@@ -1,0 +1,95 @@
+<?php
+// Archivo: model.cliente/ClienteDAO.php
+
+require_once 'ClienteDTO.php';
+require_once 'ClienteMapper.php';
+
+class ClienteDAO
+{
+    private $conn;
+
+    public function __construct($db)
+    {
+        $this->conn = $db;
+    }
+    public function create($cliente)
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?)");
+            return $stmt->execute([
+                $cliente->nombre,
+                $cliente->correo,
+                $cliente->telefono,
+                $cliente->lugarResidencia,
+                $cliente->fechaCumpleanos
+            ]);
+        } catch (PDOException $e) {
+            // MOSTRÁ el error en pantalla además de guardarlo en el log
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error PDO: ' . $e->getMessage()
+            ]);
+            exit;
+
+        }
+    }
+
+
+    public function read($id)
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteRead(?)");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row ? ClienteMapper::mapRowToDTO($row) : null;
+        } catch (PDOException $e) {
+            error_log("Error al leer cliente: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function readAll()
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteReadAll()");
+            $stmt->execute();
+            $clientes = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $clientes[] = ClienteMapper::mapRowToDTO($row);
+            }
+            return $clientes;
+        } catch (PDOException $e) {
+            error_log("Error al leer todos los clientes: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function update($cliente)
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?)");
+            return $stmt->execute([
+                $cliente->id,
+                $cliente->nombre,
+                $cliente->correo,
+                $cliente->telefono,
+                $cliente->lugarResidencia,
+                $cliente->fechaCumpleanos
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar cliente: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteDelete(?)");
+            return $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            error_log("Error al eliminar cliente: " . $e->getMessage());
+            return false;
+        }
+    }
+}

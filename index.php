@@ -1,7 +1,4 @@
-HOLA
-
-SE HIZO UN CAMBIO
-
-
-
-4 > 3
+<?php
+// Archivo: index.php
+header("Location: view/ClienteView.php");
+exit();

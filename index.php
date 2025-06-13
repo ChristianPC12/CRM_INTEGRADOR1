@@ -1,4 +1,4 @@
 <?php
 // Archivo: index.php
-header("Location: view/ClienteView.php");
-exit();
+
+require_once "view/LayoutView.php";

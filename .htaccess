@@ -1,5 +1,7 @@
-# Archivo: .htaccess
 RewriteEngine On
+RewriteBase /CRM_INT/CRM/
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+RewriteRule ^(.+)$ index.php?view=$1 [QSA,L]

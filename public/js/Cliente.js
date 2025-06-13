@@ -1,63 +1,83 @@
+/**
+ * Archivo: Cliente.js
+ * Descripción: Lógica para gestionar clientes (CRUD) desde la vista ClienteView.
+ * Autor: Cristian
+ * Notas: Este script debe cargarse solo cuando la vista 'clientes' esté activa.
+ */
+
+// Estado de edición
 let editandoId = null;
+
+// Referencias a elementos del formulario y botones
 const form = document.getElementById("clienteForm");
 const lista = document.getElementById("clienteLista");
 const submitBtn = document.getElementById("submitBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const campoId = document.getElementById("id");
 
+/**
+ * Carga todos los clientes desde el servidor y los muestra en la tabla.
+ */
 const cargarClientes = async () => {
   try {
-    const res = await fetch("../controller/ClienteController.php", {
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "action=readAll",
     });
     const response = await res.json();
-    if (response.success && response.data) mostrarClientes(response.data);
-    else
+    if (response.success && response.data) {
+      mostrarClientes(response.data);
+    } else {
       lista.innerHTML =
         '<div class="alert alert-warning">No se pudieron cargar los clientes</div>';
+    }
   } catch {
     lista.innerHTML = '<div class="alert alert-danger">Error de conexión</div>';
   }
 };
 
+/**
+ * Muestra la lista de clientes en formato tabla.
+ * @param {Array} clientes - Lista de objetos cliente.
+ */
 const mostrarClientes = (clientes) => {
   if (clientes.length === 0) {
     lista.innerHTML =
       '<div class="alert alert-info">No hay clientes registrados</div>';
     return;
   }
+
   lista.innerHTML = `
-        <table class="table table-striped table-hover mt-4">
-            <thead class="table-dark">
+    <table class="table table-striped table-hover mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Lugar</th><th>Cumpleaños</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${clientes.map(cliente => `
                 <tr>
-                    <th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Lugar</th><th>Cumpleaños</th><th>Acciones</th>
+                    <td>${cliente.id}</td><td>${cliente.nombre}</td><td>${cliente.correo}</td>
+                    <td>${cliente.telefono}</td><td>${cliente.lugarResidencia}</td><td>${cliente.fechaCumpleanos}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${cliente.id}')">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${cliente.id}')">Eliminar</button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                ${clientes
-                  .map(
-                    (cliente) => `
-                    <tr>
-                        <td>${cliente.id}</td><td>${cliente.nombre}</td><td>${cliente.correo}</td>
-                        <td>${cliente.telefono}</td><td>${cliente.lugarResidencia}</td><td>${cliente.fechaCumpleanos}</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${cliente.id}')">Editar</button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${cliente.id}')">Eliminar</button>
-                        </td>
-                    </tr>
-                `
-                  )
-                  .join("")}
-            </tbody>
-        </table>
-    `;
+            `).join('')}
+        </tbody>
+    </table>
+  `;
 };
 
+/**
+ * Carga los datos del cliente seleccionado para edición.
+ * @param {string} id - ID del cliente a editar.
+ */
 const editarCliente = async (id) => {
   try {
-    const res = await fetch("../controller/ClienteController.php", {
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=read&id=${id}`,
@@ -82,10 +102,14 @@ const editarCliente = async (id) => {
   }
 };
 
+/**
+ * Elimina un cliente mediante confirmación.
+ * @param {string} id - ID del cliente a eliminar.
+ */
 const eliminarCliente = async (id) => {
   if (!confirm("¿Estás seguro de que quieres eliminar este cliente?")) return;
   try {
-    const res = await fetch("../controller/ClienteController.php", {
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `action=delete&id=${id}`,
@@ -98,6 +122,9 @@ const eliminarCliente = async (id) => {
   }
 };
 
+/**
+ * Restaura el formulario a su estado inicial.
+ */
 const cancelarEdicion = () => {
   editandoId = null;
   form.reset();
@@ -108,14 +135,16 @@ const cancelarEdicion = () => {
   cancelBtn.style.display = "none";
 };
 
+// Manejador del envío del formulario
 form.onsubmit = async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
   const action = editandoId ? "update" : "create";
   formData.append("action", action);
   if (editandoId) formData.append("id", editandoId);
+
   try {
-    const res = await fetch("../controller/ClienteController.php", {
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
       body: formData,
     });
@@ -131,6 +160,7 @@ form.onsubmit = async (e) => {
   }
 };
 
+// Inicialización cuando se carga la vista
 document.addEventListener("DOMContentLoaded", () => {
   campoId.disabled = true;
   cancelBtn.style.display = "none";

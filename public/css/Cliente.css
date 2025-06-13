@@ -1,0 +1,24 @@
+
+/* Cliente.css - Estilos específicos para la vista de clientes */
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+input.form-control:focus {
+    box-shadow: 0 0 4px #e01e37;
+    border-color: #e01e37;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.table > :not(caption) > * > * {
+    vertical-align: middle;
+}
+
+button#cancelBtn {
+    display: none;
+}

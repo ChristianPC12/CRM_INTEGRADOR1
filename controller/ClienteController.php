@@ -3,9 +3,10 @@
 
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../model/cliente/ClienteDAO.php';
+require_once __DIR__ . '/../model/cliente/ClienteDTO.php';
+require_once __DIR__ . '/../model/cliente/ClienteMapper.php';
 require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../model.cliente/ClienteDAO.php';
-require_once __DIR__ . '/../model.cliente/ClienteDTO.php';
 
 try {
     $db = (new Database())->getConnection();
@@ -59,5 +60,8 @@ try {
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
     }
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error del servidor: ' . $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error del servidor: ' . $e->getMessage()
+    ]);
 }

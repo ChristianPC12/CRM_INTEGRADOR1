@@ -1,65 +1,317 @@
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --negro: #000000;
+  --blanco: #ffffff;
+}
 
+html,
 body {
-    display: flex;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
+  height: 100%;
 }
 
-.sidebar {
-    width: 250px;
-    background-color: #0c1446;
-    color: #fff;
-    padding-top: 1rem;
-    flex-shrink: 0;
-    height: 100vh;
-    position: sticky;
-    top: 0;
+/* CONTENEDOR PRINCIPAL DECORATIVO */
+.diseño-todo {
+  display: grid;
+  grid-template-columns: auto 60px 60px;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  position: relative;
 }
 
-.sidebar h3 {
-    color: #fff;
-    text-align: center;
-    margin-bottom: 1.5rem;
+.diseño-todo::before {
+  content: "";
+  position: absolute;
+  width: 72.9%;
+  height: 4px;
+  background: linear-gradient(to right, var(--amarillo) 50%, var(--negro) 50%);
+  top: 50%;
+  left: 33.9%;
+  transform: translateY(-50%);
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+.topbar-dashboard:first-child {
+  grid-row: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--blanco);
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--negro);
+  text-align: left;
+  max-width: 500px;
+  width: 41%;
 }
 
-.sidebar ul li {
-    padding: 10px 20px;
+.icon-user {
+  color: var(--amarillo);
+  font-size: 1.4rem;
 }
 
-.sidebar ul li a {
-    color: #87aca3;
-    text-decoration: none;
-    display: block;
+#negro-1,
+#negro-2,
+#amarillo-1,
+#amarillo-2 {
+  width: 170px;
+  height: 20px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.sidebar ul li a:hover {
-    color: #fff;
-    background-color: #2b7c85;
-    border-radius: 5px;
+#negro-1,
+#negro-2 {
+  background-color: var(--negro);
+  color: var(--blanco);
 }
 
-.topbar {
-    background-color: #fff;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#amarillo-1,
+#amarillo-2 {
+  background-color: var(--amarillo);
+  color: var(--blanco);
 }
 
-.content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+#negro-1 {
+  transform: translateX(-260%);
 }
 
-.main-content {
-    padding: 2rem;
-    overflow-y: auto;
-    flex-grow: 1;
+#amarillo-1 {
+  transform: translateX(-150%);
+}
+
+#amarillo-2 {
+  transform: translateX(-180%) translateY(35%);
+}
+
+#negro-2 {
+  transform: translateX(-75%) translateY(35%);
+}
+
+/* BIENVENIDA - NUEVO DISEÑO */
+.diseño-welcome {
+  display: grid;
+  grid-template-columns: 60px 60px auto;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  position: relative;
+}
+
+.diseño-welcome::before {
+  content: "";
+  position: absolute;
+  width: 57%;
+  height: 4px;
+  background: linear-gradient(to right, var(--gris) 50%, var(--gris) 50%);
+  top: 50%;
+  transform: translateY(-20%);
+  transform: translateX(-11.9%);
+}
+
+/* Distribución en fila de panel + imagen */
+.todo-welcome {
+  grid-row: 1 / 3;
+  grid-column: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 85%; /* antes 100% */
+  max-width: 450px;
+}
+
+/* Panel visual de bienvenida */
+.dashboard-welcome {
+  background-color: var(--blanco);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  flex: 0 0 70%; /* flex-grow: 0, flex-shrink: 0, flex-basis: 30% */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 85%;
+  transform: translateX(90%);
+}
+
+.dashboard-welcome h2 {
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  color: var(--negro);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-welcome p {
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  color: #333;
+  margin: 0.3rem 0;
+}
+
+/* Contenedor exclusivo para la imagen */
+.img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo de imagen del logo */
+.img-dashboard {
+  width: 165px;
+  height: 165px;
+  object-fit: contain;
+  border-radius: 6px;
+  padding: 4px;
+  transition: transform 0.3s ease;
+  transform: translateX(175%);
+}
+
+/* Divs decorativos del welcome */
+#negro-3,
+#amarillo-3 {
+  width: 235px;
+  height: 20px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+#negro-3 {
+  background-color: var(--negro);
+  color: var(--blanco);
+}
+
+#amarillo-3 {
+  background-color: var(--amarillo);
+  color: var(--blanco);
+}
+
+#negro-3 {
+  transform: translate(15%, 65%);
+}
+
+#amarillo-3 {
+  transform: translate(45%, 720%);
+}
+
+/* TAREAS PENDIENTES */
+.todo-section {
+  background-color: var(--blanco);
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 550px;
+  width: 80%;
+  margin: 2rem 0 2rem 2rem;
+  transform: translateX(1.8%);
+  transform: translateY(-25%);
+}
+
+.todo-title {
+  margin: 0 0 1rem 0;
+  color: var(--negro);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  border-left: 4px solid var(--amarillo);
+  padding-left: 10px;
+}
+
+#formTarea {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+#formTarea input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 200px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+#formTarea button {
+  background-color: var(--amarillo);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--negro);
+  transition: background-color 0.3s ease;
+}
+
+#formTarea button:hover {
+  background-color: #e0b614;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-list li {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.todo-list i {
+  cursor: pointer;
+  color: var(--gris);
+  transition: transform 0.2s ease;
+}
+
+.todo-list i:hover {
+  transform: scale(1.2);
+  color: var(--negro);
+}
+
+/*DEBAJO DEL SECTION DE TAREAS*/
+.divisor-tareas {
+  display: flex;
+  padding: 0;
+}
+
+#gris-1 {
+  width: 56.3%;
+  height: 20px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  background-color: var(--gris);
+  color: var(--blanco);
+  transform: translateX(7%);
+  margin-top: -5%; /* Controla el espacio desde las tareas */
+}
+
+.contenedor-tarjetas {
+  display: none;
+  background-color: var(--amarillo);
+  width: 50px;
+  height: 50px;
+  transform: translate();
+}
+
+/*MARGEN UN POCO PARA ABAJO DE MANERA GENERAL*/
+
+#container-dashboard {
+  transform: translateY(-5%);
 }

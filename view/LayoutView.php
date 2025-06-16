@@ -61,9 +61,6 @@ $vista = $_GET['view'] ?? 'dashboard';
     </aside>
 
     <div class="content">
-        <header class="topbar">
-            <h4>Panel de Administración</h4>
-        </header>
 
         <main class="main-content">
             <?php

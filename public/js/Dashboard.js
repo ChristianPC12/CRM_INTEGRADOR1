@@ -1,4 +1,4 @@
-
+/*
 document.addEventListener('DOMContentLoaded', () => {
     const ahora = new Date();
     const horas = ahora.getHours();
@@ -13,3 +13,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const fecha = document.getElementById('fechaActual');
     if (fecha) fecha.textContent = ahora.toLocaleDateString();
 });
+*/

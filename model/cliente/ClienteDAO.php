@@ -12,11 +12,13 @@ class ClienteDAO
     {
         $this->conn = $db;
     }
+
     public function create($cliente)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?, ?)");
             return $stmt->execute([
+                $cliente->cedula,
                 $cliente->nombre,
                 $cliente->correo,
                 $cliente->telefono,
@@ -24,16 +26,13 @@ class ClienteDAO
                 $cliente->fechaCumpleanos
             ]);
         } catch (PDOException $e) {
-            // MOSTRÁ el error en pantalla además de guardarlo en el log
             echo json_encode([
                 'success' => false,
                 'message' => 'Error PDO: ' . $e->getMessage()
             ]);
             exit;
-
         }
     }
-
 
     public function read($id)
     {
@@ -67,9 +66,10 @@ class ClienteDAO
     public function update($cliente)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?)");
             return $stmt->execute([
                 $cliente->id,
+                $cliente->cedula,
                 $cliente->nombre,
                 $cliente->correo,
                 $cliente->telefono,

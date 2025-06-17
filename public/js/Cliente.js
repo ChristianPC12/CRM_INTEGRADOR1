@@ -1,10 +1,3 @@
-/**
- * Archivo: Cliente.js
- * Descripción: Lógica para gestionar clientes (CRUD) desde la vista ClienteView.
- * Autor: Cristian
- * Notas: Este script debe cargarse solo cuando la vista 'clientes' esté activa.
- */
-
 // Estado de edición
 let editandoId = null;
 
@@ -39,7 +32,6 @@ const cargarClientes = async () => {
 
 /**
  * Muestra la lista de clientes en formato tabla.
- * @param {Array} clientes - Lista de objetos cliente.
  */
 const mostrarClientes = (clientes) => {
   if (clientes.length === 0) {
@@ -52,20 +44,29 @@ const mostrarClientes = (clientes) => {
     <table class="table table-striped table-hover mt-4">
         <thead class="table-dark">
             <tr>
-                <th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Lugar</th><th>Cumpleaños</th><th>Acciones</th>
+                <th>ID</th><th>Cédula</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Lugar</th><th>Cumpleaños</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            ${clientes.map(cliente => `
+            ${clientes
+              .map(
+                (cliente) => `
                 <tr>
-                    <td>${cliente.id}</td><td>${cliente.nombre}</td><td>${cliente.correo}</td>
-                    <td>${cliente.telefono}</td><td>${cliente.lugarResidencia}</td><td>${cliente.fechaCumpleanos}</td>
+                    <td>${cliente.id}</td>
+                    <td>${cliente.cedula}</td>
+                    <td>${cliente.nombre}</td>
+                    <td>${cliente.correo}</td>
+                    <td>${cliente.telefono}</td>
+                    <td>${cliente.lugarResidencia}</td>
+                    <td>${cliente.fechaCumpleanos}</td>
                     <td>
                         <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${cliente.id}')">Editar</button>
                         <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${cliente.id}')">Eliminar</button>
                     </td>
                 </tr>
-            `).join('')}
+              `
+              )
+              .join("")}
         </tbody>
     </table>
   `;
@@ -73,7 +74,6 @@ const mostrarClientes = (clientes) => {
 
 /**
  * Carga los datos del cliente seleccionado para edición.
- * @param {string} id - ID del cliente a editar.
  */
 const editarCliente = async (id) => {
   try {
@@ -86,6 +86,7 @@ const editarCliente = async (id) => {
     if (response.success && response.data) {
       const cliente = response.data;
       campoId.value = cliente.id;
+      form.cedula.value = cliente.cedula;
       form.nombre.value = cliente.nombre;
       form.correo.value = cliente.correo;
       form.telefono.value = cliente.telefono;
@@ -104,7 +105,6 @@ const editarCliente = async (id) => {
 
 /**
  * Elimina un cliente mediante confirmación.
- * @param {string} id - ID del cliente a eliminar.
  */
 const eliminarCliente = async (id) => {
   if (!confirm("¿Estás seguro de que quieres eliminar este cliente?")) return;

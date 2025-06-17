@@ -35,3 +35,36 @@ body::after {
   background: var(--blanco);
   z-index: -1;
 }
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Formulario de registro */
+.card.shadow.mb-4 {
+  background: var(--blanco);
+  box-shadow: 0 0 10px rgba(249, 196, 31, 0.4);
+  border-left: 5px solid var(--amarillo);
+}
+
+/* Headers negros para ambas tarjetas */
+.card-header {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Tabla (sin cambios visuales extra) */
+.card.shadow:last-of-type {
+  background: var(--blanco);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón eliminar */
+.btn-danger:hover {
+  background-color: #bb2d3b;
+  border-color: #a52834;
+}

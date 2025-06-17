@@ -8,6 +8,7 @@ class ClienteMapper
     {
         $dto = new ClienteDTO();
         $dto->id = $row['Id'];
+        $dto->cedula = $row['Cedula'];
         $dto->nombre = $row['Nombre'];
         $dto->correo = $row['Correo'];
         $dto->telefono = $row['Telefono'];

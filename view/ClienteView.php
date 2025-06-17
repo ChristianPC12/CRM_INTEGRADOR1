@@ -11,53 +11,58 @@
 
 <body>
 
-    <!-- Líneas decorativas si se quieren usar más -->
+    <!-- Líneas decorativas -->
     <div class="decor-line" style="top: 120px; left: 40%;"></div>
     <div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
 
     <div class="container mt-4">
         <h2 class="text-center mb-4">Gestión de Clientes</h2>
 
+        <!-- Formulario -->
         <div class="card shadow mb-4">
-            <div class="card-header bg-primary text-white">Registro de Cliente</div>
+            <div class="card-header">Registro de Cliente</div>
             <div class="card-body">
                 <form id="clienteForm">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id" class="form-label">ID</label>
+                        <div class="col-md-4 mb-3">
+                            <label for="clienteId" class="form-label">ID</label>
                             <input type="text" name="id" id="id" class="form-control" placeholder="Autogenerado"
                                 readonly>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="nombre" class="form-label">Nombre Completo *</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" required
+                        <div class="col-md-4 mb-3">
+                            <label for="clienteCedula" class="form-label">Cédula *</label>
+                            <input type="text" name="cedula" id="clienteCedula" class="form-control" required
+                                placeholder="Ej: 123456789">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="clienteNombre" class="form-label">Nombre Completo *</label>
+                            <input type="text" name="nombre" id="clienteNombre" class="form-control" required
                                 placeholder="Ej: Juan Pérez">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="correo" class="form-label">Correo Electrónico *</label>
-                            <input type="email" name="correo" id="correo" class="form-control" required
+                            <label for="clienteCorreo" class="form-label">Correo Electrónico *</label>
+                            <input type="email" name="correo" id="clienteCorreo" class="form-control" required
                                 placeholder="ejemplo@correo.com">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="telefono" class="form-label">Teléfono *</label>
-                            <input type="tel" name="telefono" id="telefono" class="form-control" required
+                            <label for="clienteTelefono" class="form-label">Teléfono *</label>
+                            <input type="tel" name="telefono" id="clienteTelefono" class="form-control" required
                                 placeholder="0000-0000">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="lugarResidencia" class="form-label">Lugar de Residencia *</label>
-                            <input type="text" name="lugarResidencia" id="lugarResidencia" class="form-control" required
+                            <label for="clienteLugar" class="form-label">Lugar de Residencia *</label>
+                            <input type="text" name="lugarResidencia" id="clienteLugar" class="form-control" required
                                 placeholder="Ej: San José, Costa Rica">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="fechaCumpleanos" class="form-label">Fecha de Cumpleaños *</label>
-                            <input type="date" name="fechaCumpleanos" id="fechaCumpleanos" class="form-control"
-                                required>
+                            <label for="clienteFecha" class="form-label">Fecha de Cumpleaños *</label>
+                            <input type="date" name="fechaCumpleanos" id="clienteFecha" class="form-control" required>
                         </div>
                     </div>
 
@@ -70,8 +75,9 @@
             </div>
         </div>
 
-        <div class="card shadow" style="display: none;">
-            <div class="card-header bg-dark text-white d-flex justify-content-between">
+        <!-- Lista de clientes -->
+        <div class="card shadow">
+            <div class="card-header d-flex justify-content-between">
                 <h5 class="mb-0">Lista de Clientes</h5>
                 <button class="btn btn-sm btn-outline-light" onclick="cargarClientes()">Actualizar</button>
             </div>
@@ -86,6 +92,7 @@
         </div>
     </div>
 
+    <script src="/CRM_INT/CRM/public/js/Cliente.js?v=<?= time() ?>"></script>
 </body>
 
 </html>

@@ -65,7 +65,11 @@ $fecha = date("d/m/Y");
                         <button type="submit" title="Agregar tarea">
                             <i class="bi bi-plus-circle"></i>
                         </button>
+                        <label id="descripcionInfo" class="info-descripcion"></label>
+                        <label id="contadorCaracteres" class="contador-caracteres"></label>
+
                     </form>
+
             </section>
 
             <div class="contenedor-tarjetas-grid">

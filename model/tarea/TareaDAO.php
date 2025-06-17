@@ -15,11 +15,10 @@ class TareaDAO
 
     public function create($tarea)
     {
-        $stmt = $this->conn->prepare("CALL TareaCreate(?, ?, ?)");
+        $stmt = $this->conn->prepare("CALL TareaCreate(?, ?)");
         return $stmt->execute([
             $tarea->descripcion,
-            $tarea->estado,
-            $tarea->fechaCreacion
+            $tarea->estado
         ]);
     }
 

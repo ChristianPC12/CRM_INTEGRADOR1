@@ -7,10 +7,10 @@ class TareaMapper
     public static function mapRowToDTO($row)
     {
         $dto = new TareaDTO();
-        $dto->id = $row['Id'];
-        $dto->descripcion = $row['Descripcion'];
-        $dto->estado = $row['Estado'];
-        $dto->fechaCreacion = $row['FechaCreacion'];
+        $dto->id = $row['id'];
+        $dto->descripcion = $row['descripcion'];
+        $dto->estado = $row['estado'];
+        $dto->fechaCreacion = $row['fecha_creacion'];
         return $dto;
     }
 }

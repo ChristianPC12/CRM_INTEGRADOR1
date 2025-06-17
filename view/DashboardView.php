@@ -68,13 +68,31 @@ $fecha = date("d/m/Y");
                     </form>
             </section>
 
-            <!-- Tarjetas a la derecha -->
-            <div id="contenedorTarjetas" class="contenedor-tarjetas">
-                <!-- Se agregan por JS -->
+            <div class="contenedor-tarjetas-grid">
+                <button id="btnEliminarTarea" class="btn-eliminar-tarea" title="Eliminar tarea actual">
+                    <i class="bi bi-trash3-fill"></i>
+                    <button id="flecha-izquierda" class="btn-flecha">&#8592;</button>
+
+                    <div class="zona-central">
+                        <div class="fecha-actual" id="fechaActual"></div>
+
+                        <!-- AQUÍ es donde faltaba el contenedor para las tareas -->
+                        <div id="contenedorTarjetas">
+                            <!-- Aquí se insertarán dinámicamente las tarjetas de tareas -->
+                        </div>
+
+                        <!-- Estos botones probablemente deberían eliminarse ya que se crean dinámicamente -->
+                        <!-- <button class="btn-estado">Estado</button>
+        <button class="btn-cambiar">Cambiar estado</button> -->
+                    </div>
+
+                    <button id="flecha-derecha" class="btn-flecha">&#8594;</button>
             </div>
 
+
+
         </div>
-        <div class="topbar-dashboard" id="gris-1"></div>
+        <!--<div class="topbar-dashboard" id="gris-1"></div>-->
 
     </div>
 

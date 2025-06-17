@@ -117,7 +117,6 @@ body {
   transform: translateX(-11.9%);
 }
 
-/* Distribución en fila de panel + imagen */
 .todo-welcome {
   grid-row: 1 / 3;
   grid-column: 3;
@@ -125,17 +124,16 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  width: 85%; /* antes 100% */
+  width: 85%;
   max-width: 450px;
 }
 
-/* Panel visual de bienvenida */
 .dashboard-welcome {
   background-color: var(--blanco);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  flex: 0 0 70%; /* flex-grow: 0, flex-shrink: 0, flex-basis: 30% */
+  flex: 0 0 70%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -156,14 +154,12 @@ body {
   margin: 0.3rem 0;
 }
 
-/* Contenedor exclusivo para la imagen */
 .img-container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Estilo de imagen del logo */
 .img-dashboard {
   width: 165px;
   height: 165px;
@@ -174,7 +170,6 @@ body {
   transform: translateX(175%);
 }
 
-/* Divs decorativos del welcome */
 #negro-3,
 #amarillo-3 {
   width: 235px;
@@ -188,18 +183,12 @@ body {
 #negro-3 {
   background-color: var(--negro);
   color: var(--blanco);
+  transform: translate(15%, 65%);
 }
 
 #amarillo-3 {
   background-color: var(--amarillo);
   color: var(--blanco);
-}
-
-#negro-3 {
-  transform: translate(15%, 65%);
-}
-
-#amarillo-3 {
   transform: translate(45%, 720%);
 }
 
@@ -208,13 +197,11 @@ body {
   background-color: var(--blanco);
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  max-width: 550px;
+  max-width: 440px;
   width: 80%;
-  margin: 2rem 0 2rem 2rem;
-  transform: translateX(1.8%);
-  transform: translateY(-25%);
+  transform: translatex(6.7%);
 }
 
 .todo-title {
@@ -283,10 +270,11 @@ body {
   color: var(--negro);
 }
 
-/*DEBAJO DEL SECTION DE TAREAS*/
 .divisor-tareas {
   display: flex;
   padding: 0;
+  max-height: 350px;
+  /* SCROLL REMOVIDO - overflow-y: auto; */
 }
 
 #gris-1 {
@@ -299,19 +287,182 @@ body {
   background-color: var(--gris);
   color: var(--blanco);
   transform: translateX(7%);
-  margin-top: -5%; /* Controla el espacio desde las tareas */
+  margin-top: -10%;
+}
+
+.contenedor-tarjetas-grid {
+  background-color: var(--blanco);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); /* Más oscuro */
+  width: 490px;
+  height: 150px;
+  border-radius: 8px;
+  transform: translateX(10%);
+}
+
+.contenedor-tarjetas-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--amarillo);
+  border-radius: 12px;
+  padding: 1rem;
+  gap: 1rem;
 }
 
 .contenedor-tarjetas {
-  display: none;
-  background-color: var(--amarillo);
-  width: 50px;
-  height: 50px;
-  transform: translate();
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  width: 300px;
+  height: auto;
+  position: relative;
 }
 
-/*MARGEN UN POCO PARA ABAJO DE MANERA GENERAL*/
+.btn-flecha {
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--negro);
+  transition: transform 0.2s ease;
+  padding: 0;
+}
 
+#flecha-izquierda {
+  transform: translate(45%, 80%);
+}
+
+#flecha-izquierda:hover {
+  transform: translate(45%, 80%) scale(1.2);
+}
+
+#flecha-derecha {
+  transform: translate(-40%, 80%);
+}
+
+#flecha-derecha:hover {
+  transform: translate(-40%, 80%) scale(1.2);
+}
+
+.btn-estado,
+.btn-cambiar {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--negro);
+  background-color: var(--blanco);
+  color: var(--negro);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  transform: translateY(120%);
+}
+
+.btn-estado:hover,
+.btn-cambiar:hover {
+  background-color: var(--negro);
+  color: var(--amarillo);
+}
+
+.fecha-actual {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.7rem;
+  color: var(--blanco);
+  padding: 2px 4px;
+}
+
+.tarjeta {
+  width: 250px;
+  height: 140px;
+  background-color: var(--blanco);
+  padding: 0.8rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.fecha-actual {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 0.7rem;
+  color: var(--blanco);
+}
+
+.contenido-tarea {
+  flex: 1;
+  /* SCROLL REMOVIDO - overflow-y: auto; */
+  font-size: 0.9rem;
+  color: var(--negro);
+  margin-bottom: 0.5rem;
+  max-height: 60px;
+}
+
+.estado-rojo {
+  background-color: #ffd9d9;
+  color: #a30000;
+}
+
+.estado-verde {
+  background-color: #d5ffd5;
+  color: #006600;
+}
+
+.btn-estado,
+.btn-cambiar {
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-top: 0.3rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-estado,
+.btn-cambiar {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* FÁCIL CAMBIO DE TAMAÑO Y POSICIÓN */
+.btn-estado {
+  transform: scale(1) translate(0px, 0px);
+}
+
+.btn-cambiar {
+  transform: scale(1) translate(0px, 0px);
+}
+
+.tarjeta {
+  width: 420px;
+}
+
+.btn-eliminar-tarea {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: transparent;
+  border: none;
+  color: var(--negro);
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+
+.btn-eliminar-tarea:hover {
+  transform: scale(1.2);
+  color: #a30000;
+}
+
+/* AJUSTE GENERAL */
 #container-dashboard {
-  transform: translateY(-5%);
+  height: 100%;
+  width: 100%;
+  transform: translateY(3%);
 }

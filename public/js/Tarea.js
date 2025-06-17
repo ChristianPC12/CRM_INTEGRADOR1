@@ -1,6 +1,7 @@
 $(document).ready(function () {
   let indiceActual = 0;
   let tareas = [];
+  const label = $("#descripcionInfo");
 
   // Cargar tareas al iniciar
   listarTareas();
@@ -15,7 +16,6 @@ $(document).ready(function () {
     $("#descripcion").val("").focus();
   }
 
-  // Renderiza una sola tarea
   function mostrarTarea(index) {
     if (!tareas[index]) return;
 
@@ -26,18 +26,19 @@ $(document).ready(function () {
       tarea.estado === "terminado" ? "estado-verde" : "estado-rojo";
 
     const tarjetaHTML = `
-      <div class="tarjeta">
-        <div class="fecha-actual">${formatearFecha(tarea.fecha)}</div>
-        <div class="contenido-tarea">${tarea.descripcion}</div>
-        <button class="btn-estado ${colorClase}">${estadoTexto}</button>
-        <button class="btn-cambiar">Cambiar estado</button>
-      </div>
-    `;
+  <div class="tarjeta">
+    <label class="fecha-creacion">${formatearFecha(tarea.fechaCreacion)}</label>
+    <div class="contenido-tarea">
+      ${tarea.descripcion}
+    </div>
+    <button class="btn-estado ${colorClase}">${estadoTexto}</button>
+    <button class="btn-cambiar">Cambiar estado</button>
+  </div>
+`;
 
     $("#contenedorTarjetas").html(tarjetaHTML);
   }
 
-  // Cargar tareas desde el servidor
   function listarTareas() {
     $.ajax({
       url: "/CRM_INT/CRM/controller/TareaController.php?action=readAll",
@@ -47,7 +48,7 @@ $(document).ready(function () {
         if (response.success && response.data) {
           tareas = response.data.map((t) => ({
             ...t,
-            estado: t.estado || "pendiente", // Por defecto
+            estado: t.estado || "pendiente",
             fecha: t.fecha || new Date().toISOString(),
           }));
           indiceActual = 0;
@@ -64,7 +65,16 @@ $(document).ready(function () {
   $("#formTarea").on("submit", function (e) {
     e.preventDefault();
     const datos = variables();
+
     if (datos.descripcion === "") return;
+
+    if (datos.descripcion.length > 220) {
+      alert(
+        "Has excedido el límite de 220 caracteres. \nNo se registró la descripción."
+      );
+      $("#descripcion").val("").focus();
+      return;
+    }
 
     $.ajax({
       url: "/CRM_INT/CRM/controller/TareaController.php?action=create",
@@ -76,7 +86,10 @@ $(document).ready(function () {
           listarTareas();
           limpiar();
         } else {
-          alert("No se pudo guardar la tarea.");
+          alert(
+            "Has excedido el límite de 220 caracteres. \nNo se registró la descripción."
+          );
+          $("#descripcion").val("").focus();
         }
       },
       error: function () {
@@ -85,14 +98,39 @@ $(document).ready(function () {
     });
   });
 
-  // Cambiar estado
+  // Validación y etiqueta dinámica
+  $("#descripcion").on("focus", function () {
+    const texto = $(this).val().trim();
+    if (texto.length > 220) {
+      label
+        .text("Has excedido el límite de 220 caracteres.")
+        .addClass("visible");
+    } else {
+      label.text("Podés escribir hasta 220 caracteres.").addClass("visible");
+    }
+  });
+
+  $("#descripcion").on("input", function () {
+    const texto = $(this).val().trim();
+    if (texto.length > 220) {
+      label
+        .text("Has excedido el límite de 220 caracteres.")
+        .addClass("visible");
+    } else {
+      label.text("Podés escribir hasta 220 caracteres.").addClass("visible");
+    }
+  });
+
+  $("#descripcion").on("blur", function () {
+    label.removeClass("visible").text("");
+  });
+
   $("#contenedorTarjetas").on("click", ".btn-cambiar", function () {
     const tarea = tareas[indiceActual];
     tarea.estado = tarea.estado === "terminado" ? "pendiente" : "terminado";
     mostrarTarea(indiceActual);
   });
 
-  // Navegación flechas
   $("#flecha-izquierda").click(function () {
     if (tareas.length === 0) return;
     indiceActual = (indiceActual - 1 + tareas.length) % tareas.length;
@@ -105,16 +143,6 @@ $(document).ready(function () {
     mostrarTarea(indiceActual);
   });
 
-  function formatearFecha(fechaISO) {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleDateString("es-CR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
-
-  // Eliminar tarea actual EN VIVO sin refrescar
   $("#btnEliminarTarea").click(function () {
     const tarea = tareas[indiceActual];
     if (!tarea || !tarea.id) return;
@@ -127,19 +155,14 @@ $(document).ready(function () {
         dataType: "json",
         success: function (response) {
           if (response.success) {
-            // Eliminar del array local
             tareas.splice(indiceActual, 1);
-
-            // Ajustar el índice
             if (indiceActual >= tareas.length) {
               indiceActual = tareas.length - 1;
             }
 
-            // Mostrar la nueva tarea, si hay
             if (tareas.length > 0) {
               mostrarTarea(indiceActual);
             } else {
-              // Si ya no hay tareas, limpiar el div
               $("#contenedorTarjetas").html(`
                 <div class="tarjeta vacia">
                   <div class="contenido-tarea">No hay tareas disponibles.</div>
@@ -155,5 +178,30 @@ $(document).ready(function () {
         },
       });
     }
+  });
+
+  function formatearFecha(fechaISO) {
+    const fecha = new Date(fechaISO);
+    return fecha.toLocaleDateString("es-CR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  const contador = $("#contadorCaracteres");
+
+  $("#descripcion").on("input", function () {
+    const texto = $(this).val();
+    contador.text(`${texto.length}/220`).addClass("visible");
+  });
+
+  $("#descripcion").on("focus", function () {
+    const texto = $(this).val();
+    contador.text(`${texto.length}/220`).addClass("visible");
+  });
+
+  $("#descripcion").on("blur", function () {
+    contador.removeClass("visible").text("");
   });
 });

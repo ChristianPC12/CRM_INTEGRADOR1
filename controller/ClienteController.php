@@ -19,6 +19,7 @@ try {
     switch ($action) {
         case 'create':
             $cliente = new ClienteDTO();
+            $cliente->cedula = $_POST['cedula'] ?? '';
             $cliente->nombre = $_POST['nombre'] ?? '';
             $cliente->correo = $_POST['correo'] ?? '';
             $cliente->telefono = $_POST['telefono'] ?? '';
@@ -41,6 +42,7 @@ try {
         case 'update':
             $cliente = new ClienteDTO();
             $cliente->id = $_POST['id'] ?? '';
+            $cliente->cedula = $_POST['cedula'] ?? '';
             $cliente->nombre = $_POST['nombre'] ?? '';
             $cliente->correo = $_POST['correo'] ?? '';
             $cliente->telefono = $_POST['telefono'] ?? '';

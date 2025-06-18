@@ -24,12 +24,14 @@ body {
 .diseño-todo::before {
   content: "";
   position: absolute;
-  width: 100%;
   height: 4px;
-  background: linear-gradient(to right, var(--amarillo) 50%, var(--negro) 50%);
   top: 50%;
   left: 33.9%;
+  width: calc(100vw - 33.9%);
+  background: linear-gradient(to right, var(--amarillo) 50%, var(--negro) 50%);
   transform: translateY(-50%);
+  pointer-events: none; /* 🛡 No interfiere con clics */
+  z-index: 0; /* Asegura que quede detrás del contenido importante */
 }
 
 .topbar-dashboard:first-child {
@@ -282,9 +284,12 @@ body {
 
 .divisor-tareas {
   display: flex;
-  padding: 0;
-  max-height: 350px;
+  justify-content: center;  /* ⬅ Centra los elementos hijos horizontalmente */
+  align-items: center;      /* (opcional) centra vertical si hace falta */
+  gap: 1.5rem;              /* (opcional) espacio entre los cuadros */
   transform: translateY(-8%);
+  max-height: 350px;
+  width: 100%;              /* Asegura que tome todo el ancho del contenedor padre */
 }
 
 #gris-1 {
@@ -529,5 +534,4 @@ body {
   width: 100%;
   transform: translateY(-1%);
 }
-
 

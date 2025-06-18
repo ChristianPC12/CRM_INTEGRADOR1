@@ -27,10 +27,7 @@ $vista = $_GET['view'] ?? 'dashboard';
 
 <body>
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="/CRM_INT/CRM/public/img/Principal_Amarillo.png" alt="Logo" class="img-header">
-            <h3>CRM Bastos</h3>
-        </div>
+       
         <ul>
             <?php
             $vista = $_GET['view'] ?? 'dashboard';

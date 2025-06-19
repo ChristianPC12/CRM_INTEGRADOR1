@@ -539,6 +539,7 @@ body {
   transform: translateY(-1%);
 }
 
+<<<<<<< HEAD
 
 @media (max-width: 768px) {
   /* Estructuras de layout en grid */
@@ -658,3 +659,5 @@ body {
   }
 }
 
+=======
+>>>>>>> origin/main

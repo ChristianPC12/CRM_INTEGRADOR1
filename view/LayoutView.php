@@ -27,7 +27,7 @@ $vista = $_GET['view'] ?? 'dashboard';
 
 <body>
     <aside class="sidebar">
-       
+
         <ul>
             <?php
             $vista = $_GET['view'] ?? 'dashboard';
@@ -40,18 +40,18 @@ $vista = $_GET['view'] ?? 'dashboard';
                     <h3>CRM Bastos</h3>
                 </div>
                 <ul>
-                    <li><a href="LayoutView.php?view=dashboard" class="<?= $vista === 'dashboard' ? 'active' : '' ?>"><i
-                                class="bi bi-house"></i> Dashboard</a></li>
-                    <li><a href="LayoutView.php?view=clientes" class="<?= $vista === 'clientes' ? 'active' : '' ?>"><i
-                                class="bi bi-person"></i> Clientes VIP</a></li>
-                    <li><a href="LayoutView.php?view=recompensas"
-                            class="<?= $vista === 'recompensas' ? 'active' : '' ?>"><i class="bi bi-gift"></i>
-                            Recompensas</a></li>
-                    <li><a href="LayoutView.php?view=ubicaciones"
-                            class="<?= $vista === 'ubicaciones' ? 'active' : '' ?>"><i class="bi bi-geo-alt"></i>
-                            Ubicaciones</a></li>
+                    <li><a href="LayoutView.php?view=dashboard" class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
+                            <i class="bi bi-house"></i> Dashboard</a></li>
 
+                    <li><a id="btnClientesVip" href="LayoutView.php?view=clientes"
+                            class="<?= $vista === 'clientes' ? 'active' : '' ?>">
+                            <i class="bi bi-award-fill"></i> Clientes VIP</a></li>
+
+                    <li><a id="btnUsuariosVip" href="LayoutView.php?view=recompensas"
+                            class="<?= $vista === 'recompensas' ? 'active' : '' ?>">
+                            <i class="bi bi-person"></i> Usuarios</a></li>
                 </ul>
+
             </aside>
 
         </ul>
@@ -76,6 +76,8 @@ $vista = $_GET['view'] ?? 'dashboard';
     <?php elseif ($vista === 'clientes'): ?>
         <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
     <?php endif; ?>
+
+
 </body>
 
 </html>

@@ -536,3 +536,151 @@ body {
   width: 100%;
   transform: translateY(10%);
 }
+
+/* ============================================= */
+/* RESPONSIVE REAL PARA DashboardView.php (móvil) */
+/* ============================================= */
+@media screen and (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Rediseñar la barra lateral para que se vea como topbar */
+  .diseño-todo {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+
+  .topbar-dashboard {
+    width: 100% !important;
+    max-width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    padding: 0.6rem !important;
+    font-size: 0.85rem;
+  }
+
+  .topbar-dashboard span.badge {
+    margin-left: 5px;
+    font-size: 0.75rem;
+  }
+
+  #negro-1, #negro-2, #amarillo-1, #amarillo-2 {
+    display: none;
+  }
+
+  /* Bienvenida */
+  .diseño-welcome {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .todo-welcome {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .dashboard-welcome {
+    transform: none;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .img-dashboard {
+    transform: none;
+    width: 100px;
+    height: auto;
+  }
+
+  #negro-3, #amarillo-3 {
+    display: none;
+  }
+
+  /* Sección de tareas */
+  .divisor-tareas {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    transform: none;
+    padding: 1rem 0.5rem;
+  }
+
+  .todo-section {
+    width: 95%;
+    min-height: auto;
+    transform: none;
+  }
+
+  #formTarea {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #formTarea input[type="text"],
+  #formTarea button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  /* Tarjetas */
+  .contenedor-tarjetas-grid {
+    width: 100% !important;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: none;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .zona-central {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  #contenedorTarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .tarjeta {
+    width: 90%;
+    max-width: 300px;
+    padding: 1rem;
+  }
+
+  .contenido-tarea {
+    font-size: 0.9rem;
+  }
+
+  .btn-flecha {
+    font-size: 1.2rem;
+    padding: 0.3rem;
+    display: inline-block;
+    margin: 0.5rem auto;
+  }
+
+  #flecha-izquierda,
+  #flecha-derecha {
+    transform: none !important;
+    position: static !important;
+    margin-top: 0.5rem;
+    text-align: center;
+    display: block;
+  }
+}

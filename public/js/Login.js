@@ -105,6 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Respuesta del servidor:", data); // Para debugging
 
         if (data.success) {
+          // --- GUARDAR EL ROL EN LOCALSTORAGE ---
+          if (data.rol) {
+            localStorage.setItem("rolUsuario", data.rol);
+          } else {
+            localStorage.removeItem("rolUsuario");
+          }
+
           showSuccessMessage();
 
           // Usar la URL de redirección proporcionada por el servidor

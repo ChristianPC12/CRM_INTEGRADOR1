@@ -35,4 +35,39 @@ function confirmarCerrarSesion() {
   if (confirm("¿Cerrar sesión?")) {
     window.location.href = "index.php?logout=1";
   }
+
+  
 }
+
+window.addEventListener("load", function () {
+  const toggleBtn = document.getElementById("menuToggle");
+  const sidebar = document.querySelector(".sidebar");
+  const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
+
+  if (!toggleBtn || !sidebar) {
+    console.warn("⚠️ No se encontró el botón ☰ o el sidebar.");
+    return;
+  }
+
+  // 🔒 Forzar sidebar cerrado en móvil al cargar (clave para evitar bug al cambiar de vista)
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove("activa");
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    sidebar.classList.toggle("activa");
+  });
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener("click", function () {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove("activa");
+      }
+    });
+  });
+});
+
+
+
+
+

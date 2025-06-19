@@ -1,4 +1,4 @@
 <?php
-// Archivo:index.php
-
-require_once "view/LayoutView.php";
+// Si no está autenticado, mostrar el login
+include_once 'view/LoginView.php';
+?>

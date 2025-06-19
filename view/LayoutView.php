@@ -35,17 +35,20 @@ $vista = $_GET['view'] ?? 'dashboard';
         </div>
         <ul>
             <li>
-                <a href="index.php?view=dashboard" class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
+                <a href="index.php?view=dashboard" id="link-dashboard"
+                    class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
                     <i class="bi bi-house"></i> Dashboard
                 </a>
             </li>
             <li>
-                <a href="index.php?view=clientes" class="<?= $vista === 'clientes' ? 'active' : '' ?>">
+                <a href="index.php?view=clientes" id="link-clientes-vip"
+                    class="<?= $vista === 'clientes' ? 'active' : '' ?>">
                     <i class="bi bi-award-fill"></i> Clientes VIP
                 </a>
             </li>
             <li>
-                <a href="index.php?view=usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
+                <a href="index.php?view=usuarios" id="link-usuarios"
+                    class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
                 </a>
             </li>
@@ -55,6 +58,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
         </ul>
+
     </aside>
 
     <div class="content">
@@ -97,6 +101,36 @@ $vista = $_GET['view'] ?? 'dashboard';
                 window.location.href = "index.php?logout=true";
             }
         }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener el rol del usuario de localStorage
+            const rol = localStorage.getItem('rolUsuario');
+
+            if (rol === 'Salonero') {
+                // Desactivar Clientes VIP
+                const linkClientes = document.getElementById('link-clientes-vip');
+                if (linkClientes) {
+                    linkClientes.classList.add('disabled-link');
+                    linkClientes.removeAttribute('href'); // Evita navegación
+                    linkClientes.style.pointerEvents = "none"; // No se puede clickear
+                    linkClientes.style.opacity = 0.5;
+                    linkClientes.title = "Acceso restringido";
+                }
+
+                // Desactivar Usuarios
+                const linkUsuarios = document.getElementById('link-usuarios');
+                if (linkUsuarios) {
+                    linkUsuarios.classList.add('disabled-link');
+                    linkUsuarios.removeAttribute('href');
+                    linkUsuarios.style.pointerEvents = "none";
+                    linkUsuarios.style.opacity = 0.5;
+                    linkUsuarios.title = "Acceso restringido";
+                }
+            }
+        });
+
     </script>
 </body>
 

@@ -12,14 +12,14 @@
     <div class="login-container">
         <div class="login-card">
             <div class="header">
-                <h2>Portal de Acceso</h2>
-                <div class="subtitle">Sistema de Gestión</div>
+                <h2>CRM BASTOS</h2>
+                <div class="subtitle">Inicio de sesión</div>
             </div>
 
             <form id="loginForm" class="login-form">
                 <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="usuario@empresa.com" required>
+                    <label for="email">Nombre de Usuario</label>
+                    <input type="text" id="email" name="email" placeholder="Ej. CarlosBastos" required>
                     <span class="error-message" id="emailError"></span>
                 </div>
 

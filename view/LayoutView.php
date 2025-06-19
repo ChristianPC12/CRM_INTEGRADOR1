@@ -8,6 +8,7 @@ $vista = $_GET['view'] ?? 'dashboard';
     <meta charset="UTF-8">
     <title>CRM Bastos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store" />
 
     <!-- Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,6 +19,8 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Dashboard.css">
     <?php elseif ($vista === 'clientes'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cliente.css">
+    <?php elseif ($vista === 'usuarios'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Usuario.css">
     <?php endif; ?>
 
     <!-- CSS general -->
@@ -42,8 +45,13 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="index.php?view=recompensas" class="<?= $vista === 'recompensas' ? 'active' : '' ?>">
+                <a href="index.php?view=usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="confirmarCerrarSesion()" style="color: #dc3545;">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </a>
             </li>
         </ul>
@@ -54,6 +62,8 @@ $vista = $_GET['view'] ?? 'dashboard';
             <?php
             if ($vista === 'clientes') {
                 include 'ClienteView.php';
+            } elseif ($vista === 'usuarios') {
+                include 'UsuarioView.php';
             } elseif ($vista === 'recompensas') {
                 include 'RecompensasView.php';
             } else {
@@ -63,14 +73,31 @@ $vista = $_GET['view'] ?? 'dashboard';
         </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script general -->
+    <script src="/CRM_INT/CRM/public/js/Layout.js"></script>
+
+    <!-- Scripts específicos -->
     <?php if ($vista === 'dashboard'): ?>
         <script src="/CRM_INT/CRM/public/js/Dashboard.js"></script>
     <?php elseif ($vista === 'clientes'): ?>
         <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
     <?php endif; ?>
 
+    <!-- Logout automático al cerrar la pestaña -->
+    <script>
+        window.addEventListener('beforeunload', function () {
+            navigator.sendBeacon('/CRM_INT/CRM/controller/LogoutOnClose.php');
+        });
+
+        function confirmarCerrarSesion() {
+            if (confirm("¿Seguro que desea cerrar sesión?")) {
+                window.location.href = "index.php?logout=true";
+            }
+        }
+    </script>
 </body>
 
 </html>

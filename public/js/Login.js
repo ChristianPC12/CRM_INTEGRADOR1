@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Elementos del DOM
   const loginForm = document.getElementById("loginForm");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
@@ -7,26 +6,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
 
-  // Validación en tiempo real
-  emailInput.addEventListener("input", function () {
-    validateEmail();
-  });
+  // Validaciones en tiempo real
+  emailInput.addEventListener("input", validateEmail);
+  emailInput.addEventListener("blur", validateEmail);
+  passwordInput.addEventListener("input", validatePassword);
+  passwordInput.addEventListener("blur", validatePassword);
 
-  emailInput.addEventListener("blur", function () {
-    validateEmail();
-  });
-
-  passwordInput.addEventListener("input", function () {
-    validatePassword();
-  });
-
-  passwordInput.addEventListener("blur", function () {
-    validatePassword();
-  });
-
-  // Manejo del envío del formulario
+  // Evento de envío del formulario
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
+
+    // Prevenir múltiples envíos
+    if (loginBtn.disabled) return;
 
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
@@ -36,18 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Función de validación de email
   function validateEmail() {
     const email = emailInput.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const formGroup = emailInput.closest(".form-group");
 
     if (!email) {
-      showError(emailError, "El correo electrónico es requerido");
-      setFormGroupState(formGroup, "error");
-      return false;
-    } else if (!emailRegex.test(email)) {
-      showError(emailError, "Ingresa un correo electrónico válido");
+      showError(emailError, "El usuario es requerido");
       setFormGroupState(formGroup, "error");
       return false;
     } else {
@@ -57,20 +42,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Función de validación de contraseña
   function validatePassword() {
     const password = passwordInput.value;
     const formGroup = passwordInput.closest(".form-group");
 
     if (!password) {
       showError(passwordError, "La contraseña es requerida");
-      setFormGroupState(formGroup, "error");
-      return false;
-    } else if (password.length < 6) {
-      showError(
-        passwordError,
-        "La contraseña debe tener al menos 6 caracteres"
-      );
       setFormGroupState(formGroup, "error");
       return false;
     } else {
@@ -80,19 +57,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Función para mostrar errores
   function showError(errorElement, message) {
     errorElement.textContent = message;
     errorElement.classList.add("show");
   }
 
-  // Función para ocultar errores
   function hideError(errorElement) {
     errorElement.textContent = "";
     errorElement.classList.remove("show");
   }
 
-  // Función para establecer el estado visual del grupo de formulario
   function setFormGroupState(formGroup, state) {
     formGroup.classList.remove("success", "error");
     if (state) {
@@ -100,31 +74,51 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Función para manejar el login
   function handleLogin() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
+    const usuario = emailInput.value.trim();
+    const contrasena = passwordInput.value;
 
-    // Mostrar estado de carga
     setLoadingState(true);
 
-    // Simular llamada a la API (reemplazar con tu lógica de autenticación)
-    simulateLogin(email, password)
+    // Remover errores anteriores
+    removeExistingErrors();
+
+    // Crear FormData para enviar al servidor
+    const formData = new FormData();
+    formData.append("action", "login");
+    formData.append("usuario", usuario);
+    formData.append("contrasena", contrasena);
+
+    // Realizar petición AJAX al controlador PHP
+    fetch("/CRM_INT/CRM/controller/LoginController.php", {
+      method: "POST",
+      body: formData,
+      credentials: "same-origin", // Importante para mantener la sesión
+    })
       .then((response) => {
-        if (response.success) {
-          // Login exitoso
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Respuesta del servidor:", data); // Para debugging
+
+        if (data.success) {
           showSuccessMessage();
-          // Redirigir después de un breve delay
+
+          // Usar la URL de redirección proporcionada por el servidor
+          const redirectUrl = data.redirect || "index.php?view=dashboard";
+
           setTimeout(() => {
-            window.location.href = "view/DashboardView.php"; // Ruta corregida para tu estructura
+            window.location.href = redirectUrl;
           }, 1500);
         } else {
-          // Login fallido
-          showLoginError(response.message);
+          showLoginError(data.message || "Credenciales incorrectas");
         }
       })
       .catch((error) => {
-        console.error("Error en el login:", error);
+        console.error("Error:", error);
         showLoginError("Error de conexión. Por favor, intenta nuevamente.");
       })
       .finally(() => {
@@ -132,83 +126,76 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Función para simular el login (reemplazar con tu API real)
-  function simulateLogin(email, password) {
-    return new Promise((resolve) => {
-      // Simular delay de red
-      setTimeout(() => {
-        // Aquí deberías hacer tu llamada real a la API
-        // Por ahora, simulamos diferentes respuestas
-        if (email === "admin@empresa.com" && password === "123456") {
-          resolve({ success: true, message: "Login exitoso" });
-        } else {
-          resolve({ success: false, message: "Credenciales incorrectas" });
-        }
-      }, 2000);
-    });
-  }
-
-  // Función para establecer el estado de carga
   function setLoadingState(isLoading) {
-    if (isLoading) {
-      loginBtn.disabled = true;
-      loginBtn.classList.add("loading");
-    } else {
-      loginBtn.disabled = false;
-      loginBtn.classList.remove("loading");
+    loginBtn.disabled = isLoading;
+    loginBtn.classList.toggle("loading", isLoading);
+
+    const btnText = loginBtn.querySelector(".btn-text");
+    if (btnText) {
+      if (isLoading) {
+        btnText.textContent = "Verificando...";
+      } else {
+        btnText.textContent = "Iniciar Sesión";
+      }
     }
   }
 
-  // Función para mostrar mensaje de éxito
   function showSuccessMessage() {
     const btnText = loginBtn.querySelector(".btn-text");
-    const originalText = btnText.textContent;
+    if (btnText) {
+      const originalText = btnText.textContent;
+      btnText.textContent = "¡Bienvenido!";
+      loginBtn.style.background = "#28a745";
+      loginBtn.style.color = "#ffffff";
 
-    btnText.textContent = "¡Bienvenido!";
-    loginBtn.style.background = "#28a745";
-    loginBtn.style.color = "#ffffff";
-
-    // Restaurar después de un tiempo
-    setTimeout(() => {
-      btnText.textContent = originalText;
-      loginBtn.style.background = "";
-      loginBtn.style.color = "";
-    }, 3000);
+      setTimeout(() => {
+        btnText.textContent = originalText;
+        loginBtn.style.background = "";
+        loginBtn.style.color = "";
+      }, 3000);
+    }
   }
 
-  // Función para mostrar errores de login
   function showLoginError(message) {
-    // Crear elemento de error temporal
+    // Remover errores anteriores
+    removeExistingErrors();
+
     const errorDiv = document.createElement("div");
     errorDiv.className = "login-error";
     errorDiv.textContent = message;
     errorDiv.style.cssText = `
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-            font-size: 14px;
-            text-align: center;
-            animation: fadeInUp 0.3s ease-out;
-        `;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border: 1px solid #f5c6cb;
+      font-size: 14px;
+      text-align: center;
+      animation: fadeInUp 0.3s ease-out;
+    `;
 
-    // Insertar antes del formulario
     loginForm.insertBefore(errorDiv, loginForm.firstChild);
 
-    // Remover después de 5 segundos
+    // Auto-remover después de 5 segundos
     setTimeout(() => {
-      errorDiv.style.animation = "fadeOut 0.3s ease-out";
-      setTimeout(() => {
-        if (errorDiv.parentNode) {
-          errorDiv.parentNode.removeChild(errorDiv);
-        }
-      }, 300);
+      if (errorDiv.parentNode) {
+        errorDiv.style.animation = "fadeOut 0.3s ease-out";
+        setTimeout(() => {
+          if (errorDiv.parentNode) {
+            errorDiv.remove();
+          }
+        }, 300);
+      }
     }, 5000);
   }
 
-  // Efecto de focus mejorado para los inputs
+  function removeExistingErrors() {
+    const existingErrors = document.querySelectorAll(".login-error");
+    existingErrors.forEach((error) => error.remove());
+  }
+
+  // Efectos de focus en inputs
   const inputs = [emailInput, passwordInput];
   inputs.forEach((input) => {
     input.addEventListener("focus", function () {
@@ -220,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Prevenir envío múltiple del formulario
+  // Prevenir múltiples envíos
   let isSubmitting = false;
   loginForm.addEventListener("submit", function (e) {
     if (isSubmitting) {
@@ -228,8 +215,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return false;
     }
     isSubmitting = true;
-
-    // Resetear después de un tiempo
     setTimeout(() => {
       isSubmitting = false;
     }, 3000);
@@ -243,14 +228,15 @@ document.addEventListener("DOMContentLoaded", function () {
     hideError(passwordError);
     setFormGroupState(emailInput.closest(".form-group"), "");
     setFormGroupState(passwordInput.closest(".form-group"), "");
+    removeExistingErrors();
   }
 
-  // Función pública para limpiar el formulario (si se necesita desde fuera)
+  // Exponer función globalmente para uso externo
   window.clearLoginForm = clearForm;
 
-  // Manejo de teclas especiales
+  // Eventos de teclado
   document.addEventListener("keydown", function (e) {
-    // Enter en cualquier input envía el formulario
+    // Enter en inputs para enviar formulario
     if (
       e.key === "Enter" &&
       (e.target === emailInput || e.target === passwordInput)
@@ -259,25 +245,44 @@ document.addEventListener("DOMContentLoaded", function () {
       loginForm.dispatchEvent(new Event("submit"));
     }
 
-    // Escape limpia el formulario
+    // Escape para limpiar formulario
     if (e.key === "Escape") {
       clearForm();
     }
   });
 
-  // Añadir estilos adicionales para animaciones
+  // Estilos adicionales
   const style = document.createElement("style");
   style.textContent = `
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
-        }
-        
-        .form-group.focused label {
-            color: var(--amarillo);
-            transform: translateY(-2px);
-            transition: all 0.3s ease;
-        }
-    `;
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group.focused label {
+      color: var(--amarillo);
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+
+    .btn.loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn.loading:hover {
+      transform: none;
+    }
+
+    .login-error {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  `;
   document.head.appendChild(style);
 });

@@ -108,7 +108,6 @@ body {
   position: relative;
 }
 
-
 .todo-welcome {
   grid-row: 1 / 3;
   grid-column: 3;
@@ -147,7 +146,6 @@ body {
   font-size: clamp(0.9rem, 2vw, 1rem);
   color: #333;
   margin: 0.3rem 0;
-
 }
 
 .img-container {
@@ -288,12 +286,12 @@ body {
 
 .divisor-tareas {
   display: flex;
-  justify-content: center;  /* ⬅ Centra los elementos hijos horizontalmente */
-  align-items: center;      /* (opcional) centra vertical si hace falta */
-  gap: 1.5rem;              /* (opcional) espacio entre los cuadros */
+  justify-content: center; /* ⬅ Centra los elementos hijos horizontalmente */
+  align-items: center; /* (opcional) centra vertical si hace falta */
+  gap: 1.5rem; /* (opcional) espacio entre los cuadros */
   transform: translateY(-8%);
   max-height: 350px;
-  width: 100%;              /* Asegura que tome todo el ancho del contenedor padre */
+  width: 100%; /* Asegura que tome todo el ancho del contenedor padre */
 }
 
 #gris-1 {
@@ -536,128 +534,5 @@ body {
 #container-dashboard {
   height: 100%;
   width: 100%;
-  transform: translateY(-1%);
+  transform: translateY(10%);
 }
-
-<<<<<<< HEAD
-
-@media (max-width: 768px) {
-  /* Estructuras de layout en grid */
-  .diseño-todo,
-  .diseño-welcome {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 95%;
-    margin: 1rem auto;
-  }
-
-  /* Contenedor combinado de imagen y bienvenida */
-  .todo-welcome {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 100%;
-    gap: 1rem;
-  }
-
-  /* Panel de bienvenida */
-  .dashboard-welcome {
-    transform: none !important;
-    width: 90%;
-    margin: 0 auto;
-    height: auto;
-    text-align: center;
-  }
-
-  .dashboard-welcome h2,
-  .dashboard-welcome p {
-    text-align: center;
-    margin: 0.5rem 0;
-  }
-
-  /* Imagen central */
-  .img-dashboard {
-    width: 50%;
-    max-width: 180px;
-    height: auto;
-    transform: none !important;
-    display: block;
-  margin: 0 auto 1rem auto;
-  }
-
-  /* Sección de tareas */
-  .todo-section {
-    width: 95%;
-    margin: 1rem auto;
-    transform: none !important;
-  }
-
-  #formTarea {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #formTarea input[type="text"],
-  #formTarea button {
-    width: 100%;
-  }
-
-  .todo-list li {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 5px;
-    padding: 12px;
-  }
-  .dashboard-welcome {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    width: 100%;
-  max-width: 500px; /* igual que el contenedor del usuario */
-  margin: 1rem auto;
-}
-
-
-  /* Tarjeta de usuario y rol */
-  .topbar-dashboard:first-child {
-    display: flex;
-     margin-bottom: 1rem; 
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 1rem;
-    padding: 1rem;
-    width: 100%;
-    max-width: 500px;
-  margin: 0 auto;
-  }
-
-  .topbar-dashboard:first-child .icon-user {
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-
-  .topbar-dashboard:first-child span,
-  .topbar-dashboard:first-child strong {
-    white-space: nowrap;
-    display: inline-block;
-  }
-
-  /* Ocultar líneas decorativas y divisores */
-  #negro-1,
-  #negro-2,
-  #amarillo-1,
-  #amarillo-2,
-  #negro-3,
-  #amarillo-3,
-  #gris-1,
-  .diseño-todo::before,
-  .diseño-welcome::before {
-    display: none !important;
-  }
-}
-
-=======
->>>>>>> origin/main

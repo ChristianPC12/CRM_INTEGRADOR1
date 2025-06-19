@@ -28,6 +28,11 @@ $vista = $_GET['view'] ?? 'dashboard';
 </head>
 
 <body>
+    <!-- BOTÓN HAMBURGUESA PARA MÓVIL -->
+<button class="btn-menu-toggle" id="menuToggle" aria-label="Abrir menú">
+    <i class="bi bi-list"></i>
+</button>
+
     <aside class="sidebar">
         <div class="sidebar-header">
             <img src="/CRM_INT/CRM/public/img/Principal_Amarillo.png" alt="Logo" class="img-header">

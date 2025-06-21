@@ -8,16 +8,13 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  
   display: flex;
   min-height: 100vh;
   position: relative;
-
-
-  
   background-color: var(--gris);
   width: 100%;
-  overflow-x: hidden;
+  /* Quitar esto evita bloquear el scroll horizontal */
+  /* overflow-x: hidden; */
 }
 
 body::before {
@@ -29,6 +26,28 @@ body::before {
   height: 70%;
   background: var(--blanco);
   z-index: -1;
+}
+
+
+.btn-primary {
+  background-color: var(--amarillo);
+  color: var(--negro);
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #e6b619;
+  transform: scale(1.03);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.5);
 }
 
 body::after {
@@ -63,7 +82,7 @@ body::after {
   letter-spacing: 0.5px;
 }
 
-/* Tabla (sin cambios visuales extra) */
+/* Tabla (contenedor sin cambios visuales extra) */
 .card.shadow:last-of-type {
   background: var(--blanco);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -74,12 +93,6 @@ body::after {
   background-color: #bb2d3b;
   border-color: #a52834;
 }
-
-
-
-
-
-
 
 /* ==== SIDEBAR COMPACTO (ESCRITORIO) ==== */
 .sidebar {
@@ -101,7 +114,6 @@ body::after {
   margin-bottom: 1.5rem;
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
- 
 }
 
 .img-header {
@@ -149,7 +161,7 @@ body::after {
 
 /* ==== CONTENIDO PRINCIPAL (ESCRITORIO) ==== */
 .content {
-  margin-left: 200px; /* mismo ancho que sidebar */
+  margin-left: 200px;
   padding: 24px;
   box-sizing: border-box;
   flex-grow: 1;
@@ -227,4 +239,16 @@ body::after {
   body::after {
     display: none;
   }
+}
+
+
+/* ==== TABLA RESPONSIVA ==== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive table {
+  min-width: 700px;
+  white-space: nowrap;
 }

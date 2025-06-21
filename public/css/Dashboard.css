@@ -684,3 +684,204 @@ body {
     display: block;
   }
 }
+
+@media screen and (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diseño-todo::before {
+    display: none;
+  }
+
+  .diseño-todo,
+  .diseño-welcome,
+  .divisor-tareas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+    max-width: 100%;
+    transform: none;
+  }
+
+  .topbar-dashboard,
+  .todo-welcome,
+  .dashboard-welcome,
+  .todo-section,
+  .contenedor-tarjetas-grid {
+    width: 95% !important;
+    max-width: 95%;
+    transform: none;
+    padding: 1rem;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+
+  .topbar-dashboard {
+    margin-top: -5rem !important;
+    transform: none !important;
+    justify-content: center !important;
+    align-items: center;
+    gap: 0.5rem !important;
+  }
+
+  .topbar-dashboard span.badge {
+    margin-left: 5px;
+    font-size: 0.75rem;
+  }
+
+  #negro-1, #negro-2, #amarillo-1, #amarillo-2, #negro-3, #amarillo-3 {
+    display: none;
+  }
+
+  .dashboard-welcome {
+    transform: none;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 1.2rem;
+  }
+
+  .dashboard-welcome p {
+    font-size: 0.95rem;
+  }
+
+  .img-dashboard {
+    transform: none;
+    width: 100px;
+    height: auto;
+  }
+
+  /* Sección de tareas */
+  .todo-section {
+    width: 100%;
+    height: auto;
+    margin-top: 18rem;
+    transform: none;
+    margin-bottom: 5rem; /* 👈 Aumenta el espacio debajo del título y formulario */
+    min-height: 170px; /* o el valor que necesites */
+  }
+
+  #formTarea {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 0rem;
+  }
+
+  #formTarea input[type="text"] {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  #formTarea button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--amarillo);
+    color: var(--negro);
+    cursor: pointer;
+  }
+
+  /* Contenedor de tarjetas */
+  .contenedor-tarjetas-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -5rem; /* 👈 Espacio arriba de la tarjeta amarilla */
+    justify-content: flex-start;
+    width: 100% !important;
+    min-height: 90x;
+    padding: 0rem;
+    overflow-y: auto !important;
+     min-height: 400px; /* o el valor que necesites */
+    overflow-x: hidden;
+    background-color: var(--amarillo);
+    box-sizing: border-box;
+  }
+  .btn-eliminar-tarea {
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  color: var(--negro);
+  cursor: pointer;
+}
+
+  .contenedor-tarjetas {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 250px;
+    padding: 10rem;
+    box-sizing: border-box;
+  }
+
+  .tarjeta {
+    width: 95% !important;
+    max-width: 300px;
+    min-height: 250px;
+   padding: 1rem 2rem; 
+    margin: 0.5rem 0;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 2;
+    transform: none !important;
+  }
+
+  .contenido-tarea {
+    font-size: 0.95rem;
+    margin-top: 2rem;
+      font-weight: 500;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  
+
+  /* Flechas de navegación */
+  .btn-flecha {
+    font-size: 1.2rem;
+    padding: 0.3rem;
+    display: inline-block;
+    text-align: center;
+    margin: 0.5rem auto;
+    transform: none !important;
+  }
+
+  #flecha-izquierda,
+  #flecha-derecha {
+    position: static !important;
+    text-align: center;
+    display: block;
+    margin-top: 0.5rem;
+  }
+ 
+}

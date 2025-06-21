@@ -56,21 +56,18 @@
     </div>
 
     <!-- Lista de clientes -->
-    <div class="card shadow">
-        <div class="card-header d-flex justify-content-between">
-            <h5 class="mb-0">Lista de Clientes</h5>
-            <button class="btn btn-sm btn-outline-light" onclick="cargarClientes()">Actualizar</button>
-        </div>
-        <div class="card-body p-0">
+     <div class="card shadow">
+    <div class="card-header d-flex justify-content-between">
+        <h5 class="mb-0">Lista de Clientes</h5>
+        <button class="btn btn-sm btn-outline-light" onclick="cargarClientes()">Actualizar</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
             <div id="clienteLista" class="p-4 text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-                <p class="mt-2">Cargando clientes...</p>
+                <!-- Aquí se inyectará la tabla -->
             </div>
         </div>
     </div>
 </div>
-
 <!-- Script exclusivo de esta vista -->
 <script src="/CRM_INT/CRM/public/js/Cliente.js?v=<?= time() ?>"></script>

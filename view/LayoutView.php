@@ -21,17 +21,18 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cliente.css">
     <?php elseif ($vista === 'usuarios'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Usuario.css">
+    <?php elseif ($vista === 'compras'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Compra.css">
     <?php endif; ?>
-
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
 </head>
 
 <body>
     <!-- BOTÓN HAMBURGUESA PARA MÓVIL -->
-<button class="btn-menu-toggle" id="menuToggle" aria-label="Abrir menú">
-    <i class="bi bi-list"></i>
-</button>
+    <button class="btn-menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <i class="bi bi-list"></i>
+    </button>
 
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -58,6 +59,11 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
+                <a href="index.php?view=compras" id="link-compras" class="<?= $vista === 'compras' ? 'active' : '' ?>">
+                    <i class="bi bi-tag"></i> Beneficios
+                </a>
+            </li>
+            <li>
                 <a href="#" onclick="confirmarCerrarSesion()" style="color: #dc3545;">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </a>
@@ -75,6 +81,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'UsuarioView.php';
             } elseif ($vista === 'recompensas') {
                 include 'RecompensasView.php';
+            } elseif ($vista === 'compras') {
+                include 'CompraView.php';
             } else {
                 include 'DashboardView.php';
             }

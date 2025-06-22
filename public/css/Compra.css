@@ -1,18 +1,39 @@
 :root {
   --amarillo: #f9c41f;
   --negro: #000000;
+  --blanco: #ffffff;
 }
 
+/* Reset */
+html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Arial", sans-serif;
-  background: var(--negro);
+  font-family: Arial, sans-serif;
+  background: var(--blanco);
+  color: var(--negro);
+  overflow: hidden;
 }
 
-.template-container {
-  width: 100%;
+/* Layout principal */
+.compra-layout {
+  display: flex;
   height: 100vh;
+  background: var(--blanco);
+}
+
+/* Barra amarilla izquierda */
+.compra-barra-amarilla {
+  width: 38px;
+  background: var(--amarillo);
+  box-shadow: 2px 0 12px 0 rgba(0, 0, 0, 0.04);
+  z-index: 10;
+}
+
+/* Contenedor principal con fondo animado */
+.template-container {
+  flex: 1;
   position: relative;
   overflow: hidden;
   background: linear-gradient(
@@ -24,13 +45,11 @@ body {
     var(--negro) 100%
   );
 }
+
 .template-container::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(
     45deg,
     transparent 30%,
@@ -38,8 +57,8 @@ body {
     transparent 70%
   );
   animation: diagonal-sweep 8s infinite;
-  z-index: 0;
 }
+
 @keyframes diagonal-sweep {
   0%,
   100% {
@@ -48,4 +67,148 @@ body {
   50% {
     transform: translateX(100%) translateY(100%);
   }
+}
+
+/* Bloque principal */
+.compra-bloque-inicio {
+  width: 96%;
+  max-width: 900px;
+  height: 85%;
+  max-height: 600px;
+  background: var(--blanco);
+  box-shadow: 0 2px 18px 0 rgba(40, 40, 40, 0.09);
+  border-radius: 2.5em;
+  position: absolute;
+  top: 6vh;
+  left: 20px;
+  padding: 4% 3%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  opacity: 0.98;
+  justify-content: flex-start;
+}
+
+/* Header en una línea */
+.compra-header-linea {
+  display: flex;
+  align-items: center;
+  gap: 1.2em;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 4%;
+  flex-wrap: wrap;
+}
+
+/* Título */
+.compra-titulo {
+  font-size: 1.3em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--negro);
+  min-width: 110px;
+  margin-right: 0.4em;
+}
+
+/* Botones de opción */
+.compra-btn-opcion {
+  background: #f9fafb;
+  color: var(--negro);
+  border: 1.5px solid var(--amarillo);
+  border-radius: 1.3em;
+  padding: 0.7em 1.5em;
+  font-weight: bold;
+  font-size: 0.5em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  min-width: 90px;
+  max-width: 170px;
+  margin-left: -2em;
+}
+.compra-btn-opcion:hover,
+.compra-btn-opcion.selected {
+  background: var(--amarillo);
+}
+
+/* Input y botón de búsqueda */
+.compra-input-id {
+  border: 1.5px solid #bcbcbc;
+  border-radius: 1em;
+  padding: 0.5em 1.1em;
+  font-size: 1em;
+  max-width: 210px;
+  min-width: 60px;
+  outline: none;
+  background: #f9fafb;
+  transition: border-color 0.2s;
+  margin-left: 92px;
+  display: block;
+}
+.compra-input-id:focus {
+  border-color: var(--amarillo);
+}
+
+.compra-btn-buscar {
+  background: var(--amarillo);
+  color: var(--negro);
+  border: none;
+  border-radius: 1em;
+  padding: 0.5em 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  letter-spacing: 1px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  font-size: 1em;
+  margin-left: auto;
+  display: block;
+}
+.compra-btn-buscar:hover {
+  background: #ffdc52;
+}
+
+/* Indicación debajo */
+.compra-indicacion {
+  text-align: center;
+  font-size: 1em;
+  color: #666;
+  background: #f7f7f7e0;
+  border-radius: 1em;
+  padding: 1.1em 0.5em;
+  margin-top: 2.2em;
+  opacity: 0.98;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7em;
+}
+
+/* Barra derecha */
+.compra-barra-derecha {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100vh;
+  background: var(--blanco);
+  z-index: 9;
+  box-shadow: -1px 0 6px 0 rgba(0, 0, 0, 0.04);
+}
+
+.compra-indicacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 1em;
+  text-align: center;
+  margin-top: 6em; /* Ajusta este valor a tu gusto */
+}
+
+.compra-indicacion .bi-info-circle {
+  color: var(--amarillo);
+  font-size: 1.3em;
 }

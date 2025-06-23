@@ -13,8 +13,10 @@
     <div class="compra-layout">
         <div class="compra-barra-amarilla"></div>
         <div class="template-container">
+
             <div class="compra-bloque-inicio">
                 <div class="compra-header-linea">
+                    <div id="compraMensaje" class="mensaje-error"></div>
                     <div class="compra-titulo">Elije una opción</div>
                     <button class="compra-btn-opcion" id="compraOpcionCompra">Compra</button>
                     <button class="compra-btn-opcion" id="compraOpcionDescuento">Descuento</button>
@@ -76,6 +78,8 @@
                         </form>
                     </div>
                 </div>
+                <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
+                <div id="historialCompras" style="margin-top: 1em;"></div>
             </div>
         </div>
         <div class="compra-barra-derecha"></div>

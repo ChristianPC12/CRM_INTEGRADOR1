@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ----------- HISTORIAL DE COMPRAS Y ELIMINACIÓN --------------
 
   // Muestra el historial de compras para un cliente
+  // Función corregida para cargar historial de compras
   window.cargarHistorialCompras = async function (idCliente) {
     const contenedor = document.getElementById("historialCompras");
     contenedor.innerHTML =
@@ -176,46 +177,54 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      // Primero calculamos el total (con el array original)
       let total = 0;
-      const filas = json.data
+      json.data.forEach((compra) => {
+        total += parseFloat(compra.total);
+      });
+
+      // Luego creamos las filas con el array invertido
+      // Crea una copia invertida del array para mostrar primero el más reciente
+      const comprasInvertidas = json.data.slice().reverse();
+      const totalFilas = comprasInvertidas.length;
+
+      const filas = comprasInvertidas
         .map((compra, i) => {
-          total += parseFloat(compra.total);
           return `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${compra.fechaCompra}</td>
-                        <td>₡${parseFloat(compra.total).toLocaleString(
-                          "es-CR"
-                        )}</td>
-                        <td>${nombreClienteActual || ""}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" title="Eliminar" onclick="eliminarCompra(${
-                              compra.idCompra
-                            })">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
+      <tr>
+        <td>${totalFilas - i}</td>
+        <td>${compra.fechaCompra}</td>
+        <td>₡${parseFloat(compra.total).toLocaleString("es-CR")}</td>
+        <td>${nombreClienteActual || ""}</td>
+        <td>
+          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="eliminarCompra(${
+            compra.idCompra
+          })">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
         })
         .join("");
 
       contenedor.innerHTML = `
-<div class="tabla-wrapper">
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Nombre Cliente</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>${filas}</tbody>
-    </table>
-</div>
-`;
+      <div class="tabla-scroll">
+          <table class="table table-striped table-hover">
+              <thead class="table-dark">
+                  <tr>
+                      <th>#</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Nombre Cliente</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+              <tbody>${filas}</tbody>
+          </table>
+      </div>
+    `;
+
       actualizarTotalActual(total);
     } catch (e) {
       contenedor.innerHTML = `<div style="color:#d43b3b;">Error al cargar historial</div>`;

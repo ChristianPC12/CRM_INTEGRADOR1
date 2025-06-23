@@ -140,12 +140,12 @@ body {
   border-radius: 1em;
   padding: 0.5em 1.1em;
   font-size: 1em;
-  max-width: 210px;
+  max-width: 170px;
   min-width: 60px;
   outline: none;
   background: #f9fafb;
   transition: border-color 0.2s;
-  margin-left: 92px;
+  margin-left: 96px;
   display: block;
 }
 .compra-input-id:focus {
@@ -172,6 +172,7 @@ body {
 }
 
 /* Indicación debajo */
+/* Elimina una de las dos reglas duplicadas y deja solo esta: */
 .compra-indicacion {
   text-align: center;
   font-size: 1em;
@@ -179,7 +180,7 @@ body {
   background: #f7f7f7e0;
   border-radius: 1em;
   padding: 1.1em 0.5em;
-  margin-top: 2.2em;
+  margin-top: 8em;
   opacity: 0.98;
   display: flex;
   justify-content: center;
@@ -197,16 +198,6 @@ body {
   background: var(--blanco);
   z-index: 9;
   box-shadow: -1px 0 6px 0 rgba(0, 0, 0, 0.04);
-}
-
-.compra-indicacion {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  padding: 1em;
-  text-align: center;
-  margin-top: 6em; /* Ajusta este valor a tu gusto */
 }
 
 .compra-indicacion .bi-info-circle {
@@ -241,4 +232,62 @@ body {
   background: #f9fafb;
   color: #888;
   padding: 0.4rem 0.75rem; /* Campos más compactos */
+}
+
+/* ---- Estilo especial para el botón "Acumular" (cuando está activo) ---- */
+.btn-acumular {
+  background: #28a745 !important; /* Verde Bootstrap */
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 2px 7px 0 rgba(40, 167, 69, 0.1);
+  transition: background 0.2s, color 0.2s;
+  width: 110px;
+}
+
+.mensaje-error {
+  display: none;
+  color: #d43b3b;
+  font-weight: bold;
+  font-size: 0.95em;
+  display: flex;
+}
+
+/* Clase para mostrar el mensaje cuando sea necesario */
+.mensaje-error.show {
+  display: block;
+}
+
+#historialCompras {
+  width: 95%;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 0.5em;
+  height: 400px; /* Altura fija del contenedor */
+  overflow-y: auto; /* Scroll vertical en el contenedor */
+  overflow-x: auto; /* Scroll horizontal si es necesario */
+  border: 1px solid #dee2e6;
+  border-radius: 0.5em;
+  background: #fff;
+}
+
+#historialCompras table {
+  width: 100%;
+  min-width: 800px; /* Ancho mínimo para forzar scroll horizontal */
+  margin: 0; /* Quitar márgenes de la tabla */
+  border-radius: 0;
+}
+
+#historialCompras table th,
+#historialCompras table td {
+  white-space: nowrap; /* Evita que el texto se corte */
+  min-width: 120px; /* Ancho mínimo por columna */
+  padding: 0.75rem; /* Padding consistente */
+}
+
+/* Hacer que el thead sea sticky */
+#historialCompras table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #212529 !important;
+  z-index: 10;
 }

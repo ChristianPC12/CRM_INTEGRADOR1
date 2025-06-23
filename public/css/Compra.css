@@ -256,38 +256,3 @@ body {
 .mensaje-error.show {
   display: block;
 }
-
-#historialCompras {
-  width: 95%;
-  max-width: 1000px;
-  margin: 0 auto;
-  margin-top: 0.5em;
-  height: 400px; /* Altura fija del contenedor */
-  overflow-y: auto; /* Scroll vertical en el contenedor */
-  overflow-x: auto; /* Scroll horizontal si es necesario */
-  border: 1px solid #dee2e6;
-  border-radius: 0.5em;
-  background: #fff;
-}
-
-#historialCompras table {
-  width: 100%;
-  min-width: 800px; /* Ancho mínimo para forzar scroll horizontal */
-  margin: 0; /* Quitar márgenes de la tabla */
-  border-radius: 0;
-}
-
-#historialCompras table th,
-#historialCompras table td {
-  white-space: nowrap; /* Evita que el texto se corte */
-  min-width: 120px; /* Ancho mínimo por columna */
-  padding: 0.75rem; /* Padding consistente */
-}
-
-/* Hacer que el thead sea sticky */
-#historialCompras table thead th {
-  position: sticky;
-  top: 0;
-  background-color: #212529 !important;
-  z-index: 10;
-}

@@ -1,0 +1,71 @@
+/* ====== ESTILOS PARA USUARIOS ====== */
+
+#usuario-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 1rem;
+}
+
+.card-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    background-color: #f5f5f5;
+}
+
+#usuarioForm .form-label {
+    font-weight: 600;
+}
+
+#usuarioForm input,
+#usuarioForm select,
+#usuarioForm textarea {
+    font-size: 0.95rem;
+    border-radius: 6px;
+}
+
+#usuarioForm textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.btn {
+    min-width: 120px;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* ====== RESPONSIVE ====== */
+
+@media screen and (max-width: 768px) {
+    #usuario-container {
+        padding: 0.5rem;
+    }
+
+    .card-header {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    #usuarioForm .row {
+        flex-direction: column;
+    }
+
+    #usuarioForm input,
+    #usuarioForm select,
+    #usuarioForm textarea {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .d-flex.justify-content-end {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

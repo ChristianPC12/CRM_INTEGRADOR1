@@ -17,12 +17,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 2. Lógica del botón Buscar / Acumular
   const btnBuscar = document.getElementById("compraBtnBuscar");
+  const btnBuscarIcon = document.getElementById("compraBtnBuscarIcon");
+
+  // Event listener para el botón principal
   btnBuscar.addEventListener("click", async function () {
+    await manejarBusquedaOAcumulacion();
+  });
+
+  // Event listener para el ícono de búsqueda
+  btnBuscarIcon.addEventListener("click", async function () {
+    await manejarBusquedaNueva();
+  });
+
+  // Función para manejar la búsqueda nueva (cuando se presiona el ícono)
+  async function manejarBusquedaNueva() {
+    const inputId = document.getElementById("compraInputId").value.trim();
+    const errorDiv = document.getElementById("compraMensaje");
+    const btnCompra = document.getElementById("compraOpcionCompra");
+
+    // Validar que hay texto en el input
+    if (!inputId) {
+      alert("Ingrese el número de tarjeta para buscar.");
+      return;
+    }
+
+    // Resetear el estado del botón a modo búsqueda
+    btnBuscar.style.background = "var(--amarillo)";
+    btnBuscar.style.color = "var(--negro)";
+    btnBuscar.textContent = "Buscar";
+    btnBuscarIcon.style.display = "none";
+
+    // Realizar la búsqueda
+    await buscarCliente(inputId);
+  }
+
+  // Función principal para manejar búsqueda o acumulación
+  async function manejarBusquedaOAcumulacion() {
     const inputId = document.getElementById("compraInputId").value.trim();
     const errorDiv = document.getElementById("compraMensaje");
     const cardForm = document.getElementById("compraCardForm");
     const indicacion = document.getElementById("compraIndicacion");
-    const compraTitulo = document.querySelector(".compra-titulo");
     const btnCompra = document.getElementById("compraOpcionCompra");
     const btnDescuento = document.getElementById("compraOpcionDescuento");
 
@@ -65,47 +99,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ---- FLUJO NORMAL: BÚSQUEDA Y MUESTRA DE CLIENTE ----
-    // Reset estilos y mensajes
     errorDiv.style.display = "none";
     btnBuscar.style.background = "var(--amarillo)";
     btnBuscar.style.color = "var(--negro)";
     btnBuscar.textContent = "Buscar";
+    btnBuscarIcon.style.display = "none";
 
+    // Validar opción seleccionada
     if (!opcion) {
-      errorDiv.textContent = "Seleccione una opción.";
-      errorDiv.style.display = "block";
+      alert("Seleccione una opción.");
       cardForm.style.display = "none";
       indicacion.style.display = "block";
-      if (compraTitulo) compraTitulo.style.display = "none";
       idClienteActual = null;
       nombreClienteActual = null;
       document.getElementById("historialCompras").innerHTML = "";
       return;
     }
 
+    // Validar inputId
     if (!inputId) {
-      errorDiv.textContent = "Ingrese el número de tarjeta.";
-      errorDiv.style.display = "block";
+      alert("Ingrese el número de tarjeta.");
       cardForm.style.display = "none";
       indicacion.style.display = "block";
-      if (compraTitulo) compraTitulo.style.display = "none";
       idClienteActual = null;
       nombreClienteActual = null;
       document.getElementById("historialCompras").innerHTML = "";
       return;
     }
 
-    // Si seleccionó "Compra", cambia el color y texto del botón a modo Acumular
-    if (opcion === "compra") {
+    // Realizar la búsqueda
+    await buscarCliente(inputId);
+
+    // Si seleccionó "Compra" y se encontró el cliente, cambiar a modo Acumular
+    if (opcion === "compra" && idClienteActual) {
       btnBuscar.style.background = "#39cc6b"; // Verde
       btnBuscar.style.color = "white";
       btnBuscar.textContent = "Acumular";
-      if (compraTitulo) compraTitulo.style.display = "block";
+      btnBuscarIcon.style.display = "block"; // Mostrar el ícono de búsqueda
     }
+  }
 
-    // (En el futuro puedes poner lógica para "descuento" aquí)
+  // Función para buscar cliente
+  async function buscarCliente(inputId) {
+    const errorDiv = document.getElementById("compraMensaje");
+    const cardForm = document.getElementById("compraCardForm");
+    const indicacion = document.getElementById("compraIndicacion");
 
-    // Buscar cliente por ID (número de tarjeta)
     try {
       const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
         method: "POST",
@@ -133,6 +172,15 @@ document.addEventListener("DOMContentLoaded", function () {
         nombreClienteActual = c.nombre; // Guarda el nombre para la tabla
 
         cargarHistorialCompras(idClienteActual);
+
+        // Si estamos en modo compra, activar el botón acumular y mostrar ícono
+        const btnCompra = document.getElementById("compraOpcionCompra");
+        if (btnCompra.classList.contains("selected")) {
+          btnBuscar.style.background = "#39cc6b"; // Verde
+          btnBuscar.style.color = "white";
+          btnBuscar.textContent = "Acumular";
+          btnBuscarIcon.style.display = "block"; // Mostrar el ícono de búsqueda
+        }
       } else {
         errorDiv.textContent =
           "No se encontró un cliente con ese número de tarjeta.";
@@ -142,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
         idClienteActual = null;
         nombreClienteActual = null;
         document.getElementById("historialCompras").innerHTML = "";
+        btnBuscarIcon.style.display = "none";
       }
     } catch (e) {
       errorDiv.textContent = "Error de conexión con el servidor.";
@@ -151,8 +200,9 @@ document.addEventListener("DOMContentLoaded", function () {
       idClienteActual = null;
       nombreClienteActual = null;
       document.getElementById("historialCompras").innerHTML = "";
+      btnBuscarIcon.style.display = "none";
     }
-  });
+  }
 
   // ----------- HISTORIAL DE COMPRAS Y ELIMINACIÓN --------------
 

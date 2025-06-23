@@ -20,7 +20,14 @@
                     <div class="compra-titulo">Elije una opción</div>
                     <button class="compra-btn-opcion" id="compraOpcionCompra">Compra</button>
                     <button class="compra-btn-opcion" id="compraOpcionDescuento">Descuento</button>
-                    <input type="text" class="compra-input-id" id="compraInputId" placeholder="Número de tarjeta">
+                    <div class="compra-input-container">
+                        <input type="text" class="compra-input-id" id="compraInputId" placeholder="Número de tarjeta">
+                        <!-- Ícono de búsqueda que aparece solo cuando se está en modo "Acumular" -->
+                        <button class="compra-btn-buscar-icon" id="compraBtnBuscarIcon" style="display: none;"
+                            title="Buscar otra tarjeta">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
                     <button class="compra-btn-buscar" id="compraBtnBuscar">Buscar</button>
                 </div>
                 <div class="compra-indicacion" id="compraIndicacion">

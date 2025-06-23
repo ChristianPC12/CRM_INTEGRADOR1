@@ -12,7 +12,6 @@
 <body>
     <div class="compra-layout">
         <div class="compra-barra-amarilla"></div>
-
         <div class="template-container">
             <div class="compra-bloque-inicio">
                 <div class="compra-header-linea">
@@ -26,11 +25,62 @@
                     <i class="bi bi-info-circle"></i>
                     Selecciona una opción para aplicar una compra o descuento al cliente.
                 </div>
+                <!-- CARD/FORMULARIO SOLO SE MUESTRA SI HAY DATOS -->
+                <div class="card shadow mb-4" id="compraCardForm" style="display:none;">
+                    <div class="card-body">
+                        <form id="compraForm">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">ID</label>
+                                    <input type="text" id="id" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Cédula</label>
+                                    <input type="text" id="clienteCedula" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Nombre Completo</label>
+                                    <input type="text" id="clienteNombre" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Correo</label>
+                                    <input type="email" id="clienteCorreo" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="tel" id="clienteTelefono" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Lugar de Residencia</label>
+                                    <input type="text" id="clienteLugar" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Fecha de Cumpleaños</label>
+                                    <input type="date" id="clienteFecha" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Acumular Compra</label>
+                                    <input type="text" id="cantidadAcumulada" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Total Actual</label>
+                                    <input type="number" id="totalActual" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="compra-barra-derecha"></div>
     </div>
+    <script src="/CRM_INT/CRM/public/js/Compra.js"></script>
 </body>
 
 </html>

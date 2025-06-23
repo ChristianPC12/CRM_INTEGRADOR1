@@ -2,6 +2,7 @@
   --amarillo: #f9c41f;
   --negro: #000000;
   --blanco: #ffffff;
+  --gris: #838886;
 }
 
 /* Reset */
@@ -73,13 +74,13 @@ body {
 .compra-bloque-inicio {
   width: 96%;
   max-width: 900px;
-  height: 85%;
+  height: 90%;
   max-height: 600px;
   background: var(--blanco);
   box-shadow: 0 2px 18px 0 rgba(40, 40, 40, 0.09);
   border-radius: 2.5em;
   position: absolute;
-  top: 6vh;
+  top: 4vh;
   left: 20px;
   padding: 4% 3%;
   z-index: 2;
@@ -211,4 +212,33 @@ body {
 .compra-indicacion .bi-info-circle {
   color: var(--amarillo);
   font-size: 1.3em;
+}
+
+.card.shadow.mb-4 {
+  background: var(--blanco);
+  box-shadow: 0 0 10px rgba(249, 196, 31, 0.12);
+  border-left: 5px solid var(--amarillo);
+  border-radius: 1em;
+  margin-top: -1.5em;
+  margin-bottom: 0.5em; /* Muy reducido */
+  height: 72%;
+  overflow-y: visible;
+}
+
+.card-body {
+  padding: 0.5em 1.2em; /* Más compacto en todos los lados */
+  line-height: 1.3; /* Reduce altura de líneas de texto */
+}
+
+/* Compactar elementos del formulario */
+.card-body .form-group,
+.card-body .mb-3,
+.card-body .mb-2 {
+  margin-bottom: 0.75rem !important; /* Reduce espacios entre campos */
+}
+
+.form-control:read-only {
+  background: #f9fafb;
+  color: #888;
+  padding: 0.4rem 0.75rem; /* Campos más compactos */
 }

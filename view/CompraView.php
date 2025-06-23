@@ -79,7 +79,12 @@
                     </div>
                 </div>
                 <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
-                <div id="historialCompras" style="margin-top: 1em;"></div>
+                <div id="historialCompras" style="margin-top: -1.5em; width:100% ; 
+                    height: 100px; min-height: 100px; 
+                    overflow-y: auto; overflow-x: auto; 
+                    scrollbar-width: none; 
+                    -ms-overflow-style: none;">
+                </div>
             </div>
         </div>
         <div class="compra-barra-derecha"></div>

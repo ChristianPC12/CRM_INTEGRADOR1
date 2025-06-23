@@ -256,3 +256,44 @@ body {
 .mensaje-error.show {
   display: block;
 }
+/* Estilos para el contenedor del input y el ícono de búsqueda */
+.compra-input-container {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  vertical-align: top;
+}
+
+/* Estilos para el botón con ícono de búsqueda */
+.compra-btn-buscar-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--amarillo);
+  border: none;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.compra-btn-buscar-icon:hover {
+  background: #f0c419;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.compra-btn-buscar-icon i {
+  color: var(--negro);
+  font-size: 14px;
+}
+
+/* Ajustar el padding del input para dar espacio al ícono */
+.compra-input-container .compra-input-id {
+  padding-right: 45px;
+}

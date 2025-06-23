@@ -32,8 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Función para manejar la búsqueda nueva (cuando se presiona el ícono)
   async function manejarBusquedaNueva() {
     const inputId = document.getElementById("compraInputId").value.trim();
-    const errorDiv = document.getElementById("compraMensaje");
-    const btnCompra = document.getElementById("compraOpcionCompra");
 
     // Validar que hay texto en el input
     if (!inputId) {
@@ -41,20 +39,14 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Resetear el estado del botón a modo búsqueda
-    btnBuscar.style.background = "var(--amarillo)";
-    btnBuscar.style.color = "var(--negro)";
-    btnBuscar.textContent = "Buscar";
-    btnBuscarIcon.style.display = "none";
-
-    // Realizar la búsqueda
-    await buscarCliente(inputId);
+    // NO resetear el estado del botón aquí - mantener todo como está
+    // Realizar la búsqueda directamente, pasando true para indicar que es búsqueda por ícono
+    await buscarCliente(inputId, true);
   }
 
   // Función principal para manejar búsqueda o acumulación
   async function manejarBusquedaOAcumulacion() {
     const inputId = document.getElementById("compraInputId").value.trim();
-    const errorDiv = document.getElementById("compraMensaje");
     const cardForm = document.getElementById("compraCardForm");
     const indicacion = document.getElementById("compraIndicacion");
     const btnCompra = document.getElementById("compraOpcionCompra");
@@ -99,11 +91,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ---- FLUJO NORMAL: BÚSQUEDA Y MUESTRA DE CLIENTE ----
-    errorDiv.style.display = "none";
     btnBuscar.style.background = "var(--amarillo)";
     btnBuscar.style.color = "var(--negro)";
     btnBuscar.textContent = "Buscar";
     btnBuscarIcon.style.display = "none";
+
+    // Validar que solo sean números
+    if (!/^\d+$/.test(inputId)) {
+      alert("Ingrese solo números en el campo de tarjeta.");
+      document.getElementById("compraInputId").value = ""; // Limpia el input
+      document.getElementById("compraInputId").focus(); // Vuelve el foco al input
+      cardForm.style.display = "none";
+      indicacion.style.display = "block";
+      idClienteActual = null;
+      nombreClienteActual = null;
+      document.getElementById("historialCompras").innerHTML = "";
+      return;
+    }
 
     // Validar opción seleccionada
     if (!opcion) {
@@ -128,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Realizar la búsqueda
-    await buscarCliente(inputId);
+    await buscarCliente(inputId, false);
 
     // Si seleccionó "Compra" y se encontró el cliente, cambiar a modo Acumular
     if (opcion === "compra" && idClienteActual) {
@@ -140,8 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Función para buscar cliente
-  async function buscarCliente(inputId) {
-    const errorDiv = document.getElementById("compraMensaje");
+  async function buscarCliente(inputId, esBusquedaIcono = false) {
     const cardForm = document.getElementById("compraCardForm");
     const indicacion = document.getElementById("compraIndicacion");
 
@@ -167,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         cardForm.style.display = "block";
         indicacion.style.display = "none";
-        errorDiv.style.display = "none";
         idClienteActual = c.id;
         nombreClienteActual = c.nombre; // Guarda el nombre para la tabla
 
@@ -182,9 +184,31 @@ document.addEventListener("DOMContentLoaded", function () {
           btnBuscarIcon.style.display = "block"; // Mostrar el ícono de búsqueda
         }
       } else {
-        errorDiv.textContent =
-          "No se encontró un cliente con ese número de tarjeta.";
-        errorDiv.style.display = "block";
+        alert("No se encontró un cliente con ese número de tarjeta.");
+        if (esBusquedaIcono) {
+          // Solo limpiamos el input, NO tocamos nada más para mantener todo igual
+          document.getElementById("compraInputId").value = "";
+          document.getElementById("compraInputId").focus();
+          // NO modificamos el botón ni el ícono - mantener todo como estaba
+        } else {
+          // Si fue el botón normal, sí resetea todo
+          cardForm.style.display = "none";
+          indicacion.style.display = "block";
+          idClienteActual = null;
+          nombreClienteActual = null;
+          document.getElementById("historialCompras").innerHTML = "";
+          btnBuscarIcon.style.display = "none";
+        }
+      }
+    } catch (e) {
+      alert("Error de conexión con el servidor.");
+      if (esBusquedaIcono) {
+        // Solo limpiamos el input en caso de error con búsqueda por ícono
+        document.getElementById("compraInputId").value = "";
+        document.getElementById("compraInputId").focus();
+        // NO modificamos el botón ni el ícono - mantener todo como estaba
+      } else {
+        // Si fue el botón normal, sí resetea todo
         cardForm.style.display = "none";
         indicacion.style.display = "block";
         idClienteActual = null;
@@ -192,22 +216,12 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("historialCompras").innerHTML = "";
         btnBuscarIcon.style.display = "none";
       }
-    } catch (e) {
-      errorDiv.textContent = "Error de conexión con el servidor.";
-      errorDiv.style.display = "block";
-      cardForm.style.display = "none";
-      indicacion.style.display = "block";
-      idClienteActual = null;
-      nombreClienteActual = null;
-      document.getElementById("historialCompras").innerHTML = "";
-      btnBuscarIcon.style.display = "none";
     }
   }
 
   // ----------- HISTORIAL DE COMPRAS Y ELIMINACIÓN --------------
 
   // Muestra el historial de compras para un cliente
-  // Función corregida para cargar historial de compras
   window.cargarHistorialCompras = async function (idCliente) {
     const contenedor = document.getElementById("historialCompras");
     contenedor.innerHTML =

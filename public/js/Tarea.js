@@ -66,11 +66,11 @@ $(document).ready(function () {
     e.preventDefault();
     const datos = variables();
 
-    if (datos.descripcion === "") return;
+     if (datos.descripcion.length === 0) return;
 
     if (datos.descripcion.length > 220) {
       alert(
-        "Has excedido el límite de 220 caracteres. \nNo se registró la descripción."
+        `Has escrito ${datos.descripcion.length} caracteres.\nEl máximo permitido es 220.`
       );
       $("#descripcion").val("").focus();
       return;

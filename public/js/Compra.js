@@ -1,232 +1,166 @@
-// Archivo: Compra.js
-// Lógica principal para la vista de compra/canje de puntos
-
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Gestión de selección de botones (Compra/Descuento)
   const btns = document.querySelectorAll(".compra-btn-opcion");
-  btns.forEach((btn) => {
+  const btnBuscar = document.getElementById("compraBtnBuscar");
+  const btnBuscarIcon = document.getElementById("compraBtnBuscarIcon");
+  const btnCompra = document.getElementById("compraOpcionCompra");
+  const btnDescuento = document.getElementById("compraOpcionDescuento");
+  const inputAcumulada = document.getElementById("cantidadAcumulada");
+
+  let idClienteActual = null,
+    nombreClienteActual = null,
+    datosClienteActual = null;
+
+  btns.forEach((btn) =>
     btn.addEventListener("click", function () {
       btns.forEach((b) => b.classList.remove("selected"));
       this.classList.add("selected");
-    });
-  });
-
-  // Variables de referencia
-  let idClienteActual = null;
-  let nombreClienteActual = null; // Guarda el nombre para la tabla
-
-  // 2. Lógica del botón Buscar / Acumular
-  const btnBuscar = document.getElementById("compraBtnBuscar");
-  const btnBuscarIcon = document.getElementById("compraBtnBuscarIcon");
-
-  // Event listener para el botón principal
-  btnBuscar.addEventListener("click", async function () {
-    await manejarBusquedaOAcumulacion();
-  });
-
-  // Event listener para el ícono de búsqueda
-  btnBuscarIcon.addEventListener("click", async function () {
-    await manejarBusquedaNueva();
-  });
-
-  // Función para manejar la búsqueda nueva (cuando se presiona el ícono)
-  async function manejarBusquedaNueva() {
-    const inputId = document.getElementById("compraInputId").value.trim();
-
-    // Validar que hay texto en el input
-    if (!inputId) {
-      alert("Ingrese el número de tarjeta para buscar.");
-      return;
-    }
-
-    // NO resetear el estado del botón aquí - mantener todo como está
-    // Realizar la búsqueda directamente, pasando true para indicar que es búsqueda por ícono
-    await buscarCliente(inputId, true);
-  }
-
-  // Función principal para manejar búsqueda o acumulación
-  async function manejarBusquedaOAcumulacion() {
-    const inputId = document.getElementById("compraInputId").value.trim();
-    const cardForm = document.getElementById("compraCardForm");
-    const indicacion = document.getElementById("compraIndicacion");
-    const btnCompra = document.getElementById("compraOpcionCompra");
-    const btnDescuento = document.getElementById("compraOpcionDescuento");
-
-    let opcion = null;
-    if (btnCompra.classList.contains("selected")) opcion = "compra";
-    else if (btnDescuento.classList.contains("selected")) opcion = "descuento";
-
-    // Si estamos en modo "Acumular", hacer la operación de compra
-    if (
-      btnBuscar.textContent === "Acumular" &&
-      idClienteActual &&
-      opcion === "compra"
-    ) {
-      const monto = document.getElementById("cantidadAcumulada").value.trim();
-      if (!monto || isNaN(monto) || parseFloat(monto) <= 0) {
-        alert("Ingrese un monto válido para acumular.");
-        return;
+      if (this === btnCompra) {
+        inputAcumulada.removeAttribute("readonly");
+        btnBuscar.textContent = "Buscar";
+        btnBuscar.style.background = "var(--amarillo)";
+        btnBuscar.style.color = "var(--negro)";
+      } else {
+        inputAcumulada.setAttribute("readonly", true);
+        btnBuscar.textContent = "Aplicar";
+        btnBuscar.style.background = "#198754";
+        btnBuscar.style.color = "white";
       }
-      try {
-        const res = await fetch(
-          "/CRM_INT/CRM/controller/CompraController.php",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `action=create&total=${encodeURIComponent(
-              monto
-            )}&idCliente=${encodeURIComponent(idClienteActual)}`,
-          }
+    })
+  );
+
+  btnBuscar.addEventListener("click", async () => await manejarAccion());
+  btnBuscarIcon.addEventListener("click", async () => await buscarCliente());
+
+  async function manejarAccion() {
+    const inputId = document.getElementById("compraInputId").value.trim();
+    const opcion = btnCompra.classList.contains("selected")
+      ? "compra"
+      : btnDescuento.classList.contains("selected")
+      ? "descuento"
+      : null;
+
+    if (!opcion || !inputId)
+      return alert("Seleccione una opción y digite la tarjeta.");
+
+    if (opcion === "descuento" && btnBuscar.textContent === "Aplicar") {
+      let saldo = parseFloat(document.getElementById("totalActual").value) || 0;
+      if (saldo < 50000)
+        return alert(
+          "El saldo actual es insuficiente para aplicar el descuento."
         );
-        const json = await res.json();
-        alert(json.message);
-        if (json.success) {
-          document.getElementById("cantidadAcumulada").value = "";
-          cargarHistorialCompras(idClienteActual);
-        }
+      let saldoFinal = saldo - 50000;
+      try {
+        const r = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: datosClienteActual
+            ? `action=update&id=${datosClienteActual.id}&cedula=${datosClienteActual.cedula}&nombre=${datosClienteActual.nombre}&correo=${datosClienteActual.correo}&telefono=${datosClienteActual.telefono}&lugarResidencia=${datosClienteActual.lugarResidencia}&fechaCumpleanos=${datosClienteActual.fechaCumpleanos}&acumulado=${saldoFinal}`
+            : "",
+        });
+        const json = await r.json();
+        if (!json.success)
+          return alert(
+            "Ocurrió un error al actualizar el saldo en la base de datos."
+          );
+        document.getElementById("totalActual").value = saldoFinal;
+        datosClienteActual.acumulado = saldoFinal;
       } catch {
-        alert("Error al acumular la compra.");
+        return alert("Error de servidor.");
       }
+      alert(
+        `Descuento exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${nombreClienteActual}.\nEl saldo actual cambió de ₡${saldo.toLocaleString(
+          "es-CR"
+        )} a ₡${saldoFinal.toLocaleString("es-CR")}.`
+      );
       return;
     }
 
-    // ---- FLUJO NORMAL: BÚSQUEDA Y MUESTRA DE CLIENTE ----
-    btnBuscar.style.background = "var(--amarillo)";
-    btnBuscar.style.color = "var(--negro)";
-    btnBuscar.textContent = "Buscar";
-    btnBuscarIcon.style.display = "none";
-
-    // Validar que solo sean números
-    if (!/^\d+$/.test(inputId)) {
-      alert("Ingrese solo números en el campo de tarjeta.");
-      document.getElementById("compraInputId").value = ""; // Limpia el input
-      document.getElementById("compraInputId").focus(); // Vuelve el foco al input
-      cardForm.style.display = "none";
-      indicacion.style.display = "block";
-      idClienteActual = null;
-      nombreClienteActual = null;
-      document.getElementById("historialCompras").innerHTML = "";
-      return;
+    if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
+      let monto =
+        parseFloat(document.getElementById("cantidadAcumulada").value.trim()) ||
+        0;
+      if (monto <= 0) return alert("Ingrese un monto válido para acumular.");
+      const rCompra = await fetch(
+        "/CRM_INT/CRM/controller/CompraController.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `action=create&total=${monto}&idCliente=${idClienteActual}`,
+        }
+      );
+      const resCompra = await rCompra.json();
+      if (!resCompra.success) return alert(resCompra.message);
+      let nuevoTotal =
+        (parseFloat(document.getElementById("totalActual").value) || 0) + monto;
+      const rCliente = await fetch(
+        "/CRM_INT/CRM/controller/ClienteController.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: datosClienteActual
+            ? `action=update&id=${datosClienteActual.id}&cedula=${datosClienteActual.cedula}&nombre=${datosClienteActual.nombre}&correo=${datosClienteActual.correo}&telefono=${datosClienteActual.telefono}&lugarResidencia=${datosClienteActual.lugarResidencia}&fechaCumpleanos=${datosClienteActual.fechaCumpleanos}&acumulado=${nuevoTotal}`
+            : "",
+        }
+      );
+      const resCliente = await rCliente.json();
+      if (!resCliente.success)
+        return alert(
+          "Compra registrada pero error al actualizar el acumulado."
+        );
+      document.getElementById("cantidadAcumulada").value = "";
+      document.getElementById("totalActual").value = nuevoTotal;
+      datosClienteActual.acumulado = nuevoTotal;
+      cargarHistorialCompras(idClienteActual);
+      return alert(resCompra.message);
     }
 
-    // Validar opción seleccionada
-    if (!opcion) {
-      alert("Seleccione una opción.");
-      cardForm.style.display = "none";
-      indicacion.style.display = "block";
-      idClienteActual = null;
-      nombreClienteActual = null;
-      document.getElementById("historialCompras").innerHTML = "";
-      return;
-    }
-
-    // Validar inputId
-    if (!inputId) {
-      alert("Ingrese el número de tarjeta.");
-      cardForm.style.display = "none";
-      indicacion.style.display = "block";
-      idClienteActual = null;
-      nombreClienteActual = null;
-      document.getElementById("historialCompras").innerHTML = "";
-      return;
-    }
-
-    // Realizar la búsqueda
-    await buscarCliente(inputId, false);
-
-    // Si seleccionó "Compra" y se encontró el cliente, cambiar a modo Acumular
+    await buscarCliente();
     if (opcion === "compra" && idClienteActual) {
-      btnBuscar.style.background = "#39cc6b"; // Verde
-      btnBuscar.style.color = "white";
       btnBuscar.textContent = "Acumular";
-      btnBuscarIcon.style.display = "block"; // Mostrar el ícono de búsqueda
+      btnBuscar.style.background = "#39cc6b";
+      btnBuscar.style.color = "white";
+      btnBuscarIcon.style.display = "block";
     }
   }
 
-  // Función para buscar cliente
-  async function buscarCliente(inputId, esBusquedaIcono = false) {
-    const cardForm = document.getElementById("compraCardForm");
-    const indicacion = document.getElementById("compraIndicacion");
-
+  async function buscarCliente() {
+    const inputId = document.getElementById("compraInputId").value.trim();
     try {
-      const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
+      const r = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `action=read&id=${encodeURIComponent(inputId)}`,
       });
-      const json = await res.json();
-
-      if (json.success && json.data) {
-        const c = json.data;
-        document.getElementById("id").value = c.id || "";
-        document.getElementById("clienteCedula").value = c.cedula || "";
-        document.getElementById("clienteNombre").value = c.nombre || "";
-        document.getElementById("clienteCorreo").value = c.correo || "";
-        document.getElementById("clienteTelefono").value = c.telefono || "";
-        document.getElementById("clienteLugar").value = c.lugarResidencia || "";
-        document.getElementById("clienteFecha").value = c.fechaCumpleanos || "";
-        document.getElementById("cantidadAcumulada").value = "";
-        document.getElementById("totalActual").value = "";
-
-        cardForm.style.display = "block";
-        indicacion.style.display = "none";
-        idClienteActual = c.id;
-        nombreClienteActual = c.nombre; // Guarda el nombre para la tabla
-
-        cargarHistorialCompras(idClienteActual);
-
-        // Si estamos en modo compra, activar el botón acumular y mostrar ícono
-        const btnCompra = document.getElementById("compraOpcionCompra");
-        if (btnCompra.classList.contains("selected")) {
-          btnBuscar.style.background = "#39cc6b"; // Verde
-          btnBuscar.style.color = "white";
-          btnBuscar.textContent = "Acumular";
-          btnBuscarIcon.style.display = "block"; // Mostrar el ícono de búsqueda
-        }
-      } else {
-        alert("No se encontró un cliente con ese número de tarjeta.");
-        if (esBusquedaIcono) {
-          // Solo limpiamos el input, NO tocamos nada más para mantener todo igual
-          document.getElementById("compraInputId").value = "";
-          document.getElementById("compraInputId").focus();
-          // NO modificamos el botón ni el ícono - mantener todo como estaba
-        } else {
-          // Si fue el botón normal, sí resetea todo
-          cardForm.style.display = "none";
-          indicacion.style.display = "block";
-          idClienteActual = null;
-          nombreClienteActual = null;
-          document.getElementById("historialCompras").innerHTML = "";
-          btnBuscarIcon.style.display = "none";
-        }
-      }
-    } catch (e) {
+      const { success, data } = await r.json();
+      if (!success || !data)
+        return alert("No se encontró un cliente con ese número de tarjeta.");
+      datosClienteActual = { ...data, acumulado: data.acumulado || 0 };
+      idClienteActual = data.id;
+      nombreClienteActual = data.nombre;
+      document.getElementById("id").value = data.id || "";
+      document.getElementById("clienteCedula").value = data.cedula || "";
+      document.getElementById("clienteNombre").value = data.nombre || "";
+      document.getElementById("clienteCorreo").value = data.correo || "";
+      document.getElementById("clienteTelefono").value = data.telefono || "";
+      document.getElementById("clienteLugar").value =
+        data.lugarResidencia || "";
+      document.getElementById("clienteFecha").value =
+        data.fechaCumpleanos || "";
+      document.getElementById("cantidadAcumulada").value = "";
+      document.getElementById("totalActual").value =
+        datosClienteActual.acumulado;
+      document.getElementById("compraCardForm").style.display = "block";
+      document.getElementById("compraIndicacion").style.display = "none";
+      cargarHistorialCompras(idClienteActual);
+    } catch {
       alert("Error de conexión con el servidor.");
-      if (esBusquedaIcono) {
-        // Solo limpiamos el input en caso de error con búsqueda por ícono
-        document.getElementById("compraInputId").value = "";
-        document.getElementById("compraInputId").focus();
-        // NO modificamos el botón ni el ícono - mantener todo como estaba
-      } else {
-        // Si fue el botón normal, sí resetea todo
-        cardForm.style.display = "none";
-        indicacion.style.display = "block";
-        idClienteActual = null;
-        nombreClienteActual = null;
-        document.getElementById("historialCompras").innerHTML = "";
-        btnBuscarIcon.style.display = "none";
-      }
     }
   }
 
-  // ----------- HISTORIAL DE COMPRAS Y ELIMINACIÓN --------------
-
-  // Muestra el historial de compras para un cliente
   window.cargarHistorialCompras = async function (idCliente) {
     const contenedor = document.getElementById("historialCompras");
     contenedor.innerHTML =
       '<div style="color:var(--gris)">Cargando historial...</div>';
-
     try {
       const res = await fetch("/CRM_INT/CRM/controller/CompraController.php", {
         method: "POST",
@@ -234,68 +168,46 @@ document.addEventListener("DOMContentLoaded", function () {
         body: `action=readByCliente&idCliente=${encodeURIComponent(idCliente)}`,
       });
       const json = await res.json();
-
-      if (!json.success || !json.data || json.data.length === 0) {
+      if (!json.success || !json.data || !json.data.length) {
         contenedor.innerHTML = `<div class="alert alert-info mt-4">No hay compras registradas para este cliente.</div>`;
-        actualizarTotalActual(0);
         return;
       }
-
-      // Primero calculamos el total (con el array original)
-      let total = 0;
-      json.data.forEach((compra) => {
-        total += parseFloat(compra.total);
-      });
-
-      // Luego creamos las filas con el array invertido
-      // Crea una copia invertida del array para mostrar primero el más reciente
-      const comprasInvertidas = json.data.slice().reverse();
-      const totalFilas = comprasInvertidas.length;
-
-      const filas = comprasInvertidas
-        .map((compra, i) => {
-          return `
-      <tr>
-        <td>${totalFilas - i}</td>
-        <td>${compra.fechaCompra}</td>
-        <td>₡${parseFloat(compra.total).toLocaleString("es-CR")}</td>
-        <td>${nombreClienteActual || ""}</td>
-        <td>
-          <button class="btn btn-sm btn-danger" title="Eliminar" onclick="eliminarCompra(${
-            compra.idCompra
-          })">
-            <i class="bi bi-trash"></i>
-          </button>
-        </td>
-      </tr>
-    `;
-        })
+      const filas = json.data
+        .slice()
+        .reverse()
+        .map(
+          (compra, i, arr) => `
+        <tr>
+          <td>${arr.length - i}</td>
+          <td>${compra.fechaCompra}</td>
+          <td>₡${parseFloat(compra.total).toLocaleString("es-CR")}</td>
+          <td>${nombreClienteActual || ""}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" title="Eliminar" onclick="eliminarCompra(${
+              compra.idCompra
+            })">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `
+        )
         .join("");
-
       contenedor.innerHTML = `
-      <div class="tabla-scroll">
+        <div class="tabla-scroll">
           <table class="table table-striped table-hover">
-              <thead class="table-dark">
-                  <tr>
-                      <th>#</th>
-                      <th>Fecha</th>
-                      <th>Total</th>
-                      <th>Nombre Cliente</th>
-                      <th>Acciones</th>
-                  </tr>
-              </thead>
-              <tbody>${filas}</tbody>
+            <thead class="table-dark">
+              <tr><th>#</th><th>Fecha</th><th>Total</th><th>Nombre Cliente</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>${filas}</tbody>
           </table>
-      </div>
-    `;
-
-      actualizarTotalActual(total);
-    } catch (e) {
+        </div>
+      `;
+    } catch {
       contenedor.innerHTML = `<div style="color:#d43b3b;">Error al cargar historial</div>`;
     }
   };
 
-  // Elimina una compra (registro) individual
   window.eliminarCompra = async function (idCompra) {
     if (!confirm("¿Está seguro de eliminar esta compra?")) return;
     try {
@@ -306,17 +218,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       const json = await res.json();
       alert(json.message);
-      if (json.success && idClienteActual) {
+      if (json.success && idClienteActual)
         cargarHistorialCompras(idClienteActual);
-      }
     } catch {
       alert("Error al eliminar la compra.");
     }
   };
-
-  // Actualiza el campo Total Actual
-  function actualizarTotalActual(valor) {
-    const campoTotal = document.getElementById("totalActual");
-    if (campoTotal) campoTotal.value = valor ? valor : 0;
-  }
 });

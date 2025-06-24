@@ -66,7 +66,7 @@ class ClienteDAO
     public function update($cliente)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?, ?)");
             return $stmt->execute([
                 $cliente->id,
                 $cliente->cedula,
@@ -74,13 +74,16 @@ class ClienteDAO
                 $cliente->correo,
                 $cliente->telefono,
                 $cliente->lugarResidencia,
-                $cliente->fechaCumpleanos
+                $cliente->fechaCumpleanos,
+                $cliente->acumulado
             ]);
         } catch (PDOException $e) {
             error_log("Error al actualizar cliente: " . $e->getMessage());
             return false;
         }
     }
+
+
 
     public function delete($id)
     {

@@ -25,6 +25,7 @@ try {
             $cliente->telefono = $_POST['telefono'] ?? '';
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
+            $cliente->acumulado = $_POST['acumulado'] ?? 0;
             $result = $dao->create($cliente);
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente creado exitosamente' : 'Error al crear cliente']);
             break;
@@ -48,6 +49,7 @@ try {
             $cliente->telefono = $_POST['telefono'] ?? '';
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
+            $cliente->acumulado = $_POST['acumulado'] ?? null; // NUEVO
             $result = $dao->update($cliente);
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente actualizado exitosamente' : 'Error al actualizar cliente']);
             break;

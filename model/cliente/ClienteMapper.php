@@ -14,6 +14,7 @@ class ClienteMapper
         $dto->telefono = $row['Telefono'];
         $dto->lugarResidencia = $row['LugarResidencia'];
         $dto->fechaCumpleanos = $row['FechaCumpleanos'];
+        $dto->acumulado = $row['Acumulado'];
         return $dto;
     }
 }

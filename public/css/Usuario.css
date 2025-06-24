@@ -74,6 +74,23 @@
     padding-right: 35px !important;
 }
 
-#togglePassword:hover {
+.toggle-password-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #f9c41f;
+    cursor: pointer;
+    z-index: 10;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.toggle-password-btn:hover {
     color: #000000 !important;
 }

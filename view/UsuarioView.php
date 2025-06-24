@@ -8,11 +8,16 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="usuario" class="form-label">Usuario *</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" required>
+                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Por favor introduzca un nombre" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="contrasena" class="form-label">Contraseña *</label>
-                        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                            <button type="button" id="togglePassword" class="toggle-password-btn">
+                                <i class="bi bi-eye" id="passwordIcon"></i>
+                            </button>
+                        </div>
                         <div class="form-text">
                             Mínimo 6 caracteres, al menos 1 letra y 1 número.
                         </div>

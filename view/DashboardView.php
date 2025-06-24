@@ -9,7 +9,7 @@ date_default_timezone_set('America/Costa_Rica');
 $usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Invitado';
 
 $hora = date('H');
-$saludo = ($hora < 12) ? "Buenos días, $usuario" : (($hora < 18) ? "Buenas tardes, $usuario" : "Buenas noches, $usuario");
+$saludo = ($hora < 12) ? "Buenos , $usuario" : (($hora < 18) ? "Buenas tardes, $usuario" : "Buenas noches, $usuario");
 $fecha = date("d/m/Y");
 ?>
 

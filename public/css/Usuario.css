@@ -69,3 +69,11 @@
         align-items: stretch;
     }
 }
+
+#contrasena {
+    padding-right: 35px !important;
+}
+
+#togglePassword:hover {
+    color: #000000 !important;
+}

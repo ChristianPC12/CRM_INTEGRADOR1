@@ -16,14 +16,24 @@ document.addEventListener("DOMContentLoaded", function () {
       this.classList.add("selected");
       if (this === btnCompra) {
         inputAcumulada.removeAttribute("readonly");
-        btnBuscar.textContent = "Buscar";
-        btnBuscar.style.background = "var(--amarillo)";
-        btnBuscar.style.color = "var(--negro)";
+        // Cambia a 'Acumular' si hay cliente ya cargado, sino 'Buscar'
+        if (idClienteActual) {
+          btnBuscar.textContent = "Acumular";
+          btnBuscar.style.background = "#39cc6b";
+          btnBuscar.style.color = "white";
+          btnBuscarIcon.style.display = "block";
+        } else {
+          btnBuscar.textContent = "Buscar";
+          btnBuscar.style.background = "var(--amarillo)";
+          btnBuscar.style.color = "var(--negro)";
+          btnBuscarIcon.style.display = "none";
+        }
       } else {
         inputAcumulada.setAttribute("readonly", true);
         btnBuscar.textContent = "Aplicar";
         btnBuscar.style.background = "#198754";
         btnBuscar.style.color = "white";
+        btnBuscarIcon.style.display = "none";
       }
     })
   );

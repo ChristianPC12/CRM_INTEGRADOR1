@@ -73,21 +73,20 @@ body {
 /* Bloque principal */
 .compra-bloque-inicio {
   width: 96%;
-  max-width: 900px;
+  max-width: 2500px;
   height: 90%;
-  max-height: 600px;
+  max-height: 1800px;
   background: var(--blanco);
   box-shadow: 0 2px 18px 0 rgba(40, 40, 40, 0.09);
   border-radius: 2.5em;
-  position: absolute;
-  top: 4vh;
-  left: 20px;
+  margin: 4vh auto 0; /* Centra horizontalmente y da margen superior */
   padding: 4% 3%;
   z-index: 2;
   display: flex;
   flex-direction: column;
   opacity: 0.98;
   justify-content: flex-start;
+  position: relative; /* Cambio clave */
 }
 
 /* Header en una línea */

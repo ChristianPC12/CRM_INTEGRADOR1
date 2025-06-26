@@ -1,4 +1,4 @@
- :root {
+:root {
   --amarillo: #f9c41f;
   --gris: #838886;
   --negro: #000000;
@@ -8,6 +8,15 @@
 html,
 body {
   height: 100%;
+}
+
+body {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* CONTENEDOR PRINCIPAL DECORATIVO */
@@ -412,8 +421,7 @@ body {
 
 /* Alternativa si necesitas mantener flex por alguna razón específica */
 
-* Mostrar texto en múltiples líneas con scroll invisible */
-.contenido-tarea {
+* Mostrar texto en múltiples líneas con scroll invisible */ .contenido-tarea {
   max-height: 100px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -546,6 +554,7 @@ body {
   padding-bottom: 2rem; /* Opcional: espacio abajo si hay contenido largo */
   width: calc(100% - 30px); /* 👈 el ancho del sidebar */
   box-sizing: border-box;
+  margin-top: -2%;
 }
 
 /* ============================================= */
@@ -582,7 +591,10 @@ body {
     font-size: 0.75rem;
   }
 
-  #negro-1, #negro-2, #amarillo-1, #amarillo-2 {
+  #negro-1,
+  #negro-2,
+  #amarillo-1,
+  #amarillo-2 {
     display: none;
   }
 
@@ -614,7 +626,8 @@ body {
     height: auto;
   }
 
-  #negro-3, #amarillo-3 {
+  #negro-3,
+  #amarillo-3 {
     display: none;
   }
 
@@ -745,7 +758,12 @@ body {
     font-size: 0.75rem;
   }
 
-  #negro-1, #negro-2, #amarillo-1, #amarillo-2, #negro-3, #amarillo-3 {
+  #negro-1,
+  #negro-2,
+  #amarillo-1,
+  #amarillo-2,
+  #negro-3,
+  #amarillo-3 {
     display: none;
   }
 
@@ -819,22 +837,22 @@ body {
     min-height: 90x;
     padding: 0rem;
     overflow-y: auto !important;
-     min-height: 400px; /* o el valor que necesites */
+    min-height: 400px; /* o el valor que necesites */
     overflow-x: hidden;
     background-color: var(--amarillo);
     box-sizing: border-box;
   }
   .btn-eliminar-tarea {
-  position: relative;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-  font-size: 1.1rem;
-  background: none;
-  border: none;
-  color: var(--negro);
-  cursor: pointer;
-}
+    position: relative;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    font-size: 1.1rem;
+    background: none;
+    border: none;
+    color: var(--negro);
+    cursor: pointer;
+  }
 
   .contenedor-tarjetas {
     width: 100%;
@@ -854,7 +872,7 @@ body {
     width: 95% !important;
     max-width: 300px;
     min-height: 250px;
-   padding: 1rem 2rem; 
+    padding: 1rem 2rem;
     margin: 0.5rem 0;
     background-color: white;
     border-radius: 10px;
@@ -870,12 +888,10 @@ body {
   .contenido-tarea {
     font-size: 0.95rem;
     margin-top: 2rem;
-      font-weight: 500;
+    font-weight: 500;
     word-break: break-word;
     overflow-wrap: break-word;
   }
-
-  
 
   /* Flechas de navegación */
   .btn-flecha {
@@ -894,5 +910,4 @@ body {
     display: block;
     margin-top: 0.5rem;
   }
- 
-} 
+}

@@ -2,6 +2,7 @@ $(document).ready(function () {
   let indiceActual = 0;
   let tareas = [];
   const label = $("#descripcionInfo");
+  const contador = $("#contadorCaracteres");
 
   // Cargar tareas al iniciar
   listarTareas();
@@ -21,20 +22,22 @@ $(document).ready(function () {
 
     const tarea = tareas[index];
     const estadoTexto =
-      tarea.estado === "terminado" ? "Terminado" : "Pendiente";
+      tarea.estado === "completada" ? "Completada" : "Pendiente";
     const colorClase =
-      tarea.estado === "terminado" ? "estado-verde" : "estado-rojo";
+      tarea.estado === "completada" ? "estado-verde" : "estado-rojo";
 
     const tarjetaHTML = `
-  <div class="tarjeta">
-    <label class="fecha-creacion">${formatearFecha(tarea.fechaCreacion)}</label>
-    <div class="contenido-tarea">
-      ${tarea.descripcion}
-    </div>
-    <button class="btn-estado ${colorClase}">${estadoTexto}</button>
-    <button class="btn-cambiar">Cambiar estado</button>
-  </div>
-`;
+      <div class="tarjeta">
+        <label class="fecha-creacion">${formatearFecha(
+          tarea.fechaCreacion
+        )}</label>
+        <div class="contenido-tarea">
+          ${tarea.descripcion}
+        </div>
+        <button class="btn-estado ${colorClase}">${estadoTexto}</button>
+        <button class="btn-cambiar">Cambiar estado</button>
+      </div>
+    `;
 
     $("#contenedorTarjetas").html(tarjetaHTML);
   }
@@ -49,7 +52,8 @@ $(document).ready(function () {
           tareas = response.data.map((t) => ({
             ...t,
             estado: t.estado || "pendiente",
-            fecha: t.fecha || new Date().toISOString(),
+            fechaCreacion:
+              t.fechaCreacion || t.fecha_creacion || new Date().toISOString(),
           }));
           indiceActual = 0;
           mostrarTarea(indiceActual);
@@ -66,7 +70,7 @@ $(document).ready(function () {
     e.preventDefault();
     const datos = variables();
 
-     if (datos.descripcion.length === 0) return;
+    if (datos.descripcion.length === 0) return;
 
     if (datos.descripcion.length > 220) {
       alert(
@@ -99,7 +103,7 @@ $(document).ready(function () {
   });
 
   // Validación y etiqueta dinámica
-  $("#descripcion").on("focus", function () {
+  $("#descripcion").on("focus input", function () {
     const texto = $(this).val().trim();
     if (texto.length > 220) {
       label
@@ -108,27 +112,42 @@ $(document).ready(function () {
     } else {
       label.text("Podés escribir hasta 220 caracteres.").addClass("visible");
     }
-  });
-
-  $("#descripcion").on("input", function () {
-    const texto = $(this).val().trim();
-    if (texto.length > 220) {
-      label
-        .text("Has excedido el límite de 220 caracteres.")
-        .addClass("visible");
-    } else {
-      label.text("Podés escribir hasta 220 caracteres.").addClass("visible");
-    }
+    contador.text(`${texto.length}/220`).addClass("visible");
   });
 
   $("#descripcion").on("blur", function () {
     label.removeClass("visible").text("");
+    contador.removeClass("visible").text("");
   });
 
+  // Cambiar estado de la tarea (ahora actualiza en la BD)
   $("#contenedorTarjetas").on("click", ".btn-cambiar", function () {
     const tarea = tareas[indiceActual];
-    tarea.estado = tarea.estado === "terminado" ? "pendiente" : "terminado";
-    mostrarTarea(indiceActual);
+    if (!tarea) return;
+
+    // Alternar estado localmente
+    tarea.estado = tarea.estado === "pendiente" ? "completada" : "pendiente";
+
+    // AJAX para actualizar en la BD
+    $.ajax({
+      url: "/CRM_INT/CRM/controller/TareaController.php?action=update",
+      type: "POST",
+      data: {
+        id: tarea.id,
+        estado: tarea.estado,
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          listarTareas(); // Actualizar la vista
+        } else {
+          alert("No se pudo actualizar el estado de la tarea.");
+        }
+      },
+      error: function () {
+        console.error("❌ Error al actualizar el estado de la tarea.");
+      },
+    });
   });
 
   $("#flecha-izquierda").click(function () {
@@ -159,7 +178,6 @@ $(document).ready(function () {
             if (indiceActual >= tareas.length) {
               indiceActual = tareas.length - 1;
             }
-
             if (tareas.length > 0) {
               mostrarTarea(indiceActual);
             } else {
@@ -188,20 +206,4 @@ $(document).ready(function () {
       year: "numeric",
     });
   }
-
-  const contador = $("#contadorCaracteres");
-
-  $("#descripcion").on("input", function () {
-    const texto = $(this).val();
-    contador.text(`${texto.length}/220`).addClass("visible");
-  });
-
-  $("#descripcion").on("focus", function () {
-    const texto = $(this).val();
-    contador.text(`${texto.length}/220`).addClass("visible");
-  });
-
-  $("#descripcion").on("blur", function () {
-    contador.removeClass("visible").text("");
-  });
 });

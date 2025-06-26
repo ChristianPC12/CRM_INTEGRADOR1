@@ -37,13 +37,15 @@ try {
             break;
 
         case 'update':
-            $tarea = new TareaDTO();
-            $tarea->id = $_POST['id'] ?? '';
-            $tarea->descripcion = $_POST['descripcion'] ?? '';
-            $tarea->estado = $_POST['estado'] ?? 'Pendiente';
-            $result = $dao->update($tarea);
-            echo json_encode(['success' => $result, 'message' => $result ? 'Tarea actualizada' : 'Error al actualizar tarea']);
+            $id = $_POST['id'] ?? '';
+            $estado = $_POST['estado'] ?? '';
+            $result = $dao->update($id, $estado);
+            echo json_encode([
+                'success' => $result,
+                'message' => $result ? 'Tarea actualizada' : 'Error al actualizar tarea'
+            ]);
             break;
+
 
         case 'delete':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';

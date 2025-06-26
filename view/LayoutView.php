@@ -19,13 +19,15 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Dashboard.css">
     <?php elseif ($vista === 'clientes'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cliente.css">
-    <?php elseif ($vista === 'usuarios'): ?>
-        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Usuario.css">
     <?php elseif ($vista === 'compras'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Compra.css">
     <?php endif; ?>
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
+    <!-- CSS de usuarios (cargado al final para mayor prioridad) -->
+    <?php if ($vista === 'usuarios'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Usuario.css?v=<?= time() ?>">
+    <?php endif; ?>
 </head>
 
 <body>
@@ -121,30 +123,98 @@ $vista = $_GET['view'] ?? 'dashboard';
             // Obtener el rol del usuario de localStorage
             const rol = localStorage.getItem('rolUsuario');
 
-            if (rol === 'Salonero') {
-                // Desactivar Clientes VIP
-                const linkClientes = document.getElementById('link-clientes-vip');
-                if (linkClientes) {
-                    linkClientes.classList.add('disabled-link');
-                    linkClientes.removeAttribute('href'); // Evita navegación
-                    linkClientes.style.pointerEvents = "none"; // No se puede clickear
-                    linkClientes.style.opacity = 0.5;
-                    linkClientes.title = "Acceso restringido";
-                }
-
-                // Desactivar Usuarios
+            if (rol === "Salonero") {
+                // Desactivar Usuarios en todas las vistas (acceso restringido)
                 const linkUsuarios = document.getElementById('link-usuarios');
                 if (linkUsuarios) {
                     linkUsuarios.classList.add('disabled-link');
                     linkUsuarios.removeAttribute('href');
-                    linkUsuarios.style.pointerEvents = "none";
-                    linkUsuarios.style.opacity = 0.5;
                     linkUsuarios.title = "Acceso restringido";
+                }
+
+                // Solo aplicar restricciones de solo lectura en la vista de clientes
+                const currentView = '<?= $vista ?>';
+                
+                if (currentView === 'clientes') {
+                    // Desactivar botón de guardar
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('btn-disabled');
+                        submitBtn.title = "No tienes permisos para guardar clientes";
+                    }
+
+                    // Desactivar botón de cancelar edición
+                    const cancelBtn = document.getElementById('cancelBtn');
+                    if (cancelBtn) {
+                        cancelBtn.disabled = true;
+                        cancelBtn.classList.add('btn-disabled');
+                        cancelBtn.title = "No tienes permisos para editar clientes";
+                    }
+
+                    // Hacer los campos del formulario de solo lectura
+                    const form = document.getElementById('clienteForm');
+                    if (form) {
+                        const campos = form.querySelectorAll("input, select, textarea");
+                        campos.forEach((campo) => {
+                            campo.readOnly = true;
+                            campo.disabled = true;
+                            campo.classList.add('form-readonly');
+                        });
+                    }
+
+                    // Desactivar botones de editar y eliminar en la tabla
+                    const observer = new MutationObserver(() => {
+                        document.querySelectorAll("button.btn-warning").forEach((btn) => {
+                            btn.disabled = true;
+                            btn.classList.add('btn-disabled');
+                            btn.title = "No tienes permisos para editar clientes";
+                        });
+                        document.querySelectorAll("button.btn-danger").forEach((btn) => {
+                            btn.disabled = true;
+                            btn.classList.add('btn-disabled');
+                            btn.title = "No tienes permisos para eliminar clientes";
+                        });
+                    });
+
+                    // Observar cambios en la tabla de clientes
+                    const lista = document.getElementById("clienteLista");
+                    if (lista) {
+                        observer.observe(lista, { childList: true, subtree: true });
+                    }
+                }
+            } else if (rol === "Administrador") {
+                // Desactivar Usuarios en todas las vistas (acceso restringido)
+                const linkUsuarios = document.getElementById('link-usuarios');
+                if (linkUsuarios) {
+                    linkUsuarios.classList.add('disabled-link');
+                    linkUsuarios.removeAttribute('href');
+                    linkUsuarios.title = "Acceso restringido";
+                }
+
+                // Solo aplicar restricciones de eliminación en la vista de clientes
+                const currentView = '<?= $vista ?>';
+                
+                if (currentView === 'clientes') {
+                    // Desactivar solo botones de eliminar en la tabla
+                    const observer = new MutationObserver(() => {
+                        document.querySelectorAll("button.btn-danger").forEach((btn) => {
+                            btn.disabled = true;
+                            btn.classList.add('btn-disabled');
+                            btn.title = "No tienes permisos para eliminar clientes";
+                        });
+                    });
+
+                    // Observar cambios en la tabla de clientes
+                    const lista = document.getElementById("clienteLista");
+                    if (lista) {
+                        observer.observe(lista, { childList: true, subtree: true });
+                    }
                 }
             }
         });
-
     </script>
+
 </body>
 
 </html>

@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Validación sencilla de contraseña (mínimo 6 caracteres, al menos una letra y un número)
-  function esContrasenaValida(contrasena) {
-    const regex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
-    return regex.test(contrasena);
-  }
+  // Validación con mínimo 6 y máximo 14 caracteres, al menos una letra y un número
+function esContrasenaValida(contrasena) {
+  const regex = /^(?=.*[a-zA-Z])(?=.*\d).{6,14}$/;
+  return regex.test(contrasena);
+}
 
   const form = document.getElementById("usuarioForm");
 
@@ -69,10 +69,10 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (!esContrasenaValida(contrasena)) {
-      alert("La contraseña debe tener al menos 6 caracteres, una letra y un número.");
-      return;
-    }
+   if (!esContrasenaValida(contrasena)) {
+  alert("La contraseña debe tener entre 6 y 14 caracteres, con al menos una letra y un número.");
+  return;
+}
 
     const datos = new FormData();
     datos.append("action", "create");

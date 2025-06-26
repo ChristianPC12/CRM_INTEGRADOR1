@@ -1,8 +1,13 @@
- <h2 class="text-center mb-4">Gestión de Usuarios</h2>
+<!-- Líneas decorativas -->
+<div class="decor-line" style="top: 120px; left: 40%;"></div>
+<div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Gestión de Usuarios</h2>
 
     <!-- Formulario de registro de usuario -->
     <div class="card shadow mb-4">
-        <div class="card-header">Registrar Usuario</div>
+        <div class="card-header">Registro de Usuario</div>
         <div class="card-body">
             <form id="usuarioForm">
                 <div class="row">
@@ -36,30 +41,28 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="privilegios" class="form-label">Privilegios (descripción)</label>
-                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3"
-                                  placeholder="Ej: Puede agregar, editar y ver clientes. No puede eliminar usuarios."></textarea>
+                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3" placeholder="" readonly></textarea>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button type="reset" class="btn btn-secondary me-2">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+                    <button type="reset" id="cancelBtn" class="btn btn-secondary me-2">Cancelar</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Guardar Usuario</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Tabla de usuarios -->
+    <!-- Lista de usuarios -->
     <div class="card shadow">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between">
             <h5 class="mb-0">Lista de Usuarios</h5>
-            <button class="btn btn-sm btn-outline-primary" onclick="cargarUsuarios()">Actualizar</button>
+            <button class="btn btn-sm btn-outline-light" onclick="cargarUsuarios()">Actualizar</button>
         </div>
         <div class="card-body p-0">
-            <div id="usuarioLista" class="table-responsive p-3">
-                <div class="text-center">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2">Cargando usuarios...</p>
+            <div class="table-responsive">
+                <div id="usuarioLista" class="p-4 text-center">
+                    <!-- Aquí se inyectará la tabla -->
                 </div>
             </div>
         </div>

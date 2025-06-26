@@ -121,6 +121,13 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = redirectUrl;
           }, 1500);
         } else {
+          let msg = data.message;
+          if (data.debug) {
+            msg = (msg ? msg + "\n\nDEBUG:\n" : "") + data.debug;
+          }
+          if (msg) {
+            alert(msg);
+          }
           showLoginError(data.message || "Credenciales incorrectas");
         }
       })

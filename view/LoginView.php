@@ -19,13 +19,13 @@
             <form id="loginForm" class="login-form">
                 <div class="form-group">
                     <label for="email">Nombre de Usuario</label>
-                    <input type="text" id="email" name="email" placeholder="Ej. CarlosBastos" required>
+                    <input type="text" id="email" name="usuario" placeholder="Ej. CarlosBastos" required>
                     <span class="error-message" id="emailError"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                    <input type="password" id="password" name="contrasena" placeholder="Contraseña" required>
                     <span class="error-message" id="passwordError"></span>
                 </div>
 

@@ -90,10 +90,10 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("contrasena", contrasena);
 
     // Realizar petición AJAX al controlador PHP
-    fetch("/CRM_INT/CRM/controller/LoginController.php", {
+    fetch("/CRM_INT/CRM/controller/UsuarioController.php", {
       method: "POST",
       body: formData,
-      credentials: "same-origin", // Importante para mantener la sesión
+      credentials: "same-origin",
     })
       .then((response) => {
         if (!response.ok) {
@@ -125,9 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.debug) {
             msg = (msg ? msg + "\n\nDEBUG:\n" : "") + data.debug;
           }
-          if (msg) {
-            alert(msg);
-          }
+
           showLoginError(data.message || "Credenciales incorrectas");
         }
       })

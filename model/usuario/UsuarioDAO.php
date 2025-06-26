@@ -30,9 +30,8 @@ class UsuarioDAO
     public function create($usuario)
     {
         try {
-            $stmt = $this->conn->prepare("CALL UsuarioCreate(?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL UsuarioCreate(?, ?, ?)");
             return $stmt->execute([
-                $usuario->id,
                 $usuario->usuario,
                 $usuario->contrasena,
                 $usuario->rol

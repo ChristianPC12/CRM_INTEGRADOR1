@@ -11,14 +11,15 @@ class UsuarioDAO
         $this->conn = $db;
     }
 
-    public function readAll()
+    // $omitPassword: true (default) para ocultar hash, false para traerlo (solo login)
+    public function readAll($omitPassword = true)
     {
         try {
             $stmt = $this->conn->prepare("CALL UsuarioReadAll()");
             $stmt->execute();
             $usuarios = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $usuarios[] = UsuarioMapper::mapRowToDTO($row);
+                $usuarios[] = UsuarioMapper::mapRowToDTO($row, $omitPassword);
             }
             return $usuarios;
         } catch (PDOException $e) {
@@ -52,13 +53,14 @@ class UsuarioDAO
         }
     }
 
-    public function read($id)
+    // $omitPassword también lo puedes usar aquí si quieres
+    public function read($id, $omitPassword = true)
     {
         try {
             $stmt = $this->conn->prepare("CALL UsuarioRead(?)");
             $stmt->execute([$id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $row ? UsuarioMapper::mapRowToDTO($row) : null;
+            return $row ? UsuarioMapper::mapRowToDTO($row, $omitPassword) : null;
         } catch (PDOException $e) {
             error_log("Error al leer usuario: " . $e->getMessage());
             return null;

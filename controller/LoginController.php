@@ -20,7 +20,7 @@ try {
         case 'create':
             $usuario = new LoginDTO();
             $usuario->usuario = $_POST['usuario'] ?? '';
-            $usuario->contrasena = password_hash($_POST['contrasena'] ?? '', PASSWORD_DEFAULT);
+            $usuario->contrasena = $_POST['contrasena'] ?? '';
             $usuario->rol = $_POST['rol'] ?? '';
             $result = $dao->create($usuario);
             echo json_encode(['success' => $result, 'message' => $result ? 'Usuario creado exitosamente' : 'Error al crear usuario']);
@@ -40,7 +40,7 @@ try {
             $usuario = new LoginDTO();
             $usuario->id = $_POST['id'] ?? '';
             $usuario->usuario = $_POST['usuario'] ?? '';
-            $usuario->contrasena = password_hash($_POST['contrasena'] ?? '', PASSWORD_DEFAULT);
+            $usuario->contrasena = $_POST['contrasena'] ?? '';
             $usuario->rol = $_POST['rol'] ?? '';
             $result = $dao->update($usuario);
             echo json_encode(['success' => $result, 'message' => $result ? 'Usuario actualizado exitosamente' : 'Error al actualizar usuario']);
@@ -77,22 +77,13 @@ try {
             if (!$usuarioEncontrado) {
                 echo json_encode([
                     'success' => false,
-                    'message' => 'Usuario no encontrado'
+                    'message' => ''
                 ]);
                 break;
             }
 
-            // Verificar contraseña - maneja tanto texto plano como hash
-            $contrasenaValida = false;
-
-            // Si la contraseña en BD empieza con $2y$ es un hash de password_hash()
-            if (strpos($usuarioEncontrado->contrasena, '$2y$') === 0) {
-                // Es un hash, usar password_verify
-                $contrasenaValida = password_verify($contrasenaInput, $usuarioEncontrado->contrasena);
-            } else {
-                // Es texto plano, comparar directamente
-                $contrasenaValida = ($contrasenaInput === $usuarioEncontrado->contrasena);
-            }
+            // Verificar contraseña solo en texto plano
+            $contrasenaValida = ($contrasenaInput === $usuarioEncontrado->contrasena);
 
             if ($contrasenaValida) {
                 // Iniciar sesión

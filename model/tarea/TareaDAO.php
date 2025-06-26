@@ -41,14 +41,10 @@ class TareaDAO
         return $tareas;
     }
 
-    public function update($tarea)
+    public function update($id, $estado)
     {
-        $stmt = $this->conn->prepare("CALL TareaUpdate(?, ?, ?)");
-        return $stmt->execute([
-            $tarea->id,
-            $tarea->descripcion,
-            $tarea->estado
-        ]);
+        $stmt = $this->conn->prepare("CALL TareaUpdate(?, ?)");
+        return $stmt->execute([$id, $estado]);
     }
 
     public function delete($id)

@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             contenedor.innerHTML = "<p class='text-center mt-3'>No hay usuarios registrados.</p>";
             return;
           }
-          let html = `<table class='table table-bordered table-hover'>
+          let html = `<table class='table table-striped table-hover mt-4'>
             <thead class='table-dark'>
               <tr>
                 <th>ID</th>
@@ -133,9 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${usuario.usuario}</td>
               <td>${usuario.rol}</td>
               <td>
-                <button class='btn btn-sm btn-danger eliminar-usuario' data-id='${usuario.id}'>
-                  <i class='bi bi-trash'></i> Eliminar
-                </button>
+                <button class='btn btn-sm btn-danger eliminar-usuario' data-id='${usuario.id}'>Eliminar</button>
               </td>
             </tr>`;
           });
@@ -212,4 +210,31 @@ document.addEventListener("DOMContentLoaded", function () {
   rolInput.oninput = function(e) {
     e.target.setCustomValidity("");
   };
+
+  // Mostrar mensaje en privilegios según el rol seleccionado
+  const privilegiosInput = document.getElementById("privilegios");
+  if (rolInput && privilegiosInput) {
+    rolInput.addEventListener("change", function() {
+      let mensaje = "";
+      switch (rolInput.value) {
+        case "Administrador":
+          mensaje = "Puede visualizar, crear y editar clientes. No puede eliminar registros. No puede ingresar al modulo Usuario.";
+          break;
+        case "Salonero":
+          mensaje = "Solo puede visualizar la sección. No puede editar, guardar ni eliminar registros. No puede ingresar al Modulo Usuario.";
+          break;
+        case "Propietario":
+          mensaje = "Acceso completo a todas las secciones y funcionalidades del sistema.";
+          break;
+        default:
+          mensaje = "";
+      }
+      privilegiosInput.value = mensaje;
+    });
+  }
+
+  // Limpiar el campo de privilegios al cargar la página
+  if (privilegiosInput) {
+    privilegiosInput.value = "";
+  }
 });

@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const passwordIcon = document.getElementById("passwordIcon");
 
   if (togglePassword && passwordInput && passwordIcon) {
-    // PC: mouse events
     togglePassword.addEventListener("mousedown", function () {
       passwordInput.type = "text";
       passwordIcon.classList.replace("bi-eye", "bi-eye-slash");
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
       passwordIcon.classList.replace("bi-eye-slash", "bi-eye");
       togglePassword.title = "Mostrar contraseña";
     });
-    // Touch
     togglePassword.addEventListener("touchstart", function () {
       passwordInput.type = "text";
       passwordIcon.classList.replace("bi-eye", "bi-eye-slash");
@@ -36,11 +34,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Validación de contraseña: 6 a 16 caracteres, al menos una letra y un número
+  // Validación de contraseña: 6 a 16 caracteres, al menos una letra, un número y un carácter especial
   function esContrasenaValida(contrasena) {
-    // Al menos una letra, un número y un carácter especial, longitud 6 a 16
     const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,16}$/;
     return regex.test(contrasena);
+  }
+
+  // Validación de usuario completamente en mayúsculas
+  function esUsuarioMayusculas(usuario) {
+    return /^[A-Z]+$/.test(usuario);
   }
 
   const form = document.getElementById("usuarioForm");
@@ -61,26 +63,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      // Validación de longitud máxima
-      if (contrasena.length > 16) {
-        alert(
-          "La contraseña debe tener entre 6 y 16 caracteres, al menos una letra, un número y un carácter especial."
-        );
+      if (!esUsuarioMayusculas(usuario)) {
+        alert("El nombre de usuario debe estar completamente en mayúsculas (sin espacios ni caracteres especiales).");
         return;
       }
 
-      // Solo validar la complejidad en creación, no al editar si no hay cambio de contraseña
-      if (!editandoId && !esContrasenaValida(contrasena)) {
-        alert(
-          "La contraseña debe tener entre 6 y 16 caracteres, con al menos una letra y un número."
-        );
+      if (contrasena.length > 16) {
+        alert("La contraseña debe tener entre 6 y 16 caracteres, al menos una letra, un número y un carácter especial.");
         return;
       }
-      // Al editar, si se está cambiando la contraseña, validarla también
+
+      if (!editandoId && !esContrasenaValida(contrasena)) {
+        alert("La contraseña debe tener entre 6 y 16 caracteres, con al menos una letra, un número y un carácter especial.");
+        return;
+      }
+
       if (editandoId && contrasena && !esContrasenaValida(contrasena)) {
-        alert(
-          "La nueva contraseña debe tener entre 6 y 16 caracteres, con al menos una letra y un número."
-        );
+        alert("La nueva contraseña debe tener entre 6 y 16 caracteres, con al menos una letra, un número y un carácter especial.");
         return;
       }
 
@@ -105,19 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
-            alert(
-              editandoId
-                ? "Usuario editado correctamente."
-                : "Usuario guardado correctamente."
-            );
+            alert(editandoId ? "Usuario editado correctamente." : "Usuario guardado correctamente.");
             form.reset();
             editandoId = null;
             if (formTitulo) formTitulo.textContent = "Registrar Usuario";
             cargarUsuarios();
           } else {
-            alert(
-              "No se pudo guardar: " + (data.message || "Error desconocido.")
-            );
+            alert("No se pudo guardar: " + (data.message || "Error desconocido."));
           }
         })
         .catch((err) => {
@@ -127,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Cargar usuarios en la tabla
   window.cargarUsuarios = function () {
     const contenedor = document.getElementById("usuarioLista");
     if (!contenedor) return;
@@ -142,8 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.success && Array.isArray(data.data)) {
           if (data.data.length === 0) {
-            contenedor.innerHTML =
-              "<p class='text-center mt-3'>No hay usuarios registrados.</p>";
+            contenedor.innerHTML = "<p class='text-center mt-3'>No hay usuarios registrados.</p>";
             return;
           }
           let html = `<table class='table table-striped table-hover mt-4'>
@@ -170,23 +161,19 @@ document.addEventListener("DOMContentLoaded", function () {
           html += "</tbody></table>";
           contenedor.innerHTML = html;
         } else {
-          contenedor.innerHTML =
-            "<p class='text-danger'>Error al cargar usuarios.</p>";
+          contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
         }
       })
       .catch((err) => {
         console.error("Error al cargar usuarios:", err);
-        contenedor.innerHTML =
-          "<p class='text-danger'>Error al cargar usuarios.</p>";
+        contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
       });
   };
 
-  // Evento para editar y eliminar usuario
   document.addEventListener("click", function (e) {
     const editarBtn = e.target.closest(".editar-usuario");
     const eliminarBtn = e.target.closest(".eliminar-usuario");
 
-    // Editar usuario
     if (editarBtn) {
       const id = editarBtn.getAttribute("data-id");
       const usuario = editarBtn.getAttribute("data-usuario");
@@ -197,21 +184,17 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("usuario").value = usuario;
       document.getElementById("rol").value = rol;
       document.getElementById("contrasena").value = "";
-      // Privilegios: refresca descripción
       if (rolInput && privilegiosInput) {
         let mensaje = "";
         switch (rol) {
           case "Administrador":
-            mensaje =
-              "Puede visualizar, crear y editar clientes. No puede eliminar registros. No puede ingresar al modulo Usuario.";
+            mensaje = "Como administrador, puede acceder completamente al Dashboard. En la sección de Clientes VIP puede ver, agregar y editar clientes, pero no eliminarlos. En la sección de Beneficios puede usar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios.";
             break;
           case "Salonero":
-            mensaje =
-              "Solo puede visualizar la sección. No puede editar, guardar ni eliminar registros. No puede ingresar al Modulo Usuario.";
+            mensaje = "Como salonero, puede ver todo el contenido del Dashboard. En la sección de Clientes VIP solo puede ver la información, pero no puede agregar, editar ni eliminar clientes. En la sección de Beneficios puede hacer búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios.";
             break;
           case "Propietario":
-            mensaje =
-              "Acceso completo a todas las secciones y funcionalidades del sistema.";
+            mensaje = "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción.";
             break;
           default:
             mensaje = "";
@@ -222,7 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Eliminar usuario
     if (eliminarBtn) {
       const id = eliminarBtn.getAttribute("data-id");
       if (confirm("¿Estás seguro de eliminar este usuario?")) {
@@ -240,9 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
               alert("Usuario eliminado.");
               cargarUsuarios();
             } else {
-              alert(
-                "No se pudo eliminar: " + (data.message || "Error desconocido.")
-              );
+              alert("No se pudo eliminar: " + (data.message || "Error desconocido."));
             }
           })
           .catch((err) => {
@@ -253,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Botón Cancelar para volver a modo "crear"
   const cancelBtn = document.getElementById("cancelBtn");
   if (cancelBtn) {
     cancelBtn.addEventListener("click", function () {
@@ -263,10 +242,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Cargar la lista al abrir la vista
   cargarUsuarios();
 
-  // Mensaje personalizado para los campos
   const usuarioInput = document.getElementById("usuario");
   if (usuarioInput) {
     usuarioInput.oninvalid = function (e) {
@@ -275,10 +252,14 @@ document.addEventListener("DOMContentLoaded", function () {
     usuarioInput.oninput = function (e) {
       e.target.setCustomValidity("");
     };
+    // Conversión automática a mayúsculas
+    usuarioInput.addEventListener("input", function () {
+      this.value = this.value.toUpperCase();
+    });
   }
 
   if (passwordInput) {
-    passwordInput.setAttribute("maxlength", "16"); // asegúrate que el input tenga el límite también
+    passwordInput.setAttribute("maxlength", "16");
     passwordInput.oninvalid = function (e) {
       e.target.setCustomValidity("Por favor introduzca una contraseña");
     };
@@ -288,6 +269,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const rolInput = document.getElementById("rol");
+  const privilegiosInput = document.getElementById("privilegios");
+
   if (rolInput) {
     rolInput.oninvalid = function (e) {
       e.target.setCustomValidity("Por favor seleccione un rol");
@@ -297,23 +280,18 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Mostrar mensaje en privilegios según el rol seleccionado
-  const privilegiosInput = document.getElementById("privilegios");
   if (rolInput && privilegiosInput) {
     rolInput.addEventListener("change", function () {
       let mensaje = "";
       switch (rolInput.value) {
         case "Administrador":
-          mensaje =
-            "Puede visualizar, crear y editar clientes. No puede eliminar registros. No puede ingresar al modulo Usuario.";
+          mensaje = "Como administrador, puede acceder completamente al Dashboard. En la sección de Clientes VIP puede ver, agregar y editar clientes, pero no eliminarlos. En la sección de Beneficios puede usar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios.";
           break;
         case "Salonero":
-          mensaje =
-            "Solo puede visualizar la sección. No puede editar, guardar ni eliminar registros. No puede ingresar al Modulo Usuario.";
+          mensaje = "Como salonero, puede ver todo el contenido del Dashboard. En la sección de Clientes VIP solo puede ver la información, pero no puede agregar, editar ni eliminar clientes. En la sección de Beneficios puede hacer búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios.";
           break;
         case "Propietario":
-          mensaje =
-            "Acceso completo a todas las secciones y funcionalidades del sistema.";
+          mensaje = "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción.";
           break;
         default:
           mensaje = "";
@@ -322,7 +300,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Limpiar el campo de privilegios al cargar la página
   if (privilegiosInput) {
     privilegiosInput.value = "";
   }

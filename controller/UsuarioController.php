@@ -48,7 +48,7 @@ try {
             $usuarioDTO = new UsuarioDTO();
             $usuarioDTO->id = uniqid(); // O puedes usar otro generador de ID si lo prefieres
             $usuarioDTO->usuario = $usuario;
-            $usuarioDTO->contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
+            $usuarioDTO->contrasena = $contrasena;
             $usuarioDTO->rol = $rol;
 
             $result = $dao->create($usuarioDTO);
@@ -85,23 +85,8 @@ try {
                 break;
             }
             // Si se proporciona una nueva contraseña, validar y hashear
-            $contrasenaHash = null;
-            if ($contrasena !== '') {
-                if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d).{6,}$/', $contrasena)) {
-                    echo json_encode(['success' => false, 'message' => 'La contraseña debe tener mínimo 6 caracteres, al menos 1 letra y 1 número.']);
-                    break;
-                }
-                $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
-            } else {
-                // Si no se proporciona, mantener la contraseña actual
-                $usuarioActual = $dao->read($id);
-                if ($usuarioActual) {
-                    $contrasenaHash = $usuarioActual->contrasena;
-                } else {
-                    echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
-                    break;
-                }
-            }
+            $contrasenaHash = $contrasena;
+
             $usuarioDTO = new UsuarioDTO();
             $usuarioDTO->id = $id;
             $usuarioDTO->usuario = $usuario;

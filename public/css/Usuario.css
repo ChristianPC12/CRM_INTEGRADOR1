@@ -4,6 +4,9 @@
     max-width: 1100px;
     margin: auto;
     padding: 1rem;
+    background-color: var(--GRIS);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
 }
 
 .card-header {
@@ -36,6 +39,8 @@
     max-height: 400px;
     overflow-y: auto;
 }
+
+
 
 /* ====== RESPONSIVE ====== */
 
@@ -108,10 +113,8 @@ body {
   display: flex;
   min-height: 100vh;
   position: relative;
-  background-color: var(--gris);
+  background-color: var(--blanco);
   width: 100%;
-  /* Quitar esto evita bloquear el scroll horizontal */
-  /* overflow-x: hidden; */
 }
 
 body::before {
@@ -125,6 +128,16 @@ body::before {
   z-index: -1;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 50%;
+  background: var(--blanco);
+  z-index: -1;
+}
 
 .btn-primary {
   background-color: var(--amarillo);
@@ -137,25 +150,16 @@ body::before {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
+
 .btn-primary:hover {
   background-color: #e6b619;
   transform: scale(1.03);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
+
 .btn-primary:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.5);
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 60%;
-  height: 50%;
-  background: var(--blanco);
-  z-index: -1;
 }
 
 .card {
@@ -164,14 +168,12 @@ body::after {
   overflow: hidden;
 }
 
-/* Formulario de registro */
 .card.shadow.mb-4 {
   background: var(--blanco);
   box-shadow: 0 0 10px rgba(249, 196, 31, 0.4);
   border-left: 5px solid var(--amarillo);
 }
 
-/* Headers negros para ambas tarjetas */
 .card-header {
   background-color: var(--negro) !important;
   color: var(--blanco) !important;
@@ -179,19 +181,16 @@ body::after {
   letter-spacing: 0.5px;
 }
 
-/* Tabla (contenedor sin cambios visuales extra) */
 .card.shadow:last-of-type {
   background: var(--blanco);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Botón eliminar */
 .btn-danger:hover {
   background-color: #bb2d3b;
   border-color: #a52834;
 }
 
-/* ==== SIDEBAR COMPACTO (ESCRITORIO) ==== */
 .sidebar {
   width: 220px;
   background-color: var(--negro);
@@ -256,6 +255,14 @@ body::after {
   color: var(--negro);
 }
 
+.content {
+  margin-left: 200px;
+  padding: 24px;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+
 /* ==== CONTENIDO PRINCIPAL (ESCRITORIO) ==== */
 .content {
   margin-left: 200px;
@@ -264,72 +271,93 @@ body::after {
   flex-grow: 1;
 }
 
-/* ==== RESPONSIVE PARA MÓVILES ==== */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    margin-bottom: 1rem;
-    padding: 10px 15px;
+  body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+  }
+
+  .sidebar {
+    width: 250px; /* <--- CORREGIDO: antes decía 100% */
+    padding: 12px;
+    flex-direction: column; /* <--- CORREGIDO: antes decía row */
+    justify-content: flex-start; /* <--- CORREGIDO */
+    align-items: flex-start;     /* <--- CORREGIDO */
+    gap: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #000; /* o el color que uses en el menú */
+    z-index: 999;
+    transition: all 0.3s ease-in-out;
   }
 
   .sidebar-header {
+    flex-direction: row;
     justify-content: center;
-    text-align: center;
-    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
   .sidebar ul {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
   }
 
   .sidebar ul li {
-    width: 100%;
-    text-align: center;
+    margin: 0;
   }
 
   .sidebar ul li a {
-    display: inline-block;
-    width: auto;
-    padding: 8px 16px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    padding: 8px 14px;
   }
 
   .content {
-    margin-left: 0;
-    padding: 1rem;
     width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
     box-sizing: border-box;
   }
 
-  h2,
-  .topbar h4 {
-    text-align: center;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
   .card {
-    width: 95%;
-    margin: 0 auto 1rem auto;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   }
 
   .card-header {
-    font-size: 1rem;
     text-align: center;
+    font-size: 1.1rem;
+    padding: 12px;
   }
 
-  .card.shadow.mb-4 {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+  .btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .table-responsive table {
+    width: 100%;
+    table-layout: auto;
   }
 
   body::before,
@@ -339,8 +367,3 @@ body::after {
 }
 
 
-/* ==== TABLA RESPONSIVA ==== */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}

@@ -149,7 +149,11 @@ form.onsubmit = async (e) => {
       body: formData,
     });
     const response = await res.json();
-    alert(response.message);
+    let msg = response.message || "Cliente guardado correctamente";
+    if (response.debug) {
+      msg += "\n\nDEBUG:\n" + response.debug;
+    }
+    alert(msg);
     if (response.success) {
       cancelarEdicion();
       cargarClientes();

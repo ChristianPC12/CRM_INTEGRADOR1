@@ -1,103 +1,101 @@
 /* ====== ESTILOS PARA USUARIOS ====== */
 
 #usuario-container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 1rem;
-    background-color: var(--GRIS);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    border-radius: 12px;
+  max-width: 1100px;
+  margin: auto;
+  padding: 1rem;
+  background-color: var(--GRIS);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
 }
 
 .card-header {
-    font-weight: bold;
-    font-size: 1.1rem;
-    background-color: #f5f5f5;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #f5f5f5;
 }
 
 #usuarioForm .form-label {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 #usuarioForm input,
 #usuarioForm select,
 #usuarioForm textarea {
-    font-size: 0.95rem;
-    border-radius: 6px;
+  font-size: 0.95rem;
+  border-radius: 6px;
 }
 
 #usuarioForm textarea {
-    resize: vertical;
-    min-height: 90px;
+  resize: vertical;
+  min-height: 90px;
 }
 
 .btn {
-    min-width: 120px;
+  min-width: 120px;
 }
 
 .table-responsive {
-    max-height: 400px;
-    overflow-y: auto;
+  max-height: 400px;
+  overflow-y: auto;
 }
-
-
 
 /* ====== RESPONSIVE ====== */
 
 @media screen and (max-width: 768px) {
-    #usuario-container {
-        padding: 0.5rem;
-    }
+  #usuario-container {
+    padding: 0.5rem;
+  }
 
-    .card-header {
-        font-size: 1rem;
-        text-align: center;
-    }
+  .card-header {
+    font-size: 1rem;
+    text-align: center;
+  }
 
-    #usuarioForm .row {
-        flex-direction: column;
-    }
+  #usuarioForm .row {
+    flex-direction: column;
+  }
 
-    #usuarioForm input,
-    #usuarioForm select,
-    #usuarioForm textarea {
-        width: 100%;
-    }
+  #usuarioForm input,
+  #usuarioForm select,
+  #usuarioForm textarea {
+    width: 100%;
+  }
 
-    .btn {
-        width: 100%;
-        margin-top: 10px;
-    }
+  .btn {
+    width: 100%;
+    margin-top: 10px;
+  }
 
-    .d-flex.justify-content-end {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 #contrasena {
-    padding-right: 35px !important;
+  padding-right: 35px !important;
 }
 
 .toggle-password-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #f9c41f;
-    cursor: pointer;
-    z-index: 10;
-    width: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #f9c41f;
+  cursor: pointer;
+  z-index: 10;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .toggle-password-btn:hover {
-    color: #000000 !important;
+  color: #000000 !important;
 }
 
 :root {
@@ -191,6 +189,18 @@ body::after {
   border-color: #a52834;
 }
 
+.btn-amarillo {
+  background-color: var(--amarillo);
+  border-color: var(--amarillo);
+  color: #000 !important;
+}
+.btn-amarillo:hover,
+.btn-amarillo:focus {
+  background-color: #d8b216 !important; /* Un poco más claro en hover */
+  border-color: #d8b216 !important;
+  color: #000 !important;
+}
+
 .sidebar {
   width: 220px;
   background-color: var(--negro);
@@ -262,7 +272,6 @@ body::after {
   flex-grow: 1;
 }
 
-
 /* ==== CONTENIDO PRINCIPAL (ESCRITORIO) ==== */
 .content {
   margin-left: 200px;
@@ -285,7 +294,7 @@ body::after {
     padding: 12px;
     flex-direction: column; /* <--- CORREGIDO: antes decía row */
     justify-content: flex-start; /* <--- CORREGIDO */
-    align-items: flex-start;     /* <--- CORREGIDO */
+    align-items: flex-start; /* <--- CORREGIDO */
     gap: 10px;
     position: fixed;
     top: 0;
@@ -331,7 +340,7 @@ body::after {
     width: 100%;
     margin-bottom: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   }
 
   .card-header {
@@ -365,5 +374,3 @@ body::after {
     display: none;
   }
 }
-
-

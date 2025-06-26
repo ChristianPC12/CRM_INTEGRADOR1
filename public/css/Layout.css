@@ -168,6 +168,8 @@ body {
   color: #ccc !important;
   cursor: not-allowed !important;
   background: none !important;
+  opacity: 0.5 !important;
+  pointer-events: none !important;
 }
 .disabled-link i {
   color: #ccc !important;
@@ -229,6 +231,30 @@ body {
     margin-left: 0;
     padding-top: 60px;
   }
+}
+
+/* ======================= */
+/* ESTILOS PARA ELEMENTOS DESHABILITADOS */
+/* ======================= */
+
+/* Botones deshabilitados */
+.btn-disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Campos de formulario de solo lectura */
+.form-readonly {
+  background-color: #f8f9fa !important;
+  color: #6c757d !important;
+  cursor: not-allowed !important;
+}
+
+/* Elementos con acceso restringido */
+.access-restricted {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
 }
 
 

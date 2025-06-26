@@ -5,27 +5,34 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Gestión de Usuarios</h2>
 
-    <!-- Formulario de registro de usuario -->
+    <!-- Formulario de registro/edición de usuario -->
     <div class="card shadow mb-4">
         <div class="card-header">Registro de Usuario</div>
         <div class="card-body">
+            <!-- Título dinámico -->
+            <h3 id="usuarioFormTitulo" class="mb-3">Registrar Usuario</h3>
             <form id="usuarioForm">
+                <input type="hidden" id="usuarioId" value="">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="usuario" class="form-label">Usuario *</label>
-                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Por favor introduzca un nombre" required>
+                        <input type="text" class="form-control" id="usuario" name="usuario"
+                            placeholder="Por favor introduzca un nombre" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="contrasena" class="form-label">Contraseña *</label>
                         <div class="position-relative">
-                            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+                            <input type="password" class="form-control" id="contrasena" name="contrasena" required
+                                maxlength="16">
                             <button type="button" id="togglePassword" class="toggle-password-btn">
                                 <i class="bi bi-eye" id="passwordIcon"></i>
                             </button>
                         </div>
                         <div class="form-text">
-                            Mínimo 6 caracteres, al menos 1 letra y 1 número.
+                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra, 1 número y 1 carácter
+                            especial (ej: !, @, #, $).
                         </div>
+
                     </div>
                 </div>
 
@@ -41,7 +48,8 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="privilegios" class="form-label">Privilegios (descripción)</label>
-                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3" placeholder="" readonly></textarea>
+                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3" placeholder=""
+                            readonly></textarea>
                     </div>
                 </div>
 

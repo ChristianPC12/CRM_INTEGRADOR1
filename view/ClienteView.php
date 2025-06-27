@@ -56,7 +56,7 @@
     </div>
 
     <!-- Lista de clientes -->
-     <div class="card shadow">
+    <div class="card shadow mb-4">
     <div class="card-header d-flex justify-content-between">
         <h5 class="mb-0">Lista de Clientes</h5>
         <button class="btn btn-sm btn-outline-light" onclick="cargarClientes()">Actualizar</button>

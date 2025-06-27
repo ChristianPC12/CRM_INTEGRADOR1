@@ -26,7 +26,7 @@ body::before {
   left: 0;
   width: 40%;
   height: 70%;
-  background: var(--blanco);
+  background: var(--amarillo);
   z-index: -1;
 }
 
@@ -59,7 +59,7 @@ body::after {
   right: 0;
   width: 60%;
   height: 50%;
-  background: var(--blanco);
+  background: var(--gris);
   z-index: -1;
 }
 

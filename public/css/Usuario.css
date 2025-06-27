@@ -1,3 +1,10 @@
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --negro: #000000;
+  --blanco: #ffffff;
+}
+
 /* ====== ESTILOS PARA USUARIOS ====== */
 
 #usuario-container {
@@ -34,47 +41,8 @@
   overflow-y: auto;
 }
 
+/* ====== SCROLL OCULTO EN TODOS LOS CONTENEDORES ====== */
 
-
-/* ====== RESPONSIVE ====== */
-
-@media screen and (max-width: 768px) {
-  #usuario-container {
-    padding: 0.5rem;
-  }
-
-  .card-header {
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  #usuarioForm .row {
-    flex-direction: column;
-  }
-
-  #usuarioForm input,
-  #usuarioForm select,
-  #usuarioForm textarea {
-    width: 100%;
-  }
-
-  .btn {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .d-flex.justify-content-end {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-:root {
-  --amarillo: #f9c41f;
-  --gris: #838886;
-  --negro: #000000;
-  --blanco: #ffffff;
-}
 body,
 html,
 .container,
@@ -89,6 +57,8 @@ html::-webkit-scrollbar,
 .content::-webkit-scrollbar {
   display: none;                /* Chrome, Safari, Opera */
 }
+
+/* ====== DECORACIÓN FONDO ====== */
 
 body::before {
   content: "";
@@ -110,6 +80,32 @@ body::after {
   height: 50%;
   background: var(--gris);
   z-index: -1;
+}
+
+/* ====== COMPONENTES ====== */
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card.shadow.mb-4 {
+  background: var(--blanco);
+  box-shadow: 0 0 10px rgba(249, 196, 31, 0.4);
+  border-left: 5px solid var(--amarillo);
+}
+
+.card.shadow:last-of-type {
+  background: var(--blanco);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .btn-primary {
@@ -135,30 +131,6 @@ body::after {
   box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.5);
 }
 
-.card {
-  border: none;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.card.shadow.mb-4 {
-  background: var(--blanco);
-  box-shadow: 0 0 10px rgba(249, 196, 31, 0.4);
-  border-left: 5px solid var(--amarillo);
-}
-
-.card-header {
-  background-color: var(--negro) !important;
-  color: var(--blanco) !important;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-.card.shadow:last-of-type {
-  background: var(--blanco);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-}
-
 .btn-danger:hover {
   background-color: #bb2d3b;
   border-color: #a52834;
@@ -169,12 +141,15 @@ body::after {
   border-color: var(--amarillo);
   color: #000 !important;
 }
+
 .btn-amarillo:hover,
 .btn-amarillo:focus {
-  background-color: #d8b216 !important; /* Un poco más claro en hover */
+  background-color: #d8b216 !important;
   border-color: #d8b216 !important;
   color: #000 !important;
 }
+
+/* ====== SIDEBAR ====== */
 
 .sidebar {
   width: 220px;
@@ -240,6 +215,8 @@ body::after {
   color: var(--negro);
 }
 
+/* ====== CONTENIDO PRINCIPAL ====== */
+
 .content {
   margin-left: 200px;
   padding: 24px;
@@ -247,15 +224,9 @@ body::after {
   flex-grow: 1;
 }
 
-/* ==== CONTENIDO PRINCIPAL (ESCRITORIO) ==== */
-.content {
-  margin-left: 200px;
-  padding: 24px;
-  box-sizing: border-box;
-  flex-grow: 1;
-}
+/* ====== RESPONSIVE ====== */
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   body {
     display: flex;
     flex-direction: column;
@@ -265,17 +236,17 @@ body::after {
   }
 
   .sidebar {
-    width: 250px; /* <--- CORREGIDO: antes decía 100% */
+    width: 250px;
     padding: 12px;
-    flex-direction: column; /* <--- CORREGIDO: antes decía row */
-    justify-content: flex-start; /* <--- CORREGIDO */
-    align-items: flex-start; /* <--- CORREGIDO */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 10px;
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
-    background-color: #000; /* o el color que uses en el menú */
+    background-color: #000;
     z-index: 999;
     transition: all 0.3s ease-in-out;
   }
@@ -350,8 +321,9 @@ body::after {
   }
 }
 
+/* ====== AJUSTES EXTRA ====== */
 
 .mover-derecha {
- max-width: 98.5%; /* Ajustalo según lo angosto que lo querés */
+  max-width: 98.5%;
   transform: translateX(2%);
 }

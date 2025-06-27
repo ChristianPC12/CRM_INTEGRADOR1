@@ -13,8 +13,10 @@ body {
   position: relative;
   background-color: var(--gris);
   width: 100%;
-  /* Quitar esto evita bloquear el scroll horizontal */
-  /* overflow-x: hidden; */
+}
+
+body::-webkit-scrollbar {
+  display: none;   
 }
 
 body::before {
@@ -167,6 +169,23 @@ body::after {
   flex-grow: 1;
 }
 
+.container {
+  max-width: 79%; /* Ajustalo según lo angosto que lo querés */
+  transform: translateX(-12%);
+}
+
+#clienteLista {
+  max-height: 300px;         /* altura máxima visible */
+  overflow-y: auto;          /* scroll vertical si es necesario */
+  padding-right: 10px;       /* espacio por si se oculta la barra */
+  scrollbar-width: none;     /* Firefox: oculta scrollbar */
+}
+
+#clienteLista::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari: oculta scrollbar */
+}
+
+
 /* ==== RESPONSIVE PARA MÓVILES ==== */
 @media (max-width: 768px) {
   .sidebar {
@@ -239,6 +258,13 @@ body::after {
   body::after {
     display: none;
   }
+
+  .container {
+  max-width: 95%;
+  margin: 0 auto;
+  transform: none;
+}
+
 }
 
 

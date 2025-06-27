@@ -327,7 +327,7 @@ body {
   .compra-bloque-inicio {
     position: static;
     width: 92%;
-    height: auto;
+    min-height: 83vh; /* ← Aquí se aumenta la altura mínima */
     max-height: none;
     margin: 5vh auto;
     padding: 6% 4%;

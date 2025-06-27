@@ -1,39 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   let editandoId = null;
 
-  // Mostrar/ocultar contraseña
-  const togglePassword = document.getElementById("togglePassword");
-  const passwordInput = document.getElementById("contrasena");
-  const passwordIcon = document.getElementById("passwordIcon");
-
-  if (togglePassword && passwordInput && passwordIcon) {
-    togglePassword.addEventListener("mousedown", function () {
-      passwordInput.type = "text";
-      passwordIcon.classList.replace("bi-eye", "bi-eye-slash");
-      togglePassword.title = "Ocultar contraseña";
-    });
-    togglePassword.addEventListener("mouseup", function () {
-      passwordInput.type = "password";
-      passwordIcon.classList.replace("bi-eye-slash", "bi-eye");
-      togglePassword.title = "Mostrar contraseña";
-    });
-    togglePassword.addEventListener("mouseleave", function () {
-      passwordInput.type = "password";
-      passwordIcon.classList.replace("bi-eye-slash", "bi-eye");
-      togglePassword.title = "Mostrar contraseña";
-    });
-    togglePassword.addEventListener("touchstart", function () {
-      passwordInput.type = "text";
-      passwordIcon.classList.replace("bi-eye", "bi-eye-slash");
-      togglePassword.title = "Ocultar contraseña";
-    });
-    togglePassword.addEventListener("touchend", function () {
-      passwordInput.type = "password";
-      passwordIcon.classList.replace("bi-eye-slash", "bi-eye");
-      togglePassword.title = "Mostrar contraseña";
-    });
-  }
-
   // Validación de contraseña: 6 a 16 caracteres, al menos una letra, un número y un carácter especial
   function esContrasenaValida(contrasena) {
     const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{6,16}$/;
@@ -63,8 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      
-
       if (contrasena.length > 16) {
         alert("La contraseña debe tener entre 6 y 16 caracteres, al menos una letra, un número y un carácter especial.");
         return;
@@ -82,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const datos = new FormData();
       datos.append("usuario", usuario);
-      // Convertir rol a mayúsculas antes de enviarlo
       datos.append("rol", rol);
       datos.append("privilegios", privilegios);
 
@@ -250,12 +214,12 @@ document.addEventListener("DOMContentLoaded", function () {
     usuarioInput.oninput = function (e) {
       e.target.setCustomValidity("");
     };
-    // Conversión automática a mayúsculas
     usuarioInput.addEventListener("input", function () {
       this.value = this.value.toUpperCase();
     });
   }
 
+  const passwordInput = document.getElementById("contrasena");
   if (passwordInput) {
     passwordInput.setAttribute("maxlength", "16");
     passwordInput.oninvalid = function (e) {

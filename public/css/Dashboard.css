@@ -419,27 +419,34 @@ body::-webkit-scrollbar {
   color: var(--blanco);
 }
 
-/* Caja que acomoda el la descripción de la tarea*/
+
 /* Caja que acomoda el la descripción de la tarea*/
 .contenido-tarea {
-    font-size: 0.9rem;
-    margin-top: 1rem; /* Reducido de 2rem a 1rem para subirla */
-    margin-bottom: 1rem; /* Agregado para dar espacio abajo */
-    word-break: break-word;
-    overflow-wrap: break-word;
-    max-height: 50px; /* Agregado altura máxima un poco más grande */
-    min-height: 50px; /* Agregado altura mínima para hacerla más grande */
-    overflow-y: auto;
-    overflow-x: hidden;
-    white-space: pre-wrap;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    font-size: 1rem;            
+    margin-top: 1rem;                 
+    margin-bottom: 1rem;             
+    min-height: 45px;                
+    overflow-x: hidden;            
+     padding: 4px 6px;
+   /* scrollbar-width: none; */        /* oculta la barra de scroll en Firefox (sólo si overflow es auto) */
+    -ms-overflow-style: none;     
     background-color: var(--amarillo);
-    border-radius: 6px;
-    line-height: 1.3;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    border-radius: 6px;              
+    line-height: 1.3;           
+    align-items: flex-start;      
+    justify-content: flex-start;      
+
+  
+    overflow-wrap: anywhere;        
+    word-break: break-all;         
+
+   
+    white-space: pre-wrap;           
+
+    max-height: none;               
+    overflow-y: visible;            
+
+    display: block;                 
 }
 
 /* Ocultar scrollbar en webkit browsers */
@@ -906,4 +913,24 @@ body::-webkit-scrollbar {
     display: block;
     margin-top: 0.5rem;
   }
+}
+
+
+
+html,
+body {
+  /* 1. nunca permitir barras ni desplazamiento lateral */
+  overflow-x: hidden !important;
+
+  /* 2. los gestos táctiles solo moverán verticalmente */
+  touch-action: pan-y;          /* Chrome, Edge, Safari, Firefox */
+
+  /* 3. evita el “rebote” o overscroll a los lados */
+  overscroll-behavior-x: contain; /* ó 'none' si quieres aún más estricto */
+}
+
+/* Asegura que el contenedor principal no pueda exceder el ancho */
+#container-dashboard {
+  max-width: 100vw;
+  overflow-x: hidden;
 }

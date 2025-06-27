@@ -63,10 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      if (!esUsuarioMayusculas(usuario)) {
-        alert("El nombre de usuario debe estar completamente en mayúsculas (sin espacios ni caracteres especiales).");
-        return;
-      }
+      
 
       if (contrasena.length > 16) {
         alert("La contraseña debe tener entre 6 y 16 caracteres, al menos una letra, un número y un carácter especial.");
@@ -85,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const datos = new FormData();
       datos.append("usuario", usuario);
+      // Convertir rol a mayúsculas antes de enviarlo
       datos.append("rol", rol);
       datos.append("privilegios", privilegios);
 
@@ -151,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
             html += `<tr>
               <td>${usuario.id}</td>
               <td>${usuario.usuario}</td>
-              <td>${usuario.rol}</td>
+              <td>${usuario.rol.toUpperCase()}</td>
               <td>
                 <button class='btn btn-sm btn-amarillo editar-usuario' data-id='${usuario.id}' data-usuario='${usuario.usuario}' data-rol='${usuario.rol}'>Editar</button>
                 <button class='btn btn-sm btn-danger eliminar-usuario' data-id='${usuario.id}'>Eliminar</button>

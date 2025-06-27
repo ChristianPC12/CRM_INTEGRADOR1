@@ -41,9 +41,9 @@
                         <label for="rol" class="form-label">Rol *</label>
                         <select class="form-select" id="rol" name="rol" required>
                             <option value="">Seleccione un rol</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Salonero">Salonero</option>
-                            <option value="Propietario">Propietario</option>
+                            <option value="Administrador">ADMINISTRADOR</option>
+                            <option value="Salonero">SALONERO</option>
+                            <option value="Propietario">PROPIETARIO</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">

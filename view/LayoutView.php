@@ -21,6 +21,10 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cliente.css">
     <?php elseif ($vista === 'compras'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Compra.css">
+    <?php elseif ($vista === 'codigo'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Codigo.css">
+    <?php elseif ($vista === 'analisis'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Analisis.css">
     <?php endif; ?>
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
@@ -61,8 +65,21 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="index.php?view=compras" id="link-compras" class="<?= $vista === 'compras' ? 'active' : '' ?>">
+                <a href="index.php?view=compras" id="link-compras"
+                    class="<?= $vista === 'compras' ? 'active' : '' ?>">
                     <i class="bi bi-tag"></i> Beneficios
+                </a>
+            </li>
+            <li>
+                <a href="index.php?view=codigo" id="link-codigo"
+                    class="<?= $vista === 'codigo' ? 'active' : '' ?>">
+                    <i class="bi bi-upc-scan"></i> Código de barras
+                </a>
+            </li>
+            <li>
+                <a href="index.php?view=analisis" id="link-analisis"
+                    class="<?= $vista === 'analisis' ? 'active' : '' ?>">
+                    <i class="bi bi-graph-up-arrow"></i> Análisis
                 </a>
             </li>
             <li>
@@ -71,7 +88,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
         </ul>
-
     </aside>
 
     <div class="content">
@@ -85,6 +101,10 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'RecompensasView.php';
             } elseif ($vista === 'compras') {
                 include 'CompraView.php';
+            } elseif ($vista === 'codigo') {
+                include 'CodigoView.php';
+            } elseif ($vista === 'analisis') {
+                include 'AnalisisView.php';
             } else {
                 include 'DashboardView.php';
             }
@@ -134,9 +154,8 @@ $vista = $_GET['view'] ?? 'dashboard';
 
                 // Solo aplicar restricciones de solo lectura en la vista de clientes
                 const currentView = '<?= $vista ?>';
-                
+
                 if (currentView === 'clientes') {
-                    // Desactivar botón de guardar
                     const submitBtn = document.getElementById('submitBtn');
                     if (submitBtn) {
                         submitBtn.disabled = true;
@@ -144,7 +163,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                         submitBtn.title = "No tienes permisos para guardar clientes";
                     }
 
-                    // Desactivar botón de cancelar edición
                     const cancelBtn = document.getElementById('cancelBtn');
                     if (cancelBtn) {
                         cancelBtn.disabled = true;
@@ -152,7 +170,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                         cancelBtn.title = "No tienes permisos para editar clientes";
                     }
 
-                    // Hacer los campos del formulario de solo lectura
                     const form = document.getElementById('clienteForm');
                     if (form) {
                         const campos = form.querySelectorAll("input, select, textarea");
@@ -163,7 +180,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                         });
                     }
 
-                    // Desactivar botones de editar y eliminar en la tabla
                     const observer = new MutationObserver(() => {
                         document.querySelectorAll("button.btn-warning").forEach((btn) => {
                             btn.disabled = true;
@@ -177,14 +193,12 @@ $vista = $_GET['view'] ?? 'dashboard';
                         });
                     });
 
-                    // Observar cambios en la tabla de clientes
                     const lista = document.getElementById("clienteLista");
                     if (lista) {
                         observer.observe(lista, { childList: true, subtree: true });
                     }
                 }
             } else if (rol === "Administrador") {
-                // Desactivar Usuarios en todas las vistas (acceso restringido)
                 const linkUsuarios = document.getElementById('link-usuarios');
                 if (linkUsuarios) {
                     linkUsuarios.classList.add('disabled-link');
@@ -192,11 +206,9 @@ $vista = $_GET['view'] ?? 'dashboard';
                     linkUsuarios.title = "Acceso restringido";
                 }
 
-                // Solo aplicar restricciones de eliminación en la vista de clientes
                 const currentView = '<?= $vista ?>';
-                
+
                 if (currentView === 'clientes') {
-                    // Desactivar solo botones de eliminar en la tabla
                     const observer = new MutationObserver(() => {
                         document.querySelectorAll("button.btn-danger").forEach((btn) => {
                             btn.disabled = true;
@@ -205,7 +217,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                         });
                     });
 
-                    // Observar cambios en la tabla de clientes
                     const lista = document.getElementById("clienteLista");
                     if (lista) {
                         observer.observe(lista, { childList: true, subtree: true });

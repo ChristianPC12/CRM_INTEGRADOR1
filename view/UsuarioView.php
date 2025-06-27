@@ -2,7 +2,7 @@
 <div class="decor-line" style="top: 120px; left: 40%;"></div>
 <div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
 
-<div class="container mt-4">
+<div class="container mt-4 mover-derecha">
     <h2 class="text-center mb-4">Gestión de Usuarios</h2>
 
     <!-- Formulario de registro/edición de usuario -->
@@ -24,9 +24,6 @@
                         <div class="position-relative">
                             <input type="password" class="form-control" id="contrasena" name="contrasena" required
                                 maxlength="16">
-                            <button type="button" id="togglePassword" class="toggle-password-btn">
-                                <i class="bi bi-eye" id="passwordIcon"></i>
-                            </button>
                         </div>
                         <div class="form-text">
                             La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra, 1 número y 1 carácter
@@ -62,7 +59,7 @@
     </div>
 
     <!-- Lista de usuarios -->
-    <div class="card shadow">
+<div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between">
             <h5 class="mb-0">Lista de Usuarios</h5>
             <button class="btn btn-sm btn-outline-light" onclick="cargarUsuarios()">Actualizar</button>

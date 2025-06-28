@@ -25,15 +25,6 @@ try {
     $dao = new TareaDAO($db);
     $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
-    // 📝 Guardar en log para depuración
-    $logData = [
-        'fecha' => date('Y-m-d H:i:s'),
-        'method' => $_SERVER['REQUEST_METHOD'],
-        'action' => $action,
-        'post' => $_POST
-    ];
-    file_put_contents(__DIR__ . '/../log_tarea.txt', json_encode($logData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
     switch ($action) {
         case 'create':
             $descripcion = $_POST['descripcion'] ?? '';

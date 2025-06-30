@@ -1,5 +1,5 @@
 <?php
-// Archivo: model.cliente/ClienteDTO.php
+// Archivo: model/cliente/ClienteDTO.php
 class ClienteDTO
 {
     public $id;
@@ -9,5 +9,6 @@ class ClienteDTO
     public $telefono;
     public $lugarResidencia;
     public $fechaCumpleanos;
-    public $acumulado; // NUEVO: Campo para el saldo/acumulado
+    public $acumulado;
+    public $fechaRegistro; // NUEVO: Fecha en que se registró el cliente
 }

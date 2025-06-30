@@ -1,5 +1,5 @@
 <?php
-// Archivo: model.cliente/ClienteMapper.php
+// Archivo: model/cliente/ClienteMapper.php
 require_once 'ClienteDTO.php';
 
 class ClienteMapper
@@ -15,6 +15,7 @@ class ClienteMapper
         $dto->lugarResidencia = $row['LugarResidencia'];
         $dto->fechaCumpleanos = $row['FechaCumpleanos'];
         $dto->acumulado = $row['Acumulado'];
+        $dto->fechaRegistro = $row['FechaRegistro']; // NUEVO: se asigna desde el SELECT
         return $dto;
     }
 }

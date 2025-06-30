@@ -170,8 +170,8 @@ body::after {
 }
 
 .container {
-  max-width: 79%; /* Ajustalo según lo angosto que lo querés */
-  transform: translateX(-12%);
+  max-width: 102%; /* Ajustalo según lo angosto que lo querés */
+  transform: translateX(1%);
 }
 
 #clienteLista {

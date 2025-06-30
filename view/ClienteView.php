@@ -2,7 +2,7 @@
 <div class="decor-line" style="top: 120px; left: 40%;"></div>
 <div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
 
-<div class="container mt-4">
+<div class="container mt-4 mover-derecha">
     <h2 class="text-center mb-4">Gestión de Clientes</h2>
 
     <!-- Formulario -->

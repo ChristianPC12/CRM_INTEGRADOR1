@@ -1,0 +1,148 @@
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --blanco: #ffffff;
+  --negro: #000000;
+}
+
+body {
+  margin: 0;
+  position: relative;
+  background-color: var(--gris);
+  width: 100%;
+}
+
+/* Oculta la barra de scroll vertical en el body */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Decoración amarilla en parte superior izquierda */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 70%;
+  background: var(--amarillo);
+  z-index: -1;
+}
+
+/* Decoración gris en parte inferior derecha */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 50%;
+  background: var(--gris);
+  z-index: -1;
+}
+
+/* === CONTENEDOR DE LA TABLA DE CÓDIGOS === */
+.card.shadow:last-of-type {
+  background: var(--blanco);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--amarillo); /* Borde amarillo izquierdo */
+
+}
+
+/* Estilo del encabezado de la tarjeta */
+.card-header {
+  background-color: var(--negro) !important;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--blanco) !important;
+  border-top: none;
+  border-left: none;
+}
+
+/* Contenedor donde se inyecta la tabla */
+#codigoLista {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Oculta scroll en navegadores WebKit */
+#codigoLista::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==== TABLA RESPONSIVA DE CÓDIGOS ==== */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive table {
+  min-width: 700px;
+  white-space: nowrap;
+}
+
+/* Centrado de texto en columnas */
+#codigoLista td,
+#codigoLista th {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Estilo para input de búsqueda */
+#buscarCodigo {
+  width: 180px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 500px;
+  max-height: 1200px;
+}
+
+#codigoLista {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;     /* Altura mínima para centrar si está vacío */
+  height: 100%;          /* Toma toda la altura disponible del card-body */
+  padding-right: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#codigoLista::-webkit-scrollbar {
+  display: none;
+}
+
+#btnActualizar {
+  border: 1px solid var(--blanco);
+  color: var(--blanco);
+  background-color:var(--negro);
+  transition: all 0.3s ease;
+}
+
+#btnActualizar:hover {
+  background-color: var(--blanco);
+  color:var(--negro);
+}
+
+
+
+/*MARGEN GENERAL*/
+.mover-derecha {
+  max-width: 98.5%;
+  transform: translateY(-2.2%);
+  transform: translateX(1.6%);
+}
+

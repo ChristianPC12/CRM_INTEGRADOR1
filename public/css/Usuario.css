@@ -325,5 +325,6 @@ body::after {
 
 .mover-derecha {
   max-width: 98.5%;
-  transform: translateX(2%);
+  transform: translateY(2%);
+  transform: translateX(1.6%);
 }

@@ -1,17 +1,23 @@
 <?php
-// Archivo: controller/CodigoController.php
+// controller/CodigoController.php
 
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/codigo/CodigoDAO.php';
 require_once __DIR__ . '/../model/codigo/CodigoDTO.php';
 require_once __DIR__ . '/../model/codigo/CodigoMapper.php';
-require_once __DIR__ . '/../config/Database.php';
+
+// NUEVO: Incluye también los modelos de cliente para hacer el join manual
+require_once __DIR__ . '/../model/cliente/ClienteDAO.php';
+require_once __DIR__ . '/../model/cliente/ClienteDTO.php';
+require_once __DIR__ . '/../model/cliente/ClienteMapper.php';
 
 try {
     $db = (new Database())->getConnection();
-    if (!$db)
+    if (!$db) {
         throw new Exception("No se pudo conectar a la base de datos");
+    }
 
     $dao = new CodigoDAO($db);
     $action = $_POST['action'] ?? $_GET['action'] ?? '';
@@ -20,40 +26,68 @@ try {
         case 'create':
             $codigo = new CodigoDTO();
             $codigo->idCliente = $_POST['idCliente'] ?? '';
-            $codigo->fechaRegistro = $_POST['fechaRegistro'] ?? '';
+            $codigo->codigoBarra = $_POST['codigoBarra'] ?? '';
             $codigo->cantImpresiones = $_POST['cantImpresiones'] ?? 0;
+
             $result = $dao->create($codigo);
-            echo json_encode(['success' => $result, 'message' => $result ? 'Tarjeta creada exitosamente' : 'Error al crear tarjeta']);
+            echo json_encode($result);
             break;
 
         case 'readAll':
-            echo json_encode(['success' => true, 'data' => $dao->readAll()]);
+            $result = $dao->readAll();
+            // INICIO DEL JOIN MANUAL
+            if ($result['success']) {
+                $clienteDAO = new ClienteDAO($db);
+                foreach ($result['data'] as &$codigo) {
+                    $cliente = $clienteDAO->read($codigo->idCliente);
+                    if ($cliente && is_object($cliente)) {
+                        $codigo->cedula = $cliente->cedula ?? '-';
+                        $codigo->nombre = $cliente->nombre ?? '-';
+                        $codigo->fechaRegistro = $cliente->fechaRegistro ?? '-';
+                    } else {
+                        $codigo->cedula = '-';
+                        $codigo->nombre = '-';
+                        $codigo->fechaRegistro = '-';
+                    }
+                }
+            }
+            // FIN DEL JOIN MANUAL
+            echo json_encode($result);
             break;
 
         case 'read':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
-            $codigo = $dao->read($id);
-            echo json_encode(['success' => $codigo !== null, 'data' => $codigo]);
+            $result = $dao->read($id);
+            echo json_encode($result);
+            break;
+
+        case 'readByCliente':
+            $idCliente = $_POST['idCliente'] ?? $_GET['idCliente'] ?? '';
+            $result = $dao->readByCliente($idCliente);
+            echo json_encode($result);
             break;
 
         case 'update':
             $codigo = new CodigoDTO();
             $codigo->id = $_POST['id'] ?? '';
-            $codigo->idCliente = $_POST['idCliente'] ?? '';
-            $codigo->fechaRegistro = $_POST['fechaRegistro'] ?? '';
+            $codigo->codigoBarra = $_POST['codigoBarra'] ?? '';
             $codigo->cantImpresiones = $_POST['cantImpresiones'] ?? 0;
+
             $result = $dao->update($codigo);
-            echo json_encode(['success' => $result, 'message' => $result ? 'Tarjeta actualizada exitosamente' : 'Error al actualizar tarjeta']);
+            echo json_encode($result);
             break;
 
         case 'delete':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
             $result = $dao->delete($id);
-            echo json_encode(['success' => $result, 'message' => $result ? 'Tarjeta eliminada exitosamente' : 'Error al eliminar tarjeta']);
+            echo json_encode($result);
             break;
 
         default:
-            echo json_encode(['success' => false, 'message' => 'Acción no válida']);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Acción no válida o no definida en CodigoController'
+            ]);
     }
 } catch (Exception $e) {
     echo json_encode([

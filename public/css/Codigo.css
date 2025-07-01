@@ -62,10 +62,11 @@ body::after {
 
 /* Contenedor donde se inyecta la tabla - CORREGIDO */
 #codigoLista {
-  max-height: 300px;
+  max-height: 450px;
   overflow-y: auto;
   padding: 1rem;
   scrollbar-width: none; /* Firefox */
+  transform: translateY(-4%);
 }
 
 /* Oculta scroll en navegadores WebKit */

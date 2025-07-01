@@ -8,6 +8,19 @@ require_once __DIR__ . '/../model/cliente/ClienteDTO.php';
 require_once __DIR__ . '/../model/cliente/ClienteMapper.php';
 require_once __DIR__ . '/../config/Database.php';
 
+// Importar modelo de código para la creación automática
+require_once __DIR__ . '/../model/codigo/CodigoDAO.php';
+require_once __DIR__ . '/../model/codigo/CodigoDTO.php';
+
+/**
+ * Genera un valor único para el código de barras.
+ * Personaliza esta lógica según tu necesidad.
+ */
+function generarCodigoBarra($cliente) {
+    // Ejemplo: cédula + fecha y hora actual para unicidad
+    return $cliente->cedula . date('YmdHis');
+}
+
 try {
     $db = (new Database())->getConnection();
     if (!$db)
@@ -27,7 +40,24 @@ try {
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
             $cliente->acumulado = $_POST['acumulado'] ?? 0;
             $result = $dao->create($cliente);
-            echo json_encode(['success' => $result, 'message' => $result ? 'Cliente creado exitosamente' : 'Error al crear cliente']);
+
+            if ($result) {
+                // Obtener el último ID insertado para cliente
+                $idCliente = $db->lastInsertId();
+
+                // Crear automáticamente el código de barras asociado a este cliente
+                $codigoDAO = new CodigoDAO($db);
+                $codigoDTO = new CodigoDTO();
+                $codigoDTO->idCliente = $idCliente;
+                $codigoDTO->codigoBarra = generarCodigoBarra($cliente);
+                $codigoDTO->cantImpresiones = 0;
+                $codigoDAO->create($codigoDTO);
+            }
+
+            echo json_encode([
+                'success' => $result,
+                'message' => $result ? 'Cliente creado exitosamente' : 'Error al crear cliente'
+            ]);
             break;
 
         case 'readAll':
@@ -49,7 +79,7 @@ try {
             $cliente->telefono = $_POST['telefono'] ?? '';
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
-            $cliente->acumulado = $_POST['acumulado'] ?? null; // NUEVO
+            $cliente->acumulado = $_POST['acumulado'] ?? null;
             $result = $dao->update($cliente);
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente actualizado exitosamente' : 'Error al actualizar cliente']);
             break;

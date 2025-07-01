@@ -1,5 +1,5 @@
 <?php
-// Archivo: model/codigo/CodigoDAO.php
+// model/codigo/CodigoDAO.php
 
 require_once 'CodigoDTO.php';
 require_once 'CodigoMapper.php';
@@ -16,17 +16,25 @@ class CodigoDAO
     public function create($codigo)
     {
         try {
-            $stmt = $this->conn->prepare("CALL CodigoCreate(?, ?)");
-            return $stmt->execute([
+            $stmt = $this->conn->prepare("CALL CodigoCreate(?, ?, ?)");
+            $success = $stmt->execute([
                 $codigo->idCliente,
-                $codigo->fechaRegistro
+                $codigo->codigoBarra,
+                $codigo->cantImpresiones
             ]);
+            if (!$success) {
+                $errorInfo = $stmt->errorInfo();
+                return [
+                    'success' => false,
+                    'message' => 'Error al crear código: ' . $errorInfo[2]
+                ];
+            }
+            return ['success' => true];
         } catch (PDOException $e) {
-            echo json_encode([
+            return [
                 'success' => false,
-                'message' => 'Error PDO: ' . $e->getMessage()
-            ]);
-            exit;
+                'message' => 'Error PDO (create): ' . $e->getMessage()
+            ];
         }
     }
 
@@ -36,10 +44,21 @@ class CodigoDAO
             $stmt = $this->conn->prepare("CALL CodigoRead(?)");
             $stmt->execute([$id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $row ? CodigoMapper::mapRowToDTO($row) : null;
+            if (!$row) {
+                return [
+                    'success' => false,
+                    'message' => "No se encontró el código con id $id"
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => CodigoMapper::mapRowToDTO($row)
+            ];
         } catch (PDOException $e) {
-            error_log("Error al leer codigo: " . $e->getMessage());
-            return null;
+            return [
+                'success' => false,
+                'message' => 'Error PDO (read): ' . $e->getMessage()
+            ];
         }
     }
 
@@ -52,26 +71,40 @@ class CodigoDAO
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $codigos[] = CodigoMapper::mapRowToDTO($row);
             }
-            return $codigos;
+            return [
+                'success' => true,
+                'data' => $codigos
+            ];
         } catch (PDOException $e) {
-            error_log("Error al leer todos los codigos: " . $e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Error PDO (readAll): ' . $e->getMessage()
+            ];
         }
     }
 
     public function update($codigo)
     {
         try {
-            $stmt = $this->conn->prepare("CALL CodigoUpdate(?, ?, ?, ?)");
-            return $stmt->execute([
+            $stmt = $this->conn->prepare("CALL CodigoUpdate(?, ?, ?)");
+            $success = $stmt->execute([
                 $codigo->id,
-                $codigo->idCliente,
-                $codigo->fechaRegistro,
+                $codigo->codigoBarra,
                 $codigo->cantImpresiones
             ]);
+            if (!$success) {
+                $errorInfo = $stmt->errorInfo();
+                return [
+                    'success' => false,
+                    'message' => 'Error al actualizar código: ' . $errorInfo[2]
+                ];
+            }
+            return ['success' => true];
         } catch (PDOException $e) {
-            error_log("Error al actualizar codigo: " . $e->getMessage());
-            return false;
+            return [
+                'success' => false,
+                'message' => 'Error PDO (update): ' . $e->getMessage()
+            ];
         }
     }
 
@@ -79,10 +112,44 @@ class CodigoDAO
     {
         try {
             $stmt = $this->conn->prepare("CALL CodigoDelete(?)");
-            return $stmt->execute([$id]);
+            $success = $stmt->execute([$id]);
+            if (!$success) {
+                $errorInfo = $stmt->errorInfo();
+                return [
+                    'success' => false,
+                    'message' => 'Error al eliminar código: ' . $errorInfo[2]
+                ];
+            }
+            return ['success' => true];
         } catch (PDOException $e) {
-            error_log("Error al eliminar codigo: " . $e->getMessage());
-            return false;
+            return [
+                'success' => false,
+                'message' => 'Error PDO (delete): ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function readByCliente($idCliente)
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL CodigoSelectByCliente(?)");
+            $stmt->execute([$idCliente]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$row) {
+                return [
+                    'success' => false,
+                    'message' => "No se encontró código para el cliente $idCliente"
+                ];
+            }
+            return [
+                'success' => true,
+                'data' => CodigoMapper::mapRowToDTO($row)
+            ];
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Error PDO (readByCliente): ' . $e->getMessage()
+            ];
         }
     }
 }

@@ -46,7 +46,6 @@ body::after {
   background: var(--blanco);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   border-left: 5px solid var(--amarillo); /* Borde amarillo izquierdo */
-
 }
 
 /* Estilo del encabezado de la tarjeta */
@@ -61,11 +60,11 @@ body::after {
   border-left: none;
 }
 
-/* Contenedor donde se inyecta la tabla */
+/* Contenedor donde se inyecta la tabla - CORREGIDO */
 #codigoLista {
   max-height: 300px;
   overflow-y: auto;
-  padding-right: 10px;
+  padding: 1rem;
   scrollbar-width: none; /* Firefox */
 }
 
@@ -109,35 +108,28 @@ body::after {
   max-height: 1200px;
 }
 
-#codigoLista {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;     /* Altura mínima para centrar si está vacío */
-  height: 100%;          /* Toma toda la altura disponible del card-body */
-  padding-right: 10px;
-  overflow-y: auto;
-  scrollbar-width: none;
+/* Asegurar que la tabla ocupe todo el ancho disponible */
+#codigoLista table {
+  width: 100%;
+  margin: 0;
 }
 
-#codigoLista::-webkit-scrollbar {
-  display: none;
+/* Ajustar el padding del card-body */
+.card-body.p-0 {
+  padding: 0 !important;
 }
 
 #btnActualizar {
   border: 1px solid var(--blanco);
   color: var(--blanco);
-  background-color:var(--negro);
+  background-color: var(--negro);
   transition: all 0.3s ease;
 }
 
 #btnActualizar:hover {
   background-color: var(--blanco);
-  color:var(--negro);
+  color: var(--negro);
 }
-
-
 
 /*MARGEN GENERAL*/
 .mover-derecha {
@@ -145,4 +137,3 @@ body::after {
   transform: translateY(-2.2%);
   transform: translateX(1.6%);
 }
-

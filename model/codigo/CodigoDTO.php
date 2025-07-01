@@ -1,9 +1,10 @@
 <?php
-// Archivo: model/codigo/CodigoDTO.php
+// model/codigo/CodigoDTO.php
+
 class CodigoDTO
 {
     public $id;
-    public $idCliente;
-    public $fechaRegistro;
+    public $idCliente;        // Número de tarjeta
+    public $codigoBarra;
     public $cantImpresiones;
 }

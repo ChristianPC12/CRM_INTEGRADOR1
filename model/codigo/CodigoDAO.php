@@ -152,4 +152,43 @@ class CodigoDAO
             ];
         }
     }
+
+    // Agregar estos métodos a tu CodigoDAO.php
+
+    /**
+     * Obtiene un código por ID de cliente
+     */
+    public function obtenerPorIdCliente($idCliente)
+    {
+        try {
+            $sql = "SELECT * FROM codigo WHERE idCliente = :idCliente";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':idCliente', $idCliente);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en obtenerPorIdCliente: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Actualiza el contador de impresiones
+     */
+    public function actualizarContadorImpresiones($idCliente, $nuevaCantidad)
+    {
+        try {
+            $sql = "UPDATE codigo SET cantImpresiones = :cantidad WHERE idCliente = :idCliente";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':cantidad', $nuevaCantidad);
+            $stmt->bindParam(':idCliente', $idCliente);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error en actualizarContadorImpresiones: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

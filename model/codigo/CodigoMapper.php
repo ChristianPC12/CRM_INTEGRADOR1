@@ -1,5 +1,6 @@
 <?php
-// Archivo: model/codigo/CodigoMapper.php
+// model/codigo/CodigoMapper.php
+
 require_once 'CodigoDTO.php';
 
 class CodigoMapper
@@ -9,7 +10,7 @@ class CodigoMapper
         $dto = new CodigoDTO();
         $dto->id = $row['Id'];
         $dto->idCliente = $row['IdCliente'];
-        $dto->fechaRegistro = $row['FechaRegistro'];
+        $dto->codigoBarra = $row['CodigoBarra'];
         $dto->cantImpresiones = $row['CantImpresiones'];
         return $dto;
     }

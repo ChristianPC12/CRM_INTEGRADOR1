@@ -83,6 +83,36 @@ try {
             echo json_encode($result);
             break;
 
+        case 'incrementarImpresiones':
+            if (isset($_POST['idCliente'])) {
+                $idCliente = $_POST['idCliente'];
+
+                // Verificar si ya existe el registro
+                $codigoExistente = $codigoDAO->obtenerPorIdCliente($idCliente);
+
+                if ($codigoExistente) {
+                    // Incrementar contador existente
+                    $nuevaCantidad = $codigoExistente['cantImpresiones'] + 1;
+                    $resultado = $codigoDAO->actualizarContadorImpresiones($idCliente, $nuevaCantidad);
+                } else {
+                    // Crear nuevo registro con contador en 1
+                    $codigo = new Codigo();
+                    $codigo->setIdCliente($idCliente);
+                    $codigo->setCodigoBarra($idCliente); // o generar código único
+                    $codigo->setCantImpresiones(1);
+                    $resultado = $codigoDAO->create($codigo);
+                }
+
+                if ($resultado) {
+                    echo json_encode(['success' => true, 'message' => 'Contador actualizado']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Error al actualizar contador']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'ID de cliente requerido']);
+            }
+            break;
+
         default:
             echo json_encode([
                 'success' => false,

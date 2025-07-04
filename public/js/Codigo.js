@@ -1,10 +1,8 @@
-// public/js/Codigo.js 
- 
-let codigosGlobal = []; // Para filtro de búsqueda en vivo 
- 
+let codigosGlobal = []; // Para filtro de búsqueda en vivo
+
 /** 
  * Carga todos los códigos desde el backend 
- */ 
+ */
 const cargarCodigos = async () => { 
     const contenedor = document.getElementById("codigoLista"); 
     contenedor.innerHTML = `<div class="text-center p-3"> 
@@ -27,28 +25,24 @@ const cargarCodigos = async () => {
     } catch { 
         contenedor.innerHTML = '<div class="alert alert-danger">Error de conexión</div>'; 
     } 
-}; 
+};
 
 /**
  * Genera un código de barras usando el número de tarjeta
  */
 function generarCodigoBarras(numeroTarjeta, elementoId) {
     try {
-        // Usar el número de tarjeta como base para el código de barras
-        // Se puede formatear o procesar según necesidades específicas
-        const codigoParaBarras = String(numeroTarjeta).padStart(8, '0'); // Asegura mínimo 8 dígitos
-        
+        const codigoParaBarras = String(numeroTarjeta).padStart(8, '0'); // Mínimo 8 dígitos
         JsBarcode(`#${elementoId}`, codigoParaBarras, {
-            format: "CODE128", // Formato del código de barras
+            format: "CODE128",
             width: 2,
             height: 50,
-            displayValue: true, // Muestra el número debajo del código
+            displayValue: true,
             fontSize: 12,
             margin: 5
         });
     } catch (error) {
         console.error('Error generando código de barras:', error);
-        // Si hay error, mostrar el número como texto plano
         document.getElementById(elementoId).innerHTML = `<span class="text-danger">Error: ${numeroTarjeta}</span>`;
     }
 }
@@ -59,40 +53,29 @@ function generarCodigoBarras(numeroTarjeta, elementoId) {
 function generarCodigoBarrasParaImpresion(numeroTarjeta) {
     const canvas = document.createElement('canvas');
     const codigoParaBarras = String(numeroTarjeta).padStart(8, '0');
-    
-    // Configuración para mayor calidad
     JsBarcode(canvas, codigoParaBarras, {
         format: "CODE128",
-        width: 2, // Aumentado para mejor calidad
-        height: 40, // Altura óptima para lectura
+        width: 2,
+        height: 40,
         displayValue: true,
         fontSize: 12,
         margin: 3,
-        background: "#ffffff", // Fondo blanco explícito
-        lineColor: "#000000", // Líneas negras sólidas
+        background: "#ffffff",
+        lineColor: "#000000",
         textAlign: "center",
         textPosition: "bottom",
         fontOptions: "bold"
     });
-    
-    // Crear un canvas de mayor resolución para mejor calidad
     const highResCanvas = document.createElement('canvas');
     const ctx = highResCanvas.getContext('2d');
-    
-    // Escalar 2x para mayor nitidez
     const scale = 2;
     highResCanvas.width = canvas.width * scale;
     highResCanvas.height = canvas.height * scale;
-    
-    // Configurar para imágenes nítidas
     ctx.imageSmoothingEnabled = false;
     ctx.webkitImageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;
     ctx.msImageSmoothingEnabled = false;
-    
-    // Dibujar el código escalado
     ctx.drawImage(canvas, 0, 0, canvas.width * scale, canvas.height * scale);
-    
     return highResCanvas;
 }
 
@@ -101,32 +84,21 @@ function generarCodigoBarrasParaImpresion(numeroTarjeta) {
  */
 async function imprimirPDF(numeroTarjeta, barcodeId) {
     try {
-        // Generar código de barras para impresión
         const canvas = generarCodigoBarrasParaImpresion(numeroTarjeta);
-        const imgData = canvas.toDataURL('image/png', 1.0); // Máxima calidad PNG
-        
-        // Crear PDF con jsPDF
+        const imgData = canvas.toDataURL('image/png', 1.0);
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({
             orientation: 'landscape',
             unit: 'mm',
-            format: [85.6, 53.98] // Tamaño tarjeta de crédito en mm
+            format: [85.6, 53.98]
         });
-        
-        // Agregar el código de barras centrado con mejor calidad
-        const imgWidth = 70; // Aumentado para mejor legibilidad
-        const imgHeight = 25; // Proporción ajustada
-        const x = (85.6 - imgWidth) / 2; // Centrar horizontalmente
-        const y = (53.98 - imgHeight) / 2; // Centrar verticalmente
-        
-        doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, '', 'FAST'); // Compresión rápida
-        
-        // Descargar
+        const imgWidth = 70;
+        const imgHeight = 25;
+        const x = (85.6 - imgWidth) / 2;
+        const y = (53.98 - imgHeight) / 2;
+        doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight, '', 'FAST');
         doc.save(`tarjeta_${numeroTarjeta}.pdf`);
-        
-        // Actualizar contador de impresiones
         await actualizarContadorImpresiones(numeroTarjeta);
-        
     } catch (error) {
         console.error('Error generando PDF:', error);
         alert('Error al generar PDF');
@@ -138,11 +110,8 @@ async function imprimirPDF(numeroTarjeta, barcodeId) {
  */
 async function imprimirWord(numeroTarjeta, barcodeId) {
     try {
-        // Generar código de barras para impresión
         const canvas = generarCodigoBarrasParaImpresion(numeroTarjeta);
         const imgData = canvas.toDataURL('image/png');
-        
-        // Crear contenido HTML que se puede abrir en Word
         const htmlContent = `
             <!DOCTYPE html>
             <html>
@@ -179,8 +148,6 @@ async function imprimirWord(numeroTarjeta, barcodeId) {
             </body>
             </html>
         `;
-        
-        // Crear blob y descargar como archivo .doc (HTML que Word puede abrir)
         const blob = new Blob([htmlContent], { type: 'application/msword' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -188,10 +155,7 @@ async function imprimirWord(numeroTarjeta, barcodeId) {
         link.download = `tarjeta_${numeroTarjeta}.doc`;
         link.click();
         URL.revokeObjectURL(url);
-        
-        // Actualizar contador de impresiones
         await actualizarContadorImpresiones(numeroTarjeta);
-        
     } catch (error) {
         console.error('Error generando Word:', error);
         alert('Error al generar documento Word');
@@ -208,17 +172,23 @@ async function actualizarContadorImpresiones(numeroTarjeta) {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `action=incrementarImpresiones&idCliente=${numeroTarjeta}`
         });
-        
-        // Recargar la lista para mostrar el contador actualizado
         cargarCodigos();
     } catch (error) {
         console.error('Error actualizando contador:', error);
     }
 }
- 
+
+/**
+ * Redirige a CompraView con el idCliente (botón invisible sobre el código de barras)
+ */
+window.redirigirCompra = function(idCliente) {
+    // Usamos el enrutador index.php
+    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}`;
+}
+
 /** 
  * Muestra la tabla de códigos 
- */ 
+ */
 function mostrarCodigos(codigos) { 
     const contenedor = document.getElementById("codigoLista"); 
     if (!codigos || codigos.length === 0) { 
@@ -227,7 +197,8 @@ function mostrarCodigos(codigos) {
     } 
 
     let filas = codigos.map((codigo, index) => { 
-        const barcodeId = `barcode-${index}`; // ID único para cada código de barras
+        const barcodeId = `barcode-${index}`;
+        // Botón invisible encima del canvas
         return ` 
             <tr> 
                 <td>${codigo.idCliente}</td> 
@@ -235,8 +206,15 @@ function mostrarCodigos(codigos) {
                 <td>${codigo.nombre ?? '-'}</td> 
                 <td>${codigo.fechaRegistro ?? '-'}</td> 
                 <td>
-                    <div class="text-center">
+                    <div class="text-center position-relative" style="width:120px; height:60px; margin:auto;">
                         <canvas id="${barcodeId}"></canvas>
+                        <button 
+                            class="btn-barcode-invisible" 
+                            title="Ir a Beneficio"
+                            onclick="redirigirCompra('${codigo.idCliente}')"
+                            tabindex="-1"
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;z-index:2;">
+                        </button>
                     </div>
                 </td> 
                 <td class="text-center">${codigo.cantImpresiones}</td> 
@@ -277,35 +255,58 @@ function mostrarCodigos(codigos) {
         </table> 
     `; 
 
-    // Generar códigos de barras después de insertar el HTML
     setTimeout(() => {
         codigos.forEach((codigo, index) => {
             const barcodeId = `barcode-${index}`;
             generarCodigoBarras(codigo.idCliente, barcodeId);
         });
-    }, 100); // Pequeño delay para asegurar que el DOM esté listo
-} 
- 
+    }, 100);
+}
+
 /** 
  * Filtro de búsqueda en vivo 
- */ 
+ */
 document.getElementById('buscarCodigo').addEventListener('input', function () { 
     const valor = this.value.trim(); 
     if (!valor) { 
         mostrarCodigos(codigosGlobal); 
         return; 
     } 
-    // Filtro por idCliente (número de tarjeta) 
     const filtrados = codigosGlobal.filter(c => 
         String(c.idCliente).toLowerCase().includes(valor.toLowerCase()) 
     ); 
     mostrarCodigos(filtrados); 
-}); 
- 
+});
+
 /** 
  * Botón actualizar recarga la lista 
- */ 
+ */
 document.getElementById('btnActualizar').addEventListener('click', cargarCodigos); 
- 
-// Carga inicial 
-document.addEventListener("DOMContentLoaded", cargarCodigos);
+
+// --------- DETECCIÓN DE LECTOR DE CÓDIGO DE BARRAS ---------
+
+document.addEventListener("DOMContentLoaded", function() {
+    cargarCodigos();
+
+    // Detectar entrada rápida en el input (lector de código de barras)
+    const inputBusqueda = document.getElementById("buscarCodigo");
+    let buffer = '';
+    let lastKeyTime = Date.now();
+
+    inputBusqueda.addEventListener('keydown', function(e) {
+        const currentTime = Date.now();
+        // Si el tiempo entre teclas es muy corto (<80ms), es probable que sea un lector
+        if (currentTime - lastKeyTime > 100) buffer = '';
+        lastKeyTime = currentTime;
+
+        if (e.key === "Enter" && buffer.length > 0) {
+            // Redirigir a compras con el código escaneado
+            window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(buffer)}`;
+            buffer = '';
+            e.preventDefault();
+            return;
+        } else if (e.key.length === 1) {
+            buffer += e.key;
+        }
+    });
+});

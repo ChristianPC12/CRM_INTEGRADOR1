@@ -1,30 +1,30 @@
 let codigosGlobal = []; // Para filtro de búsqueda en vivo
 
-/** 
+/**
  * Carga todos los códigos desde el backend 
  */
-const cargarCodigos = async () => { 
-    const contenedor = document.getElementById("codigoLista"); 
-    contenedor.innerHTML = `<div class="text-center p-3"> 
-        <div class="spinner-border text-primary" role="status"></div> 
-        <p class="mt-2">Cargando códigos...</p> 
-    </div>`; 
-    try { 
-        const res = await fetch("/CRM_INT/CRM/controller/CodigoController.php", { 
-            method: "POST", 
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }, 
-            body: "action=readAll" 
-        }); 
-        const response = await res.json(); 
-        if (response.success && response.data) { 
-            codigosGlobal = response.data; 
-            mostrarCodigos(response.data); 
-        } else { 
-            contenedor.innerHTML = '<div class="alert alert-warning">No se pudieron cargar los códigos</div>'; 
-        } 
-    } catch { 
-        contenedor.innerHTML = '<div class="alert alert-danger">Error de conexión</div>'; 
-    } 
+const cargarCodigos = async () => {
+    const contenedor = document.getElementById("codigoLista");
+    contenedor.innerHTML = `<div class="text-center p-3">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Cargando códigos...</p>
+    </div>`;
+    try {
+        const res = await fetch("/CRM_INT/CRM/controller/CodigoController.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "action=readAll"
+        });
+        const response = await res.json();
+        if (response.success && response.data) {
+            codigosGlobal = response.data;
+            mostrarCodigos(response.data);
+        } else {
+            contenedor.innerHTML = '<div class="alert alert-warning">No se pudieron cargar los códigos</div>';
+        }
+    } catch {
+        contenedor.innerHTML = '<div class="alert alert-danger">Error de conexión</div>';
+    }
 };
 
 /**
@@ -106,59 +106,44 @@ async function imprimirPDF(numeroTarjeta, barcodeId) {
 }
 
 /**
- * Imprime código de barras en Word (usando HTML convertido)
+ * Imprimir directamente (botón Imprimir)
  */
-async function imprimirWord(numeroTarjeta, barcodeId) {
+async function imprimirCodigo(numeroTarjeta, barcodeId) {
     try {
+        // 1. Crear ventana popup temporal
+        const printWindow = window.open('', '', 'width=400,height=200');
+        // 2. Generar código de barras en canvas y convertirlo en imagen
         const canvas = generarCodigoBarrasParaImpresion(numeroTarjeta);
         const imgData = canvas.toDataURL('image/png');
-        const htmlContent = `
+        // 3. Escribir HTML de impresión (puedes ajustar el CSS)
+        printWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
-                <meta charset="UTF-8">
-                <title>Tarjeta ${numeroTarjeta}</title>
+                <title>Imprimir código de barras</title>
                 <style>
-                    @page {
-                        size: 85.6mm 53.98mm;
-                        margin: 5mm;
-                    }
-                    body {
-                        margin: 0;
-                        padding: 0;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 43.98mm;
-                        font-family: Arial, sans-serif;
-                    }
-                    .barcode-container {
-                        text-align: center;
-                    }
-                    .barcode-image {
-                        max-width: 60mm;
-                        height: auto;
-                    }
+                    body { margin: 0; padding: 0; background: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; }
+                    .barcode-container { text-align: center; }
+                    .barcode-image { width: 300px; max-width: 100%; }
                 </style>
             </head>
             <body>
                 <div class="barcode-container">
                     <img src="${imgData}" alt="Código de barras ${numeroTarjeta}" class="barcode-image">
                 </div>
+                <script>
+                    window.onload = function() {
+                        window.print();
+                        window.onafterprint = function() { window.close(); };
+                    };
+                </script>
             </body>
             </html>
-        `;
-        const blob = new Blob([htmlContent], { type: 'application/msword' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `tarjeta_${numeroTarjeta}.doc`;
-        link.click();
-        URL.revokeObjectURL(url);
+        `);
         await actualizarContadorImpresiones(numeroTarjeta);
     } catch (error) {
-        console.error('Error generando Word:', error);
-        alert('Error al generar documento Word');
+        console.error('Error imprimiendo:', error);
+        alert('Error al imprimir el código de barras');
     }
 }
 
@@ -182,32 +167,30 @@ async function actualizarContadorImpresiones(numeroTarjeta) {
  * Redirige a CompraView con el idCliente (botón invisible sobre el código de barras)
  */
 window.redirigirCompra = function(idCliente) {
-    // Usamos el enrutador index.php
     window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}`;
 }
 
 /** 
  * Muestra la tabla de códigos 
  */
-function mostrarCodigos(codigos) { 
-    const contenedor = document.getElementById("codigoLista"); 
-    if (!codigos || codigos.length === 0) { 
-        contenedor.innerHTML = '<div class="alert alert-info">No hay códigos registrados</div>'; 
-        return; 
-    } 
+function mostrarCodigos(codigos) {
+    const contenedor = document.getElementById("codigoLista");
+    if (!codigos || codigos.length === 0) {
+        contenedor.innerHTML = '<div class="alert alert-info">No hay códigos registrados</div>';
+        return;
+    }
 
-    let filas = codigos.map((codigo, index) => { 
+    let filas = codigos.map((codigo, index) => {
         const barcodeId = `barcode-${index}`;
-        // Botón invisible encima del canvas
-        return ` 
-            <tr> 
-                <td>${codigo.idCliente}</td> 
-                <td>${codigo.cedula ?? '-'}</td> 
-                <td>${codigo.nombre ?? '-'}</td> 
-                <td>${codigo.fechaRegistro ?? '-'}</td> 
+        return `
+            <tr>
+                <td>${codigo.idCliente}</td>
+                <td>${codigo.cedula ?? '-'}</td>
+                <td>${codigo.nombre ?? '-'}</td>
+                <td>${codigo.fechaRegistro ?? '-'}</td>
                 <td>
                     <div class="text-center position-relative" style="width:120px; height:60px; margin:auto;">
-                        <canvas id="${barcodeId}"></canvas>
+    <canvas id="${barcodeId}" style="display:block; margin:0 auto; width:100%; height:auto;"></canvas>
                         <button 
                             class="btn-barcode-invisible" 
                             title="Ir a Beneficio"
@@ -216,8 +199,8 @@ function mostrarCodigos(codigos) {
                             style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;z-index:2;">
                         </button>
                     </div>
-                </td> 
-                <td class="text-center">${codigo.cantImpresiones}</td> 
+                </td>
+                <td class="text-center">${codigo.cantImpresiones}</td>
                 <td class="text-center">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-sm btn-outline-danger" 
@@ -225,35 +208,35 @@ function mostrarCodigos(codigos) {
                                 title="Descargar PDF">
                             <i class="fas fa-file-pdf"></i> PDF
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-primary" 
-                                onclick="imprimirWord('${codigo.idCliente}', '${barcodeId}')"
-                                title="Descargar Word">
-                            <i class="fas fa-file-word"></i> Word
+                        <button type="button" class="btn btn-sm btn-outline-success" 
+                                onclick="imprimirCodigo('${codigo.idCliente}', '${barcodeId}')"
+                                title="Imprimir">
+                            <i class="fas fa-print"></i> Imprimir
                         </button>
                     </div>
-                </td> 
-            </tr> 
-        `; 
-    }).join(""); 
- 
-    contenedor.innerHTML = ` 
-        <table class="table table-striped table-hover mt-4"> 
-            <thead class="table-dark"> 
-                <tr> 
-                    <th>Número de Tarjeta</th> 
-                    <th>Cédula</th> 
-                    <th>Nombre</th> 
-                    <th>Fecha Registro</th> 
-                    <th class="text-center">Código de barras</th> 
-                    <th class="text-center">CantImpresiones</th> 
-                    <th class="text-center">Imprimir</th> 
-                </tr> 
-            </thead> 
-            <tbody> 
-                ${filas} 
-            </tbody> 
-        </table> 
-    `; 
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    contenedor.innerHTML = `
+        <table class="table table-striped table-hover mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Número de Tarjeta</th>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Fecha Registro</th>
+                    <th class="text-center">Código de barras</th>
+                    <th class="text-center">N° Impresiones</th>
+                    <th class="text-center">Imprimir</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filas}
+            </tbody>
+        </table>
+    `;
 
     setTimeout(() => {
         codigos.forEach((codigo, index) => {
@@ -266,22 +249,22 @@ function mostrarCodigos(codigos) {
 /** 
  * Filtro de búsqueda en vivo 
  */
-document.getElementById('buscarCodigo').addEventListener('input', function () { 
-    const valor = this.value.trim(); 
-    if (!valor) { 
-        mostrarCodigos(codigosGlobal); 
-        return; 
-    } 
-    const filtrados = codigosGlobal.filter(c => 
-        String(c.idCliente).toLowerCase().includes(valor.toLowerCase()) 
-    ); 
-    mostrarCodigos(filtrados); 
+document.getElementById('buscarCodigo').addEventListener('input', function () {
+    const valor = this.value.trim();
+    if (!valor) {
+        mostrarCodigos(codigosGlobal);
+        return;
+    }
+    const filtrados = codigosGlobal.filter(c =>
+        String(c.idCliente).toLowerCase().includes(valor.toLowerCase())
+    );
+    mostrarCodigos(filtrados);
 });
 
 /** 
  * Botón actualizar recarga la lista 
  */
-document.getElementById('btnActualizar').addEventListener('click', cargarCodigos); 
+document.getElementById('btnActualizar').addEventListener('click', cargarCodigos);
 
 // --------- DETECCIÓN DE LECTOR DE CÓDIGO DE BARRAS ---------
 

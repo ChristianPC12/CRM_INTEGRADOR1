@@ -17,15 +17,7 @@
         </div>
     </div>
 </div>
-<!-- Scripts existentes -->
 <script src="/CRM_INT/CRM/public/js/Codigo.js?v=<?= time() ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-
-<!-- Nuevas librerías para generar PDF y Word -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- Alternativa más compatible para Word -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-<!-- Font Awesome para los iconos (si no lo tienes ya) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

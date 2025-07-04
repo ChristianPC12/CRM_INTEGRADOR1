@@ -10,13 +10,40 @@ document.addEventListener("DOMContentLoaded", function () {
     nombreClienteActual = null,
     datosClienteActual = null;
 
+  // NUEVO: Si viene por URL ?idCliente=65, autocompleta y busca
+  const params = new URLSearchParams(window.location.search);
+  const idAuto = params.get('idCliente');
+  if (idAuto) {
+    // 1. Asegura que "Compra" quede seleccionada visual y funcionalmente
+    btns.forEach((b) => b.classList.remove("selected"));
+    btnCompra.classList.add("selected");
+    // Ejecuta también la lógica asociada en el listener
+    btnCompra.dispatchEvent(new Event('click'));
+    // 2. Rellena el input
+    document.getElementById("compraInputId").value = idAuto;
+    // 3. Ejecuta Buscar tras un pequeño delay para que la UI reaccione
+    setTimeout(() => {
+      btnBuscar.click();
+    }, 50);
+  }
+
+  // Manejo del ENTER (lector de código de barras o manual)
+  document.getElementById("compraInputId").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      btns.forEach((b) => b.classList.remove("selected"));
+      btnCompra.classList.add("selected");
+      btnCompra.dispatchEvent(new Event('click'));
+      e.preventDefault();
+      btnBuscar.click();
+    }
+  });
+
   btns.forEach((btn) =>
     btn.addEventListener("click", function () {
       btns.forEach((b) => b.classList.remove("selected"));
       this.classList.add("selected");
       if (this === btnCompra) {
         inputAcumulada.removeAttribute("readonly");
-        // Cambia a 'Acumular' si hay cliente ya cargado, sino 'Buscar'
         if (idClienteActual) {
           btnBuscar.textContent = "Acumular";
           btnBuscar.style.background = "#39cc6b";

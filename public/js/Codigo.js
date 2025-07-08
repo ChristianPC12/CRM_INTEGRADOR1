@@ -299,30 +299,125 @@ document.getElementById('buscarCodigo').addEventListener('input', function () {
  */
 document.getElementById('btnActualizar').addEventListener('click', cargarCodigos);
 
-// --------- DETECCIÓN DE LECTOR DE CÓDIGO DE BARRAS ---------
+// --------- DETECCIÓN MEJORADA DE LECTOR DE CÓDIGO DE BARRAS ---------
 
 document.addEventListener("DOMContentLoaded", function() {
     cargarCodigos();
 
-    // Detectar entrada rápida en el input (lector de código de barras)
+    // Variables para la detección del lector
     const inputBusqueda = document.getElementById("buscarCodigo");
     let buffer = '';
     let lastKeyTime = Date.now();
+    let isScanning = false;
+    let scanTimeout;
 
+    // Función para procesar el código escaneado
+    function procesarCodigoEscaneado(codigo) {
+        console.log('Código escaneado detectado:', codigo);
+        
+        // Limpiar el input
+        inputBusqueda.value = '';
+        
+        // Redirigir a compras con el código escaneado
+        const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(codigo)}`;
+        console.log('Redirigiendo a:', url);
+        window.location.href = url;
+    }
+
+    // Función para resetear el buffer
+    function resetBuffer() {
+        buffer = '';
+        isScanning = false;
+        if (scanTimeout) {
+            clearTimeout(scanTimeout);
+        }
+    }
+
+    // Evento keydown mejorado
     inputBusqueda.addEventListener('keydown', function(e) {
         const currentTime = Date.now();
-        // Si el tiempo entre teclas es muy corto (<80ms), es probable que sea un lector
-        if (currentTime - lastKeyTime > 100) buffer = '';
+        const timeDiff = currentTime - lastKeyTime;
+        
+        // Detectar si es entrada rápida (típico de lector de código de barras)
+        if (timeDiff < 50) {
+            isScanning = true;
+        }
+        
         lastKeyTime = currentTime;
 
-        if (e.key === "Enter" && buffer.length > 0) {
-            // Redirigir a compras con el código escaneado
-            window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(buffer)}`;
-            buffer = '';
+        // Si pasa mucho tiempo entre teclas, resetear buffer
+        if (timeDiff > 200) {
+            resetBuffer();
+        }
+
+        // Manejar Enter
+        if (e.key === "Enter") {
             e.preventDefault();
-            return;
-        } else if (e.key.length === 1) {
+            
+            if (buffer.length > 0) {
+                procesarCodigoEscaneado(buffer);
+                resetBuffer();
+                return;
+            }
+        }
+        
+        // Manejar caracteres normales
+        if (e.key.length === 1) {
             buffer += e.key;
+            
+            // Timeout para procesar automáticamente después de cierto tiempo
+            clearTimeout(scanTimeout);
+            scanTimeout = setTimeout(() => {
+                if (buffer.length >= 4 && isScanning) {
+                    procesarCodigoEscaneado(buffer);
+                    resetBuffer();
+                }
+            }, 100);
         }
     });
+
+    // Evento keyup para capturar casos donde el Enter no se detecta bien
+    inputBusqueda.addEventListener('keyup', function(e) {
+        if (e.key === "Enter" && buffer.length > 0) {
+            procesarCodigoEscaneado(buffer);
+            resetBuffer();
+        }
+    });
+
+    // Evento input como respaldo
+    inputBusqueda.addEventListener('input', function(e) {
+        const valor = this.value.trim();
+        
+        // Si el valor cambió rápidamente y es largo, podría ser un escaneo
+        if (valor.length >= 4 && isScanning) {
+            setTimeout(() => {
+                if (this.value === valor) {
+                    procesarCodigoEscaneado(valor);
+                    resetBuffer();
+                }
+            }, 200);
+        }
+    });
+
+    // Resetear buffer cuando se enfoca el input
+    inputBusqueda.addEventListener('focus', function() {
+        resetBuffer();
+    });
+
+    // Asegurar que el input esté siempre enfocado para capturar la entrada del lector
+    inputBusqueda.focus();
+    
+    // Re-enfocar el input periódicamente
+    setInterval(() => {
+        if (document.activeElement !== inputBusqueda) {
+            inputBusqueda.focus();
+        }
+    }, 1000);
 });
+
+// Función de respaldo para probar manualmente
+window.testRedireccion = function(idCliente) {
+    const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}`;
+    console.log('URL de prueba:', url);
+    window.location.href = url;
+}

@@ -315,11 +315,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function procesarCodigoEscaneado(codigo) {
         console.log('Código escaneado detectado:', codigo);
         
+        // Quitar ceros a la izquierda (00000081 → 81)
+        const codigoLimpio = parseInt(codigo, 10).toString();
+        console.log('Código limpio (sin ceros):', codigoLimpio);
+        
         // Limpiar el input
         inputBusqueda.value = '';
         
-        // Redirigir a compras con el código escaneado
-        const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(codigo)}`;
+        // Redirigir a compras con el código limpio
+        const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(codigoLimpio)}`;
         console.log('Redirigiendo a:', url);
         window.location.href = url;
     }

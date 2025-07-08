@@ -111,20 +111,52 @@ async function imprimirPDF(numeroTarjeta, barcodeId) {
 async function imprimirCodigo(numeroTarjeta, barcodeId) {
     try {
         // 1. Crear ventana popup temporal
-        const printWindow = window.open('', '', 'width=400,height=200');
+        const printWindow = window.open('', '', 'width=700,height=400');
+
         // 2. Generar código de barras en canvas y convertirlo en imagen
         const canvas = generarCodigoBarrasParaImpresion(numeroTarjeta);
         const imgData = canvas.toDataURL('image/png');
-        // 3. Escribir HTML de impresión (puedes ajustar el CSS)
+
+        // 3. Escribir HTML de impresión con CSS de tamaño etiqueta y horizontal
         printWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
                 <title>Imprimir código de barras</title>
                 <style>
-                    body { margin: 0; padding: 0; background: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; }
-                    .barcode-container { text-align: center; }
-                    .barcode-image { width: 300px; max-width: 100%; }
+                    @media print {
+                        @page {
+                            size: 62mm 29mm;
+                            margin: 0;
+                        }
+                        body {
+                            width: 62mm;
+                            height: 29mm;
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+                    }
+                    html, body {
+                        width: 62mm;
+                        height: 29mm;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fff;
+                    }
+                    .barcode-container {
+                        text-align: center;
+                        width: 100%;
+                    }
+                    .barcode-image {
+                        width: 58mm;
+                        max-width: 100%;
+                        height: 20mm;
+                        object-fit: contain;
+                    }
                 </style>
             </head>
             <body>
@@ -146,6 +178,7 @@ async function imprimirCodigo(numeroTarjeta, barcodeId) {
         alert('Error al imprimir el código de barras');
     }
 }
+
 
 /**
  * Actualiza el contador de impresiones en la base de datos

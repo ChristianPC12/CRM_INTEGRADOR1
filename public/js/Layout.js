@@ -49,7 +49,7 @@ window.addEventListener("load", function () {
     return;
   }
 
-  // 🔒 Forzar sidebar cerrado en móvil al cargar (clave para evitar bug al cambiar de vista)
+  //  Forzar sidebar cerrado en móvil al cargar (clave para evitar bug al cambiar de vista)
   if (window.innerWidth <= 768) {
     sidebar.classList.remove("activa");
   }
@@ -66,8 +66,57 @@ window.addEventListener("load", function () {
     });
   });
 });
+  //  Logica del modal de tarjeta
+function mostrarModal() {
+  document.getElementById('modalTarjeta').style.display = 'flex';
+  document.getElementById('modalInputTarjeta').value = '';
+  document.getElementById('modalMensajeError').textContent = '';
+  document.getElementById('modalInputTarjeta').focus();
+}
 
+function cerrarModal() {
+  document.getElementById('modalTarjeta').style.display = 'none';
+}
 
+async function redirigirCompra() {
+  const tarjeta = document.getElementById('modalInputTarjeta').value.trim();
+  const mensajeError = document.getElementById('modalMensajeError');
+  mensajeError.textContent = '';
 
+  if (!tarjeta) {
+    mensajeError.textContent = "Por favor ingrese un número de tarjeta.";
+    return;
+  }
 
+  try {
+    const response = await fetch('/CRM_INT/CRM/controller/ClienteController.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `action=read&id=${encodeURIComponent(tarjeta)}`
+    });
 
+    const json = await response.json();
+    if (!json.success || !json.data) {
+      mensajeError.textContent = "El número de tarjeta no existe.";
+      return;
+    }
+
+    window.location.href = `index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}`;
+  } catch {
+    mensajeError.textContent = "Error de conexión con el servidor.";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const vista = urlParams.get('view');
+  if (vista === 'dashboard') {
+    mostrarModal();
+  }
+
+  const logo = document.querySelector(".img-header");
+  if (logo) {
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', mostrarModal);
+  }
+});

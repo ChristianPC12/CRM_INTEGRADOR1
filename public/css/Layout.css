@@ -256,6 +256,73 @@ body {
   pointer-events: none !important;
   cursor: not-allowed !important;
 }
+.modal-tarjeta {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
 
+.modal-contenido {
+  background: var(--blanco);
+  color: var(--negro);
+  padding: 2em;
+  border-radius: 12px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+}
 
+.modal-contenido h3 {
+  margin-bottom: 1em;
+  font-size: 1.4em;
+}
 
+.modal-contenido input {
+  width: 100%;
+  padding: 0.6em;
+  font-size: 1em;
+  border: 2px solid var(--gris);
+  border-radius: 6px;
+  outline: none;
+}
+
+.modal-mensaje-error {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 0.5em;
+  min-height: 1.2em;
+}
+
+.modal-botones {
+  margin-top: 1.5em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-botones button {
+  padding: 0.6em 1.5em;
+  font-size: 1em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-botones button:first-child {
+  background: #444a47;
+  color: var(--blanco);
+}
+
+.modal-botones button:last-child {
+  background: var(--amarillo);
+  color: var(--negro);
+}
+
+.modal-botones button:hover {
+  opacity: 0.9;
+}

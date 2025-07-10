@@ -1,46 +1,5 @@
 $(document).ready(function () {
-  let indiceActual = 0;
   let tareas = [];
-  const label = $("#descripcionInfo");
-  const contador = $("#contadorCaracteres");
-
-  // Cargar tareas al iniciar
-  listarTareas();
-
-  function variables() {
-    return {
-      descripcion: $("#descripcion").val().trim(),
-    };
-  }
-
-  function limpiar() {
-    $("#descripcion").val("").focus();
-  }
-
-  function mostrarTarea(index) {
-    if (!tareas[index]) return;
-
-    const tarea = tareas[index];
-    const estadoTexto =
-      tarea.estado === "completada" ? "Completada" : "Pendiente";
-    const colorClase =
-      tarea.estado === "completada" ? "estado-verde" : "estado-rojo";
-
-    const tarjetaHTML = `
-      <div class="tarjeta">
-        <label class="fecha-creacion">${formatearFecha(
-          tarea.fechaCreacion
-        )}</label>
-        <div class="contenido-tarea">
-          ${tarea.descripcion}
-        </div>
-        <button class="btn-estado ${colorClase}">${estadoTexto}</button>
-        <button class="btn-cambiar">Cambiar estado</button>
-      </div>
-    `;
-
-    $("#contenedorTarjetas").html(tarjetaHTML);
-  }
 
   function listarTareas() {
     $.ajax({
@@ -49,161 +8,104 @@ $(document).ready(function () {
       dataType: "json",
       success: function (response) {
         if (response.success && response.data) {
-          tareas = response.data.map((t) => ({
-            ...t,
-            estado: t.estado || "pendiente",
-            fechaCreacion:
-              t.fechaCreacion || t.fecha_creacion || new Date().toISOString(),
-          }));
-          indiceActual = 0;
-          mostrarTarea(indiceActual);
+          tareas = response.data;
+          renderizarTareas();
+        } else {
+          console.warn("No se encontraron tareas.");
         }
       },
-      error: function () {
-        console.error("❌ Error al cargar tareas.");
+      error: function (xhr, status, error) {
+        console.error(" Error al cargar tareas:", error);
       },
     });
   }
 
-  // Insertar nueva tarea
+  function renderizarTareas() {
+const ul = $("#contenedorTarjetas");
+  ul.empty();
+
+  if (tareas.length === 0) {
+    ul.append(`<li class="todo-list-item">No hay tareas registradas.</li>`);
+    return;
+  }
+
+  tareas.forEach((t) => {
+    const estadoClase = t.estado === "completada" ? "estado-completada" : "estado-pendiente";
+    const estadoTexto = t.estado === "completada" ? "Completada" : "Pendiente";
+
+    const item = `
+      <li class="todo-list-item">
+        <div class="contenido-tarea">
+          ${t.descripcion}
+          <div class="${estadoClase}" style="margin-top: 0.5rem;">${estadoTexto}</div>
+        </div>
+        <div>
+          <button class="btn-cambiar" data-id="${t.id}" data-estado="${t.estado}">Cambiar estado</button>
+          <button class="btn-eliminar" data-id="${t.id}">Eliminar</button>
+        </div>
+      </li>
+    `;
+    ul.append(item);
+  });
+
+  }
+
   $("#formTarea").on("submit", function (e) {
     e.preventDefault();
-    const datos = variables();
-
-    if (datos.descripcion.length === 0) return;
-
-    if (datos.descripcion.length > 220) {
-      alert(
-        `Has escrito ${datos.descripcion.length} caracteres.\nEl máximo permitido es 220.`
-      );
-      $("#descripcion").val("").focus();
-      return;
-    }
+    const descripcion = $("#descripcion").val().trim();
+    if (!descripcion) return;
 
     $.ajax({
       url: "/CRM_INT/CRM/controller/TareaController.php?action=create",
       type: "POST",
-      data: datos,
+      data: { descripcion },
       dataType: "json",
-      success: function (response) {
-        if (response.success) {
+      success: function (res) {
+        if (res.success) {
+          $("#descripcion").val("");
           listarTareas();
-          limpiar();
         } else {
-          alert(
-            "Has excedido el límite de 220 caracteres. \nNo se registró la descripción."
-          );
-          $("#descripcion").val("").focus();
+          alert("No se pudo agregar la tarea.");
         }
       },
       error: function () {
-        console.error("❌ Error al insertar tarea.");
+        console.error(" Error al insertar tarea.");
       },
     });
   });
 
-  // Validación y etiqueta dinámica
-  $("#descripcion").on("focus input", function () {
-    const texto = $(this).val().trim();
-    if (texto.length > 220) {
-      label
-        .text("Has excedido el límite de 220 caracteres.")
-        .addClass("visible");
-    } else {
-      label.text("Podés escribir hasta 220 caracteres.").addClass("visible");
-    }
-    contador.text(`${texto.length}/220`).addClass("visible");
-  });
-
-  $("#descripcion").on("blur", function () {
-    label.removeClass("visible").text("");
-    contador.removeClass("visible").text("");
-  });
-
-  // Cambiar estado de la tarea (ahora actualiza en la BD)
   $("#contenedorTarjetas").on("click", ".btn-cambiar", function () {
-    const tarea = tareas[indiceActual];
-    if (!tarea) return;
+    const id = $(this).data("id");
+    const estado = $(this).data("estado");
+    const nuevoEstado = estado === "pendiente" ? "completada" : "pendiente";
 
-    // Alternar estado localmente
-    tarea.estado = tarea.estado === "pendiente" ? "completada" : "pendiente";
-
-    // AJAX para actualizar en la BD
     $.ajax({
       url: "/CRM_INT/CRM/controller/TareaController.php?action=update",
       type: "POST",
-      data: {
-        id: tarea.id,
-        estado: tarea.estado,
-      },
+      data: { id, estado: nuevoEstado },
       dataType: "json",
-      success: function (response) {
-        if (response.success) {
-          listarTareas(); // Actualizar la vista
-        } else {
-          alert("No se pudo actualizar el estado de la tarea.");
-        }
-      },
-      error: function () {
-        console.error("❌ Error al actualizar el estado de la tarea.");
+      success: function (res) {
+        if (res.success) listarTareas();
+        else alert("Error al cambiar el estado.");
       },
     });
   });
 
-  $("#flecha-izquierda").click(function () {
-    if (tareas.length === 0) return;
-    indiceActual = (indiceActual - 1 + tareas.length) % tareas.length;
-    mostrarTarea(indiceActual);
-  });
+  $("#contenedorTarjetas").on("click", ".btn-eliminar", function () {
+    const id = $(this).data("id");
+    if (!confirm("¿Eliminar esta tarea?")) return;
 
-  $("#flecha-derecha").click(function () {
-    if (tareas.length === 0) return;
-    indiceActual = (indiceActual + 1) % tareas.length;
-    mostrarTarea(indiceActual);
-  });
-
-  $("#btnEliminarTarea").click(function () {
-    const tarea = tareas[indiceActual];
-    if (!tarea || !tarea.id) return;
-
-    if (confirm("¿Seguro que desea eliminar esta tarea?")) {
-      $.ajax({
-        url: "/CRM_INT/CRM/controller/TareaController.php?action=delete",
-        type: "POST",
-        data: { id: tarea.id },
-        dataType: "json",
-        success: function (response) {
-          if (response.success) {
-            tareas.splice(indiceActual, 1);
-            if (indiceActual >= tareas.length) {
-              indiceActual = tareas.length - 1;
-            }
-            if (tareas.length > 0) {
-              mostrarTarea(indiceActual);
-            } else {
-              $("#contenedorTarjetas").html(`
-                <div class="tarjeta vacia">
-                  <div class="contenido-tarea">No hay tareas disponibles.</div>
-                </div>
-              `);
-            }
-          } else {
-            alert("No se pudo eliminar la tarea.");
-          }
-        },
-        error: function () {
-          console.error("❌ Error al eliminar la tarea.");
-        },
-      });
-    }
-  });
-
-  function formatearFecha(fechaISO) {
-    const fecha = new Date(fechaISO);
-    return fecha.toLocaleDateString("es-CR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+    $.ajax({
+      url: "/CRM_INT/CRM/controller/TareaController.php?action=delete",
+      type: "POST",
+      data: { id },
+      dataType: "json",
+      success: function (res) {
+        if (res.success) listarTareas();
+        else alert("Error al eliminar la tarea.");
+      },
     });
-  }
+  });
+
+  listarTareas();
 });

@@ -1,936 +1,200 @@
+/* Dashboard.css - versión simple y funcional */
 :root {
   --amarillo: #f9c41f;
-  --gris: #838886;
-  --negro: #000000;
-  --blanco: #ffffff;
-}
-
-html,
-body {
-  height: 100%;
+  --negro: #121212;
+  --blanco: #fff;
+  --gris-fondo: #f7f7f7;
+  --gris-borde: #e0e0e0;
 }
 
 body {
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-body::-webkit-scrollbar {
-  display: none;
-}
-
-/* CONTENEDOR PRINCIPAL DECORATIVO */
-.diseño-todo {
-  display: grid;
-  grid-template-columns: auto 60px 60px;
-  grid-template-rows: 1fr 1fr;
-  gap: 1rem;
-  max-width: 900px;
-  margin: 2rem auto;
-  position: relative;
-}
-
-.diseño-todo::before {
-  content: "";
-  position: absolute;
-  height: 4px;
-  top: 50%;
-  left: 33.9%;
-  width: calc(100vw - 33.9%);
-  background: linear-gradient(to right, var(--amarillo) 50%, var(--negro) 50%);
-  transform: translateY(-50%);
-  pointer-events: none; /* 🛡 No interfiere con clics */
-  z-index: 0; /* Asegura que quede detrás del contenido importante */
-}
-
-.topbar-dashboard:first-child {
-  grid-row: 1 / 3;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--blanco);
-  border: 1px solid #f5f0f0;
-  border-radius: 12px;
-  padding: 1.2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  font-size: 1rem;
-  font-weight: 600;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--gris-fondo);
+  margin: 0;
   color: var(--negro);
-  text-align: left;
-  max-width: 500px;
-  width: 41%;
 }
 
-.icon-user {
-  color: var(--amarillo);
-  font-size: 1.4rem;
+#container-dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px 0 16px;
 }
 
-#negro-1,
-#negro-2,
-#amarillo-1,
-#amarillo-2 {
-  width: 170px;
-  height: 20px;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-#negro-1,
-#negro-2 {
-  background-color: var(--negro);
-  color: var(--blanco);
-}
-
-#amarillo-1,
-#amarillo-2 {
-  background-color: var(--amarillo);
-  color: var(--blanco);
-}
-
-#negro-1 {
-  transform: translateX(-260%);
-}
-
-#amarillo-1 {
-  transform: translateX(-150%);
-}
-
-#amarillo-2 {
-  transform: translateX(-180%) translateY(35%);
-}
-
-#negro-2 {
-  transform: translateX(-75%) translateY(35%);
-}
-
-/* BIENVENIDA - NUEVO DISEÑO */
-.diseño-welcome {
-  display: grid;
-  grid-template-columns: 60px 60px auto;
-  grid-template-rows: 1fr 1fr;
-  gap: 1rem;
-  max-width: 900px;
-  margin: 2rem auto;
-  position: relative;
-}
-
-.todo-welcome {
-  grid-row: 1 / 3;
-  grid-column: 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  width: 85%;
-  max-width: 450px;
-}
-
-.dashboard-welcome {
-  background-color: var(--blanco);
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  flex: 0 0 70%;
+.titulo-dashboard {
+  font-size: 2rem;
+  margin-bottom: 2rem;
   text-align: center;
+}
+
+.resumen-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.tarjeta-metrica {
+  background: var(--blanco);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 85%;
-  transform: translateX(90%);
+  align-items: flex-start;
+  min-height: 170px;
 }
 
-.dashboard-welcome h2 {
-  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
-  color: var(--negro);
-  margin-bottom: 0.5rem;
-  width: 100%;
-  max-width: 500px; /* igual que el contenedor del usuario */
-  margin: 1rem auto;
+.icon-metrica {
+  font-size: 1.6rem;
+  color: var(--amarillo);
 }
 
-.dashboard-welcome p {
-  font-size: clamp(0.9rem, 2vw, 1rem);
-  color: #333;
-  margin: 0.3rem 0;
+.tarjeta-metrica h4 {
+  margin: 12px 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.img-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.img-dashboard {
-  width: 165px;
-  height: 165px;
-  object-fit: contain;
-  border-radius: 6px;
-  padding: 4px;
-  transition: transform 0.3s ease;
-  transform: translateX(175%);
-}
-
-#negro-3,
-#amarillo-3 {
-  width: 235px;
-  height: 20px;
-  border-radius: 8px;
-  font-size: 0.75rem;
+.valor {
+  font-size: 1.7rem;
   font-weight: bold;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin: 0 0 4px 0;
 }
 
-#negro-3 {
-  background-color: var(--negro);
-  color: var(--blanco);
-  transform: translate(15%, 65%);
+.subvalor {
+  font-size: 1rem;
+  color: #666;
 }
 
-#amarillo-3 {
-  background-color: var(--amarillo);
-  color: var(--blanco);
-  transform: translate(45%, 720%);
+.link-metrica {
+  margin-top: auto;
+  color: var(--amarillo);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.link-metrica:hover {
+  text-decoration: underline;
 }
 
-/* TAREAS PENDIENTES */
-.todo-section {
-  background-color: var(--blanco);
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  max-width: 440px;
-  width: 80%;
-  height: 150px; /* 👈 Cambialo según lo que te parezca cómodo */
-  overflow: hidden; /* 👈 Evita que el label o el input lo hagan crecer */
-  transform: translatex(6.7%);
+#cumple-texto {
+  font-size: 0.95em;
+  color: #333;
 }
 
-/*label oculto que sugiere un límite de descripción*/
-.info-descripcion {
-  visibility: hidden;
-  opacity: 0;
-  height: 1em; /* Reservamos el espacio */
-  display: block;
-  font-size: 0.8rem;
-  color: #838886;
-  margin-top: 4px;
-  margin-left: 5px;
-  transition: opacity 0.2s ease;
-}
-.info-descripcion.visible {
-  visibility: visible;
-  opacity: 1;
+.seccion-tareas {
+  background: var(--blanco);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 28px 20px;
+  margin-top: 32px;
 }
 
 .todo-title {
-  margin: 0 0 1rem 0;
-  color: var(--negro);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  border-left: 4px solid var(--amarillo);
-  padding-left: 10px;
-}
-
-#formTarea {
+  font-size: 1.2rem;
+  margin-bottom: 18px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-  position: relative;
+  align-items: center;
+  gap: 8px;
 }
 
-#formTarea input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 200px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
+.formulario-tarea {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
 }
-
-#formTarea button {
-  background-color: var(--amarillo);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+.formulario-tarea input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--gris-borde);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.formulario-tarea button {
+  background: var(--amarillo);
   color: var(--negro);
-  transition: background-color 0.3s ease;
-}
-
-#formTarea button:hover {
-  background-color: #e0b614;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .todo-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-
-.todo-list li {
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  padding: 10px 14px;
+.todo-list-item {
+  background: var(--gris-fondo);
+  border: 1px solid var(--gris-borde);
   border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 14px 12px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 0.95rem;
+  align-items: flex-start;
 }
 
-.todo-list i {
-  cursor: pointer;
-  color: var(--gris);
-  transition: transform 0.2s ease;
-}
-
-.todo-list i:hover {
-  transform: scale(1.2);
-  color: var(--negro);
-}
-
-.divisor-tareas {
-  display: flex;
-  justify-content: center; /* ⬅ Centra los elementos hijos horizontalmente */
-  align-items: center; /* (opcional) centra vertical si hace falta */
-  gap: 1.5rem; /* (opcional) espacio entre los cuadros */
-  transform: translateY(-8%);
-  max-height: 350px;
-  width: 100%; /* Asegura que tome todo el ancho del contenedor padre */
-}
-
-#gris-1 {
-  width: 56.3%;
-  height: 20px;
-  border-radius: 8px;
-  font-size: 0.75rem;
+/* Estado de tarea: completada (verde) */
+.estado-completada {
+  color: #1a7f3c;
   font-weight: bold;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  background-color: var(--gris);
-  color: var(--blanco);
-  transform: translateX(7%);
-  margin-top: -10%;
 }
 
-.contenedor-tarjetas-grid {
-  background-color: var(--blanco);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); /* Más oscuro */
-  width: 490px;
-  height: 150px;
-  border-radius: 8px;
-  transform: translateX(10%);
+/* Estado de tarea: pendiente/incompleta (amarillo) */
+.estado-pendiente {
+  color: #f9c41f;
+  font-weight: bold;
 }
 
-.contenedor-tarjetas-grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--amarillo);
-  border-radius: 12px;
-  padding: 1rem;
-  gap: 1rem;
-}
-
-.contenedor-tarjetas {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
-  width: 300px;
-  height: auto;
-  position: relative;
-}
-
-.btn-flecha {
-  background-color: transparent;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  color: var(--negro);
-  transition: transform 0.2s ease;
-  padding: 0;
-}
-
-#flecha-izquierda {
-  transform: translate(45%, 80%);
-}
-
-#flecha-izquierda:hover {
-  transform: translate(45%, 80%) scale(1.2);
-}
-
-#flecha-derecha {
-  transform: translate(-40%, 80%);
-}
-
-#flecha-derecha:hover {
-  transform: translate(-40%, 80%) scale(1.2);
-}
-
-.btn-estado,
-.btn-cambiar {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  border-radius: 8px;
-  border: 1px solid var(--negro);
-  background-color: var(--blanco);
-  color: var(--negro);
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  transform: translateY(120%);
-}
-
-.btn-estado:hover,
-.btn-cambiar:hover {
-  background-color: var(--negro);
-  color: var(--amarillo);
-}
-
-.fecha-actual {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 0.7rem;
-  color: var(--blanco);
-  padding: 2px 4px;
-}
-
-.tarjeta {
-  width: 250px;
-  height: 140px;
-  background-color: var(--blanco);
-  padding: 0.8rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.fecha-actual {
-  position: absolute;
-  top: 5px;
-  right: 8px;
-  font-size: 0.7rem;
-  color: var(--blanco);
-}
-
-
-/* Caja que acomoda el la descripción de la tarea*/
 .contenido-tarea {
-    font-size: 1rem;            
-    margin-top: 1rem;                 
-    margin-bottom: 1rem;             
-    min-height: 45px;                
-    overflow-x: hidden;            
-     padding: 4px 6px;
-   /* scrollbar-width: none; */        /* oculta la barra de scroll en Firefox (sólo si overflow es auto) */
-    -ms-overflow-style: none;     
-    background-color: var(--amarillo);
-    border-radius: 6px;              
-    line-height: 1.3;           
-    align-items: flex-start;      
-    justify-content: flex-start;      
-
-  
-    overflow-wrap: anywhere;        
-    word-break: break-all;         
-
-   
-    white-space: pre-wrap;           
-
-    max-height: none;               
-    overflow-y: visible;            
-
-    display: block;                 
-}
-
-/* Ocultar scrollbar en webkit browsers */
-.contenido-tarea::-webkit-scrollbar {
-    display: none;
-}
-
-
-/* Ocultar scrollbar en Chrome */
-.contenido-tarea::-webkit-scrollbar {
-  display: none;
-}
-/* Ocultar scrollbar en Chrome */
-.contenido-tarea::-webkit-scrollbar {
-  display: none;
-}
-
-.contenido-tarea-flex::-webkit-scrollbar {
-  display: none;
-}
-
-#descripcion {
-  width: 85%; /* o el valor fijo que estés usando */
-  box-sizing: border-box;
-  transition: none !important; /* quita animaciones molestas */
-  outline: none;
-}
-
-/*Contador de caracteres en tarea*/
-.contador-caracteres {
-  position: absolute;
-  top: -50%;
-  right: 0;
-  font-size: 0.75rem;
-  color: var(--negro);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 10; /* Para asegurar que esté por encima de otros elementos */
-}
-
-.contador-caracteres.visible {
-  visibility: visible;
-  opacity: 1;
-}
-
-.estado-rojo {
-  background-color: #ffd9d9;
-  color: #a30000;
-}
-
-.estado-verde {
-  background-color: #d5ffd5;
-  color: #006600;
-}
-
-.btn-estado,
-.btn-cambiar {
-  border: none;
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  margin-top: 0.3rem;
-  transition: background-color 0.2s ease;
-}
-
-.btn-estado,
-.btn-cambiar {
-  display: inline-block;
-  margin-right: 5px;
-}
-
-/* FÁCIL CAMBIO DE TAMAÑO Y POSICIÓN */
-.btn-estado {
-  transform: translateY(-50%);
-}
-
-.btn-cambiar {
-  transform: translateY(-65%);
-}
-
-.tarjeta {
-  width: 420px;
-}
-
-.btn-eliminar-tarea {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  background-color: transparent;
-  border: none;
-  color: var(--negro);
   font-size: 1rem;
-  cursor: pointer;
-  z-index: 10;
-  transition: transform 0.2s ease;
-}
-
-.btn-eliminar-tarea:hover {
-  transform: scale(1.2);
-  color: #a30000;
-}
-
-/*Fecha mostrada en la descripción de la tarea*/
-.fecha-creacion {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.7rem;
   color: var(--negro);
-  background-color: transparent;
-  z-index: 1;
+  max-width: 70%;
+  word-break: break-word;
+}
+.btn-cambiar, .btn-eliminar {
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 6px;
+}
+.btn-cambiar {
+  background: var(--amarillo);
+  color: var(--negro);
+}
+.btn-eliminar {
+  background: #e74c3c;
+  color: #fff;
 }
 
-/* AJUSTE GENERAL */
-#container-dashboard {
-  width: 100%;
-  padding-top: 0rem; /* Espacio arriba del contenido */
-  padding-bottom: 2rem; /* Opcional: espacio abajo si hay contenido largo */
-  width: calc(100% - 30px); /* 👈 el ancho del sidebar */
-  box-sizing: border-box;
-  margin-top: -2%;
-}
-
-/* ============================================= */
-/* RESPONSIVE REAL PARA DashboardView.php (móvil) */
-/* ============================================= */
-@media screen and (max-width: 480px) {
-  body {
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
+@media (max-width: 700px) {
+  #container-dashboard {
+    padding: 18px 4px 0 4px;
   }
-
-  /* Rediseñar la barra lateral para que se vea como topbar */
-  .diseño-todo {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    max-width: 100%;
+  .resumen-metricas {
+    gap: 14px;
   }
-
-  .topbar-dashboard {
-    width: 100% !important;
-    max-width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    padding: 0.6rem !important;
-    font-size: 0.85rem;
+  .tarjeta-metrica {
+    padding: 16px 8px;
+    min-height: 120px;
   }
-
-  .topbar-dashboard span.badge {
-    margin-left: 5px;
-    font-size: 0.75rem;
+  .seccion-tareas {
+    padding: 16px 8px;
   }
-
-  #negro-1,
-  #negro-2,
-  #amarillo-1,
-  #amarillo-2 {
-    display: none;
-  }
-
-  /* Bienvenida */
-  .diseño-welcome {
-    display: flex;
+  .todo-list-item {
     flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem;
-    margin: 0 auto;
-    width: 95%;
-  }
-
-  .todo-welcome {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .dashboard-welcome {
-    transform: none;
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .img-dashboard {
-    transform: none;
-    width: 100px;
-    height: auto;
-  }
-
-  #negro-3,
-  #amarillo-3 {
-    display: none;
-  }
-
-  /* Sección de tareas */
-  .divisor-tareas {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    transform: none;
-    padding: 1rem 0.5rem;
-  }
-
-  .todo-section {
-    width: 95%;
-    min-height: auto;
-    transform: none;
-  }
-
-  #formTarea {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  #formTarea input[type="text"],
-  #formTarea button {
-    width: 100%;
-    font-size: 0.9rem;
-  }
-
-  /* Tarjetas */
-  .contenedor-tarjetas-grid {
-    width: 100% !important;
-    max-width: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transform: none;
-    padding: 0.5rem;
-    box-sizing: border-box;
-  }
-
-  .zona-central {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  #contenedorTarjetas {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    width: 100%;
-  }
-
-  .tarjeta {
-    width: 90%;
-    max-width: 300px;
-    padding: 1rem;
-  }
-
-  .btn-flecha {
-    font-size: 1.2rem;
-    padding: 0.3rem;
-    display: inline-block;
-    margin: 0.5rem auto;
-  }
-
-  #flecha-izquierda,
-  #flecha-derecha {
-    transform: none !important;
-    position: static !important;
-    margin-top: 0.5rem;
-    text-align: center;
-    display: block;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  body {
-    overflow-x: hidden;
-    padding: 0;
-    margin: 0;
-  }
-
-  .diseño-todo::before {
-    display: none;
-  }
-
-  .diseño-todo,
-  .diseño-welcome,
-  .divisor-tareas {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 0.5rem;
-    max-width: 100%;
-    transform: none;
-  }
-
-  .topbar-dashboard,
-  .todo-welcome,
-  .dashboard-welcome,
-  .todo-section,
-  .contenedor-tarjetas-grid {
-    width: 95% !important;
-    max-width: 95%;
-    transform: none;
-    padding: 1rem;
-    box-sizing: border-box;
-    margin: 0 auto;
-  }
-
-  .topbar-dashboard {
-    margin-top: -5rem !important;
-    transform: none !important;
-    justify-content: center !important;
-    align-items: center;
-    gap: 0.5rem !important;
-  }
-
-  .topbar-dashboard span.badge {
-    margin-left: 5px;
-    font-size: 0.75rem;
-  }
-
-  #negro-1,
-  #negro-2,
-  #amarillo-1,
-  #amarillo-2,
-  #negro-3,
-  #amarillo-3 {
-    display: none;
-  }
-
-  .dashboard-welcome {
-    transform: none;
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .dashboard-welcome h2 {
-    font-size: 1.2rem;
-  }
-
-  .dashboard-welcome p {
-    font-size: 0.95rem;
-  }
-
-  .img-dashboard {
-    transform: none;
-    width: 100px;
-    height: auto;
-  }
-
-  /* Sección de tareas */
-  .todo-section {
-    width: 100%;
-    height: auto;
-    margin-top: 18rem;
-    transform: none;
-    margin-bottom: 5rem; /* 👈 Aumenta el espacio debajo del título y formulario */
-    min-height: 170px; /* o el valor que necesites */
-  }
-
-  #formTarea {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
     align-items: stretch;
+    gap: 8px;
+  }
+  .btn-cambiar, .btn-eliminar {
     width: 100%;
-    margin-top: 0rem;
+    margin-left: 0;
+    margin-bottom: 6px;
   }
-
-  #formTarea input[type="text"] {
-    width: 100%;
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+  .btn-eliminar {
+    margin-bottom: 0;
   }
-
-  #formTarea button {
-    width: 100%;
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    background-color: var(--amarillo);
-    color: var(--negro);
-    cursor: pointer;
-  }
-
-  /* Contenedor de tarjetas */
-  .contenedor-tarjetas-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: -5rem; /* 👈 Espacio arriba de la tarjeta amarilla */
-    justify-content: flex-start;
-    width: 100% !important;
-    min-height: 90x;
-    padding: 0rem;
-    overflow-y: auto !important;
-    min-height: 400px; /* o el valor que necesites */
-    overflow-x: hidden;
-    background-color: var(--amarillo);
-    box-sizing: border-box;
-  }
-  .btn-eliminar-tarea {
-    position: relative;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-    font-size: 1.1rem;
-    background: none;
-    border: none;
-    color: var(--negro);
-    cursor: pointer;
-  }
-
-  .contenedor-tarjetas {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1.5rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 250px;
-    padding: 10rem;
-    box-sizing: border-box;
-  }
-
-  .tarjeta {
-    width: 95% !important;
-    max-width: 300px;
-    min-height: 250px;
-    padding: 1rem 2rem;
-    margin: 0.5rem 0;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    z-index: 2;
-    transform: none !important;
-  }
-
-  /* Flechas de navegación */
-  .btn-flecha {
-    font-size: 1.2rem;
-    padding: 0.3rem;
-    display: inline-block;
-    text-align: center;
-    margin: 0.5rem auto;
-    transform: none !important;
-  }
-
-  #flecha-izquierda,
-  #flecha-derecha {
-    position: static !important;
-    text-align: center;
-    display: block;
-    margin-top: 0.5rem;
-  }
-}
-
-
-
-html,
-body {
-  /* 1. nunca permitir barras ni desplazamiento lateral */
-  overflow-x: hidden !important;
-
-  /* 2. los gestos táctiles solo moverán verticalmente */
-  touch-action: pan-y;          /* Chrome, Edge, Safari, Firefox */
-
-  /* 3. evita el “rebote” o overscroll a los lados */
-  overscroll-behavior-x: contain; /* ó 'none' si quieres aún más estricto */
-}
-
-/* Asegura que el contenedor principal no pueda exceder el ancho */
-#container-dashboard {
-  max-width: 100vw;
-  overflow-x: hidden;
 }

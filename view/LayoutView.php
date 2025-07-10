@@ -110,7 +110,19 @@ $vista = $_GET['view'] ?? 'dashboard';
             }
             ?>
         </main>
+        <!-- Modal para ingresar número de tarjeta -->
     </div>
+    <div id="modalTarjeta" class="modal-tarjeta" style="display:none;">
+  <div class="modal-contenido">
+    <h3>Ingrese número de tarjeta</h3>
+    <input type="text" id="modalInputTarjeta" placeholder="Ej: 60" />
+    <div id="modalMensajeError" style="color: red; margin-top: 0.5em;"></div>
+    <div class="modal-botones">
+      <button onclick="cerrarModal()">Cancelar</button>
+      <button onclick="redirigirCompra()">Buscar</button>
+    </div>
+  </div>
+</div>
 
     <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
@@ -120,7 +132,6 @@ $vista = $_GET['view'] ?? 'dashboard';
 
     <!-- Scripts específicos -->
     <?php if ($vista === 'dashboard'): ?>
-        <script src="/CRM_INT/CRM/public/js/Dashboard.js"></script>
     <?php elseif ($vista === 'clientes'): ?>
         <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
     <?php endif; ?>
@@ -225,6 +236,8 @@ $vista = $_GET['view'] ?? 'dashboard';
             }
         });
     </script>
+
+   
 
 </body>
 

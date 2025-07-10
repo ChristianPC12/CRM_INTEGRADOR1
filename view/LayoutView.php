@@ -109,20 +109,18 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'DashboardView.php';
             }
             ?>
-        </main>
         <!-- Modal para ingresar número de tarjeta -->
-    </div>
-    <div id="modalTarjeta" class="modal-tarjeta" style="display:none;">
-  <div class="modal-contenido">
-    <h3>Ingrese número de tarjeta</h3>
-    <input type="text" id="modalInputTarjeta" placeholder="Ej: 60" />
-    <div id="modalMensajeError" style="color: red; margin-top: 0.5em;"></div>
-    <div class="modal-botones">
-      <button onclick="cerrarModal()">Cancelar</button>
-      <button onclick="redirigirCompra()">Buscar</button>
-    </div>
-  </div>
-</div>
+        <div id="modalTarjeta" class="modal-tarjeta">
+            <div class="modal-contenido">
+                <h3>Ingrese número de tarjeta</h3>
+                <input type="text" id="modalInputTarjeta" placeholder="Ej: 60" />
+                <div id="modalMensajeError" class="modal-mensaje-error"></div>
+                <div class="modal-botones">
+                    <button onclick="cerrarModal()">Cancelar</button>
+                    <button onclick="redirigirCompra()">Buscar</button>
+                </div>
+            </div>
+        </div>
 
     <!-- Scripts Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
@@ -233,6 +231,25 @@ $vista = $_GET['view'] ?? 'dashboard';
                         observer.observe(lista, { childList: true, subtree: true });
                     }
                 }
+            }
+
+     
+          const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
+       
+
+            // Mostrar el modal automáticamente solo si el rol es salonero
+            if (typeof rolUsuario !== 'undefined' && rolUsuario === "salonero") {
+              const modal = document.getElementById('modalTarjeta');
+              if (modal) modal.style.display = 'flex';
+            }
+            // Mostrar el modal al hacer click en el logo para cualquier rol
+            const logo = document.querySelector(".img-header");
+            if (logo) {
+              logo.style.cursor = 'pointer';
+              logo.addEventListener('click', function() {
+                const modal = document.getElementById('modalTarjeta');
+                if (modal) modal.style.display = 'flex';
+              });
             }
         });
     </script>

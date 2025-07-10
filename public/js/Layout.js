@@ -78,6 +78,7 @@ function cerrarModal() {
   document.getElementById('modalTarjeta').style.display = 'none';
 }
 
+
 async function redirigirCompra() {
   const tarjeta = document.getElementById('modalInputTarjeta').value.trim();
   const mensajeError = document.getElementById('modalMensajeError');
@@ -107,16 +108,18 @@ async function redirigirCompra() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const vista = urlParams.get('view');
-  if (vista === 'dashboard') {
-    mostrarModal();
-  }
 
-  const logo = document.querySelector(".img-header");
-  if (logo) {
-    logo.style.cursor = 'pointer';
-    logo.addEventListener('click', mostrarModal);
+document.addEventListener("DOMContentLoaded", function () {
+  const inputTarjeta = document.getElementById("modalInputTarjeta");
+  if (inputTarjeta) {
+    inputTarjeta.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        redirigirCompra();
+      }
+    });
   }
 });
+
+
+

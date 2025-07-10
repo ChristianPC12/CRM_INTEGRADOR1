@@ -153,6 +153,16 @@ body {
   max-width: 70%;
   word-break: break-word;
 }
+.contador-caracteres {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.contador-peligro {
+  color: #d63031; /* Rojo cuando quedan pocos caracteres */
+  font-weight: bold;
+}
 .btn-cambiar, .btn-eliminar {
   border: none;
   border-radius: 5px;
@@ -168,6 +178,19 @@ body {
 .btn-eliminar {
   background: #e74c3c;
   color: #fff;
+}
+.info-tarea {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.fecha-tarea {
+  color: #888;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 @media (max-width: 700px) {

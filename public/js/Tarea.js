@@ -32,12 +32,25 @@ const ul = $("#contenedorTarjetas");
   tareas.forEach((t) => {
     const estadoClase = t.estado === "completada" ? "estado-completada" : "estado-pendiente";
     const estadoTexto = t.estado === "completada" ? "Completada" : "Pendiente";
-
+     let fechaStr = "";
+    if (t.fechaCreacion) {
+      const fecha = new Date(t.fechaCreacion);
+      fechaStr = fecha.toLocaleDateString("es-CR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
+   
     const item = `
       <li class="todo-list-item">
         <div class="contenido-tarea">
-          ${t.descripcion}
-          <div class="${estadoClase}" style="margin-top: 0.5rem;">${estadoTexto}</div>
+          <div class="descripcion-tarea">${t.descripcion}</div>
+          <div class="info-tarea" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 10px;">
+            <span class="${estadoClase}">${estadoTexto}</span>
+              ${fechaStr ? `<span class="fecha-tarea">${fechaStr}</span>` : ''}
+
+          </div>
         </div>
         <div>
           <button class="btn-cambiar" data-id="${t.id}" data-estado="${t.estado}">Cambiar estado</button>

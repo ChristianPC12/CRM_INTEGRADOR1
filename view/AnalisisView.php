@@ -4,6 +4,10 @@
         <h5 class="mb-0"><i class="fa-solid fa-chart-bar"></i> Análisis de Clientes</h5>
         <div class="d-flex gap-2 flex-wrap">
             <button class="btn btn-analisis active" id="btnClientesFrecuentes">Clientes más frecuentes</button>
+<button class="btn btn-analisis" id="btnClientesMayorHistorial">
+    <i class="fa-solid fa-crown"></i> Clientes con mayor historial
+</button>
+<button class="btn btn-analisis" id="btnClientesInactivos">Clientes inactivos</button>
 
             <!-- Aquí podrás agregar más botones de análisis en el futuro -->
         </div>

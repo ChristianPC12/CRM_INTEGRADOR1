@@ -15,7 +15,8 @@ class ClienteMapper
         $dto->lugarResidencia = $row['LugarResidencia'];
         $dto->fechaCumpleanos = $row['FechaCumpleanos'];
         $dto->acumulado = $row['Acumulado'];
-        $dto->fechaRegistro = $row['FechaRegistro']; // NUEVO: se asigna desde el SELECT
+        $dto->fechaRegistro = $row['FechaRegistro']; 
+        $dto->totalHistorico = $row['TotalHistorico'];   // <─ NUEVO
         return $dto;
     }
 }

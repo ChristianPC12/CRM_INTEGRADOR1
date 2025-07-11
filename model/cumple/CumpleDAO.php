@@ -14,6 +14,7 @@ class CumpleDAO
     public function obtenerCumplesSemana()
     {
         try {
+            // Se asume que ClienteCumpleSemana() incluye la columna 'estado'
             $stmt = $this->conn->prepare("CALL ClienteCumpleSemana()");
             $stmt->execute();
             $cumples = [];
@@ -27,12 +28,13 @@ class CumpleDAO
         }
     }
 
-    public function actualizarEstado($id, $nuevoEstado)
+    public function actualizarEstado($id, $estado)
     {
         try {
-            $stmt = $this->conn->prepare("UPDATE cliente SET estado = :estado WHERE id = :id");
-            $stmt->bindParam(':estado', $nuevoEstado);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $sql = "UPDATE cliente SET estado = :estado WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":estado", $estado);
+            $stmt->bindParam(":id", $id);
             return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Error al actualizar estado: " . $e->getMessage());

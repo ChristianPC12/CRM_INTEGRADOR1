@@ -13,7 +13,7 @@ class CumpleMapper
         $dto->correo = $row['Correo'] ?? '';
         $dto->telefono = $row['Telefono'] ?? '';
         $dto->fechaCumpleanos = $row['FechaCumpleanos'] ?? null;
-        $dto->estado = $row['EstadoCumple'] ?? 'PENDIENTE';
+        $dto->estado = $row['Estado'] ?? 'PENDIENTE'; // <-- CORREGIDO
         return $dto;
     }
 }

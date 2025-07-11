@@ -1,4 +1,4 @@
-@import url('./Variables.css'); /* Solo si tenés variables globales en otro archivo */
+@import url('./Variables.css');
 
 :root {
   --amarillo: #f9c41f;
@@ -9,8 +9,7 @@
   --card-max-w: 1100px;
 }
 
-/* === DECORACIÓN GLOBAL ======================================= */
-/* === DECORACIÓN GLOBAL IDENTICA A CÓDIGO DE BARRAS ================= */
+/* === FONDO GLOBAL CON DOS COLORES ========================= */
 body {
   background: var(--gris);
   position: relative;
@@ -41,8 +40,7 @@ body::after {
   background: var(--gris);
 }
 
-
-/* === CONTENEDOR DE TABLA ===================================== */
+/* === TARJETAS ============================================ */
 .card {
   max-width: var(--card-max-w);
   margin: 2rem auto;
@@ -52,7 +50,6 @@ body::after {
   background: var(--blanco);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   border-left: 5px solid var(--amarillo);
-  max-height: calc(100vh - 4rem - var(--header-h));
   display: flex;
   flex-direction: column;
 }
@@ -67,14 +64,14 @@ body::after {
   align-items: center;
 }
 
-/* contenedor scrollable */
+/* === TABLA DE CUMPLEAÑOS ================================== */
 #cumpleLista {
   flex: 1 1 auto;
   overflow-y: auto !important;
   padding: 1rem !important;
+  max-height: 400px;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
-  max-height: 400px;
 }
 
 #cumpleLista::-webkit-scrollbar {
@@ -91,7 +88,6 @@ body::after {
   background: #999;
 }
 
-/* tabla */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -120,53 +116,65 @@ body::after {
   line-height: 1.4;
 }
 
-/* responsive table stack */
-@media (max-width: 576px) {
-  body::before,
-  body::after {
-    display: none;
-  }
+/* === ESTADO DE CUMPLEAÑOS (Botones) ======================= */
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+}
 
-  .card {
-    margin: 1rem 0.5rem;
-    border-left-width: 3px;
-  }
+.btn-success {
+  background-color: #198754;
+  color: #fff;
+  border: none;
+}
 
-  .card-header {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
+/* === FORMULARIO DE ENVÍO DE CORREO ======================== */
+.card-envio-correo {
+  max-width: var(--card-max-w);
+  margin: 0 auto 2rem auto;
+  background: var(--blanco);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--amarillo);
+}
 
-  .table-responsive table {
-    min-width: 100%;
-    white-space: normal;
-    table-layout: auto;
-  }
+.card-envio-correo .card-header {
+  background-color: var(--negro);
+  color: var(--blanco);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
 
-  #cumpleLista th {
-    display: none;
-  }
+/* Inputs y textarea */
+.card-envio-correo input,
+.card-envio-correo textarea {
+  background-color: #f9f9f9;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px;
+  width: 100%;
+}
 
-  #cumpleLista td {
-    display: block;
-    text-align: left;
-    max-width: none;
-  }
+/* Área de mensaje */
+.card-envio-correo textarea {
+  min-height: 120px;
+  resize: vertical;
+}
 
-  #cumpleLista tr {
-    margin-bottom: 1rem;
-    display: block;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background: #fafafa;
-  }
+/* === BOTÓN DE ENVÍO AZUL ================================ */
+#btnEnviarCorreo {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
 
-  #cumpleLista td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.25rem;
-    color: var(--negro);
-  }
+#btnEnviarCorreo:hover {
+  background-color: #0056b3;
 }

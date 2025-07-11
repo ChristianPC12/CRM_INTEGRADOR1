@@ -1,5 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
     cargarCumples();
+    document.getElementById("btnEnviarCorreo").disabled = true;
+
+    document.getElementById("formCorreo").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById("idCumple").value;
+        if (!id) return;
+
+        const actualizado = await cambiarEstado(id, 'LISTA');
+
+        if (actualizado) {
+            document.getElementById("btnEnviarCorreo").disabled = true;
+            document.getElementById("formCorreo").reset();
+
+            const fila = document.getElementById(`fila-${id}`);
+            if (fila) {
+                fila.querySelector("td:nth-child(6)").innerHTML = `<span class="badge bg-success">LISTA</span>`;
+                const botonCorreo = fila.querySelector("td:last-child button");
+                botonCorreo.disabled = true;
+                botonCorreo.classList.add("disabled");
+            }
+        }
+    });
 });
 
 const cargarCumples = async () => {
@@ -14,9 +37,7 @@ const cargarCumples = async () => {
     try {
         const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "action=readSemana"
         });
 
@@ -52,31 +73,36 @@ const renderizarTabla = (cumples) => {
                         <th>Teléfono</th>
                         <th>Fecha de Cumpleaños</th>
                         <th>Estado</th>
-                        <th>Acción</th>
+                        <th>Correo</th>
                     </tr>
                 </thead>
                 <tbody>
     `;
 
     cumples.forEach(c => {
-        const botonesEstado = `
-            <button class="btn btn-sm btn-warning me-1" onclick="cambiarEstado(${c.id}, 'PENDIENTE', this)">Pendiente</button>
-            <button class="btn btn-sm btn-success" onclick="cambiarEstado(${c.id}, 'LISTA', this)">Lista</button>
+        const esLista = c.estado === 'LISTA';
+
+        const badge = esLista
+            ? `<span class="badge bg-success">LISTA</span>`
+            : `<span class="badge bg-danger">PENDIENTE</span>`;
+
+        const botonCorreo = `
+            <button class="btn btn-sm btn-primary ${esLista ? 'disabled' : ''}"
+                onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}')"
+                ${esLista ? 'disabled' : ''}>
+                <i class="fas fa-paper-plane"></i>
+            </button>
         `;
 
-        const mensajeAccion = c.estado === 'LISTA'
-            ? `<span class="text-success fw-bold">Cliente atendido</span>`
-            : `<span class="text-warning fw-bold">Cliente pendiente</span>`;
-
         html += `
-            <tr>
+            <tr id="fila-${c.id}">
                 <td>${c.nombre}</td>
                 <td>${c.cedula}</td>
                 <td>${c.correo}</td>
                 <td>${c.telefono}</td>
                 <td>${formatearFecha(c.fechaCumpleanos)}</td>
-                <td>${botonesEstado}</td>
-                <td class="mensaje-accion">${mensajeAccion}</td>
+                <td>${badge}</td>
+                <td class="text-center">${botonCorreo}</td>
             </tr>
         `;
     });
@@ -90,7 +116,18 @@ const renderizarTabla = (cumples) => {
     contenedor.innerHTML = html;
 };
 
-const cambiarEstado = async (id, nuevoEstado, boton) => {
+const seleccionarCumple = (id, nombre, cedula, correo, telefono) => {
+    document.getElementById("idCumple").value = id;
+    document.getElementById("nombreCorreo").value = nombre;
+    document.getElementById("cedulaCorreo").value = cedula;
+    document.getElementById("correoCorreo").value = correo;
+    document.getElementById("telefonoCorreo").value = telefono;
+    document.getElementById("mensajeCorreo").value = `¡Feliz cumpleaños ${nombre}! Te esperamos para celebrarte 🎉`;
+
+    document.getElementById("btnEnviarCorreo").disabled = false;
+};
+
+const cambiarEstado = async (id, nuevoEstado) => {
     const formData = new URLSearchParams();
     formData.append('action', 'cambiarEstado');
     formData.append('id', id);
@@ -99,30 +136,15 @@ const cambiarEstado = async (id, nuevoEstado, boton) => {
     try {
         const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: formData.toString()
         });
 
         const data = await res.json();
-
-        if (data.success) {
-            // Cambiar el mensaje de acción en el DOM sin recargar la tabla
-            const fila = boton.closest("tr");
-            const celdaAccion = fila.querySelector(".mensaje-accion");
-
-            if (nuevoEstado === "LISTA") {
-                celdaAccion.innerHTML = `<span class="text-success fw-bold">Cliente atendido</span>`;
-            } else {
-                celdaAccion.innerHTML = `<span class="text-warning fw-bold">Cliente pendiente</span>`;
-            }
-        } else {
-            alert("Error al cambiar estado: " + data.message);
-        }
+        return data.success;
     } catch (error) {
         console.error("Error en cambiarEstado:", error);
-        alert("Error en la solicitud");
+        return false;
     }
 };
 

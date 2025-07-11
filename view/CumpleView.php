@@ -10,6 +10,49 @@
         </div>
     </div>
 </div>
+          
+<!-- FORMULARIO DE ENVÍO -->
+<div class="card shadow-sm mt-3" style="max-width: 1100px; margin: 0 auto; border-left: 5px solid #f9c41f;">
+    <div class="card-header bg-dark text-white py-2">
+        <h6 class="mb-0"><i class="fas fa-envelope"></i> Enviar correo de felicitación</h6>
+    </div>
+    <div class="card-body p-3">
+        <form id="formCorreo" class="row g-2">
+            <input type="hidden" id="idCumple">
 
+            <div class="col-12 col-md-6">
+                <label class="form-label small">Nombre</label>
+                <input type="text" id="nombreCorreo" class="form-control form-control-sm" readonly>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <label class="form-label small">Cédula</label>
+                <input type="text" id="cedulaCorreo" class="form-control form-control-sm" readonly>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <label class="form-label small">Teléfono</label>
+                <input type="text" id="telefonoCorreo" class="form-control form-control-sm" readonly>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small">Correo</label>
+                <input type="email" id="correoCorreo" class="form-control form-control-sm" readonly>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small">Mensaje</label>
+                <textarea id="mensajeCorreo" rows="3" class="form-control form-control-sm"
+                    placeholder="¡Feliz cumpleaños! Queremos regalarte…"></textarea>
+            </div>
+
+            <div class="col-12 text-end mt-2">
+                <button id="btnEnviarCorreo" class="btn btn-sm btn-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar correo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 <script src="/CRM_INT/CRM/public/js/Cumple.js?v=<?= time() ?>"></script>
-<link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cumple.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -14,7 +14,8 @@ class CumpleDAO
   public function obtenerCumplesSemana()
 {
     try {
-        $stmt = $this->conn->prepare("SELECT * FROM cliente");
+        // TEMPORAL: Mostrar todos los cumpleaños de la semana, sin importar el estado
+        $stmt = $this->conn->prepare("SELECT * FROM cliente WHERE Estado = 'PENDIENTE'");
         $stmt->execute();
         $clientes = [];
 
@@ -34,10 +35,19 @@ class CumpleDAO
 
             // Solo si cumple esta semana, lo agregamos a la lista
             if ($fechaCumple >= $inicioSemana && $fechaCumple <= $finSemana) {
-                $row['estado'] = 'PENDIENTE'; // siempre PENDIENTE al inicio
                 $clientes[] = CumpleMapper::mapRowToDTO($row);
             }
         }
+
+        // Ordenar por fecha de cumpleaños más próxima (día y mes)
+        usort($clientes, function($a, $b) {
+            $fechaA = DateTime::createFromFormat('Y-m-d', $a->fechaCumpleanos);
+            $fechaB = DateTime::createFromFormat('Y-m-d', $b->fechaCumpleanos);
+            if (!$fechaA || !$fechaB) return 0;
+            $fechaA->setDate((int)date('Y'), (int)$fechaA->format('m'), (int)$fechaA->format('d'));
+            $fechaB->setDate((int)date('Y'), (int)$fechaB->format('m'), (int)$fechaB->format('d'));
+            return $fechaA <=> $fechaB;
+        });
 
         return $clientes;
     } catch (PDOException $e) {

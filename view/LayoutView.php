@@ -25,6 +25,8 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Codigo.css">
     <?php elseif ($vista === 'analisis'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Analisis.css">
+    <?php elseif ($vista === 'Bitacora'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Bitacora.css">
     <?php endif; ?>
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
@@ -89,6 +91,15 @@ $vista = $_GET['view'] ?? 'dashboard';
                      <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
                  </a>   
             </li>
+
+             <li>
+                <a href="index.php?view=Bitacora" id="link-Bitacora"
+              class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
+              <i class="fas fa-clipboard-list"></i> Bitácora
+               </a>
+            </li>
+           
+
             <li>
                 <a href="#" onclick="confirmarCerrarSesion()" style="color: #dc3545;">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
@@ -115,6 +126,8 @@ if ($vista === 'clientes') {
     include 'AnalisisView.php';
 } elseif ($vista === 'cumple') {
     include 'CumpleView.php';
+} elseif ($vista === 'Bitacora') {
+    include 'BitacoraView.php';
 } else {
     include 'DashboardView.php';
 }
@@ -146,6 +159,10 @@ if ($vista === 'clientes') {
     
     <?php if ($vista === 'cumple'): ?>
         <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
+    <?php endif; ?>
+
+    <?php if ($vista === 'Bitacora'): ?>
+        <script src="/CRM_INT/CRM/public/js/Bitacora.js"></script>
     <?php endif; ?>
 
 

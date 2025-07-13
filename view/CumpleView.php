@@ -11,6 +11,14 @@
             <div id="cumpleLista" class="p-4">
                 <!-- Aquí se inyectará la tabla desde JS -->
             </div>
+            <!-- RECORDATORIO DE LLAMADAS -->
+            <div id="recordatorioLlamadas" class="mt-2 mx-4 mb-4 d-none">
+                <div class="alert alert-warning shadow-sm" role="alert">
+                <h6 class="mb-2 fw-bold"><i class="fa-solid fa-bell text-danger"></i> Clientes sin correo (llamar por teléfono):</h6>
+                <ul id="listaRecordatorios" class="mb-0 ps-3 small"></ul>
+    </div>
+</div>
+
         </div>
     </div>
 </div>

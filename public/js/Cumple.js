@@ -121,14 +121,12 @@ const cargarCumples = async () => {
 const renderizarTabla = (cumples) => {
     const contenedor = document.getElementById("cumpleLista");
 
-    // Filtrar solo pendientes y ordenar por fecha (por si acaso)
     const pendientes = cumples.filter(c => c.estado === 'PENDIENTE');
     pendientes.sort((a, b) => {
         const fechaA = new Date(a.fechaCumpleanos);
         const fechaB = new Date(b.fechaCumpleanos);
-        return fechaB - fechaA; // Orden descendente
+        return fechaB - fechaA;
     });
-    // No invertir el array, el más próximo debe estar arriba
 
     if (pendientes.length === 0) {
         contenedor.innerHTML = `<div class="alert alert-info text-center">No hay cumpleaños pendientes esta semana.</div>`;
@@ -152,11 +150,15 @@ const renderizarTabla = (cumples) => {
                 <tbody>
     `;
 
+    let recordatorios = '';
+    let tieneSinCorreo = false;
+
     pendientes.forEach(c => {
         let badge = `<span class="badge bg-danger">PENDIENTE</span>`;
         if (c.estado === 'LISTA') {
             badge = `<span class="badge bg-success">LISTO</span>`;
         }
+
         const botonCorreo = `
             <button class="btn btn-sm btn-primary"
                 onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}')">
@@ -175,6 +177,17 @@ const renderizarTabla = (cumples) => {
                 <td class="text-center">${botonCorreo}</td>
             </tr>
         `;
+
+        if (!c.correo || c.correo.trim() === '') {
+            tieneSinCorreo = true;
+            recordatorios += `
+                <li>
+                    <i class="fa-solid fa-phone text-warning me-1"></i>
+                    <strong>${c.cedula}</strong> - ${c.nombre} → 
+                    <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
+                </li>
+            `;
+        }
     });
 
     html += `
@@ -184,6 +197,17 @@ const renderizarTabla = (cumples) => {
     `;
 
     contenedor.innerHTML = html;
+
+    const divRecordatorio = document.getElementById("recordatorioLlamadas");
+    const ulRecordatorio = document.getElementById("listaRecordatorios");
+
+    if (tieneSinCorreo) {
+        ulRecordatorio.innerHTML = recordatorios;
+        divRecordatorio.classList.remove("d-none");
+    } else {
+        divRecordatorio.classList.add("d-none");
+        ulRecordatorio.innerHTML = '';
+    }
 };
 
 const seleccionarCumple = (id, nombre, cedula, correo, telefono) => {

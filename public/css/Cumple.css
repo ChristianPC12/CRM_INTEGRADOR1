@@ -116,6 +116,47 @@ body::after {
   line-height: 1.4;
 }
 
+/* === TABLA DE CUMPLEAÑOS (Colores y estilos unificados) === */
+#cumpleLista table {
+  background: #fff;
+  color: var(--negro);
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+#cumpleLista thead th {
+  background: var(--amarillo) !important;
+  color: var(--negro) !important;
+  font-weight: bold;
+}
+#cumpleLista tbody tr:nth-of-type(odd) {
+  background: #fff8dc;
+}
+#cumpleLista tbody tr:hover {
+  background: #fbeec1 !important;
+}
+#cumpleLista th, #cumpleLista td {
+  border-color: var(--negro) !important;
+}
+#cumpleLista .badge.bg-danger {
+  background: #d43b3b !important;
+  color: #fff !important;
+}
+#cumpleLista .btn.btn-primary {
+  background: var(--amarillo) !important;
+  color: var(--negro) !important;
+  border: none !important;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+#cumpleLista .btn.btn-primary:hover, #cumpleLista .btn.btn-primary:focus {
+  background: #e6b619 !important;
+  color: var(--negro) !important;
+  border: 1px solid var(--negro) !important;
+}
+
 /* === ESTADO DE CUMPLEAÑOS (Botones) ======================= */
 .btn-warning {
   background-color: #ffc107;

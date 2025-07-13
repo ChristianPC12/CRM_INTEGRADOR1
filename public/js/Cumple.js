@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    mostrarSemanaActual(); // ⬅️ NUEVO: Mostrar el rango apenas cargue
     cargarCumples();
     document.getElementById("btnEnviarCorreo").disabled = true;
 
@@ -6,24 +7,71 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const id = document.getElementById("idCumple").value;
-        if (!id) return;
+        const nombre = document.getElementById("nombreCorreo").value;
+        const correo = document.getElementById("correoCorreo").value;
 
-        const actualizado = await cambiarEstado(id, 'LISTA');
+        if (!correo || correo.trim() === "") {
+            Swal.fire({
+                icon: "info",
+                title: "¡No tiene correo!",
+                text: `${nombre} no tiene correo registrado. Contactalo por teléfono para felicitarlo.`,
+            });
+            return;
+        }
 
-        if (actualizado) {
-            document.getElementById("btnEnviarCorreo").disabled = true;
-            document.getElementById("formCorreo").reset();
+        if (!id || !nombre || !correo) return;
 
-            const fila = document.getElementById(`fila-${id}`);
-            if (fila) {
-                fila.querySelector("td:nth-child(6)").innerHTML = `<span class="badge bg-success">LISTA</span>`;
-                const botonCorreo = fila.querySelector("td:last-child button");
-                botonCorreo.disabled = true;
-                botonCorreo.classList.add("disabled");
+        const mensaje = `¡Feliz cumpleaños ${nombre}! 🎉 En nuestro restaurante queremos celebrarte con una comida, bebida o postre totalmente gratis para vos. Te esperamos hoy mismo para consentirte como te merecés.`;
+
+        const formData = new URLSearchParams();
+        formData.append("action", "enviarCorreoCumple");
+        formData.append("nombre", nombre);
+        formData.append("correo", correo);
+        formData.append("mensaje", mensaje);
+
+        try {
+            const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData.toString()
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                await cambiarEstado(id, 'LISTA');
+                Swal.fire("¡Éxito!", data.message, "success");
+                document.getElementById("formCorreo").reset();
+                document.getElementById("btnEnviarCorreo").disabled = true;
+                cargarCumples();
+            } else {
+                Swal.fire("Error", data.message, "error");
             }
+        } catch (err) {
+            console.error("Error al enviar correo:", err);
+            Swal.fire("Error", "No se pudo conectar con el servidor", "error");
         }
     });
 });
+
+const mostrarSemanaActual = () => {
+    const hoy = new Date();
+    const diaActual = hoy.getDay(); // 0 (Domingo) a 6 (Sábado)
+    const diffInicio = hoy.getDate() - diaActual + (diaActual === 0 ? -6 : 1);
+    const lunes = new Date(hoy.setDate(diffInicio));
+    const domingo = new Date(lunes);
+    domingo.setDate(lunes.getDate() + 6);
+
+    const opciones = { day: '2-digit', month: 'long' };
+
+    const formatoLunes = lunes.toLocaleDateString('es-CR', opciones);
+    const formatoDomingo = domingo.toLocaleDateString('es-CR', opciones);
+
+    const div = document.getElementById("rangoSemana");
+    if (div) {
+        div.innerHTML = `📆 Semana actual: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
+    }
+};
 
 const cargarCumples = async () => {
     const contenedor = document.getElementById("cumpleLista");
@@ -122,9 +170,19 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono) => {
     document.getElementById("cedulaCorreo").value = cedula;
     document.getElementById("correoCorreo").value = correo;
     document.getElementById("telefonoCorreo").value = telefono;
-    document.getElementById("mensajeCorreo").value = `¡Feliz cumpleaños ${nombre}! Te esperamos para celebrarte 🎉`;
 
-    document.getElementById("btnEnviarCorreo").disabled = false;
+    const btn = document.getElementById("btnEnviarCorreo");
+    if (!correo) {
+        Swal.fire({
+            icon: "warning",
+            title: "¡Este cliente no tiene correo!",
+            text: "Recordá llamarlo o escribirle un mensaje.",
+            confirmButtonText: "Entendido"
+        });
+        btn.disabled = true;
+    } else {
+        btn.disabled = false;
+    }
 };
 
 const cambiarEstado = async (id, nuevoEstado) => {

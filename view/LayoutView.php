@@ -86,6 +86,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                  <a href="index.php?view=cumple" id="link-cumple"
                      class="<?= $vista === 'cumple' ? 'active' : '' ?>">
                      <i class="bi bi-gift"></i> Cumpleaños
+                     <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
                  </a>   
             </li>
             <li>
@@ -268,7 +269,36 @@ if ($vista === 'clientes') {
         });
     </script>
 
-   
+    <script>
+// Badge de cumpleaños pendientes
+function mostrarCumpleBadge(pendientes) {
+    const badge = document.getElementById('cumple-badge');
+    if (!badge) return;
+    if (pendientes) {
+        badge.style.display = 'inline-block';
+        badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
+    } else {
+        badge.style.display = 'none';
+        badge.innerHTML = '';
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=hayPendientes'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success && data.hayPendientes) {
+            mostrarCumpleBadge(true);
+        } else {
+            mostrarCumpleBadge(false);
+        }
+    })
+    .catch(() => mostrarCumpleBadge(false));
+});
+</script>
 
 </body>
 

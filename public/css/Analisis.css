@@ -91,6 +91,13 @@
     font-size: 0.85rem;
 }
 
+.btn-analisis {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .btn-analisis.active,
 .btn-analisis:hover,
 .btn-analisis:focus-visible {
@@ -215,3 +222,32 @@
     border-radius: 1rem;
     padding-bottom: 0.5rem;
 }
+
+.header-line {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.header-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--amarillo);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+}
+
+.divider-header {
+    height: 3px;
+    background: linear-gradient(90deg, var(--amarillo) 70%, transparent 100%);
+    border-radius: 2px;
+    flex-grow: 1;
+    min-width: 40px;
+    margin-left: 1rem;
+    opacity: 0.8;
+}
+
+

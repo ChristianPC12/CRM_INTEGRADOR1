@@ -282,6 +282,128 @@ try {
             ]);
             break;
 
+        case 'ventasPorMes':
+            $compraDAO = new CompraDAO($db);
+            $compras = $compraDAO->readAll();
+
+            // Arreglo de meses en español
+            $meses_es = [
+                1 => 'Enero',
+                2 => 'Febrero',
+                3 => 'Marzo',
+                4 => 'Abril',
+                5 => 'Mayo',
+                6 => 'Junio',
+                7 => 'Julio',
+                8 => 'Agosto',
+                9 => 'Septiembre',
+                10 => 'Octubre',
+                11 => 'Noviembre',
+                12 => 'Diciembre'
+            ];
+
+            // Agrupar por mes/año
+            $ventasPorMes = [];
+            foreach ($compras as $compra) {
+                $fecha = new DateTime($compra->fechaCompra);
+                $mes = (int) $fecha->format('m');
+                $año = (int) $fecha->format('Y');
+                $key = $año . '-' . $mes;
+                if (!isset($ventasPorMes[$key])) {
+                    $ventasPorMes[$key] = [
+                        'mes' => $mes,
+                        'año' => $año,
+                        'total' => 0,
+                    ];
+                }
+                $ventasPorMes[$key]['total'] += $compra->total;
+            }
+
+            // Ordenar por año, mes descendente
+            usort($ventasPorMes, function ($a, $b) {
+                return ($b['año'] * 100 + $b['mes']) - ($a['año'] * 100 + $a['mes']);
+            });
+
+            // Calcular variación mensual
+            $ventasConVar = [];
+            for ($i = 0; $i < count($ventasPorMes); $i++) {
+                $actual = $ventasPorMes[$i];
+                $anterior = $ventasPorMes[$i + 1] ?? null;
+                $variacion = null;
+                if ($anterior && $anterior['total'] > 0) {
+                    $variacion = round((($actual['total'] - $anterior['total']) / $anterior['total']) * 100, 1);
+                }
+                $ventasConVar[] = [
+                    'posicion' => $i + 1,
+                    'mes' => $meses_es[$actual['mes']],
+                    'año' => $actual['año'],
+                    'total' => $actual['total'],
+                    'variacion' => $variacion,
+                ];
+            }
+
+            // Solo los 12 últimos meses
+            $ventasConVar = array_slice($ventasConVar, 0, 12);
+
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'ventas' => $ventasConVar,
+                ],
+            ]);
+            break;
+
+        case 'ventasPorAnio':
+            $compraDAO = new CompraDAO($db);
+            $compras = $compraDAO->readAll();
+
+            // Agrupa las ventas por año
+            $ventasPorAnio = [];
+            foreach ($compras as $compra) {
+                $fecha = new DateTime($compra->fechaCompra);
+                $anio = (int) $fecha->format('Y');
+                if (!isset($ventasPorAnio[$anio])) {
+                    $ventasPorAnio[$anio] = [
+                        'año' => $anio,
+                        'total' => 0,
+                    ];
+                }
+                $ventasPorAnio[$anio]['total'] += $compra->total;
+            }
+
+            // Ordena de mayor a menor año
+            krsort($ventasPorAnio);
+
+            // Calcula la variación anual
+            $ventasArray = array_values($ventasPorAnio);
+            $ventasConVar = [];
+            for ($i = 0; $i < count($ventasArray); $i++) {
+                $actual = $ventasArray[$i];
+                $anterior = $ventasArray[$i + 1] ?? null;
+                $variacion = null;
+                if ($anterior && $anterior['total'] > 0) {
+                    $variacion = round((($actual['total'] - $anterior['total']) / $anterior['total']) * 100, 1);
+                }
+                $ventasConVar[] = [
+                    'posicion' => $i + 1,
+                    'año' => $actual['año'],
+                    'total' => $actual['total'],
+                    'variacion' => $variacion,
+                ];
+            }
+
+            // Limita a los últimos 10 años (si hay más)
+            $ventasConVar = array_slice($ventasConVar, 0, 10);
+
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'ventas' => $ventasConVar,
+                ],
+            ]);
+            break;
+
+
 
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);

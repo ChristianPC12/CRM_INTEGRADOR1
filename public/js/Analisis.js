@@ -9,47 +9,86 @@ let lastAnalisisFuncion = mostrarClientesFrecuentes;
 
 document.addEventListener("DOMContentLoaded", () => {
   // Asigna funciones a los botones de análisis
-  document.getElementById("btnClientesFrecuentes").addEventListener("click", () => {
-    lastAnalisisFuncion = mostrarClientesFrecuentes;
-    mostrarClientesFrecuentes();
-  });
-  document.getElementById("btnClientesMayorHistorial").addEventListener("click", () => {
-    lastAnalisisFuncion = mostrarClientesMayorHistorial;
-    mostrarClientesMayorHistorial();
-  });
-  document.getElementById("btnClientesInactivos").addEventListener("click", () => {
-    lastAnalisisFuncion = mostrarClientesInactivos;
-    mostrarClientesInactivos();
-  });
-  document.getElementById("btnResidenciasFrecuentes").addEventListener("click", () => {
-    lastAnalisisFuncion = mostrarResidenciasFrecuentes;
-    mostrarResidenciasFrecuentes();
-  });
-  document.getElementById("btnClientesAntiguos").addEventListener("click", () => {
-    lastAnalisisFuncion = mostrarClientesAntiguos;
-    mostrarClientesAntiguos();
-  });
+  document
+    .getElementById("btnClientesFrecuentes")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarClientesFrecuentes;
+      mostrarClientesFrecuentes();
+    });
+  document
+    .getElementById("btnClientesMayorHistorial")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarClientesMayorHistorial;
+      mostrarClientesMayorHistorial();
+    });
+  document
+    .getElementById("btnClientesInactivos")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarClientesInactivos;
+      mostrarClientesInactivos();
+    });
+  document
+    .getElementById("btnResidenciasFrecuentes")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarResidenciasFrecuentes;
+      mostrarResidenciasFrecuentes();
+    });
+  document
+    .getElementById("btnClientesAntiguos")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarClientesAntiguos;
+      mostrarClientesAntiguos();
+    });
 
   // Botón de actualizar recarga el análisis actual
-  document.getElementById("btnActualizarAnalisis").addEventListener("click", () => {
-    if (lastAnalisisFuncion) lastAnalisisFuncion();
-  });
+  document
+    .getElementById("btnActualizarAnalisis")
+    .addEventListener("click", () => {
+      if (lastAnalisisFuncion) lastAnalisisFuncion();
+    });
 
-  // Evento de búsqueda general en tiempo real
-  document.getElementById("analisisBuscadorGeneral").addEventListener("input", function () {
+  document
+  .getElementById("analisisBuscadorGeneral")
+  .addEventListener("input", function () {
     const value = this.value.trim().toLowerCase();
     let filtrados = [];
+
+    // --- Residencias frecuentes (busca por lugar de residencia) ---
     if (modoResidencia) {
-      // Si es residencias frecuentes, busca por lugar de residencia
       filtrados = !value
         ? datosAnalisisActual
-        : datosAnalisisActual.filter(r => r.residencia.toLowerCase().includes(value));
+        : datosAnalisisActual.filter(r =>
+            (r.residencia ?? "").toLowerCase().includes(value)
+          );
       renderResidenciasFrecuentesTabla(filtrados);
-    } else {
-      // Si es otro análisis, busca por nombre
+
+    // --- Ventas por mes ---
+    } else if (lastAnalisisFuncion === mostrarVentasPorMes) {
       filtrados = !value
         ? datosAnalisisActual
-        : datosAnalisisActual.filter(c => c.nombre.toLowerCase().includes(value));
+        : datosAnalisisActual.filter(
+            v =>
+              (v.mes ?? "").toLowerCase().includes(value) ||
+              (v.año ?? "").toString().includes(value)
+          );
+      renderTablaVentasPorMes(filtrados);
+
+    // --- Ventas por año ---
+    } else if (lastAnalisisFuncion === mostrarVentasPorAnio) {
+      filtrados = !value
+        ? datosAnalisisActual
+        : datosAnalisisActual.filter(
+            v => (v.año ?? "").toString().includes(value)
+          );
+      renderTablaVentasPorAnio(filtrados);
+
+    // --- Otros análisis (buscan por nombre) ---
+    } else {
+      filtrados = !value
+        ? datosAnalisisActual
+        : datosAnalisisActual.filter(
+            c => (c.nombre ?? "").toLowerCase().includes(value)
+          );
       renderTablaAnalisisActual(filtrados);
     }
   });
@@ -91,12 +130,17 @@ async function mostrarClientesFrecuentes() {
     renderGraficoBarras({
       cont: graficoCont,
       idCanvas: "graficoFrecuentes",
-      labels: top.map(c => c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre),
-      data: top.map(c => c.visitas),
+      labels: top.map((c) =>
+        c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre
+      ),
+      data: top.map((c) => c.visitas),
       label: "Visitas",
       color: "var(--amarillo)",
-      tooltipTitle: i => top[i].nombre,
-      tooltipLabel: i => [`Visitas: ${top[i].visitas}`, `Tarjeta: ${top[i].id}`],
+      tooltipTitle: (i) => top[i].nombre,
+      tooltipLabel: (i) => [
+        `Visitas: ${top[i].visitas}`,
+        `Tarjeta: ${top[i].id}`,
+      ],
     });
   } catch (e) {
     tablaCont.innerHTML = errorHTML(e.message);
@@ -134,13 +178,17 @@ async function mostrarClientesMayorHistorial() {
     renderGraficoBarras({
       cont: graficoCont,
       idCanvas: "graficoMayorHistorial",
-      labels: top.map(c => c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre),
-      data: top.map(c => c.totalHistorico),
+      labels: top.map((c) =>
+        c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre
+      ),
+      data: top.map((c) => c.totalHistorico),
       label: "Total histórico",
       color: "var(--amarillo)",
-      tooltipTitle: i => top[i].nombre,
-      tooltipLabel: i => [
-        `Total histórico: ₡${parseFloat(top[i].totalHistorico).toLocaleString("es-CR")}`,
+      tooltipTitle: (i) => top[i].nombre,
+      tooltipLabel: (i) => [
+        `Total histórico: ₡${parseFloat(top[i].totalHistorico).toLocaleString(
+          "es-CR"
+        )}`,
         `Tarjeta: ${top[i].id}`,
       ],
     });
@@ -188,12 +236,14 @@ async function mostrarClientesInactivos() {
     renderGraficoBarras({
       cont: graficoCont,
       idCanvas: "graficoInactivos",
-      labels: top.map(c => c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre),
-      data: top.map(c => c.diasSinComprar),
+      labels: top.map((c) =>
+        c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre
+      ),
+      data: top.map((c) => c.diasSinComprar),
       label: "Tiempo sin comprar (días)",
       color: "var(--amarillo)",
-      tooltipTitle: i => top[i].nombre,
-      tooltipLabel: i => [
+      tooltipTitle: (i) => top[i].nombre,
+      tooltipLabel: (i) => [
         `Tiempo sin comprar: ${formatearAntiguedad(top[i].diasSinComprar)}`,
         `Tarjeta: ${top[i].id}`,
       ],
@@ -234,12 +284,16 @@ async function mostrarResidenciasFrecuentes() {
     renderGraficoBarras({
       cont: graficoCont,
       idCanvas: "graficoResidencias",
-      labels: top.map(r => r.residencia.length > 15 ? r.residencia.slice(0, 15) + "…" : r.residencia),
-      data: top.map(r => r.cantidad),
+      labels: top.map((r) =>
+        r.residencia.length > 15
+          ? r.residencia.slice(0, 15) + "…"
+          : r.residencia
+      ),
+      data: top.map((r) => r.cantidad),
       label: "Clientes",
       color: "var(--amarillo)",
-      tooltipTitle: i => top[i].residencia,
-      tooltipLabel: i => [`Clientes: ${top[i].cantidad}`],
+      tooltipTitle: (i) => top[i].residencia,
+      tooltipLabel: (i) => [`Clientes: ${top[i].cantidad}`],
     });
   } catch (e) {
     tablaCont.innerHTML = errorHTML(e.message);
@@ -277,13 +331,15 @@ async function mostrarClientesAntiguos() {
     renderGraficoBarras({
       cont: graficoCont,
       idCanvas: "graficoAntiguos",
-      labels: top.map(c => c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre),
-      data: top.map(c => c.antiguedadDias),
+      labels: top.map((c) =>
+        c.nombre.length > 15 ? c.nombre.slice(0, 15) + "…" : c.nombre
+      ),
+      data: top.map((c) => c.antiguedadDias),
       label: "Antigüedad (días)",
       color: "var(--amarillo)",
       indexAxis: "y",
-      tooltipTitle: i => top[i].nombre,
-      tooltipLabel: i => [
+      tooltipTitle: (i) => top[i].nombre,
+      tooltipLabel: (i) => [
         `Antigüedad: ${formatearAntiguedad(top[i].antiguedadDias)}`,
         `Tarjeta: ${top[i].id}`,
       ],
@@ -300,7 +356,9 @@ async function mostrarClientesAntiguos() {
 
 // Pone el botón de análisis activo con color
 function setBotonActivo(idBtn) {
-  document.querySelectorAll(".btn-analisis").forEach(b => b.classList.remove("active"));
+  document
+    .querySelectorAll(".btn-analisis")
+    .forEach((b) => b.classList.remove("active"));
   document.getElementById(idBtn).classList.add("active");
 }
 
@@ -402,7 +460,9 @@ function renderTablaAnalisisActual(arr) {
                     <td>${cliente.nombre}</td>
                     <td>${cliente.cedula}</td>
                     <td>${cliente.telefono ?? "-"}</td>
-                    <td>₡${parseFloat(cliente.totalHistorico).toLocaleString("es-CR")}</td>
+                    <td>₡${parseFloat(cliente.totalHistorico).toLocaleString(
+                      "es-CR"
+                    )}</td>
                     <td>${cliente.ultimaCompra ?? "-"}</td>
                   </tr>
                 `
@@ -438,7 +498,9 @@ function renderTablaAnalisisActual(arr) {
                     <td>${c.telefono ?? "-"}</td>
                     <td>${c.ultimaCompra ?? "-"}</td>
                     <td>${formatearAntiguedad(c.diasSinComprar)}</td>
-                    <td>₡${parseFloat(c.totalHistorico).toLocaleString("es-CR")}</td>
+                    <td>₡${parseFloat(c.totalHistorico).toLocaleString(
+                      "es-CR"
+                    )}</td>
                   </tr>
                 `
               )
@@ -471,7 +533,9 @@ function renderTablaAnalisisActual(arr) {
                     <td>${cliente.cedula}</td>
                     <td>${formatearAntiguedad(cliente.antiguedadDias)}</td>
                     <td>${formatearAntiguedad(cliente.diasSinComprar)}</td>
-                    <td>₡${parseFloat(cliente.totalHistorico).toLocaleString("es-CR")}</td>
+                    <td>₡${parseFloat(cliente.totalHistorico).toLocaleString(
+                      "es-CR"
+                    )}</td>
                   </tr>
                 `
               )
@@ -562,7 +626,7 @@ function renderGraficoBarras({
   color,
   tooltipTitle,
   tooltipLabel,
-  indexAxis
+  indexAxis,
 }) {
   cont.innerHTML = `<canvas id="${idCanvas}"></canvas>`;
   const ctx = document.getElementById(idCanvas).getContext("2d");
@@ -595,4 +659,217 @@ function renderGraficoBarras({
       },
     },
   });
+}
+
+
+/**
+ * Redibuja la tabla de ventas por mes
+ */
+function renderTablaVentasPorMes(arr) {
+  const tablaCont = document.getElementById("analisisTablaCont");
+  let filas = arr.map((v, i) => {
+    let varHtml = "-";
+    if (typeof v.variacion === "number") {
+      varHtml = v.variacion > 0
+        ? `<span class="text-success fw-bold">+${v.variacion}% <i class="fa fa-arrow-up"></i></span>`
+        : `<span class="text-danger fw-bold">${v.variacion}% <i class="fa fa-arrow-down"></i></span>`;
+    }
+    return `
+      <tr>
+        <td>${v.posicion}</td>
+        <td>${v.mes}</td>
+        <td>${v.año}</td>
+        <td>₡${parseFloat(v.total).toLocaleString("es-CR")}</td>
+        <td>${varHtml}</td>
+      </tr>
+    `;
+  }).join("");
+
+  tablaCont.innerHTML = `
+    <table class="table table-striped table-hover align-middle mb-0 rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Mes</th>
+          <th>Año</th>
+          <th>Ventas Totales</th>
+          <th>Var. Mensual (%)</th>
+        </tr>
+      </thead>
+      <tbody>${filas}</tbody>
+    </table>
+  `;
+}
+
+
+document.getElementById("btnVentasPorMes").addEventListener("click", () => {
+  lastAnalisisFuncion = mostrarVentasPorMes;
+  mostrarVentasPorMes();
+});
+
+async function mostrarVentasPorMes() {
+  setBotonActivo("btnVentasPorMes");
+  modoResidencia = false;
+  setBuscador("Buscar por mes o año...");
+  const tablaCont = document.getElementById("analisisTablaCont");
+  const graficoCont = document.getElementById("analisisGraficoCont");
+  tablaCont.innerHTML = loaderHTML();
+  graficoCont.innerHTML = "";
+
+  try {
+    const res = await fetch("/CRM_INT/CRM/controller/AnalisisController.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "action=ventasPorMes",
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+
+    const ventas = json.data.ventas;
+    datosAnalisisActual = ventas;
+
+    renderTablaVentasPorMes(ventas);
+
+    // Gráfico (igual que tienes)
+    if (ventas.length) {
+      const labels = ventas.map(v => `${v.mes} ${v.año}`).reverse();
+      const data = ventas.map(v => v.total).reverse();
+      graficoCont.innerHTML = `<canvas id="graficoVentasMes"></canvas>`;
+      const ctx = document.getElementById("graficoVentasMes").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Ventas Totales",
+            data,
+            backgroundColor: "var(--amarillo)",
+            borderRadius: 10,
+          }],
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  return labels[context[0].dataIndex];
+                },
+                label: function(context) {
+                  return `₡${parseFloat(data[context.dataIndex]).toLocaleString("es-CR")}`;
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  } catch (e) {
+    tablaCont.innerHTML = errorHTML(e.message);
+    graficoCont.innerHTML = "";
+  }
+}
+
+
+
+// Botón de Ventas por año
+document.getElementById("btnVentasPorAnio").addEventListener("click", () => {
+  lastAnalisisFuncion = mostrarVentasPorAnio;
+  mostrarVentasPorAnio();
+});
+
+async function mostrarVentasPorAnio() {
+  setBotonActivo("btnVentasPorAnio");
+  modoResidencia = false;
+  setBuscador("Buscar por año...");
+  const tablaCont = document.getElementById("analisisTablaCont");
+  const graficoCont = document.getElementById("analisisGraficoCont");
+  tablaCont.innerHTML = loaderHTML();
+  graficoCont.innerHTML = "";
+
+  try {
+    const res = await fetch("/CRM_INT/CRM/controller/AnalisisController.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "action=ventasPorAnio",
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+
+    const ventas = json.data.ventas;
+    datosAnalisisActual = ventas;
+
+    renderTablaVentasPorAnio(ventas);
+
+    // Gráfico de barras (años en orden ascendente)
+    if (ventas.length) {
+      const labels = ventas.map(v => v.año).reverse();
+      const data = ventas.map(v => v.total).reverse();
+      graficoCont.innerHTML = `<canvas id="graficoVentasAnio"></canvas>`;
+      const ctx = document.getElementById("graficoVentasAnio").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Ventas Totales",
+            data,
+            backgroundColor: "var(--amarillo)",
+            borderRadius: 10,
+          }],
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  return `Año ${labels[context[0].dataIndex]}`;
+                },
+                label: function(context) {
+                  return `₡${parseFloat(data[context.dataIndex]).toLocaleString("es-CR")}`;
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  } catch (e) {
+    tablaCont.innerHTML = errorHTML(e.message);
+    graficoCont.innerHTML = "";
+  }
+}
+
+
+function renderTablaVentasPorAnio(arr) {
+  const tablaCont = document.getElementById("analisisTablaCont");
+  let filas = arr.map((v, i) => {
+    let varHtml = "-";
+    if (typeof v.variacion === "number") {
+      varHtml = v.variacion > 0
+        ? `<span class="text-success fw-bold">+${v.variacion}% <i class="fa fa-arrow-up"></i></span>`
+        : `<span class="text-danger fw-bold">${v.variacion}% <i class="fa fa-arrow-down"></i></span>`;
+    }
+    return `
+      <tr>
+        <td>${v.posicion}</td>
+        <td>${v.año}</td>
+        <td>₡${parseFloat(v.total).toLocaleString("es-CR")}</td>
+        <td>${varHtml}</td>
+      </tr>
+    `;
+  }).join("");
+
+  tablaCont.innerHTML = `
+    <table class="table table-striped table-hover align-middle mb-0 rounded">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Año</th>
+          <th>Ventas Totales</th>
+          <th>Var. Anual (%)</th>
+        </tr>
+      </thead>
+      <tbody>${filas}</tbody>
+    </table>
+  `;
 }

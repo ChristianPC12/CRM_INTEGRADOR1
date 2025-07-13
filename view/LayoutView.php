@@ -250,10 +250,10 @@ if ($vista === 'clientes') {
 
      
           const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
-       
+          const vistaActual = "<?= $vista ?>";
 
-            // Mostrar el modal automáticamente solo si el rol es salonero
-            if (typeof rolUsuario !== 'undefined' && rolUsuario === "salonero") {
+            // Mostrar el modal automáticamente solo si el rol es salonero Y está en dashboard
+            if (rolUsuario === "salonero" && vistaActual === "dashboard") {
               const modal = document.getElementById('modalTarjeta');
               if (modal) modal.style.display = 'flex';
             }

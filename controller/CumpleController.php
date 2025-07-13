@@ -82,6 +82,18 @@ try {
             ]);
             break;
 
+        case 'hayPendientes':
+            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM cliente WHERE Estado = 'PENDIENTE'");
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $hayPendientes = isset($row['total']) && $row['total'] > 0;
+            echo json_encode([
+                'success' => true,
+                'hayPendientes' => $hayPendientes,
+                'total' => (int)($row['total'] ?? 0)
+            ]);
+            break;
+
         default:
             echo json_encode([
                 'success' => false,

@@ -19,7 +19,7 @@
     <i class="bi bi-gift-fill icon-metrica"></i>
     <h4>Clientes que Cumplen Años este mes</h4>
    <p id="cumple-texto" style="font-size: 0.9em;"></p>
-    <a href="CRM_INT/CRM/index.php?view=analisis" class="link-metrica" style="display: block; margin-top: 0.5rem;">Ver análisis</a>
+    <a href="CRM_INT/CRM/index.php?view=cumple" class="link-metrica" style="display: block; margin-top: 0.5rem;">Ver análisis</a>
   </div>
 
 
@@ -46,7 +46,6 @@
     <i class="bi bi-people-fill icon-metrica"></i>
     <h4>Total Clientes</h4>
     <p class="valor" id="total-clientes">0</p>
-    <a href="CRM_INT/CRM/index.php?view=analisis" class="link-metrica">Ver análisis</a>
   </div>
 </div>
     <!-- Sección de tareas -->

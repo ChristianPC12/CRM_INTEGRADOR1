@@ -10,5 +10,8 @@ class ClienteDTO
     public $lugarResidencia;
     public $fechaCumpleanos;
     public $acumulado;
-    public $fechaRegistro; // NUEVO: Fecha en que se registró el cliente
+    public $fechaRegistro;
+
+    public $totalHistorico;        // <─ NUEVO
+
 }

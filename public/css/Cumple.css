@@ -1,0 +1,180 @@
+@import url('./Variables.css');
+
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --blanco: #ffffff;
+  --negro: #000000;
+  --header-h: 72px;
+  --card-max-w: 1100px;
+}
+
+/* === FONDO GLOBAL CON DOS COLORES ========================= */
+body {
+  background: var(--gris);
+  position: relative;
+  z-index: 0;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  top: 0;
+  left: 0;
+  width: 38%;
+  height: 100%;
+  background: var(--amarillo);
+}
+
+body::after {
+  bottom: 0;
+  right: 0;
+  width: 62%;
+  height: 100%;
+  background: var(--gris);
+}
+
+/* === TARJETAS ============================================ */
+.card {
+  max-width: var(--card-max-w);
+  margin: 2rem auto;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--blanco);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--amarillo);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  background: var(--negro);
+  color: var(--blanco);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* === TABLA DE CUMPLEAÑOS ================================== */
+#cumpleLista {
+  flex: 1 1 auto;
+  overflow-y: auto !important;
+  padding: 1rem !important;
+  max-height: 400px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+#cumpleLista::-webkit-scrollbar {
+  width: 6px;
+}
+#cumpleLista::-webkit-scrollbar-track {
+  background: transparent;
+}
+#cumpleLista::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+#cumpleLista::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+.table-responsive table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#cumpleLista th,
+#cumpleLista td {
+  text-align: center;
+  vertical-align: top;
+  padding: 0.5rem;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 0;
+}
+
+#cumpleLista td {
+  min-height: 2.5rem;
+  line-height: 1.4;
+}
+
+/* === ESTADO DE CUMPLEAÑOS (Botones) ======================= */
+.btn-warning {
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+}
+
+.btn-success {
+  background-color: #198754;
+  color: #fff;
+  border: none;
+}
+
+/* === FORMULARIO DE ENVÍO DE CORREO ======================== */
+.card-envio-correo {
+  max-width: var(--card-max-w);
+  margin: 0 auto 2rem auto;
+  background: var(--blanco);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid var(--amarillo);
+}
+
+.card-envio-correo .card-header {
+  background-color: var(--negro);
+  color: var(--blanco);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Inputs y textarea */
+.card-envio-correo input,
+.card-envio-correo textarea {
+  background-color: #f9f9f9;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px;
+  width: 100%;
+}
+
+/* Área de mensaje */
+.card-envio-correo textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* === BOTÓN DE ENVÍO AZUL ================================ */
+#btnEnviarCorreo {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#btnEnviarCorreo:hover {
+  background-color: #0056b3;
+}

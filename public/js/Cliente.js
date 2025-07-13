@@ -193,10 +193,10 @@ form.onsubmit = async (e) => {
   const fechaCumpleanos = form.fechaCumpleanos.value;
   
   // Validaciones
-  if (!cedula || !nombre || !correo || !telefono || !lugarResidencia || !fechaCumpleanos) {
-    alert("Todos los campos son obligatorios.");
-    return;
-  }
+  if (!cedula || !nombre || !telefono || !lugarResidencia || !fechaCumpleanos) {
+  alert("Todos los campos son obligatorios (excepto el correo).");
+  return;
+}
   
   if (!validaciones.esCedulaValida(cedula)) {
     alert("La cédula debe tener exactamente 9 dígitos.");
@@ -210,11 +210,12 @@ form.onsubmit = async (e) => {
     return;
   }
   
-  if (!validaciones.esEmailValido(correo)) {
-    alert("Por favor ingrese un correo electrónico válido.");
-    form.correo.focus();
-    return;
-  }
+  if (correo && !validaciones.esEmailValido(correo)) {
+  alert("Por favor ingrese un correo electrónico válido.");
+  form.correo.focus();
+  return;
+}
+
   
   if (!validaciones.esTelefonoValido(telefono)) {
     alert("El teléfono debe tener exactamente 8 dígitos.");

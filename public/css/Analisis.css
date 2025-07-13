@@ -1,0 +1,217 @@
+:root {
+    --amarillo: #f9c41f;
+    --gris: #838886;
+    --blanco: #ffffff;
+    --negro: #000000;
+    --header-h: 72px;
+    --card-max-w: 1100px;
+}
+
+.card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    border: none;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%) !important;
+    color: var(--amarillo) !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 1.5rem;
+    border: none;
+}
+
+/* Título principal */
+.header-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--amarillo);
+}
+
+.header-title i {
+    font-size: 1.5rem;
+}
+
+/* Contenedor principal de controles */
+.header-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+/* Grupo de botones de análisis */
+.botones-analisis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Acciones del header */
+.acciones-header {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Contenedor del buscador */
+.buscador-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Estilos de los botones de análisis */
+.btn-analisis {
+    border-radius: 24px;
+    border: 2px solid var(--amarillo);
+    color: var(--amarillo);
+    background: transparent;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.btn-analisis i {
+    font-size: 0.85rem;
+}
+
+.btn-analisis.active,
+.btn-analisis:hover,
+.btn-analisis:focus-visible {
+    background: var(--amarillo);
+    color: var(--negro);
+    border-color: var(--amarillo);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 196, 31, 0.3);
+}
+
+/* Botón de actualizar */
+.btn-actualizar {
+    border-radius: 24px;
+    border: 2px solid #fff;
+    color: #fff;
+    background: transparent;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.btn-actualizar:hover,
+.btn-actualizar:focus-visible {
+    background: #fff;
+    color: var(--negro);
+    border-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* Buscador */
+.buscador-analisis {
+    min-width: 280px;
+    max-width: 320px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.input-group-text {
+    background: var(--amarillo) !important;
+    color: var(--negro) !important;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+}
+
+.buscador-analisis .form-control {
+    background: #fff;
+    color: #333;
+    font-weight: 500;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.buscador-analisis .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    background: #fff;
+}
+
+.buscador-analisis .form-control::placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+
+
+/* Estilos de tabla - SIN CAMBIOS */
+.btn-outline-warning {
+    border-radius: 2rem;
+    border-width: 2px;
+    font-weight: bold;
+    color: var(--amarillo);
+    border-color: var(--amarillo);
+    background: var(--negro);
+}
+
+.btn-outline-warning:hover, .btn-outline-warning.active {
+    background: var(--amarillo);
+    color: var(--negro);
+    border-color: var(--amarillo);
+}
+
+.table {
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background: var(--amarillo) !important;
+    color: var(--negro) !important;
+    font-weight: bold;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: #fff8dc;
+}
+
+.table-hover tbody tr:hover {
+    background: #fbeec1 !important;
+}
+
+#analisisGraficoCont {
+    background: #fffde7;
+    border-radius: 1rem;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+#analisisTablaCont {
+    max-height: 350px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 1rem;
+    padding-bottom: 0.5rem;
+}

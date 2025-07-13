@@ -83,31 +83,40 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
+                 <a href="index.php?view=cumple" id="link-cumple"
+                     class="<?= $vista === 'cumple' ? 'active' : '' ?>">
+                     <i class="bi bi-gift"></i> Cumpleaños
+                 </a>   
+            </li>
+            <li>
                 <a href="#" onclick="confirmarCerrarSesion()" style="color: #dc3545;">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </a>
             </li>
+            
         </ul>
     </aside>
 
     <div class="content">
         <main class="main-content">
             <?php
-            if ($vista === 'clientes') {
-                include 'ClienteView.php';
-            } elseif ($vista === 'usuarios') {
-                include 'UsuarioView.php';
-            } elseif ($vista === 'recompensas') {
-                include 'RecompensasView.php';
-            } elseif ($vista === 'compras') {
-                include 'CompraView.php';
-            } elseif ($vista === 'codigo') {
-                include 'CodigoView.php';
-            } elseif ($vista === 'analisis') {
-                include 'AnalisisView.php';
-            } else {
-                include 'DashboardView.php';
-            }
+if ($vista === 'clientes') {
+    include 'ClienteView.php';
+} elseif ($vista === 'usuarios') {
+    include 'UsuarioView.php';
+} elseif ($vista === 'recompensas') {
+    include 'RecompensasView.php';
+} elseif ($vista === 'compras') {
+    include 'CompraView.php';
+} elseif ($vista === 'codigo') {
+    include 'CodigoView.php';
+} elseif ($vista === 'analisis') {
+    include 'AnalisisView.php';
+} elseif ($vista === 'cumple') {
+    include 'CumpleView.php';
+} else {
+    include 'DashboardView.php';
+}
             ?>
         <!-- Modal para ingresar número de tarjeta -->
         <div id="modalTarjeta" class="modal-tarjeta">
@@ -133,6 +142,11 @@ $vista = $_GET['view'] ?? 'dashboard';
     <?php elseif ($vista === 'clientes'): ?>
         <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
     <?php endif; ?>
+    
+    <?php if ($vista === 'cumple'): ?>
+        <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
+    <?php endif; ?>
+
 
     <!-- Logout automático al cerrar la pestaña -->
     <script>

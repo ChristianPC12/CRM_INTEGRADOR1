@@ -12,10 +12,7 @@ require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/codigo/CodigoDAO.php';
 require_once __DIR__ . '/../model/codigo/CodigoDTO.php';
 
-/**
- * Genera un valor único para el código de barras.
- * Personaliza esta lógica según tu necesidad.
- */
+
 function generarCodigoBarra($cliente) {
     // Ejemplo: cédula + fecha y hora actual para unicidad
     return $cliente->cedula . date('YmdHis');

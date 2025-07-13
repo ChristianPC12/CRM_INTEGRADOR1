@@ -14,19 +14,21 @@ class CompraDAO
     }
 
     public function create($compra)
-    {
-        try {
-            $stmt = $this->conn->prepare("CALL CompraCreate(?, ?, ?)");
-            return $stmt->execute([
-                $compra->fechaCompra,
-                $compra->total,
-                $compra->idCliente
-            ]);
-        } catch (PDOException $e) {
-            error_log("Error al crear compra: " . $e->getMessage());
-            return false;
-        }
+{
+    try {
+        // 1. Llamar al SP que hace todo (INSERT + UPDATE)
+        $stmt = $this->conn->prepare("CALL SumarCompra(?, ?)");
+        return $stmt->execute([
+            $compra->idCliente,
+            $compra->total
+        ]);
+
+    } catch (PDOException $e) {
+        error_log("Error al registrar compra: " . $e->getMessage());
+        return false;
     }
+}
+
 
     public function read($idCompra)
     {

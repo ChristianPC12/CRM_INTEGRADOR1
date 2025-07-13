@@ -112,44 +112,34 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
-      let monto =
-        parseFloat(document.getElementById("cantidadAcumulada").value.trim()) ||
-        0;
-      if (monto <= 0) return alert("Ingrese un monto válido para acumular.");
-      const rCompra = await fetch(
-        "/CRM_INT/CRM/controller/CompraController.php",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `action=create&total=${monto}&idCliente=${idClienteActual}`,
-        }
-      );
-      const resCompra = await rCompra.json();
-      if (!resCompra.success) return alert(resCompra.message);
-      let nuevoTotal =
-        (parseFloat(document.getElementById("totalActual").value) || 0) + monto;
-      const rCliente = await fetch(
-        "/CRM_INT/CRM/controller/ClienteController.php",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: datosClienteActual
-            ? `action=update&id=${datosClienteActual.id}&cedula=${datosClienteActual.cedula}&nombre=${datosClienteActual.nombre}&correo=${datosClienteActual.correo}&telefono=${datosClienteActual.telefono}&lugarResidencia=${datosClienteActual.lugarResidencia}&fechaCumpleanos=${datosClienteActual.fechaCumpleanos}&acumulado=${nuevoTotal}`
-            : "",
-        }
-      );
-      const resCliente = await rCliente.json();
-      if (!resCliente.success)
-        return alert(
-          "Compra registrada pero error al actualizar el acumulado."
-        );
-      document.getElementById("cantidadAcumulada").value = "";
-      document.getElementById("totalActual").value = nuevoTotal;
-      datosClienteActual.acumulado = nuevoTotal;
-      cargarHistorialCompras(idClienteActual);
-      return alert(resCompra.message);
+   // === Bloque corregido para registrar una compra ==========================
+if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
+  const monto =
+    parseFloat(document.getElementById("cantidadAcumulada").value.trim()) || 0;
+  if (monto <= 0) return alert("Ingrese un monto válido para acumular.");
+
+  /* 1) Registrar la compra (SP SumarCompra hace INSERT + UPDATE) */
+  const rCompra = await fetch(
+    "/CRM_INT/CRM/controller/CompraController.php",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `action=create&total=${monto}&idCliente=${idClienteActual}`,
     }
+  );
+  const resCompra = await rCompra.json();
+  if (resCompra.success) {
+  // Limpia el input de monto
+  document.getElementById("cantidadAcumulada").value = "";
+
+  // Refresca los datos del cliente (ya traen Acumulado y TotalHistorico actualizados)
+  await buscarCliente();
+
+  cargarHistorialCompras(idClienteActual);
+  return alert(resCompra.message);
+}}
+// ========================================================================
+
 
     await buscarCliente();
     if (opcion === "compra" && idClienteActual) {

@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="clienteCorreo" class="form-label">Correo Electrónico *</label>
-                        <input type="email" name="correo" id="clienteCorreo" class="form-control" required placeholder="ejemplo@correo.com">
+                        <input type="email" name="correo" id="clienteCorreo" class="form-control" placeholder="ejemplo@correo.com">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="clienteTelefono" class="form-label">Teléfono *</label>

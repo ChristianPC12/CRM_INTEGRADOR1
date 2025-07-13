@@ -1,32 +1,35 @@
-<div class="card-header bg-dark text-white rounded-top">
-    <div class="d-flex flex-wrap align-items-center mb-2">
-        <h5 class="mb-0 flex-grow-1">
+<div class="card-header bg-dark text-white rounded-top p-4">
+    <!-- Título (línea 1) -->
+    <div class="d-flex align-items-center mb-2"> <!-- <== AJUSTA ESTE mb-2 ó mb-1 -->
+        <h5 class="mb-0 header-title">
             <i class="fa-solid fa-chart-bar"></i> Análisis de Clientes
         </h5>
+        <div class="flex-grow-1 ms-3 divider-header"></div>
     </div>
-    <div class="d-flex flex-wrap gap-2 align-items-center">
-        
-        <button class="btn btn-analisis active" id="btnClientesFrecuentes">Clientes más frecuentes</button>
-        <button class="btn btn-analisis" id="btnClientesMayorHistorial">
+
+    <!-- Fila 1 de botones -->
+    <div class="d-flex flex-wrap gap-2 w-100 botones-analisis mb-2">
+        <button class="btn btn-analisis active flex-fill" id="btnClientesFrecuentes">Clientes más frecuentes</button>
+        <button class="btn btn-analisis flex-fill" id="btnClientesMayorHistorial">
             <i class="fa-solid fa-crown"></i> Clientes con mayor historial
         </button>
-        <button class="btn btn-analisis" id="btnClientesInactivos">Clientes inactivos</button>
-        <button class="btn btn-analisis" id="btnResidenciasFrecuentes">Residencias más frecuentes</button>
-        <button class="btn btn-analisis btn-outline-dark" id="btnClientesAntiguos">
+        <button class="btn btn-analisis flex-fill" id="btnClientesInactivos">Clientes inactivos</button>
+        <button class="btn btn-analisis flex-fill" id="btnResidenciasFrecuentes">Residencias más frecuentes</button>
+    </div>
+    <!-- Fila 2 de botones + buscador -->
+    <div class="d-flex flex-wrap gap-2 w-100 align-items-center">
+        <button class="btn btn-analisis btn-outline-dark flex-fill" id="btnClientesAntiguos">
             Clientes más antiguos
         </button>
-        <button class="btn btn-analisis btn-outline-dark" id="btnVentasPorMes">
-            Ventas por mes
+        <button class="btn btn-analisis btn-outline-dark flex-fill" id="btnVentasPorMes">Ventas por mes</button>
+        <button class="btn btn-analisis flex-fill" id="btnVentasPorAnio">
+            <i class="fa-solid fa-calendar-alt"></i> Ventas por año
         </button>
-        <button class="btn btn-analisis" id="btnVentasPorAnio">
-    <i class="fa-solid fa-calendar-alt"></i> Ventas por año
-</button>
-
-        <button class="btn btn-analisis btn-outline-white" id="btnActualizarAnalisis">
+        <button class="btn btn-analisis btn-outline-white flex-fill" id="btnActualizarAnalisis">
             <i class="fa-solid fa-rotate"></i> Actualizar
         </button>
-        <!-- El div vacío fuerza el buscador a la derecha -->
-        <div class="input-group buscador-analisis" style="min-width:220px;max-width:300px;">
+        <!-- Buscador: siempre alineado a la derecha -->
+        <div class="input-group buscador-analisis ms-auto" style="min-width:220px;max-width:300px;">
             <span class="input-group-text bg-dark text-white border-0 rounded-start px-3" id="labelBuscador">
                 <i class="fa fa-search"></i>
             </span>
@@ -36,6 +39,7 @@
         </div>
     </div>
 </div>
+
 
 
 

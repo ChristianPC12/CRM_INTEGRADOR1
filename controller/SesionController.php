@@ -1,11 +1,12 @@
 <?php
-// Archivo: controller/SessionController.php
+// Archivo: controller/SessionController.php (MODIFICADO)
 
 session_start();
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../controller/BitacoraController.php';
+
 try {
-    // Obtener los datos de la petición
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
 
@@ -13,11 +14,16 @@ try {
 
     switch ($action) {
         case 'close_session':
+            // Registrar salida en bitácora antes de destruir la sesión
+            if (isset($_SESSION['idUsuario'])) {
+                $bitacoraController = new BitacoraController();
+                $bitacoraController->registrarSalida($_SESSION['idUsuario']);
+            }
+
             // Destruir la sesión completamente
             session_unset();
             session_destroy();
 
-            // Eliminar la cookie de sesión del navegador
             if (ini_get("session.use_cookies")) {
                 $params = session_get_cookie_params();
                 setcookie(
@@ -35,7 +41,6 @@ try {
             break;
 
         case 'check_session':
-            // Verificar si la sesión está activa
             $active = isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true;
             echo json_encode(['success' => true, 'active' => $active]);
             break;
@@ -50,4 +55,3 @@ try {
         'message' => 'Error del servidor: ' . $e->getMessage()
     ]);
 }
-?>

@@ -1,0 +1,83 @@
+/* BitacoraEstilos.css */
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --negro: #000000;
+  --blanco: #ffffff;
+}
+
+body {
+  background-color: #f5f5f5;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 1rem;
+}
+
+h2 {
+  text-align: center;
+  color: var(--negro);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--blanco);
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: var(--amarillo);
+  color: var(--negro);
+}
+
+tr:hover {
+  background-color: #fff8dc;
+}
+
+.btn {
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+li a i {
+  margin-right: 8px;
+  color: #fff; /* o el color que usas cuando NO está activo */
+}
+
+li.activo a i {
+  color: #000000; /* o el color que usas cuando SÍ está activo */
+}
+li:not(.activo) a i {
+  display: none;
+}
+.btn-pdf {
+  background-color: #d9534f;
+  color: white;
+}
+
+.btn-excel {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.alert {
+  background: #fff3cd;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 5px solid #ffc107;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}

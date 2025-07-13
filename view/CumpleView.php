@@ -4,13 +4,17 @@
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
+            <div id="rangoSemana" class="alert alert-info text-center fw-bold m-4">
+                <!-- Aquí se mostrará el rango de la semana -->
+            </div>
+
             <div id="cumpleLista" class="p-4">
                 <!-- Aquí se inyectará la tabla desde JS -->
             </div>
         </div>
     </div>
 </div>
-          
+
 <!-- FORMULARIO DE ENVÍO -->
 <div class="card shadow-sm mt-3" style="max-width: 1100px; margin: 0 auto; border-left: 5px solid #f9c41f;">
     <div class="card-header bg-dark text-white py-2">
@@ -40,11 +44,7 @@
                 <input type="email" id="correoCorreo" class="form-control form-control-sm" readonly>
             </div>
 
-            <div class="col-12">
-                <label class="form-label small">Mensaje</label>
-                <textarea id="mensajeCorreo" rows="3" class="form-control form-control-sm"
-                    placeholder="¡Feliz cumpleaños! Queremos regalarte…"></textarea>
-            </div>
+            <input type="hidden" id="mensajeCorreo">
 
             <div class="col-12 text-end mt-2">
                 <button id="btnEnviarCorreo" class="btn btn-sm btn-primary">
@@ -54,5 +54,6 @@
         </form>
     </div>
 </div>
+
 <script src="/CRM_INT/CRM/public/js/Cumple.js?v=<?= time() ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

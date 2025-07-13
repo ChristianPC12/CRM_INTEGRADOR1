@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/BitacoraController.php';
 require_once __DIR__ . '/../model/usuario/UsuarioDAO.php';
 require_once __DIR__ . '/../model/usuario/UsuarioDTO.php';
 require_once __DIR__ . '/../model/usuario/UsuarioMapper.php';

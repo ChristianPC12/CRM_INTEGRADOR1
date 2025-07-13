@@ -3,6 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarCumples();
     document.getElementById("btnEnviarCorreo").disabled = true;
 
+    // Función para actualizar el badge de cumpleaños pendientes en el sidebar
+    function actualizarCumpleBadgeSidebar() {
+        fetch('/CRM_INT/CRM/controller/CumpleController.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'action=hayPendientes'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (window.mostrarCumpleBadge) {
+                window.mostrarCumpleBadge(data.success && data.hayPendientes);
+            }
+        });
+    }
+
     document.getElementById("formCorreo").addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -44,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("formCorreo").reset();
                 document.getElementById("btnEnviarCorreo").disabled = true;
                 cargarCumples();
+                actualizarCumpleBadgeSidebar(); // <--- Actualiza el badge
             } else {
                 Swal.fire("Error", data.message, "error");
             }
@@ -105,15 +121,24 @@ const cargarCumples = async () => {
 const renderizarTabla = (cumples) => {
     const contenedor = document.getElementById("cumpleLista");
 
-    if (cumples.length === 0) {
-        contenedor.innerHTML = `<div class="alert alert-info text-center">No hay cumpleaños esta semana.</div>`;
+    // Filtrar solo pendientes y ordenar por fecha (por si acaso)
+    const pendientes = cumples.filter(c => c.estado === 'PENDIENTE');
+    pendientes.sort((a, b) => {
+        const fechaA = new Date(a.fechaCumpleanos);
+        const fechaB = new Date(b.fechaCumpleanos);
+        return fechaB - fechaA; // Orden descendente
+    });
+    // No invertir el array, el más próximo debe estar arriba
+
+    if (pendientes.length === 0) {
+        contenedor.innerHTML = `<div class="alert alert-info text-center">No hay cumpleaños pendientes esta semana.</div>`;
         return;
     }
 
     let html = `
         <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover">
-                <thead class="table-dark">
+            <table class="table table-bordered table-hover" style="background: var(--amarillo); color: var(--negro);">
+                <thead style="background: var(--negro); color: var(--amarillo);">
                     <tr>
                         <th>Nombre</th>
                         <th>Cédula</th>
@@ -127,17 +152,14 @@ const renderizarTabla = (cumples) => {
                 <tbody>
     `;
 
-    cumples.forEach(c => {
-        const esLista = c.estado === 'LISTA';
-
-        const badge = esLista
-            ? `<span class="badge bg-success">LISTA</span>`
-            : `<span class="badge bg-danger">PENDIENTE</span>`;
-
+    pendientes.forEach(c => {
+        let badge = `<span class="badge bg-danger">PENDIENTE</span>`;
+        if (c.estado === 'LISTA') {
+            badge = `<span class="badge bg-success">LISTO</span>`;
+        }
         const botonCorreo = `
-            <button class="btn btn-sm btn-primary ${esLista ? 'disabled' : ''}"
-                onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}')"
-                ${esLista ? 'disabled' : ''}>
+            <button class="btn btn-sm btn-primary"
+                onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}')">
                 <i class="fas fa-paper-plane"></i>
             </button>
         `;

@@ -7,9 +7,10 @@
 
     <!-- Formulario de registro/edición de usuario -->
     <div class="card shadow mb-4">
-        <div class="card-header">Registro de Usuario</div>
+        <div class="card-header usuarios-header d-flex align-items-center">
+            <h5 class="mb-0 flex-grow-1 titulo-usuarios">Registro de Usuario</h5>
+        </div>
         <div class="card-body">
-            <!-- Título dinámico -->
             <h3 id="usuarioFormTitulo" class="mb-3">Registrar Usuario</h3>
             <form id="usuarioForm">
                 <input type="hidden" id="usuarioId" value="">
@@ -21,18 +22,12 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="contrasena" class="form-label">Contraseña *</label>
-                        <div class="position-relative">
-                            <input type="password" class="form-control" id="contrasena" name="contrasena" required
-                                maxlength="16">
-                        </div>
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" required maxlength="16">
                         <div class="form-text">
-                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra, 1 número y 1 carácter
-                            especial (ej: !, @, #, $).
+                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra, 1 número y 1 carácter especial (ej: !, @, #, $).
                         </div>
-
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="rol" class="form-label">Rol *</label>
@@ -45,11 +40,9 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="privilegios" class="form-label">Privilegios (descripción)</label>
-                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3" placeholder=""
-                            readonly></textarea>
+                        <textarea class="form-control" id="privilegios" name="privilegios" rows="3" readonly></textarea>
                     </div>
                 </div>
-
                 <div class="d-flex justify-content-end">
                     <button type="reset" id="cancelBtn" class="btn btn-secondary me-2">Cancelar</button>
                     <button type="submit" id="submitBtn" class="btn btn-primary">Guardar Usuario</button>
@@ -59,10 +52,15 @@
     </div>
 
     <!-- Lista de usuarios -->
-<div class="card shadow mb-4">
-        <div class="card-header d-flex justify-content-between">
-            <h5 class="mb-0">Lista de Usuarios</h5>
-            <button class="btn btn-sm btn-outline-light" onclick="cargarUsuarios()">Actualizar</button>
+    <div class="card shadow mb-4">
+        <div class="card-header usuarios-header d-flex align-items-center gap-3 flex-wrap">
+            <h5 class="mb-0 flex-grow-1 titulo-usuarios">Lista de Usuarios</h5>
+            <!-- Buscador en tiempo real -->
+            <input type="text" id="buscadorUsuarios" class="form-control buscador-usuarios"
+                placeholder="Buscar por nombre de usuario..." autocomplete="off">
+            <button class="btn btn-sm btn-outline-light ms-2" onclick="cargarUsuarios()">
+                Actualizar
+            </button>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">

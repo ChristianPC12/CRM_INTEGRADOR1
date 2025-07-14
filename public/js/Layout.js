@@ -121,5 +121,37 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Badge de cumpleaños pendientes (global)
+// (Eliminar las funciones window.mostrarCumpleBadge y window.actualizarCumpleBadgeSidebar)
+window.actualizarCumpleBadgeSidebar = function() {
+    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=hayPendientes'
+    })
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById('cumple-badge');
+        if (!badge) return;
+        if (data.success && data.hayPendientes) {
+            badge.style.display = 'inline-block';
+            badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
+        } else {
+            badge.style.display = 'none';
+            badge.innerHTML = '';
+        }
+    })
+    .catch(() => {
+        const badge = document.getElementById('cumple-badge');
+        if (badge) {
+            badge.style.display = 'none';
+            badge.innerHTML = '';
+        }
+    });
+};
+document.addEventListener('DOMContentLoaded', function() {
+    window.actualizarCumpleBadgeSidebar();
+});
+
 
 

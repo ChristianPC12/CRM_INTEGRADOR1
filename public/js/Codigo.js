@@ -200,7 +200,8 @@ async function actualizarContadorImpresiones(numeroTarjeta) {
  * Redirige a CompraView con el idCliente (botón invisible sobre el código de barras)
  */
 window.redirigirCompra = function(idCliente) {
-    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}`;
+    console.log('Redirigiendo a beneficios con número de tarjeta:', idCliente);
+    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}&buscar=auto`;
 }
 
 /** 
@@ -223,13 +224,13 @@ function mostrarCodigos(codigos) {
                 <td>${codigo.fechaRegistro ?? '-'}</td>
                 <td>
                     <div class="text-center position-relative" style="width:120px; height:60px; margin:auto;">
-    <canvas id="${barcodeId}" style="display:block; margin:0 auto; width:100%; height:auto;"></canvas>
+                        <canvas id="${barcodeId}" style="display:block; margin:0 auto; width:100%; height:auto;"></canvas>
                         <button 
                             class="btn-barcode-invisible" 
-                            title="Ir a Beneficio"
+                            title="Ir a Beneficio - Tarjeta: ${codigo.idCliente}"
                             onclick="redirigirCompra('${codigo.idCliente}')"
                             tabindex="-1"
-                            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;z-index:2;">
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;z-index:2;background:transparent;">
                         </button>
                     </div>
                 </td>
@@ -421,7 +422,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Función de respaldo para probar manualmente
 window.testRedireccion = function(idCliente) {
-    const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}`;
+    const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}&buscar=auto`;
     console.log('URL de prueba:', url);
     window.location.href = url;
+}
+
+// Función de debugging para verificar que las funciones están disponibles
+window.debugCodigos = function() {
+    console.log('=== DEBUG CÓDIGOS ===');
+    console.log('redirigirCompra function:', typeof window.redirigirCompra);
+    console.log('testRedireccion function:', typeof window.testRedireccion);
+    console.log('codigosGlobal:', codigosGlobal.length, 'códigos disponibles');
+    
+    if (codigosGlobal.length > 0) {
+        console.log('Primer código:', codigosGlobal[0]);
+        console.log('Para probar, ejecuta: testRedireccion("' + codigosGlobal[0].idCliente + '")');
+    }
+    console.log('====================');
 }

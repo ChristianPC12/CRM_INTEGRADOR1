@@ -13,18 +13,29 @@ document.addEventListener("DOMContentLoaded", function () {
   // NUEVO: Si viene por URL ?idCliente=65, autocompleta y busca
   const params = new URLSearchParams(window.location.search);
   const idAuto = params.get('idCliente');
+  const buscarAuto = params.get('buscar');
+  
+  console.log('Parámetros URL detectados:', { idAuto, buscarAuto });
+  
   if (idAuto) {
+    console.log('Configurando búsqueda automática para tarjeta:', idAuto);
+    
     // 1. Asegura que "Compra" quede seleccionada visual y funcionalmente
     btns.forEach((b) => b.classList.remove("selected"));
     btnCompra.classList.add("selected");
     // Ejecuta también la lógica asociada en el listener
     btnCompra.dispatchEvent(new Event('click'));
+    
     // 2. Rellena el input
     document.getElementById("compraInputId").value = idAuto;
-    // 3. Ejecuta Buscar tras un pequeño delay para que la UI reaccione
-    setTimeout(() => {
-      btnBuscar.click();
-    }, 50);
+    
+    // 3. Si viene con buscar=auto (desde código de barras), ejecuta búsqueda automáticamente
+    if (buscarAuto === 'auto') {
+      console.log('Ejecutando búsqueda automática...');
+      setTimeout(() => {
+        btnBuscar.click();
+      }, 300); // Aumentamos el timeout para asegurar que todo esté listo
+    }
   }
 
   // Manejo del ENTER (lector de código de barras o manual)

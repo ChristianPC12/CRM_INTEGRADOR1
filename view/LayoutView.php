@@ -303,11 +303,11 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('/CRM_INT/CRM/controller/CumpleController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'action=hayPendientes'
+        body: 'action=readSemana'
     })
     .then(res => res.json())
     .then(data => {
-        if (data.success && data.hayPendientes) {
+        if (data.success && Array.isArray(data.data) && data.data.some(c => c.estado === 'PENDIENTE')) {
             mostrarCumpleBadge(true);
         } else {
             mostrarCumpleBadge(false);

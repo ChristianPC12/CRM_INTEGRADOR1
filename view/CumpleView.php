@@ -63,5 +63,4 @@
     </div>
 </div>
 
-<script src="/CRM_INT/CRM/public/js/Cumple.js?v=<?= time() ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

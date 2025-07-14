@@ -1,3 +1,6 @@
+let usuariosOriginales = []; // Nueva variable para guardar TODOS los usuarios
+let usuariosActuales = []; // Guardará los usuarios filtrados para la tabla
+
 document.addEventListener("DOMContentLoaded", function () {
   let editandoId = null;
 
@@ -82,55 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  window.cargarUsuarios = function () {
-    const contenedor = document.getElementById("usuarioLista");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = `<div class="text-center p-3">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-2">Cargando usuarios...</p>
-    </div>`;
-
-    fetch("/CRM_INT/CRM/controller/UsuarioController.php?action=readAll")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && Array.isArray(data.data)) {
-          if (data.data.length === 0) {
-            contenedor.innerHTML = "<p class='text-center mt-3'>No hay usuarios registrados.</p>";
-            return;
-          }
-          let html = `<table class='table table-striped table-hover mt-4'>
-            <thead class='table-dark'>
-              <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Rol</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>`;
-          data.data.forEach((usuario) => {
-            html += `<tr>
-              <td>${usuario.id}</td>
-              <td>${usuario.usuario}</td>
-              <td>${usuario.rol.toUpperCase()}</td>
-              <td>
-                <button class='btn btn-sm btn-amarillo editar-usuario' data-id='${usuario.id}' data-usuario='${usuario.usuario}' data-rol='${usuario.rol}'>Editar</button>
-                <button class='btn btn-sm btn-danger eliminar-usuario' data-id='${usuario.id}'>Eliminar</button>
-              </td>
-            </tr>`;
-          });
-          html += "</tbody></table>";
-          contenedor.innerHTML = html;
-        } else {
-          contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
-        }
-      })
-      .catch((err) => {
-        console.error("Error al cargar usuarios:", err);
-        contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
-      });
-  };
+  
 
   document.addEventListener("click", function (e) {
     const editarBtn = e.target.closest(".editar-usuario");
@@ -266,3 +221,152 @@ document.addEventListener("DOMContentLoaded", function () {
     privilegiosInput.value = "";
   }
 });
+
+//LÓGICA PARA EL BUSCADOR Y LA FORMA EN QUE SE MUESTRAN LO USUARIOS
+//ADEMÁS DEL AUTOCOMPLETADO DEL FORMULARIO
+function mostrarUsuarios(usuarios) {
+    usuariosActuales = usuarios; // Guardar para eventos de la tabla
+    
+    const contenedor = document.getElementById("usuarioLista");
+    if (!usuarios || usuarios.length === 0) {
+        contenedor.innerHTML = "<p class='text-center mt-3'>No hay usuarios registrados.</p>";
+        return;
+    }
+    
+    let html = `<table class='table table-striped table-hover mt-4' id='tablaUsuarios'>
+      <thead class='table-dark'>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>`;
+      
+    usuarios.forEach(usuario => {
+        html += `<tr class="fila-usuario" data-id="${usuario.id}">
+            <td>${usuario.id}</td>
+            <td>${usuario.usuario}</td>
+            <td>${usuario.rol.toUpperCase()}</td>
+            <td>
+              <button class='btn btn-sm btn-warning editar-usuario' data-id='${usuario.id}' data-usuario='${usuario.usuario}' data-rol='${usuario.rol}'>Editar</button>
+              <button class='btn btn-sm btn-danger eliminar-usuario' data-id='${usuario.id}'>Eliminar</button>
+            </td>
+          </tr>`;
+    });
+    
+    html += "</tbody></table>";
+    contenedor.innerHTML = html;
+    
+    // --- Auto-llenado de formulario al dar click en la fila (NO en los botones)
+document.querySelectorAll(".fila-usuario").forEach(fila => {
+    fila.addEventListener("click", function(e) {
+        if (e.target.tagName === "BUTTON" || e.target.closest("button")) return;
+        const id = this.getAttribute("data-id");
+        
+        // Buscar en usuariosOriginales en lugar de usuariosActuales
+        const usuario = usuariosOriginales.find(u => u.id == id);
+        
+        if (usuario) {
+            editandoId = usuario.id;
+            
+            // Verificar si formTitulo existe antes de usarlo
+            const formTitulo = document.getElementById("formTitulo") || document.querySelector("h5") || document.querySelector(".form-title");
+            if (formTitulo) {
+                formTitulo.textContent = "Editar Usuario";
+            }
+            
+            // Verificar si usuarioIdInput existe antes de usarlo
+            const usuarioIdInput = document.getElementById("usuarioId") || document.getElementById("id");
+            if (usuarioIdInput) {
+                usuarioIdInput.value = usuario.id;
+            }
+            
+            // Elementos del formulario con validación
+            const usuarioInput = document.getElementById("usuario");
+            const rolInput = document.getElementById("rol");
+            const contrasenaInput = document.getElementById("contrasena");
+            
+            if (usuarioInput) usuarioInput.value = usuario.usuario;
+            if (rolInput) rolInput.value = usuario.rol;
+            if (contrasenaInput) contrasenaInput.value = "";
+            if (usuarioInput) usuarioInput.focus();
+            
+            // Privilegios - también con validación
+            const privilegiosInput = document.getElementById("privilegios");
+            if (rolInput && privilegiosInput) {
+              let mensaje = "";
+              switch (usuario.rol) {
+                case "Administrador":
+                  mensaje = "Como administrador, puede acceder completamente al Dashboard...";
+                  break;
+                case "Salonero":
+                  mensaje = "Como salonero, puede ver todo el contenido del Dashboard...";
+                  break;
+                case "Propietario":
+                  mensaje = "Como propietario, tiene acceso total a todas las funciones y secciones...";
+                  break;
+                default:
+                  mensaje = "";
+              }
+              privilegiosInput.value = mensaje;
+            }
+        }
+    });
+});
+}
+
+// Función para inicializar o actualizar la lista completa de usuarios
+const cargarUsuariosCompletos = (usuarios) => {
+  usuariosOriginales = [...usuarios]; // Guardar copia completa
+  mostrarUsuarios(usuarios);
+};
+
+window.cargarUsuarios = function () {
+    const contenedor = document.getElementById("usuarioLista");
+    if (!contenedor) return;
+    
+    contenedor.innerHTML = `<div class="text-center p-3">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Cargando usuarios...</p>
+    </div>`;
+    
+    fetch("/CRM_INT/CRM/controller/UsuarioController.php?action=readAll")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.data)) {
+            // CAMBIO IMPORTANTE: Usar la nueva función en lugar de mostrarUsuarios directamente
+            cargarUsuariosCompletos(data.data);
+        } else {
+            contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar usuarios:", err);
+        contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
+      });
+};
+
+const buscadorUsuarios = document.getElementById("buscadorUsuarios");
+if (buscadorUsuarios) {
+  buscadorUsuarios.addEventListener("input", function () {
+    const valor = this.value.trim().toLowerCase();
+    
+    if (!valor) {
+      // Si usuariosOriginales está vacío, usar usuariosActuales como fallback
+      const usuariosParaMostrar = usuariosOriginales.length > 0 ? usuariosOriginales : usuariosActuales;
+      mostrarUsuarios(usuariosParaMostrar);
+      return;
+    }
+    
+    // Usar el mismo fallback para filtrar
+    const usuariosParaFiltrar = usuariosOriginales.length > 0 ? usuariosOriginales : usuariosActuales;
+    const filtrados = usuariosParaFiltrar.filter(u =>
+      (u.usuario && u.usuario.toLowerCase().includes(valor)) ||
+      (u.id && u.id.toString().includes(valor))
+    );
+    
+    mostrarUsuarios(filtrados);
+  });
+}

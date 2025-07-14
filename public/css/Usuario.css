@@ -328,3 +328,41 @@ body::after {
   transform: translateY(2%);
   transform: translateX(1.6%);
 }
+
+.usuarios-header {
+    background: var(--negro);
+    /* Puedes agregar sombra, borde, etc. aquí si lo deseas */
+}
+
+.titulo-usuarios {
+    color: var(--amarillo);
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.buscador-usuarios {
+    max-width: 300px;
+    min-width: 220px;
+    font-weight: 500;
+    border-radius: 24px;
+    background: #fff;
+    color: #222;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.buscador-usuarios::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+@media (max-width: 576px) {
+    .usuarios-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .buscador-usuarios {
+        max-width: 100%;
+        min-width: 0;
+    }
+}

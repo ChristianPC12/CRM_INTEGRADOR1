@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("formCorreo").reset();
                 document.getElementById("btnEnviarCorreo").disabled = true;
                 cargarCumples();
-                actualizarCumpleBadgeSidebar(); // <--- Actualiza el badge
+                if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
             } else {
                 Swal.fire("Error", data.message, "error");
             }

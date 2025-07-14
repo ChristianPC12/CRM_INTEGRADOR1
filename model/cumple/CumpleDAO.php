@@ -14,29 +14,12 @@ class CumpleDAO
   public function obtenerCumplesSemana()
 {
     try {
-        // TEMPORAL: Mostrar todos los cumpleaños de la semana, sin importar el estado
         $stmt = $this->conn->prepare("SELECT * FROM cliente WHERE Estado = 'PENDIENTE'");
         $stmt->execute();
         $clientes = [];
 
-        $hoy = new DateTime();
-        $diaSemana = (int)$hoy->format('w'); // 0 (domingo) a 6 (sábado)
-        $inicioSemana = clone $hoy;
-        $inicioSemana->modify('-' . ($diaSemana === 0 ? 6 : $diaSemana - 1) . ' days');
-        $finSemana = clone $inicioSemana;
-        $finSemana->modify('+6 days');
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $fechaCumple = DateTime::createFromFormat('Y-m-d', $row['FechaCumpleanos']);
-            if (!$fechaCumple) continue;
-
-            // Convertir fecha al año actual para comparar solo día y mes
-            $fechaCumple->setDate((int)date('Y'), (int)$fechaCumple->format('m'), (int)$fechaCumple->format('d'));
-
-            // Solo si cumple esta semana, lo agregamos a la lista
-            if ($fechaCumple >= $inicioSemana && $fechaCumple <= $finSemana) {
-                $clientes[] = CumpleMapper::mapRowToDTO($row);
-            }
+            $clientes[] = CumpleMapper::mapRowToDTO($row);
         }
 
         // Ordenar por fecha de cumpleaños más próxima (día y mes)

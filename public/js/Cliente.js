@@ -1,6 +1,9 @@
 // Estado de edición
 let editandoId = null;
 
+let clientesOriginales = []; // Nueva variable para guardar TODOS los clientes
+let clientesActuales = []; // Guardará los clientes filtrados para la tabla
+
 // Referencias a elementos del formulario y botones
 const form = document.getElementById("clienteForm");
 const lista = document.getElementById("clienteLista");
@@ -16,29 +19,29 @@ const validaciones = {
     // Validar formato de cédula costarricense (9 dígitos)
     return /^\d{9}$/.test(cedula);
   },
-  
+
   esEmailValido: (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   },
-  
+
   esTelefonoValido: (telefono) => {
     // Validar teléfono costarricense (8 dígitos)
     return /^\d{8}$/.test(telefono);
   },
-  
+
   esNombreValido: (nombre) => {
     // Solo letras, espacios y acentos, mínimo 2 caracteres
     return /^[a-zA-ZÀ-ÿ\s]{2,}$/.test(nombre);
   },
-  
+
   esFechaValida: (fecha) => {
     if (!fecha) return false;
     const fechaNacimiento = new Date(fecha);
     const hoy = new Date();
     const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
     return edad >= 0 && edad <= 120;
-  }
+  },
 };
 
 /**
@@ -50,7 +53,7 @@ const cargarClientes = async () => {
       <div class="spinner-border text-primary" role="status"></div>
       <p class="mt-2">Cargando clientes...</p>
     </div>`;
-    
+
     const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -68,10 +71,14 @@ const cargarClientes = async () => {
   }
 };
 
-/**
- * Muestra la lista de clientes en formato tabla.
- */
 const mostrarClientes = (clientes) => {
+  clientesActuales = clientes; // Guardar para eventos de la tabla
+  
+  // Si es la primera vez o estamos cargando todos los clientes, actualizar originales
+  if (clientes.length > 0 && clientesOriginales.length === 0) {
+    clientesOriginales = [...clientes];
+  }
+
   if (clientes.length === 0) {
     lista.innerHTML =
       '<div class="alert alert-info">No hay clientes registrados</div>';
@@ -79,7 +86,7 @@ const mostrarClientes = (clientes) => {
   }
 
   lista.innerHTML = `
-    <table class="table table-striped table-hover mt-4">
+    <table class="table table-striped table-hover mt-4" id="tablaClientes">
         <thead class="table-dark">
             <tr>
                 <th>ID</th><th>Cédula</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Lugar</th><th>Cumpleaños</th><th>Acciones</th>
@@ -89,17 +96,27 @@ const mostrarClientes = (clientes) => {
             ${clientes
               .map(
                 (cliente) => `
-                <tr>
+                <tr class="fila-cliente" data-id="${cliente.id}">
                     <td>${cliente.id}</td>
                     <td>${cliente.cedula}</td>
                     <td>${cliente.nombre.toUpperCase()}</td>
-                    <td>${cliente.correo.toUpperCase()}</td>
+                    <td>${
+                      cliente.correo ? cliente.correo.toUpperCase() : ""
+                    }</td>
                     <td>${cliente.telefono}</td>
-                    <td>${cliente.lugarResidencia.toUpperCase()}</td>
+                    <td>${
+                      cliente.lugarResidencia
+                        ? cliente.lugarResidencia.toUpperCase()
+                        : ""
+                    }</td>
                     <td>${cliente.fechaCumpleanos}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${cliente.id}')">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${cliente.id}')">Eliminar</button>
+                        <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${
+                          cliente.id
+                        }')">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${
+                          cliente.id
+                        }')">Eliminar</button>
                     </td>
                 </tr>
               `
@@ -108,7 +125,65 @@ const mostrarClientes = (clientes) => {
         </tbody>
     </table>
   `;
+
+  // ---- EVENTO CLICK EN FILA (autollenar formulario) ----
+  document.querySelectorAll(".fila-cliente").forEach((fila) => {
+    fila.addEventListener("click", function (e) {
+      // Evita que dispare si se da click en un botón dentro de la fila
+      if (e.target.tagName === "BUTTON" || e.target.closest("button")) return;
+
+      const id = this.getAttribute("data-id");
+      const cliente = clientesActuales.find((c) => c.id == id);
+      if (cliente) {
+        // Autollenar formulario (mismos campos que editarCliente, pero instantáneo)
+        campoId.value = cliente.id;
+        form.cedula.value = cliente.cedula;
+        form.nombre.value = cliente.nombre;
+        form.correo.value = cliente.correo || "";
+        form.telefono.value = cliente.telefono;
+        form.lugarResidencia.value = cliente.lugarResidencia || "";
+        form.fechaCumpleanos.value = cliente.fechaCumpleanos;
+        submitBtn.textContent = "Actualizar Cliente";
+        submitBtn.className = "btn btn-warning";
+        editandoId = cliente.id;
+        campoId.disabled = true;
+        cancelBtn.style.display = "inline-block";
+        form.cedula.focus();
+      }
+    });
+  });
 };
+
+// Función para inicializar o actualizar la lista completa de clientes
+const cargarClientesCompletos = (clientes) => {
+  clientesOriginales = [...clientes]; // Guardar copia completa
+  mostrarClientes(clientes);
+};
+
+// Buscador en tiempo real por número de tarjeta (ID) o nombre
+document.addEventListener("DOMContentLoaded", () => {
+  const buscador = document.getElementById("buscadorClientes");
+  if (buscador) {
+    buscador.addEventListener("input", function () {
+      const valor = this.value.trim().toLowerCase();
+      
+      // CLAVE: Siempre filtra sobre la lista ORIGINAL completa
+      if (!valor) {
+        mostrarClientes(clientesOriginales); // Mostrar TODOS los clientes
+        return;
+      }
+      
+      const filtrados = clientesOriginales.filter(c =>
+        (c.nombre && c.nombre.toLowerCase().includes(valor)) ||
+        (c.id && c.id.toString().includes(valor))
+      );
+      
+      mostrarClientes(filtrados);
+    });
+  }
+});
+
+
 
 /**
  * Carga los datos del cliente seleccionado para edición.
@@ -135,7 +210,7 @@ const editarCliente = async (id) => {
       editandoId = cliente.id;
       campoId.disabled = true;
       cancelBtn.style.display = "inline-block";
-      
+
       // Llevar el focus a cédula
       form.cedula.focus();
     }
@@ -174,16 +249,16 @@ const cancelarEdicion = () => {
   submitBtn.textContent = "Guardar Cliente";
   submitBtn.className = "btn btn-primary";
   cancelBtn.style.display = "none";
-  
+
   // Limpiar mensajes de validación personalizados
-  const inputs = form.querySelectorAll('input');
-  inputs.forEach(input => input.setCustomValidity(''));
+  const inputs = form.querySelectorAll("input");
+  inputs.forEach((input) => input.setCustomValidity(""));
 };
 
 // Manejador del envío del formulario
 form.onsubmit = async (e) => {
   e.preventDefault();
-  
+
   // Obtener valores del formulario
   const cedula = form.cedula.value.trim();
   const nombre = form.nombre.value.trim();
@@ -191,44 +266,45 @@ form.onsubmit = async (e) => {
   const telefono = form.telefono.value.trim();
   const lugarResidencia = form.lugarResidencia.value.trim();
   const fechaCumpleanos = form.fechaCumpleanos.value;
-  
+
   // Validaciones
   if (!cedula || !nombre || !telefono || !lugarResidencia || !fechaCumpleanos) {
-  alert("Todos los campos son obligatorios (excepto el correo).");
-  return;
-}
-  
+    alert("Todos los campos son obligatorios (excepto el correo).");
+    return;
+  }
+
   if (!validaciones.esCedulaValida(cedula)) {
     alert("La cédula debe tener exactamente 9 dígitos.");
     form.cedula.focus();
     return;
   }
-  
+
   if (!validaciones.esNombreValido(nombre)) {
-    alert("El nombre solo puede contener letras y espacios, mínimo 2 caracteres.");
+    alert(
+      "El nombre solo puede contener letras y espacios, mínimo 2 caracteres."
+    );
     form.nombre.focus();
     return;
   }
-  
-  if (correo && !validaciones.esEmailValido(correo)) {
-  alert("Por favor ingrese un correo electrónico válido.");
-  form.correo.focus();
-  return;
-}
 
-  
+  if (correo && !validaciones.esEmailValido(correo)) {
+    alert("Por favor ingrese un correo electrónico válido.");
+    form.correo.focus();
+    return;
+  }
+
   if (!validaciones.esTelefonoValido(telefono)) {
     alert("El teléfono debe tener exactamente 8 dígitos.");
     form.telefono.focus();
     return;
   }
-  
+
   if (!validaciones.esFechaValida(fechaCumpleanos)) {
     alert("Por favor ingrese una fecha de cumpleaños válida.");
     form.fechaCumpleanos.focus();
     return;
   }
-  
+
   const formData = new FormData(form);
   const action = editandoId ? "update" : "create";
   formData.append("action", action);
@@ -259,7 +335,7 @@ form.onsubmit = async (e) => {
 document.addEventListener("DOMContentLoaded", () => {
   campoId.disabled = true;
   cancelBtn.style.display = "none";
-  
+
   // Configurar validaciones y conversiones en tiempo real
   const cedulaInput = form.cedula;
   const nombreInput = form.nombre;
@@ -267,87 +343,93 @@ document.addEventListener("DOMContentLoaded", () => {
   const telefonoInput = form.telefono;
   const lugarInput = form.lugarResidencia;
   const fechaInput = form.fechaCumpleanos;
-  
+
   // Validaciones en tiempo real para cédula
   if (cedulaInput) {
-    cedulaInput.addEventListener('input', function() {
+    cedulaInput.addEventListener("input", function () {
       // Solo permitir números
-      this.value = this.value.replace(/\D/g, '');
+      this.value = this.value.replace(/\D/g, "");
       // Limitar a 9 dígitos
       if (this.value.length > 9) {
         this.value = this.value.slice(0, 9);
       }
-      this.setCustomValidity('');
+      this.setCustomValidity("");
     });
-    
-    cedulaInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor ingrese una cédula válida de 9 dígitos');
+
+    cedulaInput.addEventListener("invalid", function () {
+      this.setCustomValidity(
+        "Por favor ingrese una cédula válida de 9 dígitos"
+      );
     });
   }
-  
+
   // Conversión automática a mayúsculas para nombre
   if (nombreInput) {
-    nombreInput.addEventListener('input', function() {
+    nombreInput.addEventListener("input", function () {
       this.value = this.value.toUpperCase();
-      this.setCustomValidity('');
+      this.setCustomValidity("");
     });
-    
-    nombreInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor ingrese un nombre válido');
+
+    nombreInput.addEventListener("invalid", function () {
+      this.setCustomValidity("Por favor ingrese un nombre válido");
     });
   }
-  
+
   // Conversión automática a mayúsculas para correo
   if (correoInput) {
-    correoInput.addEventListener('input', function() {
+    correoInput.addEventListener("input", function () {
       this.value = this.value.toUpperCase();
-      this.setCustomValidity('');
+      this.setCustomValidity("");
     });
-    
-    correoInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor ingrese un correo electrónico válido');
+
+    correoInput.addEventListener("invalid", function () {
+      this.setCustomValidity("Por favor ingrese un correo electrónico válido");
     });
   }
-  
+
   // Validaciones para teléfono
   if (telefonoInput) {
-    telefonoInput.addEventListener('input', function() {
+    telefonoInput.addEventListener("input", function () {
       // Solo permitir números
-      this.value = this.value.replace(/\D/g, '');
+      this.value = this.value.replace(/\D/g, "");
       // Limitar a 8 dígitos
       if (this.value.length > 8) {
         this.value = this.value.slice(0, 8);
       }
-      this.setCustomValidity('');
+      this.setCustomValidity("");
     });
-    
-    telefonoInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor ingrese un teléfono válido de 8 dígitos');
+
+    telefonoInput.addEventListener("invalid", function () {
+      this.setCustomValidity(
+        "Por favor ingrese un teléfono válido de 8 dígitos"
+      );
     });
   }
-  
+
   // Conversión automática a mayúsculas para lugar de residencia
   if (lugarInput) {
-    lugarInput.addEventListener('input', function() {
+    lugarInput.addEventListener("input", function () {
       this.value = this.value.toUpperCase();
-      this.setCustomValidity('');
+      this.setCustomValidity("");
     });
-    
-    lugarInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor ingrese el lugar de residencia');
+
+    lugarInput.addEventListener("invalid", function () {
+      this.setCustomValidity("Por favor ingrese el lugar de residencia");
     });
   }
-  
+
   // Validación para fecha
   if (fechaInput) {
-    fechaInput.addEventListener('invalid', function() {
-      this.setCustomValidity('Por favor seleccione una fecha de cumpleaños válida');
+    fechaInput.addEventListener("invalid", function () {
+      this.setCustomValidity(
+        "Por favor seleccione una fecha de cumpleaños válida"
+      );
     });
-    
-    fechaInput.addEventListener('input', function() {
-      this.setCustomValidity('');
+
+    fechaInput.addEventListener("input", function () {
+      this.setCustomValidity("");
     });
   }
-  
+
   cargarClientes();
 });

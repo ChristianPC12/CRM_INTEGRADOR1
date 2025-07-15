@@ -8,6 +8,22 @@ require_once __DIR__ . '/../model/bitacora/BitacoraDAO.php';
 require_once __DIR__ . '/../model/bitacora/BitacoraDTO.php';
 require_once __DIR__ . '/../model/bitacora/BitacoraMapper.php';
 
+class BitacoraController {
+
+    public function registrarEntradaInterna($idUsuario) {
+        $db = (new Database())->getConnection();
+        $dao = new BitacoraDAO($db);
+
+        $dto = new BitacoraDTO();
+        $dto->idUsuario = $idUsuario;
+        $dto->horaEntrada = date('H:i:s');
+        $dto->horaSalida = null;
+        $dto->fecha = date('Y-m-d');
+
+        return $dao->create($dto);
+    }
+}
+
 try {
     $db = (new Database())->getConnection();
     if (!$db) throw new Exception("No se pudo conectar a la base de datos");

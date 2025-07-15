@@ -1,58 +1,109 @@
 <?php
-require_once __DIR__ . '/../../config/Database.php';
+require_once 'BitacoraMapper.php';
 
 class BitacoraDAO {
     private $conn;
 
-    public function __construct() {
-        $this->conn = (new Database())->getConnection(); // Asegúrate de usar mysqli
+    public function __construct(PDO $db) {
+        $this->conn = $db;
     }
 
-   public function getAll() {
-    $sql = "SELECT b.Id, u.Usuario AS usuario, u.Rol AS rol,
-                   b.HoraEntrada, b.HoraSalida,
-                   TIMEDIFF(b.HoraSalida, b.HoraEntrada) AS duracion,
-                   b.Fecha
-            FROM bitacora b
-            JOIN usuario u ON b.IdUsuario = u.Id";
+    public function handle($action, $data) {
+        switch ($action) {
+            case 'create':
+                return $this->create($data);
+            case 'read':
+                return $this->read($data['id']);
+            case 'readAll':
+                return $this->readAll();
+            case 'selectByUsuario':
+                return $this->selectByUsuario($data['idUsuario']);
+            case 'update':
+                return $this->update($data);
+            default:
+                throw new Exception("Acción no válida: $action");
+        }
+    }
+
+    public function create(BitacoraDTO $bitacora) {
+        $stmt = $this->conn->prepare("CALL BitacoraCreate(?, ?, ?, ?)");
+        return $stmt->execute([
+            $bitacora->idUsuario,
+            $bitacora->horaEntrada,
+            $bitacora->horaSalida,
+            $bitacora->fecha
+        ]);
+    }
+
+    public function read($id) {
+        $stmt = $this->conn->prepare("CALL BitacoraRead(?)");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? BitacoraMapper::mapRowToDTO($row): null;
+    }
+
+   public function readAll()
+{
+    $stmt = $this->conn->prepare("CALL BitacoraReadAll()");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bitacoras = [];
+
+    foreach ($result as $row) {
+        $bitacoras[] = BitacoraMapper::mapRowToDTO($row);
+
+    }
+
+    return $bitacoras;
+}
+
+    public function selectByUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("CALL BitacoraSelectByUsuario(?)");
+        $stmt->execute([$idUsuario]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = BitacoraMapper::mapRowToDTO($row);
+
+        }
+        return $result;
+    }
+
+    public function update(BitacoraDTO $bitacora) {
+        $stmt = $this->conn->prepare("CALL BitacoraUpdate(?, ?, ?, ?, ?)");
+        return $stmt->execute([
+            $bitacora->id,
+            $bitacora->idUsuario,
+            $bitacora->horaEntrada,
+            $bitacora->horaSalida,
+            $bitacora->fecha
+        ]);
+    }
+
+    public function readByUsuario($idUsuario)
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM bitacora WHERE IdUsuario = ?");
+            $stmt->execute([$idUsuario]);
+
+            $result = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = BitacoraMapper::mapRowToDTO($row);
+            }
+            return $result;
+        } catch (PDOException $e) {
+            return "Error al leer bitácoras por usuario: " . $e->getMessage();
+        }
+    }
+    public function hayPorExpirar(): bool
+{
+    $sql = "SELECT COUNT(*) as total FROM bitacora 
+            WHERE Fecha <= DATE_SUB(CURDATE(), INTERVAL 25 DAY)";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
-    return $stmt; // ← Ahora sí funciona correctamente con PDO
-}
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-   public function getById($id) {
-    $stmt = $this->conn->prepare("SELECT b.Id, u.Usuario AS usuario, u.Rol AS rol,
-                                         b.HoraEntrada, b.HoraSalida,
-                                         TIMEDIFF(b.HoraSalida, b.HoraEntrada) AS duracion,
-                                         b.Fecha
-                                  FROM bitacora b
-                                  JOIN usuario u ON b.IdUsuario = u.Id
-                                  WHERE b.Id = ?");
-    $stmt->execute([$id]); // en PDO se pasan los parámetros como array
-    return $stmt; // devuelve PDOStatement, lo usas luego con fetch o fetchAll
-    }
-
-   public function delete($id): bool {
-    $stmt = $this->conn->prepare("DELETE FROM bitacora WHERE Id = ?");
-    return $stmt->execute([$id]); 
-}
-
-   public function limpiarAntiguos(): bool {
-    $stmt = $this->conn->prepare("DELETE FROM bitacora WHERE Fecha < (CURDATE() - INTERVAL 1 MONTH)");
-    return $stmt->execute(); // esto sí devuelve un bool en PDO
-}
-
-   public function hayPorExpirar(): bool {
-    $sql = "SELECT COUNT(*) AS total
-            FROM bitacora
-            WHERE Fecha BETWEEN (CURDATE() - INTERVAL 26 DAY) AND (CURDATE() - INTERVAL 25 DAY)";
-    $stmt = $this->conn->query($sql);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC); 
-    return $row['total'] > 0;
-}
-public function registrarSalida($idUsuario): bool {
-    $stmt = $this->conn->prepare("CALL BitacoraUpdateHoraSalida(?)");
-    return $stmt->execute([$idUsuario]);
+    return $row && $row['total'] > 0;
 }
 }
+?>

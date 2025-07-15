@@ -1,9 +1,5 @@
 <?php
-// ✅ NO dejar espacios antes ni después del <?php o cierre
-ob_start();
 header('Content-Type: application/json');
-
-// ✅ Establecer zona horaria
 date_default_timezone_set("America/Costa_Rica");
 
 require_once __DIR__ . '/../model/usuario/UsuarioDAO.php';
@@ -19,11 +15,7 @@ try {
     $dao = new UsuarioDAO($db);
     $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
-    // Limpia cualquier salida inesperada antes de la respuesta
-    if (ob_get_length()) ob_clean();
-
     switch ($action) {
-
         case 'create':
             $usuario = trim($_POST['usuario'] ?? '');
             $contrasena = trim($_POST['contrasena'] ?? '');
@@ -31,19 +23,19 @@ try {
 
             if ($usuario === '' || $contrasena === '' || $rol === '') {
                 echo json_encode(['success' => false, 'message' => 'Faltan campos obligatorios.']);
-                break;
+                return;
             }
 
             if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d).{6,}$/', $contrasena)) {
                 echo json_encode(['success' => false, 'message' => 'La contraseña debe tener mínimo 6 caracteres, al menos 1 letra y 1 número.']);
-                break;
+                return;
             }
 
             $usuariosExistentes = $dao->readAll();
             foreach ($usuariosExistentes as $u) {
                 if (strtolower($u->usuario) === strtolower($usuario)) {
                     echo json_encode(['success' => false, 'message' => 'El usuario ya existe.']);
-                    break 2;
+                    return;
                 }
             }
 
@@ -57,7 +49,7 @@ try {
                 'success' => $result === true,
                 'message' => $result ? 'Usuario guardado correctamente.' : $result
             ]);
-            break;
+            return;
 
         case 'login':
             session_start();
@@ -65,11 +57,8 @@ try {
             $contrasenaInput = $_POST['contrasena'] ?? '';
 
             if (empty($usuarioInput) || empty($contrasenaInput)) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Usuario y contraseña son requeridos'
-                ]);
-                break;
+                echo json_encode(['success' => false, 'message' => 'Usuario y contraseña son requeridos']);
+                return;
             }
 
             $usuarios = $dao->readAll(false);
@@ -82,11 +71,8 @@ try {
             }
 
             if (!$usuarioEncontrado) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Usuario no encontrado'
-                ]);
-                break;
+                echo json_encode(['success' => false, 'message' => 'Usuario no encontrado']);
+                return;
             }
 
             if (password_verify($contrasenaInput, $usuarioEncontrado->contrasena)) {
@@ -107,28 +93,25 @@ try {
                     'redirect' => '/CRM_INT/CRM/index.php?view=dashboard'
                 ]);
             } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Contraseña incorrecta'
-                ]);
+                echo json_encode(['success' => false, 'message' => 'Contraseña incorrecta']);
             }
-            break;
+            return;
 
         case 'readAll':
             $usuarios = $dao->readAll(true);
             echo json_encode(['success' => true, 'data' => $usuarios]);
-            break;
+            return;
 
         case 'read':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
             if ($id === '') {
                 echo json_encode(['success' => false, 'message' => 'ID de usuario requerido.']);
-                break;
+                return;
             }
             $usuario = $dao->read($id);
             if ($usuario) unset($usuario->contrasena);
             echo json_encode(['success' => $usuario !== null, 'data' => $usuario]);
-            break;
+            return;
 
         case 'update':
             $id = trim($_POST['id'] ?? '');
@@ -138,7 +121,7 @@ try {
 
             if ($id === '' || $usuario === '' || $rol === '') {
                 echo json_encode(['success' => false, 'message' => 'Faltan campos obligatorios.']);
-                break;
+                return;
             }
 
             $usuarioDTO = new UsuarioDTO();
@@ -158,30 +141,28 @@ try {
                 'success' => $result,
                 'message' => $result ? 'Usuario actualizado correctamente.' : 'Error al actualizar usuario.'
             ]);
-            break;
+            return;
 
         case 'delete':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
             if ($id === '') {
                 echo json_encode(['success' => false, 'message' => 'ID de usuario requerido.']);
-                break;
+                return;
             }
             $result = $dao->delete($id);
             echo json_encode([
                 'success' => $result,
                 'message' => $result ? 'Usuario eliminado correctamente.' : 'Error al eliminar usuario.'
             ]);
-            break;
+            return;
 
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
+            return;
     }
 } catch (Exception $e) {
-    if (ob_get_length()) ob_clean(); // Limpia cualquier salida previa
     echo json_encode([
         'success' => false,
         'message' => 'Error del servidor: ' . $e->getMessage()
     ]);
-} finally {
-    if (ob_get_length()) ob_end_clean(); // ✅ Evita salida de basura HTML o warning
 }

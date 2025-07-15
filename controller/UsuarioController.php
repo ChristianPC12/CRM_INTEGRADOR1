@@ -1,23 +1,29 @@
 <?php
+// ✅ NO dejar espacios antes ni después del <?php o cierre
+ob_start();
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/BitacoraController.php';
+// ✅ Establecer zona horaria
+date_default_timezone_set("America/Costa_Rica");
+
 require_once __DIR__ . '/../model/usuario/UsuarioDAO.php';
 require_once __DIR__ . '/../model/usuario/UsuarioDTO.php';
 require_once __DIR__ . '/../model/usuario/UsuarioMapper.php';
 require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/BitacoraController.php';
 
 try {
     $db = (new Database())->getConnection();
-    if (!$db)
-        throw new Exception("No se pudo conectar a la base de datos");
+    if (!$db) throw new Exception("No se pudo conectar a la base de datos");
 
     $dao = new UsuarioDAO($db);
     $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
+    // Limpia cualquier salida inesperada antes de la respuesta
+    if (ob_get_length()) ob_clean();
+
     switch ($action) {
 
-        // ====================== CREAR USUARIO ========================
         case 'create':
             $usuario = trim($_POST['usuario'] ?? '');
             $contrasena = trim($_POST['contrasena'] ?? '');
@@ -27,42 +33,34 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Faltan campos obligatorios.']);
                 break;
             }
+
             if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d).{6,}$/', $contrasena)) {
                 echo json_encode(['success' => false, 'message' => 'La contraseña debe tener mínimo 6 caracteres, al menos 1 letra y 1 número.']);
                 break;
             }
 
-            // Validar usuario único
             $usuariosExistentes = $dao->readAll();
-            $usuarioExiste = false;
             foreach ($usuariosExistentes as $u) {
                 if (strtolower($u->usuario) === strtolower($usuario)) {
-                    $usuarioExiste = true;
-                    break;
+                    echo json_encode(['success' => false, 'message' => 'El usuario ya existe.']);
+                    break 2;
                 }
             }
-            if ($usuarioExiste) {
-                echo json_encode(['success' => false, 'message' => 'El usuario ya existe.']);
-                break;
-            }
 
-            // Crear usuario con contraseña encriptada
             $usuarioDTO = new UsuarioDTO();
             $usuarioDTO->usuario = $usuario;
             $usuarioDTO->contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
             $usuarioDTO->rol = $rol;
 
             $result = $dao->create($usuarioDTO);
-            if ($result === true) {
-                echo json_encode(['success' => true, 'message' => 'Usuario guardado correctamente.']);
-            } else {
-                echo json_encode(['success' => false, 'message' => $result]);
-            }
+            echo json_encode([
+                'success' => $result === true,
+                'message' => $result ? 'Usuario guardado correctamente.' : $result
+            ]);
             break;
 
-        // ========================= LOGIN ============================
         case 'login':
-            session_start(); // ¡IMPORTANTE para sesiones!
+            session_start();
             $usuarioInput = trim($_POST['usuario'] ?? '');
             $contrasenaInput = $_POST['contrasena'] ?? '';
 
@@ -74,7 +72,6 @@ try {
                 break;
             }
 
-            // Aquí sí traemos el hash
             $usuarios = $dao->readAll(false);
             $usuarioEncontrado = null;
             foreach ($usuarios as $u) {
@@ -93,11 +90,14 @@ try {
             }
 
             if (password_verify($contrasenaInput, $usuarioEncontrado->contrasena)) {
-                // GUARDAR SESIÓN
                 $_SESSION['authenticated'] = true;
                 $_SESSION['usuario'] = $usuarioEncontrado->usuario;
                 $_SESSION['rol'] = $usuarioEncontrado->rol;
+                $_SESSION['idUsuario'] = $usuarioEncontrado->id;
                 $_SESSION['login_time'] = time();
+
+                $bitacora = new BitacoraController();
+                $bitacora->registrarEntradaInterna($usuarioEncontrado->id);
 
                 echo json_encode([
                     'success' => true,
@@ -114,13 +114,11 @@ try {
             }
             break;
 
-        // ========================= LEER TODOS ======================
         case 'readAll':
-            $usuarios = $dao->readAll(true); // true = NO enviar hash
+            $usuarios = $dao->readAll(true);
             echo json_encode(['success' => true, 'data' => $usuarios]);
             break;
 
-        // ======================== LEER UNO ========================
         case 'read':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
             if ($id === '') {
@@ -128,12 +126,10 @@ try {
                 break;
             }
             $usuario = $dao->read($id);
-            if ($usuario)
-                unset($usuario->contrasena);
+            if ($usuario) unset($usuario->contrasena);
             echo json_encode(['success' => $usuario !== null, 'data' => $usuario]);
             break;
 
-        // ========================= ACTUALIZAR ======================
         case 'update':
             $id = trim($_POST['id'] ?? '');
             $usuario = trim($_POST['usuario'] ?? '');
@@ -148,14 +144,15 @@ try {
             $usuarioDTO = new UsuarioDTO();
             $usuarioDTO->id = $id;
             $usuarioDTO->usuario = $usuario;
+            $usuarioDTO->rol = $rol;
+
             if ($contrasena !== '') {
                 $usuarioDTO->contrasena = password_hash($contrasena, PASSWORD_DEFAULT);
             } else {
-                // Traer la contraseña actual
-                $usuarioActual = $dao->read($id, false);
-                $usuarioDTO->contrasena = $usuarioActual ? $usuarioActual->contrasena : '';
+                $actual = $dao->read($id, false);
+                $usuarioDTO->contrasena = $actual ? $actual->contrasena : '';
             }
-            $usuarioDTO->rol = $rol;
+
             $result = $dao->update($usuarioDTO);
             echo json_encode([
                 'success' => $result,
@@ -163,7 +160,6 @@ try {
             ]);
             break;
 
-        // ========================== ELIMINAR =======================
         case 'delete':
             $id = $_POST['id'] ?? $_GET['id'] ?? '';
             if ($id === '') {
@@ -177,13 +173,15 @@ try {
             ]);
             break;
 
-        // ========================== DEFAULT =======================
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
     }
 } catch (Exception $e) {
+    if (ob_get_length()) ob_clean(); // Limpia cualquier salida previa
     echo json_encode([
         'success' => false,
         'message' => 'Error del servidor: ' . $e->getMessage()
     ]);
+} finally {
+    if (ob_get_length()) ob_end_clean(); // ✅ Evita salida de basura HTML o warning
 }

@@ -1,25 +1,39 @@
 <?php
-require_once __DIR__ . '/BitacoraDTO.php';
+// Archivo: model/bitacora/BitacoraMapper.php
 
-class BitacoraMapper {
-    public static function map($row) {
+require_once 'BitacoraDTO.php';
+
+/**
+ * Mapper para convertir filas de la base de datos en objetos BitacoraDTO.
+ */
+class BitacoraMapper
+{
+    /**
+     * Convierte una fila asociativa de la base de datos en un objeto BitacoraDTO.
+     * @param array $row Fila asociativa.
+     * @return BitacoraDTO
+     */
+  public static function mapRowToDTO($row)
+{
+    $dto = new BitacoraDTO();
+    $dto->id = $row['Id'];
+    $dto->idUsuario = $row['IdUsuario'];
+    $dto->horaEntrada = $row['HoraEntrada'];
+    $dto->horaSalida = $row['HoraSalida'];
+    $dto->fecha = $row['Fecha'];
+    return $dto;
+}
+
+public static function mapDto($data)
+    {
         $dto = new BitacoraDTO();
-        $dto->id = $row['Id'];
-        $dto->idUsuario = $row['IdUsuario'] ?? null;
-        $dto->usuario = $row['usuario'];
-        $dto->rol = $row['rol'];
-        $dto->horaEntrada = $row['HoraEntrada'];
-        $dto->horaSalida = $row['HoraSalida'];
-        $dto->duracion = $row['duracion'];
-        $dto->fecha = $row['Fecha'];
+        $dto->id = $data['id'] ?? null;
+        $dto->idUsuario = $data['idUsuario'] ?? null;
+        $dto->horaEntrada = $data['horaEntrada'] ?? null;
+        $dto->horaSalida = $data['horaSalida'] ?? null;
+        $dto->fecha = $data['fecha'] ?? null;
+
         return $dto;
     }
-
-    public static function mapAll($result) {
-        $bitacoras = [];
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $bitacoras[] = self::map($row);
-        }
-        return $bitacoras;
-    }
+  
 }

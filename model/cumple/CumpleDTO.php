@@ -9,4 +9,8 @@ class CumpleDTO
     public $telefono;
     public $fechaCumpleanos;
     public $estado = 'PENDIENTE'; // Por defecto
+    public $fechaLlamada;
+    public $vence;
+    public $vencido;
+    
 }

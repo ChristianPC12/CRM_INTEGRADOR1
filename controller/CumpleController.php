@@ -62,24 +62,49 @@ try {
             break;
 
         case 'enviarCorreoCumple':
-            $correo = $_POST['correo'] ?? '';
-            $nombre = $_POST['nombre'] ?? '';
-            $mensaje = $_POST['mensaje'] ?? '';
+    $correo = $_POST['correo'] ?? '';
+    $nombre = $_POST['nombre'] ?? '';
+    $mensaje = $_POST['mensaje'] ?? '';
+    $idCliente = $_POST['idCliente'] ?? null; // ✅ NUEVO: lo obtenemos del formulario
 
-            if (empty($correo) || empty($nombre) || empty($mensaje)) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Datos incompletos para enviar el correo'
-                ]);
-                break;
-            }
+    if (empty($correo) || empty($nombre) || empty($mensaje) || empty($idCliente)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Datos incompletos para enviar el correo'
+        ]);
+        break;
+    }
 
-            $enviado = enviarCorreoCumple($correo, $nombre, $mensaje);
+    $enviado = enviarCorreoCumple($correo, $nombre, $mensaje);
 
-            echo json_encode([
-                'success' => $enviado,
-                'message' => $enviado ? 'Correo enviado correctamente' : 'Error al enviar el correo'
-            ]);
+    if ($enviado) {
+        // ✅ NUEVO: calcular fecha de vencimiento como domingo de esta semana
+        $hoy = new DateTime();
+        $diaSemana = $hoy->format('w'); // 0 (domingo) a 6 (sábado)
+        $diasHastaDomingo = 7 - $diaSemana;
+        $vence = clone $hoy;
+        $vence->modify("+$diasHastaDomingo days");
+        $venceStr = $vence->format('Y-m-d');
+
+        // ✅ Insertar en historial con relación a cliente
+        $sql = "INSERT INTO cumple (IdCliente, FechaLlamada, Vence, Vencido)
+                VALUES (:idCliente, CURDATE(), :vence, 'NO')";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':idCliente', $idCliente);
+        $stmt->bindParam(':vence', $venceStr);
+        $stmt->execute();
+    }
+
+    echo json_encode([
+        'success' => $enviado,
+        'message' => $enviado ? 'Correo enviado correctamente' : 'Error al enviar el correo'
+    ]);
+    break;
+
+
+        case 'readHistorial':
+            $historial = $dao->obtenerHistorial();
+            echo json_encode($historial);
             break;
 
         default:

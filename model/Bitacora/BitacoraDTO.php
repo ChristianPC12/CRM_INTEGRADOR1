@@ -2,10 +2,43 @@
 class BitacoraDTO {
     public $id;
     public $idUsuario;
-    public $usuario;
-    public $rol;
     public $horaEntrada;
     public $horaSalida;
-    public $duracion;
     public $fecha;
+
+    public function getId() {
+        return $this->id;
+    }
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function getIdUsuario() {
+        return $this->idUsuario;
+    }
+    public function setIdUsuario($idUsuario) {
+        $this->idUsuario = $idUsuario;
+    }
+
+    public function getHoraEntrada() {
+        return $this->horaEntrada;
+    }
+    public function setHoraEntrada($horaEntrada) {
+        $this->horaEntrada = $horaEntrada;
+    }
+
+    public function getHoraSalida() {
+        return $this->horaSalida;
+    }
+    public function setHoraSalida($horaSalida) {
+        $this->horaSalida = $horaSalida;
+    }
+
+    public function getFecha() {
+        return $this->fecha;
+    }
+    public function setFecha($fecha) {
+        $this->fecha = $fecha;
+    }
 }
+?>

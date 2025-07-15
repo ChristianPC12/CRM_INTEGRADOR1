@@ -6,17 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const emailError = document.getElementById("emailError");
   const passwordError = document.getElementById("passwordError");
 
-  // Validaciones en tiempo real
   emailInput.addEventListener("input", validateEmail);
   emailInput.addEventListener("blur", validateEmail);
   passwordInput.addEventListener("input", validatePassword);
   passwordInput.addEventListener("blur", validatePassword);
 
-  // Evento de envío del formulario
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Prevenir múltiples envíos
     if (loginBtn.disabled) return;
 
     const isEmailValid = validateEmail();
@@ -79,58 +76,51 @@ document.addEventListener("DOMContentLoaded", function () {
     const contrasena = passwordInput.value;
 
     setLoadingState(true);
-
-    // Remover errores anteriores
     removeExistingErrors();
 
-    // Crear FormData para enviar al servidor
     const formData = new FormData();
     formData.append("action", "login");
     formData.append("usuario", usuario);
     formData.append("contrasena", contrasena);
 
-    // Realizar petición AJAX al controlador PHP
-    fetch("/CRM_INT/CRM/controller/UsuarioController.php", {
+    fetch("controller/UsuarioController.php", {
+
       method: "POST",
       body: formData,
       credentials: "same-origin",
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Respuesta del servidor:", data); // Para debugging
+      .then((response) => response.text())
+      .then((text) => {
+        console.log("🧾 Texto recibido:", text);
 
-        if (data.success) {
-          // --- GUARDAR EL ROL EN LOCALSTORAGE ---
-          if (data.rol) {
-            localStorage.setItem("rolUsuario", data.rol);
+        try {
+          const jsonText = text.trim().match(/^{.*}$/s)?.[0];
+          if (!jsonText) throw new Error("No se encontró JSON válido");
+
+          const data = JSON.parse(jsonText);
+
+          if (data.success) {
+            if (data.rol) {
+              localStorage.setItem("rolUsuario", data.rol);
+            } else {
+              localStorage.removeItem("rolUsuario");
+            }
+
+            showSuccessMessage();
+
+            setTimeout(() => {
+              window.location.href = data.redirect || "index.php?view=dashboard";
+            }, 1500);
           } else {
-            localStorage.removeItem("rolUsuario");
+            showLoginError(data.message || "Credenciales incorrectas");
           }
-
-          showSuccessMessage();
-
-          // Usar la URL de redirección proporcionada por el servidor
-          const redirectUrl = data.redirect || "index.php?view=dashboard";
-
-          setTimeout(() => {
-            window.location.href = redirectUrl;
-          }, 1500);
-        } else {
-          let msg = data.message;
-          if (data.debug) {
-            msg = (msg ? msg + "\n\nDEBUG:\n" : "") + data.debug;
-          }
-
-          showLoginError(data.message || "Credenciales incorrectas");
+        } catch (error) {
+          console.error("❌ Error al parsear JSON:", error);
+          showLoginError("Respuesta inválida del servidor:\n\n" + text);
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("❌ Error de conexión:", error);
         showLoginError("Error de conexión. Por favor, intenta nuevamente.");
       })
       .finally(() => {
@@ -144,11 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const btnText = loginBtn.querySelector(".btn-text");
     if (btnText) {
-      if (isLoading) {
-        btnText.textContent = "Verificando...";
-      } else {
-        btnText.textContent = "Iniciar Sesión";
-      }
+      btnText.textContent = isLoading ? "Verificando..." : "Iniciar Sesión";
     }
   }
 
@@ -169,7 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showLoginError(message) {
-    // Remover errores anteriores
     removeExistingErrors();
 
     const errorDiv = document.createElement("div");
@@ -189,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loginForm.insertBefore(errorDiv, loginForm.firstChild);
 
-    // Auto-remover después de 5 segundos
     setTimeout(() => {
       if (errorDiv.parentNode) {
         errorDiv.style.animation = "fadeOut 0.3s ease-out";
@@ -207,32 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
     existingErrors.forEach((error) => error.remove());
   }
 
-  // Efectos de focus en inputs
-  const inputs = [emailInput, passwordInput];
-  inputs.forEach((input) => {
-    input.addEventListener("focus", function () {
-      this.parentElement.classList.add("focused");
-    });
-
-    input.addEventListener("blur", function () {
-      this.parentElement.classList.remove("focused");
-    });
-  });
-
-  // Prevenir múltiples envíos
-  let isSubmitting = false;
-  loginForm.addEventListener("submit", function (e) {
-    if (isSubmitting) {
-      e.preventDefault();
-      return false;
-    }
-    isSubmitting = true;
-    setTimeout(() => {
-      isSubmitting = false;
-    }, 3000);
-  });
-
-  // Función para limpiar el formulario
   function clearForm() {
     emailInput.value = "";
     passwordInput.value = "";
@@ -243,12 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
     removeExistingErrors();
   }
 
-  // Exponer función globalmente para uso externo
   window.clearLoginForm = clearForm;
 
-  // Eventos de teclado
   document.addEventListener("keydown", function (e) {
-    // Enter en inputs para enviar formulario
     if (
       e.key === "Enter" &&
       (e.target === emailInput || e.target === passwordInput)
@@ -257,13 +212,11 @@ document.addEventListener("DOMContentLoaded", function () {
       loginForm.dispatchEvent(new Event("submit"));
     }
 
-    // Escape para limpiar formulario
     if (e.key === "Escape") {
       clearForm();
     }
   });
 
-  // Estilos adicionales
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fadeOut {

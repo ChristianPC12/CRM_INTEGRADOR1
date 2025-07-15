@@ -52,17 +52,8 @@ tr:hover {
   cursor: pointer;
 }
 
-li a i {
-  margin-right: 8px;
-  color: #fff; /* o el color que usas cuando NO está activo */
-}
 
-li.activo a i {
-  color: #000000; /* o el color que usas cuando SÍ está activo */
-}
-li:not(.activo) a i {
-  display: none;
-}
+
 .btn-pdf {
   background-color: #d9534f;
   color: white;

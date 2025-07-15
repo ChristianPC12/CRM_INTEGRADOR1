@@ -14,6 +14,9 @@ class CumpleMapper
         $dto->telefono = $row['Telefono'] ?? '';
         $dto->fechaCumpleanos = $row['FechaCumpleanos'] ?? null;
         $dto->estado = $row['Estado'] ?? 'PENDIENTE'; // <-- CORREGIDO
+        $dto->fechaLlamada = $row['FechaLlamada'] ?? null;
+        $dto->vence = $row['Vence'] ?? null;
+        $dto->vencido = $row['Vencido'] ?? null;
         return $dto;
     }
 }

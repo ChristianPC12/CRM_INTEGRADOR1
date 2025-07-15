@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     mostrarSemanaActual(); // ⬅️ NUEVO: Mostrar el rango apenas cargue
     cargarCumples();
+    cargarHistorial();
     document.getElementById("btnEnviarCorreo").disabled = true;
+    
 
     // Función para actualizar el badge de cumpleaños pendientes en el sidebar
     function actualizarCumpleBadgeSidebar() {
@@ -43,6 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("nombre", nombre);
         formData.append("correo", correo);
         formData.append("mensaje", mensaje);
+        // NUEVO: enviar cedula, telefono y cumpleaños
+        // NUEVO: enviar solo el ID del cliente
+        const idCliente = document.getElementById("idCumple").value;
+        formData.append("idCliente", idCliente);
+
 
         try {
             const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
@@ -59,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("formCorreo").reset();
                 document.getElementById("btnEnviarCorreo").disabled = true;
                 cargarCumples();
+                cargarHistorial(); 
                 if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
             } else {
                 Swal.fire("Error", data.message, "error");
@@ -161,7 +169,7 @@ const renderizarTabla = (cumples) => {
 
         const botonCorreo = `
             <button class="btn btn-sm btn-primary"
-                onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}')">
+            onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}', '${c.fechaCumpleanos}')"
                 <i class="fas fa-paper-plane"></i>
             </button>
         `;
@@ -210,12 +218,14 @@ const renderizarTabla = (cumples) => {
     }
 };
 
-const seleccionarCumple = (id, nombre, cedula, correo, telefono) => {
+const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
     document.getElementById("idCumple").value = id;
     document.getElementById("nombreCorreo").value = nombre;
     document.getElementById("cedulaCorreo").value = cedula;
     document.getElementById("correoCorreo").value = correo;
     document.getElementById("telefonoCorreo").value = telefono;
+    document.getElementById("fechaCumple").value = fecha;
+
 
     const btn = document.getElementById("btnEnviarCorreo");
     if (!correo) {
@@ -269,3 +279,52 @@ const formatearFecha = (fechaStr) => {
         year: "numeric"
     });
 };
+function cargarHistorial() {
+    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=readHistorial'
+    })
+    .then(res => res.json())
+    .then(data => {
+        let html = `
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Fecha de Cumpleaños</th>
+                            <th>Fecha de Llamada</th>
+                            <th>Vence</th>
+                            <th>Vencido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        data.forEach(c => {
+            html += `
+                <tr>
+                    <td>${c.cedula}</td>
+                    <td>${c.nombre}</td>
+                    <td>${c.telefono}</td>
+                    <td>${c.fechaCumpleanos}</td>
+                    <td>${c.fechaLlamada}</td>
+                    <td>${c.vence}</td>
+                    <td>${c.vencido === 'SI' ? '✅' : 'NO'}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        document.getElementById('historialCumples').innerHTML = html;
+    });
+}
+

@@ -95,7 +95,7 @@ $vista = $_GET['view'] ?? 'dashboard';
              <li>
                 <a href="index.php?view=Bitacora" id="link-Bitacora"
               class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
-              <i class="fas fa-clipboard-list"></i> Bitácora
+              <i class="bi bi-journal-text"></i> Bitácora
                </a>
             </li>
            

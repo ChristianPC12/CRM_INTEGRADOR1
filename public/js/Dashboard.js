@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Contador de caracteres para el input de tareas
+    // Contador de caracteres para el input
     const $inputDescripcion = $("#descripcion");
     const $contador = $("#contador-caracteres");
 
@@ -62,22 +62,53 @@ $(document).ready(function () {
         }
     });
 
-    // Obtener total de ventas
+    // Cargar datos de ventas
     $.ajax({
-        url: "/CRM_INT/CRM/controller/CompraController.php?action=readAll",
-        type: "GET",
+        url: "/CRM_INT/CRM/controller/CompraController.php",
+        method: "POST",
+        data: { action: "readAll" },
         dataType: "json",
-        success: function (res) {
-            if (res.success && res.data) {
-                const compras = res.data;
-                const totalVentas = compras.reduce((total, compra) =>
+        success: function (response) {
+            if (response.success && response.data) {
+                const compras = response.data;
+                const fechaActual = new Date();
+                const mesActual = fechaActual.getMonth() + 1;
+                const anioActual = fechaActual.getFullYear();
+
+                // Filtrar compras del mes actual
+                const comprasMesActual = compras.filter(compra => {
+                    if (!compra.fechaCompra) return false;
+                    const fechaCompra = new Date(compra.fechaCompra);
+                    return fechaCompra.getFullYear() === anioActual && 
+                           fechaCompra.getMonth() === mesActual - 1;
+                });
+
+                // Filtrar compras del año actual
+                const comprasAnioActual = compras.filter(compra => {
+                    if (!compra.fechaCompra) return false;
+                    const fechaCompra = new Date(compra.fechaCompra);
+                    return fechaCompra.getFullYear() === anioActual;
+                });
+
+                // Calcular totales
+                const totalVentasMes = comprasMesActual.reduce((total, compra) =>
                     total + parseFloat(compra.total || 0), 0
                 );
-                $("#total-ventas").text(formatearColones(totalVentas));
+                
+                const totalVentasAnio = comprasAnioActual.reduce((total, compra) =>
+                    total + parseFloat(compra.total || 0), 0
+                );
+
+                // Actualizar valores en el DOM
+                $("#total-ventas").text(formatearColones(totalVentasMes));
+                $("#total-ventas-anio").text(formatearColones(totalVentasAnio));
+
+                console.log(`Ventas del mes ${mesActual}/${anioActual}:`, formatearColones(totalVentasMes));
+                console.log(`Ventas del año ${anioActual}:`, formatearColones(totalVentasAnio));
             }
         },
         error: function (xhr, status, error) {
-            console.error("Error al obtener ventas:");
+            console.error("Error al obtener datos de ventas:");
             console.log("Status:", status);
             console.log("Error:", error);
             console.log("Respuesta del servidor:", xhr.responseText);

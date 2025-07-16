@@ -4,6 +4,9 @@
         <div class="d-flex gap-2">
             <input type="text" id="buscarCodigo" class="form-control form-control-sm w-auto"
                    placeholder="Buscar por # tarjeta">
+            <button id="btnBuscarTarjeta" class="btn btn-sm btn-warning" title="Ir a Beneficios">
+                <i class="bi bi-search"></i> Buscar
+            </button>
             <button id="btnActualizar" class="btn btn-sm btn-outline-light">
                 Actualizar
             </button>

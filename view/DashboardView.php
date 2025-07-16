@@ -35,9 +35,9 @@
   <!-- Total Ventas -->
   <div class="tarjeta-metrica">
     <i class="bi bi-currency-dollar icon-metrica"></i>
-    <h4>Total Ventas</h4>
+    <h4>Ventas del Mes Actual</h4>
     <p class="valor" id="total-ventas">$0</p>
-    <a href="CRM_INT/CRM/index.php?view=analisis" class="link-metrica">Ver análisis</a>
+    <a href="CRM_INT/CRM/index.php?view=analisis&seccion=ventasPorMes" class="link-metrica">Ver análisis</a>
   </div>
 
  
@@ -46,6 +46,14 @@
     <i class="bi bi-people-fill icon-metrica"></i>
     <h4>Total Clientes</h4>
     <p class="valor" id="total-clientes">0</p>
+  </div>
+
+  <!-- Total Ventas por Año -->
+  <div class="tarjeta-metrica">
+    <i class="bi bi-calendar-year icon-metrica"></i>
+    <h4>Ventas del Año Actual</h4>
+    <p class="valor" id="total-ventas-anio">$0</p>
+    <a href="CRM_INT/CRM/index.php?view=analisis&seccion=ventasPorAnio" class="link-metrica">Ver análisis</a>
   </div>
 </div>
     <!-- Sección de tareas -->

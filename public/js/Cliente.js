@@ -273,19 +273,19 @@ form.onsubmit = async (e) => {
     return;
   }
 
-  if (!validaciones.esCedulaValida(cedula)) {
-    alert("La cédula debe tener exactamente 9 dígitos.");
+  if (!(cedula.length === 9 || cedula.length === 14)) {
+    alert("La cédula debe tener 9 o 14 dígitos.");
     form.cedula.focus();
     return;
   }
 
+
   if (!validaciones.esNombreValido(nombre)) {
-    alert(
-      "El nombre solo puede contener letras y espacios, mínimo 2 caracteres."
-    );
+    alert("El nombre solo puede contener letras y espacios, mínimo 2 caracteres.");
     form.nombre.focus();
     return;
   }
+
 
   if (correo && !validaciones.esEmailValido(correo)) {
     alert("Por favor ingrese un correo electrónico válido.");
@@ -293,7 +293,7 @@ form.onsubmit = async (e) => {
     return;
   }
 
-  if (!validaciones.esTelefonoValido(telefono)) {
+  if (!validaciones.esTelefonoValido(telefono.replace("-", ""))) {
     alert("El teléfono debe tener exactamente 8 dígitos.");
     form.telefono.focus();
     return;
@@ -312,23 +312,28 @@ form.onsubmit = async (e) => {
 
   try {
     const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
-      method: "POST",
-      body: formData,
-    });
+    method: "POST",
+    body: formData,
+  });
     const response = await res.json();
-    let msg = response.message || "Cliente guardado correctamente";
-    if (response.debug) {
-      msg += "\n\nDEBUG:\n" + response.debug;
-    }
-    alert(msg);
-    if (response.success) {
-      cancelarEdicion();
-      cargarClientes();
-    }
-  } catch (error) {
-    console.error("Error real al guardar cliente:", error);
-    alert("Error de conexión al guardar");
+
+  if (!response.success) {
+    alert(response.message || "Error al guardar el cliente.");
+    return;
   }
+
+    let msg = response.message || "Cliente guardado correctamente";
+  if (response.debug) {
+    msg += "\n\nDEBUG:\n" + response.debug;
+  }
+    alert(msg);
+    cancelarEdicion();
+    cargarClientes();
+  } catch (error) {
+   console.error("Error real al guardar cliente:", error);
+    alert("Error de conexión al guardar");
+}
+
 };
 
 // Inicialización cuando se carga la vista
@@ -344,36 +349,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const lugarInput = form.lugarResidencia;
   const fechaInput = form.fechaCumpleanos;
 
-  // Validaciones en tiempo real para cédula
+ // Validaciones en tiempo real para cédula
   if (cedulaInput) {
-    cedulaInput.addEventListener("input", function () {
-      // Solo permitir números
-      this.value = this.value.replace(/\D/g, "");
-      // Limitar a 9 dígitos
-      if (this.value.length > 9) {
-        this.value = this.value.slice(0, 9);
-      }
-      this.setCustomValidity("");
+   cedulaInput.addEventListener("input", function () {
+      this.value = this.value.replace(/\D/g, ""); // Solo números
+
+    // Limitar a 14 dígitos (máximo permitido)
+     if (this.value.length > 14) {
+       this.value = this.value.slice(0, 14);
+     }
+
+    this.setCustomValidity("");
     });
 
     cedulaInput.addEventListener("invalid", function () {
-      this.setCustomValidity(
-        "Por favor ingrese una cédula válida de 9 dígitos"
-      );
+     this.setCustomValidity("Por favor ingrese una cédula válida (9 o 14 dígitos)");
     });
   }
 
-  // Conversión automática a mayúsculas para nombre
+
+ // Conversión automática a mayúsculas para nombre y límite de caracteres
   if (nombreInput) {
-    nombreInput.addEventListener("input", function () {
+      nombreInput.addEventListener("input", function () {
       this.value = this.value.toUpperCase();
-      this.setCustomValidity("");
-    });
 
-    nombreInput.addEventListener("invalid", function () {
-      this.setCustomValidity("Por favor ingrese un nombre válido");
-    });
+      // Limitar a 50 caracteres
+    if (this.value.length > 50) {
+      this.value = this.value.slice(0, 50);
+    }
+
+      this.setCustomValidity("");
+      });
+
+        nombreInput.addEventListener("invalid", function () {
+        this.setCustomValidity("Por favor ingrese un nombre válido");
+      });
   }
+
 
   // Conversión automática a mayúsculas para correo
   if (correoInput) {
@@ -388,35 +400,49 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Validaciones para teléfono
+ // Validaciones para teléfono con guion automático
   if (telefonoInput) {
     telefonoInput.addEventListener("input", function () {
-      // Solo permitir números
-      this.value = this.value.replace(/\D/g, "");
-      // Limitar a 8 dígitos
-      if (this.value.length > 8) {
-        this.value = this.value.slice(0, 8);
-      }
-      this.setCustomValidity("");
-    });
+    let valor = this.value.replace(/\D/g, ""); // Solo números
 
-    telefonoInput.addEventListener("invalid", function () {
-      this.setCustomValidity(
-        "Por favor ingrese un teléfono válido de 8 dígitos"
-      );
+    // Limitar a 8 dígitos
+    if (valor.length > 8) {
+      valor = valor.slice(0, 8);
+    }
+
+    // Agregar guion en la posición 4 si hay más de 4 dígitos
+    if (valor.length > 4) {
+      this.value = valor.slice(0, 4) + '-' + valor.slice(4);
+    } else {
+      this.value = valor;
+    }
+
+    this.setCustomValidity("");
+  });
+
+   telefonoInput.addEventListener("invalid", function () {
+    this.setCustomValidity("Por favor ingrese un teléfono válido de 8 dígitos");
     });
   }
 
-  // Conversión automática a mayúsculas para lugar de residencia
+  // Conversión automática a mayúsculas y validación para lugar de residencia
   if (lugarInput) {
     lugarInput.addEventListener("input", function () {
-      this.value = this.value.toUpperCase();
-      this.setCustomValidity("");
-    });
+    this.value = this.value.toUpperCase();
+
+    // Limitar a 50 caracteres
+    if (this.value.length > 50) {
+      this.value = this.value.slice(0, 50);
+    }
+
+    this.setCustomValidity("");
+   });
 
     lugarInput.addEventListener("invalid", function () {
-      this.setCustomValidity("Por favor ingrese el lugar de residencia");
+    this.setCustomValidity("Por favor ingrese el lugar de residencia");
     });
   }
+
 
   // Validación para fecha
   if (fechaInput) {

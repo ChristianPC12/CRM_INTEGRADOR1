@@ -45,9 +45,11 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="clienteLugar" class="form-label">Lugar de Residencia *</label>
-                        <input type="text" name="lugarResidencia" id="clienteLugar" class="form-control" required
-                            placeholder="Ej: San José, Costa Rica">
+                        <input list="listaCantones" name="lugarResidencia" id="clienteLugar" class="form-control" required
+                        placeholder="Ej: San José, Costa Rica">
+                        <datalist id="listaCantones"></datalist>
                     </div>
+
                     <div class="col-md-6 mb-3">
                         <label for="clienteFecha" class="form-label">Fecha de Cumpleaños *</label>
                         <input type="date" name="fechaCumpleanos" id="clienteFecha" class="form-control" required>
@@ -82,6 +84,100 @@
             </div>
         </div>
     </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cantonesCR = [
+  "LIBERIA, GUANACASTE",
+  "NICOYA, GUANACASTE",
+  "SANTA CRUZ, GUANACASTE",
+  "BAGACES, GUANACASTE",
+  "CARRILLO, GUANACASTE",
+  "CAÑAS, GUANACASTE",
+  "ABANGARES, GUANACASTE",
+  "TILARÁN, GUANACASTE",
+  "NANDAYURE, GUANACASTE",
+  "LA CRUZ, GUANACASTE",
+  "HOJANCHA, GUANACASTE",
+  "PUNTARENAS, PUNTARENAS",
+  "ESPARZA, PUNTARENAS",
+  "BUENOS AIRES, PUNTARENAS",
+  "MONTES DE ORO, PUNTARENAS",
+  "OSA, PUNTARENAS",
+  "AGUIRRE, PUNTARENAS",
+  "GOLFITO, PUNTARENAS",
+  "COTO BRUS, PUNTARENAS",
+  "PARAÍSO, PUNTARENAS",
+  "CORREDORES, PUNTARENAS",
+  "GARABITO, PUNTARENAS",
+  "SAN JOSÉ, SAN JOSÉ",
+  "ESCAZÚ, SAN JOSÉ",
+  "DESAMPARADOS, SAN JOSÉ",
+  "PURISCAL, SAN JOSÉ",
+  "TARAZU, SAN JOSÉ",
+  "ASERRÍ, SAN JOSÉ",
+  "MORA, SAN JOSÉ",
+  "GOICOECHEA, SAN JOSÉ",
+  "SANTA ANA, SAN JOSÉ",
+  "ALAJUELITA, SAN JOSÉ",
+  "VÁSQUEZ DE CORONADO, SAN JOSÉ",
+  "ACOSTA, SAN JOSÉ",
+  "TIBÁS, SAN JOSÉ",
+  "MORAVIA, SAN JOSÉ",
+  "MONTES DE OCA, SAN JOSÉ",
+  "TURRUBARES, SAN JOSÉ",
+  "DOTA, SAN JOSÉ",
+  "CURRIDABAT, SAN JOSÉ",
+  "PÉREZ ZELEDÓN, SAN JOSÉ",
+  "LEÓN CORTÉS, SAN JOSÉ",
+  "ALAJUELA, ALAJUELA",
+  "SAN RAMÓN, ALAJUELA",
+  "GRECIA, ALAJUELA",
+  "SAN MATEO, ALAJUELA",
+  "ATENAS, ALAJUELA",
+  "NARANJO, ALAJUELA",
+  "PALMARES, ALAJUELA",
+  "POÁS, ALAJUELA",
+  "OROTINA, ALAJUELA",
+  "SAN CARLOS, ALAJUELA",
+  "ZARCERO, ALAJUELA",
+  "VALVERDE VEGA, ALAJUELA",
+  "UPALA, ALAJUELA",
+  "LOS CHILES, ALAJUELA",
+  "GUATUSO, ALAJUELA",
+  "RIO CUARTO, ALAJUELA",
+  "HEREDIA, HEREDIA",
+  "BARVA, HEREDIA",
+  "SANTO DOMINGO, HEREDIA",
+  "SANTA BÁRBARA, HEREDIA",
+  "SAN RAFAEL, HEREDIA",
+  "SAN ISIDRO, HEREDIA",
+  "BELÉN, HEREDIA",
+  "FLORES, HEREDIA",
+  "SARAPIQUÍ, HEREDIA",
+  "CARTAGO, CARTAGO",
+  "PARAÍSO, CARTAGO",
+  "LA UNIÓN, CARTAGO",
+  "JIMÉNEZ, CARTAGO",
+  "TURRIALBA, CARTAGO",
+  "ALVARADO, CARTAGO",
+  "OREAMUNO, CARTAGO",
+  "EL GUARCO, CARTAGO",
+  "LIMÓN, LIMÓN",
+  "POCOCÍ, LIMÓN",
+  "SIQUIRRES, LIMÓN",
+  "TALAMANCA, LIMÓN",
+  "MATINA, LIMÓN",
+  "GUÁCIMO, LIMÓN"
+];
+
+  const listaCantones = document.getElementById("listaCantones");
+  cantonesCR.forEach(canton => {
+    const option = document.createElement("option");
+    option.value = canton;
+    listaCantones.appendChild(option);
+  });
+});
+</script>
 
 
     <!-- Script exclusivo de esta vista -->

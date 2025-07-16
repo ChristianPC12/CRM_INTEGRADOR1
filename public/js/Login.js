@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
             showSuccessMessage();
 
             setTimeout(() => {
-              window.location.href = data.redirect || "index.php?view=dashboard";
+              window.location.href = data.redirect || "/CRM_INT/CRM/index.php?view=dashboard";
             }, 1500);
           } else {
             showLoginError(data.message || "Credenciales incorrectas");

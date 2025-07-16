@@ -49,43 +49,43 @@ $vista = $_GET['view'] ?? 'dashboard';
         </div>
         <ul>
             <li>
-                <a href="index.php?view=dashboard" id="link-dashboard"
+                <a href="/CRM_INT/CRM/index.php?view=dashboard" id="link-dashboard"
                     class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
                     <i class="bi bi-house"></i> Dashboard
                 </a>
             </li>
             <li>
-                <a href="index.php?view=clientes" id="link-clientes-vip"
+                <a href="/CRM_INT/CRM/index.php?view=clientes" id="link-clientes-vip"
                     class="<?= $vista === 'clientes' ? 'active' : '' ?>">
                     <i class="bi bi-award-fill"></i> Clientes VIP
                 </a>
             </li>
             <li>
-                <a href="index.php?view=usuarios" id="link-usuarios"
+                <a href="/CRM_INT/CRM/index.php?view=usuarios" id="link-usuarios"
                     class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
                 </a>
             </li>
             <li>
-                <a href="index.php?view=compras" id="link-compras"
+                <a href="/CRM_INT/CRM/index.php?view=compras" id="link-compras"
                     class="<?= $vista === 'compras' ? 'active' : '' ?>">
                     <i class="bi bi-tag"></i> Beneficios
                 </a>
             </li>
             <li>
-                <a href="index.php?view=codigo" id="link-codigo"
+                <a href="/CRM_INT/CRM/index.php?view=codigo" id="link-codigo"
                     class="<?= $vista === 'codigo' ? 'active' : '' ?>">
                     <i class="bi bi-upc-scan"></i> Código de barras
                 </a>
             </li>
             <li>
-                <a href="index.php?view=analisis" id="link-analisis"
+                <a href="/CRM_INT/CRM/index.php?view=analisis" id="link-analisis"
                     class="<?= $vista === 'analisis' ? 'active' : '' ?>">
                     <i class="bi bi-graph-up-arrow"></i> Análisis
                 </a>
             </li>
             <li>
-                 <a href="index.php?view=cumple" id="link-cumple"
+                 <a href="/CRM_INT/CRM/index.php?view=cumple" id="link-cumple"
                      class="<?= $vista === 'cumple' ? 'active' : '' ?>">
                      <i class="bi bi-gift"></i> Cumpleaños
                      <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
@@ -93,7 +93,7 @@ $vista = $_GET['view'] ?? 'dashboard';
             </li>
 
              <li>
-                <a href="index.php?view=Bitacora" id="link-Bitacora"
+                <a href="/CRM_INT/CRM/index.php?view=Bitacora" id="link-Bitacora"
               class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
               <i class="bi bi-journal-text"></i> Bitácora
                </a>

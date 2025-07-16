@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Función para confirmar cierre de sesión manual
 function confirmarCerrarSesion() {
   if (confirm("¿Cerrar sesión?")) {
-    window.location.href = "index.php?logout=1";
+    window.location.href = "/CRM_INT/CRM/index.php?logout=1";
   }
 
   
@@ -121,7 +121,7 @@ async function redirigirCompra() {
     }
 
     console.log('Modal: Redirigiendo a beneficios con tarjeta:', tarjeta);
-    window.location.href = `index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}&buscar=auto`;
+    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}&buscar=auto`;
   } catch {
     mensajeError.textContent = "Error de conexión con el servidor.";
   }

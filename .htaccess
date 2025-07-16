@@ -1,7 +1,13 @@
 RewriteEngine On
 RewriteBase /CRM_INT/CRM/
 
+# Evitar múltiples redirecciones
+RewriteCond %{REQUEST_URI} ^/CRM_INT/CRM/CRM_INT/CRM/(.*)$
+RewriteRule ^ /CRM_INT/CRM/%1 [R=301,L]
+
+# Solo aplicar la reescritura si el archivo no existe y no es una petición a index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/CRM_INT/CRM/index\.php
 
 RewriteRule ^(.+)$ index.php?view=$1 [QSA,L]

@@ -1,4 +1,5 @@
 let codigosGlobal = []; // Para filtro de búsqueda en vivo
+let isScanning = false; // Para detectar si se está usando el lector de código de barras
 
 /**
  * Carga todos los códigos desde el backend 
@@ -200,8 +201,21 @@ async function actualizarContadorImpresiones(numeroTarjeta) {
  * Redirige a CompraView con el idCliente (botón invisible sobre el código de barras)
  */
 window.redirigirCompra = function(idCliente) {
-    console.log('Redirigiendo a beneficios con número de tarjeta:', idCliente);
-    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}&buscar=auto`;
+    console.log('=== CLICK EN CODIGO DE BARRAS ===');
+    console.log('ID Cliente:', idCliente);
+    console.log('Tipo de idCliente:', typeof idCliente);
+    
+    if (!idCliente) {
+        console.error('Error: idCliente está vacío');
+        alert('Error: Número de tarjeta no válido');
+        return;
+    }
+    
+    const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(idCliente)}&buscar=auto`;
+    console.log('URL de redirección:', url);
+    console.log('Redirigiendo...');
+    
+    window.location.href = url;
 }
 
 /** 
@@ -228,9 +242,9 @@ function mostrarCodigos(codigos) {
                         <button 
                             class="btn-barcode-invisible" 
                             title="Ir a Beneficio - Tarjeta: ${codigo.idCliente}"
-                            onclick="redirigirCompra('${codigo.idCliente}')"
+                            data-tarjeta="${codigo.idCliente}"
                             tabindex="-1"
-                            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;z-index:2;background:transparent;">
+                            style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.1;cursor:pointer;border:1px solid red;padding:0;margin:0;z-index:10;background:rgba(255,0,0,0.1);">
                         </button>
                     </div>
                 </td>
@@ -277,6 +291,28 @@ function mostrarCodigos(codigos) {
             const barcodeId = `barcode-${index}`;
             generarCodigoBarras(codigo.idCliente, barcodeId);
         });
+        
+        // Agregar event listeners a todos los botones invisibles
+        const botonesInvisibles = document.querySelectorAll('.btn-barcode-invisible');
+        console.log('Configurando', botonesInvisibles.length, 'botones invisibles');
+        
+        botonesInvisibles.forEach(boton => {
+            boton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const tarjeta = this.getAttribute('data-tarjeta');
+                console.log('Click en botón invisible, tarjeta:', tarjeta);
+                
+                // Redirección directa sin llamar a función externa
+                const url = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}&buscar=auto`;
+                console.log('Redirigiendo directamente a:', url);
+                console.log('Ejecutando window.location.href...');
+                
+                window.location.href = url;
+                
+                console.log('window.location.href ejecutado');
+            });
+        });
     }, 100);
 }
 
@@ -293,6 +329,36 @@ document.getElementById('buscarCodigo').addEventListener('input', function () {
         String(c.idCliente).toLowerCase().includes(valor.toLowerCase())
     );
     mostrarCodigos(filtrados);
+});
+
+/**
+ * Función para redirigir a beneficios desde el campo de búsqueda
+ */
+function buscarEnBeneficios() {
+    const valor = document.getElementById('buscarCodigo').value.trim();
+    if (!valor) {
+        alert('Por favor ingrese un número de tarjeta');
+        return;
+    }
+    
+    console.log('Redirigiendo a beneficios desde búsqueda con tarjeta:', valor);
+    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(valor)}&buscar=auto`;
+}
+
+/**
+ * Event listener para el botón de búsqueda
+ */
+document.getElementById('btnBuscarTarjeta').addEventListener('click', buscarEnBeneficios);
+
+/**
+ * Event listener para Enter en el campo de búsqueda (además del lector de códigos)
+ */
+document.getElementById('buscarCodigo').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !isScanning) {
+        // Si no está en modo scanning (lector), tratar como búsqueda manual
+        e.preventDefault();
+        buscarEnBeneficios();
+    }
 });
 
 /** 
@@ -437,6 +503,17 @@ window.debugCodigos = function() {
     if (codigosGlobal.length > 0) {
         console.log('Primer código:', codigosGlobal[0]);
         console.log('Para probar, ejecuta: testRedireccion("' + codigosGlobal[0].idCliente + '")');
+        console.log('O ejecuta: redirigirCompra("' + codigosGlobal[0].idCliente + '")');
     }
     console.log('====================');
+}
+
+// Función para probar el click manualmente
+window.testClick = function(idCliente) {
+    console.log('=== TEST MANUAL DE CLICK ===');
+    if (!idCliente && codigosGlobal.length > 0) {
+        idCliente = codigosGlobal[0].idCliente;
+    }
+    console.log('Probando con ID:', idCliente);
+    redirigirCompra(idCliente);
 }

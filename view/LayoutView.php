@@ -271,16 +271,14 @@ if ($vista === 'clientes') {
 
             // Mostrar el modal automáticamente solo si el rol es salonero Y está en dashboard
             if (rolUsuario === "salonero" && vistaActual === "dashboard") {
-              const modal = document.getElementById('modalTarjeta');
-              if (modal) modal.style.display = 'flex';
+              abrirModal();
             }
             // Mostrar el modal al hacer click en el logo para cualquier rol
             const logo = document.querySelector(".img-header");
             if (logo) {
               logo.style.cursor = 'pointer';
               logo.addEventListener('click', function() {
-                const modal = document.getElementById('modalTarjeta');
-                if (modal) modal.style.display = 'flex';
+                abrirModal();
               });
             }
         });

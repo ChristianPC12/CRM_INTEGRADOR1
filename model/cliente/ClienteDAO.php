@@ -62,6 +62,29 @@ class ClienteDAO
             return [];
         }
     }
+    
+    public function existeTelefonoOCorreo($telefono, $correo, $id = null) {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteVerificarDuplicados(?, ?, ?)");
+            $stmt->execute([$telefono, $correo, $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+        } catch (PDOException $e) {
+             error_log("Error al verificar duplicados (SP): " . $e->getMessage());
+             return true;
+        }
+    }
+    
+    public function existeCedula($cedula, $id = null) {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteExisteCedula(?, ?)");
+            $stmt->execute([$cedula, $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+    } catch (PDOException $e) {
+            error_log("Error al verificar cédula duplicada: " . $e->getMessage());
+            return true; 
+        }
+    }
+
 
     public function update($cliente)
     {

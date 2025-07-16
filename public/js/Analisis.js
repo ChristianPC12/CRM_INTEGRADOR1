@@ -40,6 +40,20 @@ document.addEventListener("DOMContentLoaded", () => {
       mostrarClientesAntiguos();
     });
 
+  document
+    .getElementById("btnVentasPorMes")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarVentasPorMes;
+      mostrarVentasPorMes();
+    });
+
+  document
+    .getElementById("btnVentasPorAnio")
+    .addEventListener("click", () => {
+      lastAnalisisFuncion = mostrarVentasPorAnio;
+      mostrarVentasPorAnio();
+    });
+
   // Botón de actualizar recarga el análisis actual
   document
     .getElementById("btnActualizarAnalisis")
@@ -93,8 +107,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Por defecto, carga el primer análisis al entrar
-  mostrarClientesFrecuentes();
+  // Detectar parámetro URL para auto-seleccionar sección
+  const urlParams = new URLSearchParams(window.location.search);
+  const seccion = urlParams.get('seccion');
+  
+  // Cargar sección específica o la por defecto
+  switch(seccion) {
+    case 'ventasPorMes':
+      console.log('Auto-cargando: Ventas por mes');
+      lastAnalisisFuncion = mostrarVentasPorMes;
+      mostrarVentasPorMes();
+      break;
+    case 'ventasPorAnio':
+      console.log('Auto-cargando: Ventas por año');
+      lastAnalisisFuncion = mostrarVentasPorAnio;
+      mostrarVentasPorAnio();
+      break;
+    case 'clientesFrecuentes':
+      console.log('Auto-cargando: Clientes frecuentes');
+      lastAnalisisFuncion = mostrarClientesFrecuentes;
+      mostrarClientesFrecuentes();
+      break;
+    case 'clientesMayorHistorial':
+      console.log('Auto-cargando: Clientes con mayor historial');
+      lastAnalisisFuncion = mostrarClientesMayorHistorial;
+      mostrarClientesMayorHistorial();
+      break;
+    case 'clientesInactivos':
+      console.log('Auto-cargando: Clientes inactivos');
+      lastAnalisisFuncion = mostrarClientesInactivos;
+      mostrarClientesInactivos();
+      break;
+    case 'residenciasFrecuentes':
+      console.log('Auto-cargando: Residencias frecuentes');
+      lastAnalisisFuncion = mostrarResidenciasFrecuentes;
+      mostrarResidenciasFrecuentes();
+      break;
+    case 'clientesAntiguos':
+      console.log('Auto-cargando: Clientes antiguos');
+      lastAnalisisFuncion = mostrarClientesAntiguos;
+      mostrarClientesAntiguos();
+      break;
+    default:
+      // Por defecto, carga el primer análisis al entrar
+      mostrarClientesFrecuentes();
+      break;
+  }
 });
 
 /**
@@ -701,12 +759,6 @@ function renderTablaVentasPorMes(arr) {
   `;
 }
 
-
-document.getElementById("btnVentasPorMes").addEventListener("click", () => {
-  lastAnalisisFuncion = mostrarVentasPorMes;
-  mostrarVentasPorMes();
-});
-
 async function mostrarVentasPorMes() {
   setBotonActivo("btnVentasPorMes");
   modoResidencia = false;
@@ -770,12 +822,6 @@ async function mostrarVentasPorMes() {
 }
 
 
-
-// Botón de Ventas por año
-document.getElementById("btnVentasPorAnio").addEventListener("click", () => {
-  lastAnalisisFuncion = mostrarVentasPorAnio;
-  mostrarVentasPorAnio();
-});
 
 async function mostrarVentasPorAnio() {
   setBotonActivo("btnVentasPorAnio");

@@ -76,6 +76,24 @@ function mostrarModal() {
 
 function cerrarModal() {
   document.getElementById('modalTarjeta').style.display = 'none';
+  // Limpiar el campo de texto y el mensaje de error
+  document.getElementById('modalInputTarjeta').value = '';
+  document.getElementById('modalMensajeError').textContent = '';
+}
+
+function abrirModal() {
+  const modal = document.getElementById('modalTarjeta');
+  if (modal) {
+    modal.style.display = 'flex';
+    // Auto-focus en el campo de texto
+    setTimeout(() => {
+      const input = document.getElementById('modalInputTarjeta');
+      if (input) {
+        input.value = ''; // Limpiar campo
+        input.focus(); // Hacer focus
+      }
+    }, 100);
+  }
 }
 
 
@@ -102,7 +120,8 @@ async function redirigirCompra() {
       return;
     }
 
-    window.location.href = `index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}`;
+    console.log('Modal: Redirigiendo a beneficios con tarjeta:', tarjeta);
+    window.location.href = `index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}&buscar=auto`;
   } catch {
     mensajeError.textContent = "Error de conexión con el servidor.";
   }

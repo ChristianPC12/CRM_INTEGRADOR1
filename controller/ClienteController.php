@@ -36,6 +36,20 @@ try {
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
             $cliente->acumulado = $_POST['acumulado'] ?? 0;
+            if ($dao->existeTelefonoOCorreo($cliente->telefono, $cliente->correo)) {
+                echo json_encode([
+                 'success' => false,
+                 'message' => 'El teléfono o correo ya están registrados para otro cliente.'
+            ]);
+            exit;
+            }
+            if ($dao->existeCedula($cliente->cedula, null)) {
+                echo json_encode([
+                'success' => false,
+                'message' => 'La cédula ya está registrada.'
+                ]);
+                exit;
+            }   
             $result = $dao->create($cliente);
 
             if ($result) {
@@ -77,6 +91,20 @@ try {
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
             $cliente->acumulado = $_POST['acumulado'] ?? null;
+            if ($dao->existeTelefonoOCorreo($cliente->telefono, $cliente->correo, $cliente->id)) {
+                echo json_encode([
+                 'success' => false,
+                 'message' => 'El teléfono o correo ya están registrados para otro cliente.'
+                ]);
+                 exit;
+            }
+            if ($dao->existeCedula($cliente->cedula, $cliente->id)) {
+                echo json_encode([
+                'success' => false,
+                 'message' => 'La cédula ya está registrada.'
+                ]);
+                 exit;
+            }
             $result = $dao->update($cliente);
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente actualizado exitosamente' : 'Error al actualizar cliente']);
             break;

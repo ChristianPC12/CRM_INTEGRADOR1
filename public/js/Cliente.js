@@ -232,7 +232,14 @@ const eliminarCliente = async (id) => {
     });
     const response = await res.json();
     alert(response.message);
-    if (response.success) cargarClientes();
+    if (response.success) {
+      cargarClientes();
+      
+      // ✨ ACTUALIZAR BADGE DE CUMPLEAÑOS SI EXISTE LA FUNCIÓN
+      if (window.actualizarCumpleBadgeSidebar) {
+        window.actualizarCumpleBadgeSidebar();
+      }
+    }
   } catch {
     alert("Error al eliminar el cliente");
   }
@@ -329,6 +336,11 @@ form.onsubmit = async (e) => {
     alert(msg);
     cancelarEdicion();
     cargarClientes();
+    
+    // ✨ ACTUALIZAR BADGE DE CUMPLEAÑOS SI EXISTE LA FUNCIÓN
+    if (window.actualizarCumpleBadgeSidebar) {
+      window.actualizarCumpleBadgeSidebar();
+    }
   } catch (error) {
    console.error("Error real al guardar cliente:", error);
     alert("Error de conexión al guardar");

@@ -226,6 +226,66 @@ body::after {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* Estilos para historial de reasignaciones */
+.fila-cliente:hover {
+  background-color: #e9ecef !important;
+}
+
+.codigo-barra {
+  font-family: 'Courier New', monospace;
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #495057;
+}
+
+.codigo-barra-small {
+  font-family: 'Courier New', monospace;
+  background-color: #f8f9fa;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 0.75em;
+  color: #6c757d;
+}
+
+.motivo-cell {
+  max-width: 200px;
+}
+
+.motivo-texto {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.detalle-reasignacion {
+  background-color: #f8f9fa;
+  border-left: 3px solid #0d6efd;
+}
+
+.alert-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.table th {
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.table td {
+  vertical-align: middle;
+  font-size: 0.9em;
+}
+
+.badge {
+  font-size: 0.75em;
+}
+
 /* Responsive para móviles */
 @media (max-width: 768px) {
   body::before,
@@ -316,31 +376,6 @@ body::after {
   }
 }
 
-.clientes-header {
-    background: var(--negro);
-    /* Puedes agregar sombra, borde, etc. aquí si lo deseas */
-}
-
-.titulo-clientes {
-    color: var(--amarillo);
-    font-weight: bold;
-}
-
-.buscador-clientes {
-    max-width: 300px;
-    min-width: 220px;
-    font-weight: 500;
-    border-radius: 24px;
-    background: #fff;
-    color: #222;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.buscador-clientes::placeholder {
-    color: #888;
-    font-weight: 400;
-}
-
 @media (max-width: 576px) {
     .clientes-header {
         flex-direction: column;
@@ -353,13 +388,116 @@ body::after {
     }
 }
 
-
+/* Header de clientes */
 .clientes-header {
-    background: var(--negro);
+    background: var(--negro) !important;
+    border-bottom: 3px solid var(--amarillo);
+    padding: 1rem 1.5rem !important;
 }
 
 .titulo-clientes {
     color: var(--amarillo);
     font-weight: bold;
     margin-bottom: 0;
+    font-size: 1.1rem;
+}
+
+.buscador-clientes {
+    max-width: 300px;
+    min-width: 220px;
+    font-weight: 500;
+    border-radius: 24px;
+    background: #fff;
+    color: #222;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+}
+
+.buscador-clientes::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.buscador-clientes:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.3);
+    border-color: var(--amarillo);
+}
+
+/* Botón actualizar en el header */
+.clientes-header .btn-outline-light {
+    border: 2px solid var(--amarillo);
+    color: var(--amarillo);
+    background: transparent;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 6px 16px;
+    transition: all 0.3s ease;
+}
+
+.clientes-header .btn-outline-light:hover {
+    background: var(--amarillo);
+    color: var(--negro);
+    transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+    .clientes-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 1rem !important;
+        padding: 1rem !important;
+    }
+    
+    .titulo-clientes {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .buscador-clientes {
+        max-width: 100%;
+        min-width: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .clientes-header .btn-outline-light {
+        align-self: center;
+        width: fit-content;
+    }
+}
+
+/* Estilos para botones de acciones en disposición especial */
+.acciones-cliente {
+    display: flex;
+    gap: 0.4rem;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 140px;
+}
+
+.columna-izquierda {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.columna-derecha {
+    display: flex;
+    align-items: flex-start;
+}
+
+.acciones-cliente .btn {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 60px;
+}
+
+/* Asegurar que todos los botones tengan el mismo ancho */
+.columna-izquierda .btn,
+.columna-derecha .btn {
+    width: 65px;
 }

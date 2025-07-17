@@ -101,6 +101,46 @@ try {
     ]);
     break;
 
+    case 'registrarLlamadaCumple':
+    $idCliente = $_POST['idCliente'] ?? null;
+
+    if (empty($idCliente)) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'ID del cliente no proporcionado'
+        ]);
+        break;
+    }
+
+    // Igual que en enviarCorreoCumple, calculamos fecha de vencimiento (domingo de la semana)
+    $hoy = new DateTime();
+    $diaSemana = $hoy->format('w'); // 0 (domingo) a 6 (sábado)
+    $diasHastaDomingo = 7 - $diaSemana;
+    $vence = clone $hoy;
+    $vence->modify("+$diasHastaDomingo days");
+    $venceStr = $vence->format('Y-m-d');
+
+    // Insertamos en la tabla cumple, pero sin correo
+    $sql = "INSERT INTO cumple (IdCliente, FechaLlamada, Vence, Vencido)
+            VALUES (:idCliente, CURDATE(), :vence, 'NO')";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':idCliente', $idCliente);
+    $stmt->bindParam(':vence', $venceStr);
+    $stmt->execute();
+
+    // ACTUALIZA el estado del cliente a 'LISTA'
+    $update = $conn->prepare("UPDATE cliente SET Estado = 'LISTA' WHERE Id = :idCliente");
+    $update->bindParam(':idCliente', $idCliente);
+    $update->execute();
+
+    echo json_encode([
+        'success' => true,
+        'message' => '¡Llamada registrada correctamente!'
+    ]);
+    break;
+
+
+
 
         case 'readHistorial':
             $historial = $dao->obtenerHistorial();

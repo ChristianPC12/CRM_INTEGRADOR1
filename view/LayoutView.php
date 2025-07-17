@@ -105,9 +105,9 @@ $vista = $_GET['view'] ?? 'dashboard';
            
 
             <li>
-                <a href="#" onclick="confirmarCerrarSesion()" style="color: #dc3545;">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-                </a>
+             <a href="/CRM_INT/CRM/controller/UsuarioController.php?action=logout" style="color: #dc3545;">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
             </li>
             
         </ul>
@@ -168,9 +168,6 @@ if ($vista === 'clientes') {
         <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
     <?php endif; ?>
 
-    <?php if ($vista === 'Bitacora'): ?>
-        <script src="/CRM_INT/CRM/public/js/Bitacora.js"></script>
-    <?php endif; ?>
 
 
     <!-- Logout automático al cerrar la pestaña -->

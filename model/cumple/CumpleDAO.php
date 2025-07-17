@@ -57,11 +57,12 @@ public function obtenerHistorial()
         // ✅ Actualiza los vencidos antes de consultar
         $this->marcarCumplesVencidos();
 
-        $sql = "SELECT c.Id, cl.Cedula, cl.Nombre, cl.Telefono, cl.FechaCumpleanos, 
-                       c.FechaLlamada, c.Vence, c.Vencido
-                FROM cumple c
-                INNER JOIN cliente cl ON c.IdCliente = cl.Id
-                ORDER BY FechaLlamada DESC";
+        $sql = "SELECT c.Id, cl.Cedula, cl.Nombre, cl.Correo, cl.Telefono, cl.FechaCumpleanos, 
+               c.FechaLlamada, c.Vence, c.Vencido
+        FROM cumple c
+        INNER JOIN cliente cl ON c.IdCliente = cl.Id
+        ORDER BY FechaLlamada DESC";
+
                 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();

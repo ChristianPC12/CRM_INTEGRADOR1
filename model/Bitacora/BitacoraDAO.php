@@ -1,5 +1,6 @@
 <?php
 require_once 'BitacoraMapper.php';
+require_once __DIR__ . '/../../config/Database.php';
 
 class BitacoraDAO {
     private $conn;
@@ -8,23 +9,7 @@ class BitacoraDAO {
         $this->conn = $db;
     }
 
-    public function handle($action, $data) {
-        switch ($action) {
-            case 'create':
-                return $this->create($data);
-            case 'read':
-                return $this->read($data['id']);
-            case 'readAll':
-                return $this->readAll();
-            case 'selectByUsuario':
-                return $this->selectByUsuario($data['idUsuario']);
-            case 'update':
-                return $this->update($data);
-            default:
-                throw new Exception("Acción no válida: $action");
-        }
-    }
-
+    // Crear nueva entrada en la bitácora
     public function create(BitacoraDTO $bitacora) {
         $stmt = $this->conn->prepare("CALL BitacoraCreate(?, ?, ?, ?)");
         return $stmt->execute([
@@ -35,75 +20,76 @@ class BitacoraDAO {
         ]);
     }
 
+    // Leer una entrada por ID (💡no aplica porque no hay PK, lo dejamos por compatibilidad)
     public function read($id) {
-        $stmt = $this->conn->prepare("CALL BitacoraRead(?)");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? BitacoraMapper::mapRowToDTO($row): null;
+        return null; // no se puede implementar sin una PK única
     }
 
-   public function readAll()
-{
-    $stmt = $this->conn->prepare("CALL BitacoraReadAll()");
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $bitacoras = [];
+    // Leer todas las entradas
+    public function readAll() {
+        $stmt = $this->conn->prepare("CALL BitacoraReadAll()");
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($result as $row) {
-        $bitacoras[] = BitacoraMapper::mapRowToDTO($row);
+        $bitacoras = [];
+        foreach ($result as $row) {
+            $bitacoras[] = BitacoraMapper::mapRowToDTO($row);
+        }
 
+        return $bitacoras;
     }
 
-    return $bitacoras;
-}
+    // Actualizar la hora de salida (💡usamos múltiples condiciones para identificar la entrada)
+    public function update(BitacoraDTO $dto) {
+        $sql = "UPDATE bitacora 
+                SET horaSalida = :horaSalida 
+                WHERE IdUsuario = :idUsuario 
+                AND Fecha = :fecha 
+                AND horaEntrada = :horaEntrada";
 
-    public function selectByUsuario($idUsuario) {
-        $stmt = $this->conn->prepare("CALL BitacoraSelectByUsuario(?)");
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':horaSalida', $dto->horaSalida);
+        $stmt->bindParam(':idUsuario', $dto->idUsuario);
+        $stmt->bindParam(':fecha', $dto->fecha);
+        $stmt->bindParam(':horaEntrada', $dto->horaEntrada);
+        return $stmt->execute();
+    }
+
+    // Leer todas las entradas de un usuario
+    public function readByUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("SELECT * FROM bitacora WHERE IdUsuario = ? ORDER BY Fecha DESC, HoraEntrada DESC");
         $stmt->execute([$idUsuario]);
+
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $result[] = BitacoraMapper::mapRowToDTO($row);
-
         }
         return $result;
     }
 
-    public function update(BitacoraDTO $bitacora) {
-        $stmt = $this->conn->prepare("CALL BitacoraUpdate(?, ?, ?, ?, ?)");
-        return $stmt->execute([
-            $bitacora->id,
-            $bitacora->idUsuario,
-            $bitacora->horaEntrada,
-            $bitacora->horaSalida,
-            $bitacora->fecha
-        ]);
+    // Eliminar registros expirados (más de 30 días)
+    public function eliminarExpirados() {
+        $sql = "DELETE FROM bitacora 
+                WHERE (horaSalida IS NOT NULL AND horaSalida != '00:00:00')
+                AND CONCAT(fecha, ' ', horaEntrada) < NOW() - INTERVAL 30 DAY";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute();
     }
 
-    public function readByUsuario($idUsuario)
-    {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM bitacora WHERE IdUsuario = ?");
-            $stmt->execute([$idUsuario]);
-
-            $result = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $result[] = BitacoraMapper::mapRowToDTO($row);
-            }
-            return $result;
-        } catch (PDOException $e) {
-            return "Error al leer bitácoras por usuario: " . $e->getMessage();
-        }
+    // Verificar si el usuario ya tiene una sesión activa sin salida
+    public function tieneSesionActiva($idUsuario) {
+        $sql = "SELECT COUNT(*) FROM bitacora 
+                WHERE IdUsuario = ? AND (horaSalida IS NULL OR horaSalida = '00:00:00')";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$idUsuario]);
+        return $stmt->fetchColumn() > 0;
     }
-    public function hayPorExpirar(): bool
-{
-    $sql = "SELECT COUNT(*) as total FROM bitacora 
-            WHERE Fecha <= DATE_SUB(CURDATE(), INTERVAL 25 DAY)";
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $row && $row['total'] > 0;
-}
+    // Limpieza automática
+    public static function ejecutarLimpiezaAutomatica() {
+        $db = (new Database())->getConnection();
+        $dao = new BitacoraDAO($db);
+        return $dao->eliminarExpirados();
+    }
 }
 ?>

@@ -42,6 +42,7 @@ function confirmarCerrarSesion() {
 window.addEventListener("load", function () {
   const toggleBtn = document.getElementById("menuToggle");
   const sidebar = document.querySelector(".sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
   const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
 
   if (!toggleBtn || !sidebar) {
@@ -49,21 +50,49 @@ window.addEventListener("load", function () {
     return;
   }
 
-  //  Forzar sidebar cerrado en móvil al cargar (clave para evitar bug al cambiar de vista)
-  if (window.innerWidth <= 768) {
+  // Forzar sidebar cerrado en móvil al cargar
+  if (window.innerWidth <= 992) {
+    sidebar.classList.remove("show");
     sidebar.classList.remove("activa");
+    if (overlay) overlay.classList.remove("show");
   }
 
+  // Toggle del menú
   toggleBtn.addEventListener("click", function () {
+    sidebar.classList.toggle("show");
     sidebar.classList.toggle("activa");
+    if (overlay) {
+      overlay.classList.toggle("show");
+    }
   });
 
+  // Cerrar al hacer click en overlay
+  if (overlay) {
+    overlay.addEventListener("click", function () {
+      sidebar.classList.remove("show");
+      sidebar.classList.remove("activa");
+      overlay.classList.remove("show");
+    });
+  }
+
+  // Cerrar al hacer click en un enlace (solo en móvil)
   sidebarLinks.forEach(link => {
     link.addEventListener("click", function () {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 992) {
+        sidebar.classList.remove("show");
         sidebar.classList.remove("activa");
+        if (overlay) overlay.classList.remove("show");
       }
     });
+  });
+
+  // Cerrar al redimensionar ventana
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 992) {
+      sidebar.classList.remove("show");
+      sidebar.classList.remove("activa");
+      if (overlay) overlay.classList.remove("show");
+    }
   });
 });
   //  Logica del modal de tarjeta
@@ -146,13 +175,13 @@ window.actualizarCumpleBadgeSidebar = function() {
     fetch('/CRM_INT/CRM/controller/CumpleController.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'action=hayPendientes'
+        body: 'action=readSemana'
     })
     .then(res => res.json())
     .then(data => {
         const badge = document.getElementById('cumple-badge');
         if (!badge) return;
-        if (data.success && data.hayPendientes) {
+        if (data.success && data.data && data.data.length > 0) {
             badge.style.display = 'inline-block';
             badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
         } else {

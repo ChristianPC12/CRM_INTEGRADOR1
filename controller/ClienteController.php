@@ -115,6 +115,48 @@ try {
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente eliminado exitosamente' : 'Error al eliminar cliente']);
             break;
 
+        case 'reassignCode':
+            $idCliente = $_POST['idCliente'] ?? '';
+            $motivo = $_POST['motivo'] ?? '';
+
+            if (empty($idCliente) || empty($motivo)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Todos los campos son requeridos: ID Cliente y Motivo'
+                ]);
+                break;
+            }
+
+            $codigoDAO = new CodigoDAO($db);
+            $result = $codigoDAO->reassignCode($idCliente, $motivo);
+            echo json_encode($result);
+            break;
+
+        case 'getHistorialReasignaciones':
+            $codigoDAO = new CodigoDAO($db);
+            
+            // Obtener TODOS los códigos usando el procedimiento existente
+            $resultCodigos = $codigoDAO->readAll();
+            
+            // Obtener TODOS los clientes
+            $resultClientes = $dao->readAll();
+            
+            if ($resultCodigos['success'] && $resultClientes) {
+                echo json_encode([
+                    'success' => true,
+                    'data' => [
+                        'codigos' => $resultCodigos['data'],
+                        'clientes' => $resultClientes
+                    ]
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error al obtener datos'
+                ]);
+            }
+            break;
+
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
     }

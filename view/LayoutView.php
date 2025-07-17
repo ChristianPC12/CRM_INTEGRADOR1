@@ -13,6 +13,8 @@ $vista = $_GET['view'] ?? 'dashboard';
     <!-- Bootstrap y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- CSS por vista -->
     <?php if ($vista === 'dashboard'): ?>
@@ -27,6 +29,8 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Analisis.css">
     <?php elseif ($vista === 'Bitacora'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Bitacora.css">
+    <?php elseif ($vista === 'cumple'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cumple.css?v=<?= time() ?>">
     <?php endif; ?>
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
@@ -108,6 +112,9 @@ $vista = $_GET['view'] ?? 'dashboard';
             
         </ul>
     </aside>
+
+    <!-- OVERLAY PARA MÓVIL -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="content">
         <main class="main-content">

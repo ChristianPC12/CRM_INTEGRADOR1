@@ -138,7 +138,7 @@ class CodigoDAO
             if (!$row) {
                 return [
                     'success' => false,
-                    'message' => "No se encontró código para el cliente $idCliente"
+                    'message' => "No se encontró código activo para el cliente $idCliente"
                 ];
             }
             return [
@@ -153,41 +153,39 @@ class CodigoDAO
         }
     }
 
-    // Agregar estos métodos a tu CodigoDAO.php
-
     /**
-     * Obtiene un código por ID de cliente
+     * Reasigna un código de barras usando el procedimiento almacenado
      */
-    public function obtenerPorIdCliente($idCliente)
+    public function reassignCode($idCliente, $motivo)
     {
         try {
-            $sql = "SELECT * FROM codigo WHERE idCliente = :idCliente";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':idCliente', $idCliente);
-            $stmt->execute();
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            // El nuevo procedimiento solo necesita idCliente y motivo
+            // Se encarga internamente de encontrar el código activo
+            $stmt = $this->conn->prepare("CALL CodigoReassign(?, ?)");
+            $result = $stmt->execute([$idCliente, $motivo]);
+            
+            if ($result) {
+                // Obtener el nuevo código generado
+                $nuevoCodigoResult = $stmt->fetch(PDO::FETCH_ASSOC);
+                $nuevoCodigo = $nuevoCodigoResult['NuevoCodigoGenerado'] ?? '';
+                
+                return [
+                    'success' => true,
+                    'nuevoCodigo' => $nuevoCodigo,
+                    'message' => 'Código reasignado exitosamente'
+                ];
+            } else {
+                $errorInfo = $stmt->errorInfo();
+                return [
+                    'success' => false,
+                    'message' => 'Error al reasignar código: ' . $errorInfo[2]
+                ];
+            }
         } catch (PDOException $e) {
-            error_log("Error en obtenerPorIdCliente: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Actualiza el contador de impresiones
-     */
-    public function actualizarContadorImpresiones($idCliente, $nuevaCantidad)
-    {
-        try {
-            $sql = "UPDATE codigo SET cantImpresiones = :cantidad WHERE idCliente = :idCliente";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':cantidad', $nuevaCantidad);
-            $stmt->bindParam(':idCliente', $idCliente);
-
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            error_log("Error en actualizarContadorImpresiones: " . $e->getMessage());
-            return false;
+            return [
+                'success' => false,
+                'message' => 'Error PDO (reassignCode): ' . $e->getMessage()
+            ];
         }
     }
 

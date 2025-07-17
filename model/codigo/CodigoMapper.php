@@ -12,6 +12,9 @@ class CodigoMapper
         $dto->idCliente = $row['IdCliente'];
         $dto->codigoBarra = $row['CodigoBarra'];
         $dto->cantImpresiones = $row['CantImpresiones'];
+        $dto->estado = $row['Estado'] ?? 'Activo';
+        $dto->motivoCambio = $row['MotivoCambio'] ;
+        $dto->fechaCambio = $row['FechaCambio'] ;
         return $dto;
     }
 }

@@ -18,8 +18,14 @@ const cargarCodigos = async () => {
         });
         const response = await res.json();
         if (response.success && response.data) {
-            codigosGlobal = response.data;
-            mostrarCodigos(response.data);
+            console.log('Datos recibidos del backend:', response.data);
+            console.log('Primer registro:', response.data[0]);
+            
+            // Filtrar solo códigos activos para el array global
+            codigosGlobal = response.data.filter(codigo => codigo.estado === 'Activo');
+            console.log('Códigos activos filtrados:', codigosGlobal);
+            
+            mostrarCodigos(codigosGlobal);
         } else {
             contenedor.innerHTML = '<div class="alert alert-warning">No se pudieron cargar los códigos</div>';
         }
@@ -224,7 +230,7 @@ window.redirigirCompra = function(idCliente) {
 function mostrarCodigos(codigos) {
     const contenedor = document.getElementById("codigoLista");
     if (!codigos || codigos.length === 0) {
-        contenedor.innerHTML = '<div class="alert alert-info">No hay códigos registrados</div>';
+        contenedor.innerHTML = '<div class="alert alert-info">No hay tarjetas activas</div>';
         return;
     }
 

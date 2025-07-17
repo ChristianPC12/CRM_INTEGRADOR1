@@ -111,12 +111,19 @@ const mostrarClientes = (clientes) => {
                     }</td>
                     <td>${cliente.fechaCumpleanos}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning me-1" onclick="editarCliente('${
-                          cliente.id
-                        }')">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${
-                          cliente.id
-                        }')">Eliminar</button>
+                        <div class="acciones-cliente">
+                            <div class="columna-izquierda">
+                                <button class="btn btn-sm btn-warning" onclick="editarCliente('${
+                                  cliente.id
+                                }')">Editar</button>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${
+                                  cliente.id
+                                }')">Eliminar</button>
+                            </div>
+                            <div class="columna-derecha">
+                                <button class="btn btn-sm btn-info" onclick="abrirModalReasignar(${cliente.id}, \`${cliente.nombre}\`, '${cliente.cedula}')">Reasignar</button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
               `
@@ -469,5 +476,542 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+});
+
+/**
+ * Funciones para reasignación de códigos
+ */
+
+// Variables globales para el modal de reasignación
+let clienteParaReasignar = null;
+
+/**
+ * Abre el modal de reasignación de código
+ */
+const abrirModalReasignar = (idCliente, nombreCliente, cedulaCliente) => {
+  console.log('Abriendo modal para cliente:', idCliente);
+  
+  clienteParaReasignar = {
+    id: idCliente,
+    nombre: nombreCliente,
+    cedula: cedulaCliente
+  };
+
+  // Actualizar información del cliente en el modal
+  const modalClienteNombre = document.getElementById('modalClienteNombre');
+  const modalClienteCedula = document.getElementById('modalClienteCedula');
+  const modalClienteId = document.getElementById('modalClienteId');
+  const motivoSelect = document.getElementById('motivoSelect');
+  const motivoReasignacion = document.getElementById('motivoReasignacion');
+  
+  if (modalClienteNombre) modalClienteNombre.textContent = nombreCliente;
+  if (modalClienteCedula) modalClienteCedula.textContent = cedulaCliente;
+  if (modalClienteId) modalClienteId.textContent = idCliente;
+  
+  // Limpiar y resetear los campos de motivo
+  if (motivoSelect) motivoSelect.selectedIndex = 0;
+  if (motivoReasignacion) {
+    motivoReasignacion.value = '';
+    motivoReasignacion.style.display = 'none';
+  }
+  
+  // Verificar si el modal existe
+  const modalElement = document.getElementById('modalReasignar');
+  if (!modalElement) {
+    console.error('Modal no encontrado');
+    alert('Error: No se pudo encontrar el modal');
+    return;
+  }
+  
+  // Mostrar el modal
+  try {
+    const modal = new bootstrap.Modal(modalElement, {
+      backdrop: false,   // Sin fondo oscuro
+      keyboard: true,    // Permite cerrar con ESC
+      focus: true        // Enfoca el modal al abrirse
+    });
+    modal.show();
+  } catch (error) {
+    console.error('Error al abrir modal:', error);
+    // Fallback: usar jQuery si está disponible
+    if (typeof $ !== 'undefined') {
+      $('#modalReasignar').modal('show');
+    } else {
+      alert('Error al abrir el modal. Por favor recarga la página e intenta de nuevo.');
+    }
+  }
+};
+
+/**
+ * Maneja la selección del motivo de reasignación
+ */
+const manejarSeleccionMotivo = () => {
+  const motivoSelect = document.getElementById('motivoSelect');
+  const motivoTextarea = document.getElementById('motivoReasignacion');
+  
+  const valorSeleccionado = motivoSelect.value;
+  
+  if (valorSeleccionado === 'otro') {
+    // Mostrar textarea para motivo personalizado
+    motivoTextarea.style.display = 'block';
+    motivoTextarea.value = '';
+    motivoTextarea.placeholder = 'Especifique el motivo...';
+    motivoTextarea.focus();
+  } else if (valorSeleccionado !== '') {
+    // Ocultar textarea y usar el valor seleccionado
+    motivoTextarea.style.display = 'none';
+    motivoTextarea.value = valorSeleccionado;
+  } else {
+    // No hay selección, ocultar textarea
+    motivoTextarea.style.display = 'none';
+    motivoTextarea.value = '';
+  }
+};
+
+/**
+ * Procesa la reasignación del código
+ */
+const procesarReasignacion = async () => {
+  try {
+    if (!clienteParaReasignar || !clienteParaReasignar.id) {
+      alert('Error: No se ha seleccionado un cliente válido');
+      return;
+    }
+
+    // Obtener el motivo correcto
+    const motivoSelect = document.getElementById('motivoSelect');
+    let motivo = '';
+    
+    if (motivoSelect && motivoSelect.value) {
+      if (motivoSelect.value === 'otro') {
+        const motivoReasignacion = document.getElementById('motivoReasignacion');
+        motivo = motivoReasignacion ? motivoReasignacion.value.trim() : '';
+        
+        if (!motivo) {
+          alert('Por favor especifica el motivo de reasignación');
+          return;
+        }
+      } else {
+        motivo = motivoSelect.value;
+      }
+    } else {
+      alert('Por favor selecciona un motivo para la reasignación');
+      return;
+    }
+
+    const btnConfirmar = document.getElementById('btnConfirmarReasignacion');
+    const textoOriginal = btnConfirmar.textContent;
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = 'Procesando...';
+
+    // El procedimiento ahora se encarga de encontrar el código activo internamente
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `action=reassignCode&idCliente=${clienteParaReasignar.id}&motivo=${encodeURIComponent(motivo)}`,
+    });
+
+    const response = await res.json();
+
+    btnConfirmar.disabled = false;
+    btnConfirmar.textContent = textoOriginal;
+
+    if (response.success) {
+      alert(`Código reasignado exitosamente.\nNuevo código: ${response.nuevoCodigo}`);
+      
+      // Cerrar el modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalReasignar'));
+      modal.hide();
+      
+      // Recargar la lista de clientes Y el historial de reasignaciones
+      cargarClientes();
+      cargarHistorialReasignaciones(true); // Manual después de reasignación
+    } else {
+      alert(`Error al reasignar código: ${response.message}`);
+    }
+
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error de conexión al procesar la reasignación');
+    
+    const btnConfirmar = document.getElementById('btnConfirmarReasignacion');
+    btnConfirmar.disabled = false;
+    btnConfirmar.textContent = 'Confirmar';
+  }
+};
+
+// Inicialización cuando se carga la vista
+document.addEventListener("DOMContentLoaded", () => {
   cargarClientes();
+  
+  // Verificar que el modal existe al cargar la página
+  const modal = document.getElementById('modalReasignar');
+  if (modal) {
+    console.log('Modal de reasignación encontrado correctamente');
+    
+    // Agregar evento para cerrar modal al hacer clic en el fondo
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        const bootstrapModal = bootstrap.Modal.getInstance(modal);
+        if (bootstrapModal) {
+          bootstrapModal.hide();
+        }
+      }
+    });
+    
+    // Agregar evento para cerrar con ESC
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const bootstrapModal = bootstrap.Modal.getInstance(modal);
+        if (bootstrapModal && modal.classList.contains('show')) {
+          bootstrapModal.hide();
+        }
+      }
+    });
+    
+  } else {
+    console.error('Modal de reasignación NO encontrado en el DOM');
+  }
+});
+
+/**
+ * Actualiza el estado visual de la actualización automática
+ */
+const actualizarEstadoVisualizacion = (estado) => {
+  const estadoElement = document.getElementById('estadoActualizacion');
+  if (estadoElement) {
+    switch (estado) {
+      case 'cargando':
+        estadoElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Actualizando...';
+        break;
+      case 'activo':
+        estadoElement.innerHTML = 'Actualización automática activa';
+        break;
+      case 'error':
+        estadoElement.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Error en actualización';
+        break;
+      default:
+        estadoElement.innerHTML = 'Actualización automática activa';
+    }
+  }
+};
+
+/**
+ * Carga el historial de reasignaciones desde el servidor
+ */
+const cargarHistorialReasignaciones = async (esManual = false) => {
+  const contenedor = document.getElementById("historialReasignaciones");
+  
+  // Solo mostrar spinner en carga manual, no en automática
+  const esActualizacionManual = esManual || !intervaloActualizacion;
+  
+  if (esActualizacionManual) {
+    contenedor.innerHTML = `<div class="text-center p-3">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">Cargando historial...</p>
+    </div>`;
+  } else {
+    // Para actualización automática, solo cambiar el estado
+    actualizarEstadoVisualizacion('cargando');
+  }
+  
+  try {
+    // Agregar timestamp para evitar cache del navegador
+    const timestamp = new Date().getTime();
+    const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cache-Control": "no-cache"
+      },
+      body: `action=getHistorialReasignaciones&timestamp=${timestamp}`
+    });
+    
+    const response = await res.json();
+    
+    if (response.success && response.data) {
+      // Procesar los datos para obtener el historial de reasignaciones
+      const historialProcesado = procesarHistorialReasignaciones(response.data.codigos, response.data.clientes);
+      mostrarHistorialReasignaciones(historialProcesado);
+      
+      // Actualizar estado visual
+      actualizarEstadoVisualizacion('activo');
+    } else {
+      contenedor.innerHTML = '<div class="alert alert-warning">No se pudieron cargar los registros de reasignaciones</div>';
+      actualizarEstadoVisualizacion('error');
+    }
+  } catch (error) {
+    console.error('Error cargando historial:', error);
+    contenedor.innerHTML = '<div class="alert alert-danger">Error de conexión al cargar el historial</div>';
+    actualizarEstadoVisualizacion('error');
+  }
+};
+
+/**
+ * Procesa los datos de códigos para extraer el historial de reasignaciones
+ */
+const procesarHistorialReasignaciones = (codigos, clientes) => {
+  const ahora = new Date().toLocaleTimeString();
+  console.log(`[${ahora}] Procesando historial de reasignaciones...`);
+  console.log('Total códigos recibidos:', codigos.length);
+  console.log('Total clientes recibidos:', clientes.length);
+  
+  // Crear un mapa de clientes para búsqueda rápida
+  const clientesMap = {};
+  clientes.forEach(cliente => {
+    clientesMap[cliente.id] = cliente;
+  });
+  
+  // Filtrar solo códigos inactivos que tienen motivo de cambio
+  const codigosInactivos = codigos.filter(codigo => 
+    codigo.estado === 'Inactivo' && 
+    codigo.motivoCambio && 
+    codigo.motivoCambio.trim() !== ''
+  );
+  
+  console.log(`[${ahora}] Códigos inactivos con motivo:`, codigosInactivos.length);
+  
+  // Agrupar por cliente para contar reasignaciones
+  const reasignacionesPorCliente = {};
+  
+  codigosInactivos.forEach(codigo => {
+    const idCliente = codigo.idCliente;
+    const cliente = clientesMap[idCliente];
+    
+    if (!reasignacionesPorCliente[idCliente]) {
+      reasignacionesPorCliente[idCliente] = {
+        cliente: {
+          id: idCliente,
+          nombre: cliente ? cliente.nombre : 'Cliente no encontrado',
+          cedula: cliente ? cliente.cedula : '-'
+        },
+        reasignaciones: [],
+        totalReasignaciones: 0
+      };
+    }
+    
+    reasignacionesPorCliente[idCliente].reasignaciones.push({
+      codigoBarra: codigo.codigoBarra,
+      cantImpresiones: codigo.cantImpresiones || 0,
+      motivoCambio: codigo.motivoCambio,
+      fechaCambio: codigo.fechaCambio,
+      fechaRegistro: codigo.fechaRegistro
+    });
+    
+    reasignacionesPorCliente[idCliente].totalReasignaciones++;
+  });
+  
+  // Convertir a array y ordenar por fecha más reciente
+  const historialArray = Object.values(reasignacionesPorCliente).map(cliente => {
+    // Ordenar las reasignaciones de cada cliente por fecha (más reciente primero)
+    cliente.reasignaciones.sort((a, b) => {
+      // Comparar por fechaCambio primero, luego por fechaRegistro como fallback
+      const fechaA = new Date(a.fechaCambio || a.fechaRegistro || '1970-01-01');
+      const fechaB = new Date(b.fechaCambio || b.fechaRegistro || '1970-01-01');
+      
+      // Si las fechas son iguales, ordenar por cantImpresiones (mayor = más reciente)
+      if (fechaA.getTime() === fechaB.getTime()) {
+        return (b.cantImpresiones || 0) - (a.cantImpresiones || 0);
+      }
+      
+      return fechaB - fechaA; // Más reciente primero
+    });
+    
+    // Tomar la reasignación más reciente para ordenar la lista
+    const fechaMasReciente = new Date(cliente.reasignaciones[0].fechaCambio || cliente.reasignaciones[0].fechaRegistro || '1970-01-01');
+    cliente.fechaMasReciente = fechaMasReciente;
+    
+    return cliente;
+  });
+  
+  // Ordenar por fecha de reasignación más reciente
+  historialArray.sort((a, b) => b.fechaMasReciente - a.fechaMasReciente);
+  
+  const ahora2 = new Date().toLocaleTimeString();
+  console.log(`[${ahora2}] Historial procesado:`, historialArray.length, 'clientes con reasignaciones');
+  historialArray.forEach(cliente => {
+    console.log(`Cliente ${cliente.cliente.nombre}: ${cliente.totalReasignaciones} reasignaciones`);
+  });
+  return historialArray;
+};
+
+/**
+ * Muestra el historial de reasignaciones en una tabla
+ */
+const mostrarHistorialReasignaciones = (historialPorCliente) => {
+  const contenedor = document.getElementById("historialReasignaciones");
+  
+  if (!historialPorCliente || historialPorCliente.length === 0) {
+    contenedor.innerHTML = '<div class="alert alert-info">No hay reasignaciones registradas</div>';
+    return;
+  }
+
+  const formatearFecha = (fecha) => {
+    if (!fecha) return '-';
+    const date = new Date(fecha);
+    return date.toLocaleDateString('es-CR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // Crear filas expandibles para cada cliente
+  const filasClientes = historialPorCliente.map((clienteData, index) => {
+    const cliente = clienteData.cliente;
+    const reasignaciones = clienteData.reasignaciones;
+    const totalReasignaciones = clienteData.totalReasignaciones;
+    
+    // Tomar la reasignación más reciente para mostrar en la fila principal
+    const reasignacionReciente = reasignaciones[0];
+    
+    // Crear filas de detalle (ocultas inicialmente)
+    const filasDetalle = reasignaciones.map((reasignacion, rIndex) => `
+      <tr class="detalle-reasignacion" id="detalle-${index}" style="display: none;">
+        <td class="text-center">
+          <small class="text-muted">
+            ${rIndex + 1}° 
+            ${rIndex === 0 ? '<span class="badge bg-success bg-opacity-75 ms-1">Más reciente</span>' : ''}
+          </small>
+        </td>
+        <td>-</td>
+        <td>-</td>
+        <td class="text-center">
+          <code class="codigo-barra-small">${reasignacion.codigoBarra}</code>
+        </td>
+        <td class="text-center">
+          <small>${reasignacion.cantImpresiones || 0}</small>
+        </td>
+        <td class="text-center">
+          <span class="badge bg-danger bg-opacity-75">Inactivo</span>
+        </td>
+        <td class="motivo-cell">
+          <small class="motivo-texto" title="${reasignacion.motivoCambio}">
+            ${reasignacion.motivoCambio}
+          </small>
+        </td>
+        <td class="text-center">
+          <small class="text-muted">${formatearFecha(reasignacion.fechaCambio || reasignacion.fechaRegistro)}</small>
+        </td>
+      </tr>
+    `).join('');
+    
+    // Fila principal del cliente
+    const filaPrincipal = `
+      <tr class="fila-cliente" style="cursor: pointer;" onclick="toggleDetalleReasignaciones(${index})">
+        <td class="text-center">
+          <strong>${cliente.id}</strong>
+          <br>
+          <small class="text-primary">
+            <i class="fas fa-eye me-1"></i>Ver ${totalReasignaciones} reasignación${totalReasignaciones > 1 ? 'es' : ''}
+          </small>
+        </td>
+        <td>
+          <strong>${cliente.cedula || '-'}</strong>
+        </td>
+        <td>
+          <strong>${cliente.nombre || '-'}</strong>
+        </td>
+        <td class="text-center">
+          <code class="codigo-barra">${reasignacionReciente.codigoBarra}</code>
+          <br>
+          <small class="text-muted">(más reciente)</small>
+        </td>
+        <td class="text-center">
+          <span class="badge bg-warning text-dark">${totalReasignaciones}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge bg-danger">Inactivo</span>
+        </td>
+        <td class="motivo-cell">
+          <span class="motivo-texto" title="${reasignacionReciente.motivoCambio}">
+            ${reasignacionReciente.motivoCambio}
+          </span>
+        </td>
+        <td class="text-center">
+          <small class="text-muted">${formatearFecha(reasignacionReciente.fechaCambio || reasignacionReciente.fechaRegistro)}</small>
+        </td>
+      </tr>
+    `;
+    
+    return filaPrincipal + filasDetalle;
+  }).join('');
+
+  contenedor.innerHTML = `
+    <div class="alert alert-info alert-sm mb-3">
+      <i class="fas fa-info-circle me-2"></i>
+      <small>Haz clic en cualquier fila para ver el detalle de todas las reasignaciones de ese cliente.</small>
+    </div>
+    <table class="table table-striped table-hover mt-2">
+      <thead class="table-dark">
+        <tr>
+          <th class="text-center">Tarjeta</th>
+          <th>Cédula</th>
+          <th>Cliente</th>
+          <th class="text-center">Código</th>
+          <th class="text-center">Total Reasignaciones</th>
+          <th class="text-center">Estado</th>
+          <th>Último Motivo</th>
+          <th class="text-center">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filasClientes}
+      </tbody>
+    </table>
+  `;
+};
+
+/**
+ * Función para mostrar/ocultar detalles de reasignaciones de un cliente
+ */
+window.toggleDetalleReasignaciones = function(clienteIndex) {
+  const detalles = document.querySelectorAll(`#detalle-${clienteIndex}`);
+  const isVisible = detalles[0]?.style.display !== 'none';
+  
+  detalles.forEach(detalle => {
+    detalle.style.display = isVisible ? 'none' : '';
+    if (!isVisible) {
+      detalle.style.backgroundColor = '#f8f9fa';
+    }
+  });
+};
+
+/**
+ * Actualización automática del historial cada 30 segundos
+ */
+let intervaloActualizacion = null;
+
+const iniciarActualizacionAutomatica = () => {
+  // Limpiar cualquier intervalo existente
+  if (intervaloActualizacion) {
+    clearInterval(intervaloActualizacion);
+  }
+  
+  // Actualizar cada 30 segundos
+  intervaloActualizacion = setInterval(() => {
+    const ahora = new Date().toLocaleTimeString();
+    console.log(`[${ahora}] Actualizando historial automáticamente...`);
+    cargarHistorialReasignaciones();
+  }, 30000); // 30 segundos
+  
+  console.log('Auto-refresh iniciado: cada 30 segundos');
+};
+
+const detenerActualizacionAutomatica = () => {
+  if (intervaloActualizacion) {
+    clearInterval(intervaloActualizacion);
+    intervaloActualizacion = null;
+  }
+};
+
+// Cargar historial al inicializar la página
+document.addEventListener("DOMContentLoaded", function() {
+  cargarHistorialReasignaciones(true); // Manual al cargar la página
+  iniciarActualizacionAutomatica();
+  
+  // Detener actualización automática cuando se cambia de página
+  window.addEventListener('beforeunload', detenerActualizacionAutomatica);
 });

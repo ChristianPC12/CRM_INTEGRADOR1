@@ -143,8 +143,8 @@ const renderizarTabla = (cumples) => {
 
     let html = `
         <div class="table-responsive">
-            <table class="table table-bordered table-hover" style="background: var(--amarillo); color: var(--negro);">
-                <thead style="background: var(--negro); color: var(--amarillo);">
+            <table class="table table-bordered table-hover">
+                <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Cédula</th>
@@ -152,7 +152,7 @@ const renderizarTabla = (cumples) => {
                         <th>Teléfono</th>
                         <th>Fecha de Cumpleaños</th>
                         <th>Estado</th>
-                        <th>Correo</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>

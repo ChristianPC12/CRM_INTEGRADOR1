@@ -187,15 +187,23 @@ const renderizarTabla = (cumples) => {
         `;
 
         if (!c.correo || c.correo.trim() === '') {
-            tieneSinCorreo = true;
-            recordatorios += `
-                <li>
-                    <i class="fa-solid fa-phone text-warning me-1"></i>
-                    <strong>${c.cedula}</strong> - ${c.nombre} → 
-                    <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
-                </li>
-            `;
-        }
+        tieneSinCorreo = true;
+        recordatorios += `
+        <li>
+            <i class="fa-solid fa-phone text-warning me-1"></i>
+            <strong>${c.cedula}</strong> - ${c.nombre} → 
+            <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
+            <button 
+                class="btn btn-sm btn-success ms-2 btnRegistrarLlamada"
+                data-id="${c.id}" 
+                data-nombre="${c.nombre}"
+                data-telefono="${c.telefono}">
+                Registrar llamada
+            </button>
+        </li>
+        `;
+     }
+
     });
 
     html += `
@@ -212,6 +220,56 @@ const renderizarTabla = (cumples) => {
     if (tieneSinCorreo) {
         ulRecordatorio.innerHTML = recordatorios;
         divRecordatorio.classList.remove("d-none");
+        setTimeout(() => {
+    document.querySelectorAll('.btnRegistrarLlamada').forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const idCliente = this.dataset.id;
+            const nombre = this.dataset.nombre;
+            const telefono = this.dataset.telefono;
+
+            const confirm = await Swal.fire({
+                title: '¿Registrar llamada?',
+                text: `¿Confirmás que llamaste a ${nombre} al número ${telefono}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, registrar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (confirm.isConfirmed) {
+                const formData = new URLSearchParams();
+                formData.append("action", "registrarLlamadaCumple");
+                formData.append("idCliente", idCliente);
+
+                try {
+                    const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: formData.toString()
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        Swal.fire("¡Llamada registrada!", data.message, "success");
+                        cargarCumples();
+                        cargarHistorial(); 
+                        if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+                        // Limpia el recordatorio por si acaso
+                        document.getElementById("listaRecordatorios").innerHTML = '';
+                        document.getElementById("recordatorioLlamadas").classList.add("d-none");
+
+                    } else {
+                        Swal.fire("Error", data.message, "error");
+                    }
+                } catch (err) {
+                    console.error("Error al registrar llamada:", err);
+                    Swal.fire("Error", "No se pudo conectar con el servidor", "error");
+                }
+            }
+        });
+    });
+}, 300); // Espera un poco para asegurar que los botones ya existen en el DOM
+
     } else {
         divRecordatorio.classList.add("d-none");
         ulRecordatorio.innerHTML = '';
@@ -294,7 +352,7 @@ function cargarHistorial() {
                         <tr>
                             <th>Cédula</th>
                             <th>Nombre</th>
-                            <th>Teléfono</th>
+                            <th>Correo/Teléfono</th>
                             <th>Fecha de Cumpleaños</th>
                             <th>Fecha de Llamada</th>
                             <th>Vence</th>
@@ -305,18 +363,20 @@ function cargarHistorial() {
         `;
 
         data.forEach(c => {
-            html += `
-                <tr>
-                    <td>${c.cedula}</td>
-                    <td>${c.nombre}</td>
-                    <td>${c.telefono}</td>
-                    <td>${c.fechaCumpleanos}</td>
-                    <td>${c.fechaLlamada}</td>
-                    <td>${c.vence}</td>
-                    <td>${c.vencido === 'SI' ? '✅' : 'NO'}</td>
-                </tr>
-            `;
-        });
+    let datoContacto = (c.correo && c.correo.trim() !== "") ? c.correo : c.telefono;
+    html += `
+        <tr>
+            <td>${c.cedula}</td>
+            <td>${c.nombre}</td>
+            <td>${datoContacto}</td>
+            <td>${c.fechaCumpleanos}</td>
+            <td>${c.fechaLlamada}</td>
+            <td>${c.vence}</td>
+            <td>${c.vencido === 'SI' ? '✅' : 'NO'}</td>
+        </tr>
+    `;
+});
+
 
         html += `
                     </tbody>

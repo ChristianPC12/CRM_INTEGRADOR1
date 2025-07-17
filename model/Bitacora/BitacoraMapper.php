@@ -13,27 +13,19 @@ class BitacoraMapper
      * @param array $row Fila asociativa.
      * @return BitacoraDTO
      */
-  public static function mapRowToDTO($row)
-{
-    $dto = new BitacoraDTO();
-    $dto->id = $row['Id'];
-    $dto->idUsuario = $row['IdUsuario'];
-    $dto->horaEntrada = $row['HoraEntrada'];
-    $dto->horaSalida = $row['HoraSalida'];
-    $dto->fecha = $row['Fecha'];
-    return $dto;
-}
-
-public static function mapDto($data)
+    public static function mapRowToDTO($row)
     {
         $dto = new BitacoraDTO();
-        $dto->id = $data['id'] ?? null;
-        $dto->idUsuario = $data['idUsuario'] ?? null;
-        $dto->horaEntrada = $data['horaEntrada'] ?? null;
-        $dto->horaSalida = $data['horaSalida'] ?? null;
-        $dto->fecha = $data['fecha'] ?? null;
+
+        // Como NO hay Id en la tabla, asignamos null o dejamos vacío
+        $dto->id = null;
+
+        // Asignamos los campos existentes, validando con ?? null
+        $dto->idUsuario = $row['IdUsuario'] ?? null;
+        $dto->horaEntrada = $row['HoraEntrada'] ?? null;
+        $dto->horaSalida = $row['HoraSalida'] ?? null;
+        $dto->fecha = $row['Fecha'] ?? null;
 
         return $dto;
     }
-  
 }

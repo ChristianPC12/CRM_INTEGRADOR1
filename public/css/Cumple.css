@@ -1,17 +1,1081 @@
-.bg-black {
-    background-color: #000 !important;
+/* Cumple.css - Diseño profesional consistente con el CRM */
+:root {
+  --amarillo: #f9c41f;
+  --gris: #838886;
+  --negro: #000000;
+  --blanco: #ffffff;
+  --gris-fondo: #f7f7f7;
+  --gris-borde: #e0e0e0;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
 }
 
-.text-warning {
-    color: #f9c41f !important;
+* {
+  box-sizing: border-box;
+}
+
+/* FORZAR ESTILOS DEL BODY ESPECÍFICAMENTE PARA CUMPLEAÑOS */
+body {
+  margin: 0 !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  display: flex !important;
+  min-height: 100vh !important;
+  background-color: var(--gris) !important;
+  overflow-x: hidden !important;
+}
+
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Fondo geométrico como otros módulos - MÁS ESPECÍFICO */
+body::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 40% !important;
+  height: 70% !important;
+  background: var(--amarillo) !important;
+  z-index: -1 !important;
+}
+
+body::after {
+  content: "" !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 60% !important;
+  height: 50% !important;
+  background: var(--gris) !important;
+  z-index: -1 !important;
+}
+
+/* CONTENIDO PRINCIPAL ESPECÍFICO */
+.content {
+  margin-left: 220px !important;
+  padding: 24px !important;
+  flex-grow: 1 !important;
+}
+
+.container {
+  max-width: 102% !important;
+  transform: translateX(1%) !important;
+}
+
+/* CARDS PRINCIPALES - FORZADOS */
+.card {
+  border: none !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background: var(--blanco) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  margin-bottom: 24px !important;
+  transition: box-shadow 0.3s ease !important;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card.shadow.mb-4 {
+  box-shadow: 0 0 10px rgba(249, 196, 31, 0.4) !important;
+  border-left: 5px solid var(--amarillo) !important;
+}
+
+/* HEADERS DE CARDS - MUY ESPECÍFICO */
+.card-header,
+.card-header.d-flex,
+.card-header.bg-dark,
+.card-header.bg-black,
+.card-header.bg-secondary {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+  font-weight: bold !important;
+  letter-spacing: 0.5px !important;
+  padding: 16px 20px !important;
+  border-bottom: 3px solid var(--amarillo) !important;
+}
+
+.card-header h5, 
+.card-header h6 {
+  font-weight: bold !important;
+  margin: 0 !important;
+  font-size: 1.1rem !important;
+  color: var(--blanco) !important;
+}
+
+.card-header i {
+  color: var(--amarillo) !important;
+  margin-right: 8px !important;
+}
+
+/* BOTONES ESPECÍFICOS */
+.btn-primary {
+  background-color: var(--amarillo) !important;
+  color: var(--negro) !important;
+  font-weight: bold !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  font-size: 1rem !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover {
+  background-color: #e6b619 !important;
+  transform: scale(1.03) !important;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15) !important;
+  color: var(--negro) !important;
 }
 
 .btn-warning {
-    background-color: #f9c41f !important;
-    border: none;
-    color: #000 !important;
+  background-color: var(--amarillo) !important;
+  color: var(--negro) !important;
+  font-weight: bold !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  transition: all 0.3s ease !important;
 }
 
-.card-header h5, .card-header h6 {
-    font-weight: bold;
+.btn-warning:hover {
+  background-color: #e6b619 !important;
+  color: var(--negro) !important;
+  transform: scale(1.05) !important;
 }
+
+.btn-success {
+  background-color: var(--success) !important;
+  color: var(--blanco) !important;
+  font-weight: bold !important;
+  border: none !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-success:hover {
+  background-color: #218838 !important;
+  transform: scale(1.05) !important;
+}
+
+.btn-danger {
+  background-color: var(--danger) !important;
+  color: var(--blanco) !important;
+  font-weight: bold !important;
+  border: none !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-danger:hover {
+  background-color: #c82333 !important;
+  transform: scale(1.05) !important;
+}
+
+.btn-sm {
+  padding: 6px 12px !important;
+  font-size: 0.875rem !important;
+}
+
+/* ALERTAS ESTILIZADAS - FORZADAS */
+.alert {
+  border-radius: 10px !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  margin-bottom: 16px !important;
+}
+
+.alert-info {
+  background-color: #e8f4f8 !important;
+  color: #0c5460 !important;
+  border-left: 4px solid var(--info) !important;
+}
+
+.alert-warning {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+  border-left: 4px solid var(--warning) !important;
+}
+
+.alert-success {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border-left: 4px solid var(--success) !important;
+}
+
+/* TABLAS - MUY ESPECÍFICAS */
+.table,
+.table-bordered,
+.table-hover {
+  background-color: var(--blanco) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.table thead th,
+.table thead td {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 12px 15px !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.5px !important;
+  text-align: center !important;
+}
+
+.table tbody td,
+.table tbody th {
+  padding: 12px 15px !important;
+  border-top: 1px solid var(--gris-borde) !important;
+  font-size: 0.9rem !important;
+  vertical-align: middle !important;
+  background-color: var(--blanco) !important;
+  color: var(--negro) !important;
+  text-align: center !important;
+}
+
+.table tbody tr:hover td {
+  background-color: #f8f9fa !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.table-responsive {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+/* FORMULARIOS */
+.form-control {
+  border-radius: 8px !important;
+  border: 2px solid var(--gris-borde) !important;
+  padding: 10px 12px !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.9rem !important;
+}
+
+.form-control:focus {
+  border-color: var(--amarillo) !important;
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2) !important;
+  outline: none !important;
+}
+
+.form-control-sm {
+  padding: 6px 10px !important;
+  font-size: 0.875rem !important;
+}
+
+.form-label {
+  font-weight: 600 !important;
+  color: var(--negro) !important;
+  margin-bottom: 6px !important;
+  font-size: 0.9rem !important;
+}
+
+/* ESTADOS DE CUMPLEAÑOS - BADGES */
+.cumple-badge,
+.table .badge,
+#cumpleLista .badge,
+#historialCumples .badge {
+  padding: 6px 12px !important;
+  border-radius: 20px !important;
+  font-size: 0.75rem !important;
+  font-weight: bold !important;
+  display: inline-block !important;
+}
+
+.cumple-badge.bg-danger,
+.table .badge.bg-danger,
+#cumpleLista .badge.bg-danger,
+#historialCumples .badge.bg-danger {
+  background-color: var(--danger) !important;
+  color: var(--blanco) !important;
+}
+
+.cumple-badge.bg-success,
+.table .badge.bg-success,
+#cumpleLista .badge.bg-success,
+#historialCumples .badge.bg-success {
+  background-color: var(--success) !important;
+  color: var(--blanco) !important;
+}
+
+.cumple-badge.bg-warning,
+.table .badge.bg-warning,
+#cumpleLista .badge.bg-warning,
+#historialCumples .badge.bg-warning {
+  background-color: var(--warning) !important;
+  color: var(--negro) !important;
+}
+
+/* RANGO DE SEMANA - MÁS ESPECÍFICO */
+#rangoSemana {
+  background: linear-gradient(135deg, var(--amarillo), #e6b619) !important;
+  color: var(--negro) !important;
+  font-weight: bold !important;
+  border-radius: 10px !important;
+  border: none !important;
+  box-shadow: 0 4px 8px rgba(249, 196, 31, 0.3) !important;
+}
+
+/* LISTA DE RECORDATORIOS */
+#recordatorioLlamadas {
+  animation: fadeIn 0.5s ease-in !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HISTORIAL */
+#historialCumples .table tbody tr:nth-child(even) td {
+  background-color: #f8f9fa !important;
+}
+
+/* LOADING SPINNER */
+.spinner-border.text-warning {
+  color: var(--amarillo) !important;
+  border-color: rgba(249, 196, 31, 0.3) !important;
+  border-top-color: var(--amarillo) !important;
+}
+
+/* RESPONSIVE - MÓVILES Y TABLETS */
+@media (max-width: 992px) {
+  .content {
+    margin-left: 0 !important;
+    padding: 12px !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    transform: none !important;
+    padding: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* LAYOUT MÓVIL */
+  body::before {
+    width: 30% !important;
+    height: 50% !important;
+  }
+  
+  body::after {
+    width: 70% !important;
+    height: 40% !important;
+  }
+  
+  .content {
+    margin-left: 0 !important;
+    padding: 8px !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    transform: none !important;
+    padding: 0 !important;
+  }
+  
+  /* CARDS RESPONSIVOS */
+  .card {
+    margin-bottom: 16px !important;
+    border-radius: 8px !important;
+  }
+  
+  .card-header {
+    padding: 12px 16px !important;
+  }
+  
+  .card-header h5,
+  .card-header h6 {
+    font-size: 1rem !important;
+  }
+  
+  .card-body {
+    padding: 12px !important;
+  }
+  
+  /* TABLAS RESPONSIVAS */
+  .table-responsive {
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+  }
+  
+  .table {
+    font-size: 0.75rem !important;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 8px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .table thead th {
+    white-space: nowrap !important;
+  }
+  
+  .table tbody td {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 120px !important;
+  }
+  
+  /* BOTONES MÓVILES */
+  .btn {
+    font-size: 0.75rem !important;
+    padding: 6px 10px !important;
+  }
+  
+  .btn-sm {
+    font-size: 0.7rem !important;
+    padding: 4px 8px !important;
+  }
+  
+  /* FORMULARIOS MÓVILES */
+  .form-control {
+    font-size: 0.9rem !important;
+    padding: 8px 10px !important;
+  }
+  
+  .form-control-sm {
+    font-size: 0.8rem !important;
+    padding: 6px 8px !important;
+  }
+  
+  .form-label {
+    font-size: 0.85rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  /* ALERTAS MÓVILES */
+  .alert {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* BADGES MÓVILES - SOLO PARA CUMPLEAÑOS */
+  .cumple-badge,
+  .table .badge,
+  #cumpleLista .badge,
+  #historialCumples .badge {
+    font-size: 0.7rem !important;
+    padding: 4px 8px !important;
+  }
+  
+  /* RANGO DE SEMANA MÓVIL */
+  #rangoSemana {
+    font-size: 0.9rem !important;
+    padding: 12px !important;
+    margin: 8px !important;
+  }
+}
+
+/* EXTRA PEQUEÑO - MÓVILES PEQUEÑOS */
+@media (max-width: 576px) {
+  /* EXTRA PEQUEÑO - MÓVILES PEQUEÑOS - MEJORADO */
+  .content {
+    padding: 55px 4px 4px 4px !important;
+  }
+  
+  .card {
+    margin-bottom: 8px !important;
+    border-radius: 6px !important;
+  }
+  
+  .card-header {
+    padding: 6px 8px !important;
+  }
+  
+  .card-header h5,
+  .card-header h6 {
+    font-size: 0.85rem !important;
+  }
+  
+  .card-body {
+    padding: 6px !important;
+  }
+  
+  /* Rango de semana extra compacto */
+  #rangoSemana {
+    font-size: 0.8rem !important;
+    padding: 6px 8px !important;
+    margin: 4px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Tabla extra pequeña */
+  #cumpleLista {
+    padding: 4px !important;
+  }
+  
+  #cumpleLista .table {
+    font-size: 0.65rem !important;
+  }
+  
+  #cumpleLista .table thead th {
+    padding: 4px 2px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  #cumpleLista .table tbody td {
+    padding: 4px 2px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  /* En móviles muy pequeños, ocultar más columnas */
+  #cumpleLista .table th:nth-child(3), /* Correo */
+  #cumpleLista .table td:nth-child(3) {
+    display: none !important;
+  }
+  
+  /* Ajustar anchos para móviles muy pequeños */
+  #cumpleLista .table th:nth-child(1), /* Nombre */
+  #cumpleLista .table td:nth-child(1) {
+    width: 50% !important;
+    max-width: 140px !important;
+  }
+  
+  #cumpleLista .table th:nth-child(5), /* Fecha */
+  #cumpleLista .table td:nth-child(5) {
+    width: 25% !important;
+    font-size: 0.6rem !important;
+  }
+  
+  #cumpleLista .table th:nth-child(6), /* Estado */
+  #cumpleLista .table td:nth-child(6) {
+    width: 20% !important;
+  }
+  
+  #cumpleLista .table th:nth-child(7), /* Botón */
+  #cumpleLista .table td:nth-child(7) {
+    width: 5% !important;
+  }
+  
+  /* Botones extra pequeños */
+  #cumpleLista .btn {
+    padding: 3px 4px !important;
+    font-size: 0.6rem !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 2px !important;
+  }
+  
+  #cumpleLista .btn i {
+    font-size: 0.65rem !important;
+  }
+  
+  /* Estados extra pequeños */
+  #cumpleLista .badge {
+    font-size: 0.55rem !important;
+    padding: 1px 3px !important;
+    border-radius: 6px !important;
+  }
+  
+  /* Formulario extra compacto */
+  .card:nth-child(2) .card-body {
+    padding: 8px 4px !important;
+  }
+  
+  #formCorreo .form-label {
+    font-size: 0.75rem !important;
+    margin-bottom: 2px !important;
+  }
+  
+  #formCorreo .form-control {
+    font-size: 0.8rem !important;
+    padding: 4px 6px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  #formCorreo .btn {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Historial extra compacto */
+  #historialCumples {
+    padding: 4px !important;
+    max-height: 200px !important;
+  }
+  
+  #historialCumples .table {
+    font-size: 0.65rem !important;
+  }
+  
+  #historialCumples .table th,
+  #historialCumples .table td {
+    padding: 3px 4px !important;
+  }
+  
+  /* Recordatorios extra compactos */
+  #recordatorioLlamadas {
+    margin: 4px !important;
+  }
+  
+  #recordatorioLlamadas .alert {
+    padding: 6px !important;
+  }
+  
+  #recordatorioLlamadas h6 {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
+  }
+  
+  #recordatorioLlamadas li {
+    font-size: 0.7rem !important;
+    margin-bottom: 4px !important;
+    line-height: 1.2 !important;
+  }
+  
+  #recordatorioLlamadas .btn {
+    padding: 3px 6px !important;
+    font-size: 0.65rem !important;
+    min-height: 24px !important;
+    margin-top: 2px !important;
+  }
+}
+
+/* ORIENTACIÓN HORIZONTAL EN MÓVILES */
+@media (max-width: 768px) and (orientation: landscape) {
+  .content {
+    padding: 6px !important;
+  }
+  
+  .card {
+    margin-bottom: 8px !important;
+  }
+  
+  .card-header {
+    padding: 6px 12px !important;
+  }
+  
+  .card-body {
+    padding: 6px !important;
+  }
+  
+  .table {
+    font-size: 0.75rem !important;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 4px 6px !important;
+  }
+}
+
+/* MEJORAS ESPECÍFICAS PARA TÁCTIL */
+@media (max-width: 768px) {
+  /* BOTONES MÁS GRANDES PARA TÁCTIL */
+  .btn {
+    min-height: 36px !important;
+    min-width: 60px !important;
+    touch-action: manipulation !important;
+  }
+  
+  .btn-sm {
+    min-height: 32px !important;
+    min-width: 50px !important;
+  }
+  
+  /* INPUTS MÁS GRANDES PARA TÁCTIL */
+  .form-control {
+    min-height: 40px !important;
+  }
+  
+  .form-control-sm {
+    min-height: 36px !important;
+  }
+  
+  /* SEPARACIÓN ENTRE ELEMENTOS TÁCTILES */
+  .table tbody tr {
+    height: 40px !important;
+  }
+  
+  /* SCROLL HORIZONTAL PARA TABLAS */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* OCULTAR TEXTOS LARGOS EN MÓVIL */
+  .table tbody td:nth-child(4) { /* Correo */
+    display: none !important;
+  }
+  
+  .table thead th:nth-child(4) { /* Header Correo */
+    display: none !important;
+  }
+}
+
+/* PANTALLAS MUY PEQUEÑAS - OCULTAR MÁS COLUMNAS */
+@media (max-width: 480px) {
+  .table tbody td:nth-child(6) { /* Lugar */
+    display: none !important;
+  }
+  
+  .table thead th:nth-child(6) { /* Header Lugar */
+    display: none !important;
+  }
+  
+  .table tbody td:nth-child(3) { /* Nombre - Acortar */
+    max-width: 100px !important;
+  }
+}
+
+/* SPINNER RESPONSIVO */
+@media (max-width: 768px) {
+  .spinner-border {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+}
+
+/* NAVEGACIÓN MÓVIL - SIDEBAR MEJORADO */
+@media (max-width: 992px) {
+  /* Botón hamburguesa */
+  .btn-menu-toggle {
+    position: fixed !important;
+    top: 15px !important;
+    left: 15px !important;
+    z-index: 10000 !important;
+    background-color: var(--negro) !important;
+    color: var(--amarillo) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 1.3rem !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .btn-menu-toggle:hover {
+    background-color: var(--amarillo) !important;
+    color: var(--negro) !important;
+    transform: scale(1.05) !important;
+  }
+  
+  /* Overlay para cerrar sidebar */
+  .sidebar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0,0,0,0.6) !important;
+    z-index: 9998 !important;
+    display: none !important;
+    transition: opacity 0.3s ease !important;
+  }
+  
+  .sidebar-overlay.show {
+    display: block !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ajuste del sidebar en móvil */
+  .sidebar {
+    width: 300px !important;
+    box-shadow: 6px 0 15px rgba(0,0,0,0.4) !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  .sidebar.show,
+  .sidebar.activa {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-header {
+    padding: 20px 16px !important;
+    border-bottom: 2px solid var(--amarillo) !important;
+  }
+  
+  .sidebar-header h3 {
+    font-size: 1.2rem !important;
+    margin: 8px 0 0 0 !important;
+  }
+  
+  .sidebar-header .img-header {
+    width: 40px !important;
+    height: auto !important;
+  }
+  
+  .sidebar ul {
+    padding-top: 10px !important;
+  }
+  
+  .sidebar ul li a {
+    padding: 14px 20px !important;
+    font-size: 1rem !important;
+    margin: 2px 8px !important;
+    border-radius: 8px !important;
+  }
+  
+  .sidebar ul li a i {
+    font-size: 1.1rem !important;
+    margin-right: 10px !important;
+  }
+}
+
+/* ESTILOS ESPECÍFICOS PARA MÓVILES PEQUEÑOS - MEJORADO */
+@media (max-width: 480px) {
+  .btn-menu-toggle {
+    top: 8px !important;
+    left: 8px !important;
+    padding: 6px 10px !important;
+    font-size: 1.1rem !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important;
+  }
+  
+  .content {
+    padding: 50px 2px 2px 2px !important;
+  }
+  
+  .sidebar {
+    width: 260px !important;
+  }
+  
+  .sidebar-header {
+    padding: 12px 8px !important;
+  }
+  
+  .sidebar-header h3 {
+    font-size: 1rem !important;
+  }
+  
+  .sidebar-header .img-header {
+    width: 35px !important;
+  }
+  
+  .sidebar ul li a {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Cards ultra compactos */
+  .card {
+    margin-bottom: 6px !important;
+    border-radius: 4px !important;
+  }
+  
+  .card-header {
+    padding: 4px 6px !important;
+  }
+  
+  .card-header h5,
+  .card-header h6 {
+    font-size: 0.8rem !important;
+  }
+  
+  .card-body {
+    padding: 4px !important;
+  }
+  
+  /* Tabla ultra compacta */
+  #cumpleLista {
+    padding: 2px !important;
+  }
+  
+  #cumpleLista .table {
+    font-size: 0.6rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  #cumpleLista .table thead th {
+    padding: 3px 1px !important;
+    font-size: 0.6rem !important;
+  }
+  
+  #cumpleLista .table tbody td {
+    padding: 3px 1px !important;
+    font-size: 0.6rem !important;
+  }
+  
+  /* Botones ultra pequeños */
+  #cumpleLista .btn {
+    padding: 2px 3px !important;
+    font-size: 0.55rem !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    border-radius: 2px !important;
+  }
+  
+  /* Estados ultra pequeños */
+  #cumpleLista .badge {
+    font-size: 0.5rem !important;
+    padding: 1px 2px !important;
+    border-radius: 4px !important;
+  }
+  
+  /* Rango ultra compacto */
+  #rangoSemana {
+    font-size: 0.75rem !important;
+    padding: 4px 6px !important;
+    margin: 2px !important;
+  }
+}
+
+
+
+/* REGLAS CON MÁXIMA PRIORIDAD PARA TABLAS JAVASCRIPT */
+/* Estas reglas se aplican al final para sobrescribir cualquier inline style */
+
+/* Encabezados de tabla - JavaScript override */
+#cumpleLista .table thead th,
+#historialCumples .table thead th,
+.cumple-table thead th,
+.table thead th {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+  border-color: var(--negro) !important;
+  padding: 12px 8px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+/* Celdas de tabla - JavaScript override */
+#cumpleLista .table tbody td,
+#historialCumples .table tbody td,
+.cumple-table tbody td,
+.table tbody td {
+  background-color: var(--blanco) !important;
+  color: var(--negro) !important;
+  border-color: #dee2e6 !important;
+  padding: 8px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Filas alternas - JavaScript override */
+#cumpleLista .table tbody tr:nth-child(even) td,
+#historialCumples .table tbody tr:nth-child(even) td,
+.cumple-table tbody tr:nth-child(even) td {
+  background-color: #f8f9fa !important;
+}
+
+/* Badges en tablas - JavaScript override */
+.table .badge {
+  font-size: 0.7em !important;
+  padding: 0.25em 0.5em !important;
+  border-radius: 0.25rem !important;
+}
+
+.table .badge.bg-success {
+  background-color: #198754 !important;
+  color: white !important;
+}
+
+.table .badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.table .badge.bg-danger {
+  background-color: #dc3545 !important;
+  color: white !important;
+}
+
+/* Botones en tablas - JavaScript override */
+.table .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.5 !important;
+  border-radius: 0.2rem !important;
+}
+
+.table .btn-warning {
+  background-color: var(--amarillo) !important;
+  border-color: var(--amarillo) !important;
+  color: var(--negro) !important;
+}
+
+.table .btn-warning:hover {
+  background-color: #e0a800 !important;
+  border-color: #d39e00 !important;
+  color: var(--negro) !important;
+}
+
+/* RESPONSIVE PARA TABLAS MÓVIL */
+@media (max-width: 768px) {
+  #cumpleLista .table thead th,
+  #historialCumples .table thead th,
+  .cumple-table thead th {
+    padding: 6px 4px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap !important;
+  }
+  
+  #cumpleLista .table tbody td,
+  #historialCumples .table tbody td,
+  .cumple-table tbody td {
+    padding: 6px 4px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  .table .btn {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.6rem !important;
+  }
+  
+  .table .badge {
+    font-size: 0.6em !important;
+    padding: 0.2em 0.4em !important;
+  }
+}
+
+@media (max-width: 576px) {
+  #cumpleLista .table thead th,
+  #historialCumples .table thead th,
+  .cumple-table thead th {
+    padding: 4px 2px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  #cumpleLista .table tbody td,
+  #historialCumples .table tbody td,
+  .cumple-table tbody td {
+    padding: 4px 2px !important;
+    font-size: 0.65rem !important;
+  }
+  
+  .table .btn {
+    padding: 0.15rem 0.3rem !important;
+    font-size: 0.55rem !important;
+  }
+  
+  .table .badge {
+    font-size: 0.55em !important;
+    padding: 0.15em 0.3em !important;
+  }
+}
+
+/* FORZAR ESTILOS ESPECÍFICOS PARA ELEMENTOS GENERADOS DINÁMICAMENTE */
+.table [style*="background"],
+#cumpleLista [style*="background"],
+#historialCumples [style*="background"] {
+  background-color: var(--blanco) !important;
+  color: var(--negro) !important;
+}
+
+.table th[style*="background"],
+#cumpleLista th[style*="background"],
+#historialCumples th[style*="background"] {
+  background-color: var(--negro) !important;
+  color: var(--blanco) !important;
+}
+
+/* Fin de reglas con máxima prioridad */

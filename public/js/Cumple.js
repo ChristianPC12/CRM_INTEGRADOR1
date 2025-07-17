@@ -194,12 +194,13 @@ const renderizarTabla = (cumples) => {
             <strong>${c.cedula}</strong> - ${c.nombre} → 
             <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
             <button 
-                class="btn btn-sm btn-success ms-2 btnRegistrarLlamada"
-                data-id="${c.id}" 
-                data-nombre="${c.nombre}"
-                data-telefono="${c.telefono}">
-                Registrar llamada
+                 class="btn btn-sm btn-warning text-black ms-2 btnRegistrarLlamada"
+                 data-id="${c.id}" 
+                 data-nombre="${c.nombre}"
+                 data-telefono="${c.telefono}">
+                 Registrar llamada
             </button>
+
         </li>
         `;
      }

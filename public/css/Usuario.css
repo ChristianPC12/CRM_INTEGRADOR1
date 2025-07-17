@@ -150,75 +150,12 @@ body::after {
 }
 
 /* ====== SIDEBAR ====== */
-
-.sidebar {
-  width: 220px;
-  background-color: var(--negro);
-  color: var(--blanco);
-  padding: 20px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  overflow-y: auto;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 1.5rem;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.img-header {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  border-radius: 6px;
-  background-color: var(--gris);
-  padding: 4px;
-  transition: transform 0.3s ease;
-}
-
-.sidebar-header h3 {
-  font-size: 1.2rem;
-  margin: 0;
-  font-weight: bold;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-  color: var(--blanco);
-  text-decoration: none;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.sidebar ul li a:hover,
-.sidebar ul li a.active {
-  background-color: var(--amarillo);
-  color: var(--negro);
-}
+/* Los estilos del sidebar se heredan de Layout.css */
 
 /* ====== CONTENIDO PRINCIPAL ====== */
 
 .content {
-  margin-left: 200px;
+  margin-left: 220px;
   padding: 24px;
   box-sizing: border-box;
   flex-grow: 1;
@@ -235,44 +172,7 @@ body::after {
     background-color: #f4f4f4;
   }
 
-  .sidebar {
-    width: 250px;
-    padding: 12px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    background-color: #000;
-    z-index: 999;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .sidebar-header {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .sidebar ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .sidebar ul li {
-    margin: 0;
-  }
-
-  .sidebar ul li a {
-    font-size: 0.9rem;
-    padding: 8px 14px;
-  }
+  /* Los estilos responsivos del sidebar se heredan de Layout.css */
 
   .content {
     width: 100%;

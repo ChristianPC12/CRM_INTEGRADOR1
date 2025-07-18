@@ -39,16 +39,8 @@ class CumpleDAO
 
     public function actualizarEstado($id, $estado)
     {
-        try {
-            $sql = "UPDATE cliente SET estado = :estado WHERE id = :id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":estado", $estado);
-            $stmt->bindParam(":id", $id);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            error_log("Error al actualizar estado: " . $e->getMessage());
-            return false;
-        }
+        // El campo 'estado' ya no existe en la tabla cliente, así que esta función no realiza ninguna acción.
+        return true;
     }
 
 public function obtenerHistorial()

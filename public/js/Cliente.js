@@ -27,7 +27,9 @@ const validaciones = {
 
   esTelefonoValido: (telefono) => {
     // Validar teléfono costarricense (8 dígitos)
-    return /^\d{8}$/.test(telefono);
+    // Elimina guiones y espacios antes de validar
+    const soloDigitos = telefono.replace(/[^\d]/g, "");
+    return /^\d{8}$/.test(soloDigitos);
   },
 
   esNombreValido: (nombre) => {
@@ -121,7 +123,7 @@ const mostrarClientes = (clientes) => {
                                 }')">Eliminar</button>
                             </div>
                             <div class="columna-derecha">
-                                <button class="btn btn-sm btn-info" onclick="abrirModalReasignar(${cliente.id}, \`${cliente.nombre}\`, '${cliente.cedula}')">Reasignar</button>
+                                <button class="btn btn-sm" style="background-color: #111; color: #FFD600; border: none;" onclick="abrirModalReasignar(${cliente.id}, \`${cliente.nombre}\`, '${cliente.cedula}')">Reasignar</button>
                             </div>
                         </div>
                     </td>
@@ -762,71 +764,63 @@ const procesarHistorialReasignaciones = (codigos, clientes) => {
     clientesMap[cliente.id] = cliente;
   });
   
-  // Filtrar solo códigos inactivos que tienen motivo de cambio
-  const codigosInactivos = codigos.filter(codigo => 
-    codigo.estado === 'Inactivo' && 
-    codigo.motivoCambio && 
-    codigo.motivoCambio.trim() !== ''
-  );
-  
-  console.log(`[${ahora}] Códigos inactivos con motivo:`, codigosInactivos.length);
-  
-  // Agrupar por cliente para contar reasignaciones
-  const reasignacionesPorCliente = {};
-  
-  codigosInactivos.forEach(codigo => {
+  // Agrupar por cliente y separar códigos activos/inactivos
+  const agrupadoPorCliente = {};
+  codigos.forEach(codigo => {
     const idCliente = codigo.idCliente;
     const cliente = clientesMap[idCliente];
-    
-    if (!reasignacionesPorCliente[idCliente]) {
-      reasignacionesPorCliente[idCliente] = {
+    if (!agrupadoPorCliente[idCliente]) {
+      agrupadoPorCliente[idCliente] = {
         cliente: {
           id: idCliente,
           nombre: cliente ? cliente.nombre : 'Cliente no encontrado',
           cedula: cliente ? cliente.cedula : '-'
         },
+        codigoActivo: null,
         reasignaciones: [],
         totalReasignaciones: 0
       };
     }
-    
-    reasignacionesPorCliente[idCliente].reasignaciones.push({
-      codigoBarra: codigo.codigoBarra,
-      cantImpresiones: codigo.cantImpresiones || 0,
-      motivoCambio: codigo.motivoCambio,
-      fechaCambio: codigo.fechaCambio,
-      fechaRegistro: codigo.fechaRegistro
-    });
-    
-    reasignacionesPorCliente[idCliente].totalReasignaciones++;
+    if (codigo.estado === 'Activo') {
+      agrupadoPorCliente[idCliente].codigoActivo = {
+        codigoBarra: codigo.codigoBarra,
+        cantImpresiones: codigo.cantImpresiones || 0,
+        fechaRegistro: codigo.fechaRegistro
+      };
+    } else if (codigo.estado === 'Inactivo' && codigo.motivoCambio && codigo.motivoCambio.trim() !== '') {
+      agrupadoPorCliente[idCliente].reasignaciones.push({
+        codigoBarra: codigo.codigoBarra,
+        cantImpresiones: codigo.cantImpresiones || 0,
+        motivoCambio: codigo.motivoCambio,
+        fechaCambio: codigo.fechaCambio,
+        fechaRegistro: codigo.fechaRegistro
+      });
+      agrupadoPorCliente[idCliente].totalReasignaciones++;
+    }
   });
-  
-  // Convertir a array y ordenar por fecha más reciente
-  const historialArray = Object.values(reasignacionesPorCliente).map(cliente => {
-    // Ordenar las reasignaciones de cada cliente por fecha (más reciente primero)
+  // Ordenar las reasignaciones por fecha más reciente primero
+  Object.values(agrupadoPorCliente).forEach(cliente => {
     cliente.reasignaciones.sort((a, b) => {
-      // Comparar por fechaCambio primero, luego por fechaRegistro como fallback
       const fechaA = new Date(a.fechaCambio || a.fechaRegistro || '1970-01-01');
       const fechaB = new Date(b.fechaCambio || b.fechaRegistro || '1970-01-01');
-      
-      // Si las fechas son iguales, ordenar por cantImpresiones (mayor = más reciente)
       if (fechaA.getTime() === fechaB.getTime()) {
         return (b.cantImpresiones || 0) - (a.cantImpresiones || 0);
       }
-      
-      return fechaB - fechaA; // Más reciente primero
+      return fechaB - fechaA;
     });
-    
-    // Tomar la reasignación más reciente para ordenar la lista
-    const fechaMasReciente = new Date(cliente.reasignaciones[0].fechaCambio || cliente.reasignaciones[0].fechaRegistro || '1970-01-01');
+    // Para ordenar la lista principal por la fecha más reciente (activo o inactivo)
+    let fechaMasReciente = null;
+    if (cliente.codigoActivo) {
+      fechaMasReciente = new Date(cliente.codigoActivo.fechaRegistro || '1970-01-01');
+    } else if (cliente.reasignaciones.length > 0) {
+      fechaMasReciente = new Date(cliente.reasignaciones[0].fechaCambio || cliente.reasignaciones[0].fechaRegistro || '1970-01-01');
+    } else {
+      fechaMasReciente = new Date('1970-01-01');
+    }
     cliente.fechaMasReciente = fechaMasReciente;
-    
-    return cliente;
   });
-  
-  // Ordenar por fecha de reasignación más reciente
-  historialArray.sort((a, b) => b.fechaMasReciente - a.fechaMasReciente);
-  
+  // Ordenar clientes por fecha más reciente
+  const historialArray = Object.values(agrupadoPorCliente).sort((a, b) => b.fechaMasReciente - a.fechaMasReciente);
   const ahora2 = new Date().toLocaleTimeString();
   console.log(`[${ahora2}] Historial procesado:`, historialArray.length, 'clientes con reasignaciones');
   historialArray.forEach(cliente => {
@@ -852,61 +846,27 @@ const mostrarHistorialReasignaciones = (historialPorCliente) => {
     return date.toLocaleDateString('es-CR', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: '2-digit'
     });
   };
 
-  // Crear filas expandibles para cada cliente
-  const filasClientes = historialPorCliente.map((clienteData, index) => {
+  // Mostrar solo la fila del código activo por cliente
+  const filasClientes = historialPorCliente.map((clienteData) => {
     const cliente = clienteData.cliente;
-    const reasignaciones = clienteData.reasignaciones;
-    const totalReasignaciones = clienteData.totalReasignaciones;
-    
-    // Tomar la reasignación más reciente para mostrar en la fila principal
-    const reasignacionReciente = reasignaciones[0];
-    
-    // Crear filas de detalle (ocultas inicialmente)
-    const filasDetalle = reasignaciones.map((reasignacion, rIndex) => `
-      <tr class="detalle-reasignacion" id="detalle-${index}" style="display: none;">
-        <td class="text-center">
-          <small class="text-muted">
-            ${rIndex + 1}° 
-            ${rIndex === 0 ? '<span class="badge bg-success bg-opacity-75 ms-1">Más reciente</span>' : ''}
-          </small>
-        </td>
-        <td>-</td>
-        <td>-</td>
-        <td class="text-center">
-          <code class="codigo-barra-small">${reasignacion.codigoBarra}</code>
-        </td>
-        <td class="text-center">
-          <small>${reasignacion.cantImpresiones || 0}</small>
-        </td>
-        <td class="text-center">
-          <span class="badge bg-danger bg-opacity-75">Inactivo</span>
-        </td>
-        <td class="motivo-cell">
-          <small class="motivo-texto" title="${reasignacion.motivoCambio}">
-            ${reasignacion.motivoCambio}
-          </small>
-        </td>
-        <td class="text-center">
-          <small class="text-muted">${formatearFecha(reasignacion.fechaCambio || reasignacion.fechaRegistro)}</small>
-        </td>
-      </tr>
-    `).join('');
-    
-    // Fila principal del cliente
-    const filaPrincipal = `
-      <tr class="fila-cliente" style="cursor: pointer;" onclick="toggleDetalleReasignaciones(${index})">
+    const codigoActivo = clienteData.codigoActivo;
+    if (!codigoActivo) return '';
+    // Buscar la última reasignación (inactiva más reciente)
+    let ultimoMotivo = '-';
+    let ultimaFecha = '-';
+    if (clienteData.reasignaciones && clienteData.reasignaciones.length > 0) {
+      const ultimaReasignacion = clienteData.reasignaciones[0];
+      ultimoMotivo = ultimaReasignacion.motivoCambio || '-';
+      ultimaFecha = formatearFecha(ultimaReasignacion.fechaCambio || ultimaReasignacion.fechaRegistro);
+    }
+    return `
+      <tr class="fila-cliente">
         <td class="text-center">
           <strong>${cliente.id}</strong>
-          <br>
-          <small class="text-primary">
-            <i class="fas fa-eye me-1"></i>Ver ${totalReasignaciones} reasignación${totalReasignaciones > 1 ? 'es' : ''}
-          </small>
         </td>
         <td>
           <strong>${cliente.cedula || '-'}</strong>
@@ -915,28 +875,22 @@ const mostrarHistorialReasignaciones = (historialPorCliente) => {
           <strong>${cliente.nombre || '-'}</strong>
         </td>
         <td class="text-center">
-          <code class="codigo-barra">${reasignacionReciente.codigoBarra}</code>
+          <code class="codigo-barra">${codigoActivo.codigoBarra}</code>
           <br>
-          <small class="text-muted">(más reciente)</small>
+          <small class="text-success">(activo)</small>
         </td>
         <td class="text-center">
-          <span class="badge bg-warning text-dark">${totalReasignaciones}</span>
+          <span class="badge bg-warning text-dark">${clienteData.totalReasignaciones}</span>
         </td>
         <td class="text-center">
-          <span class="badge bg-danger">Inactivo</span>
+          <span class="badge bg-success">Activo</span>
         </td>
-        <td class="motivo-cell">
-          <span class="motivo-texto" title="${reasignacionReciente.motivoCambio}">
-            ${reasignacionReciente.motivoCambio}
-          </span>
-        </td>
+        <td class="motivo-cell">${ultimoMotivo}</td>
         <td class="text-center">
-          <small class="text-muted">${formatearFecha(reasignacionReciente.fechaCambio || reasignacionReciente.fechaRegistro)}</small>
+          <small class="text-muted">${ultimaFecha}</small>
         </td>
       </tr>
     `;
-    
-    return filaPrincipal + filasDetalle;
   }).join('');
 
   contenedor.innerHTML = `

@@ -129,7 +129,7 @@ const cargarCumples = async () => {
 const renderizarTabla = (cumples) => {
     const contenedor = document.getElementById("cumpleLista");
 
-    const pendientes = cumples.filter(c => c.estado === 'PENDIENTE');
+    const pendientes = cumples.filter(c => c.estado === 'Activo');
     pendientes.sort((a, b) => {
         const fechaA = new Date(a.fechaCumpleanos);
         const fechaB = new Date(b.fechaCumpleanos);
@@ -162,7 +162,7 @@ const renderizarTabla = (cumples) => {
     let tieneSinCorreo = false;
 
     pendientes.forEach(c => {
-        let badge = `<span class="badge bg-danger">PENDIENTE</span>`;
+        let badge = `<span class="badge bg-success">Activo</span>`;
         if (c.estado === 'LISTA') {
             badge = `<span class="badge bg-success">LISTO</span>`;
         }

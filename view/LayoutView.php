@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(res => res.json())
     .then(data => {
-        if (data.success && Array.isArray(data.data) && data.data.some(c => c.estado === 'PENDIENTE')) {
+        if (data.success && Array.isArray(data.data) && data.data.some(c => c.estado === 'Activo')) {
             mostrarCumpleBadge(true);
         } else {
             mostrarCumpleBadge(false);

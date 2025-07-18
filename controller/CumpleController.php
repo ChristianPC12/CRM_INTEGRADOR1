@@ -129,7 +129,7 @@ try {
     $stmt->execute();
 
     // ACTUALIZA el estado del cliente a 'LISTA'
-    $update = $conn->prepare("UPDATE cliente SET Estado = 'LISTA' WHERE Id = :idCliente");
+    $update = $conn->prepare("UPDATE cliente SET Estado = 'Inactivo' WHERE Id = :idCliente");
     $update->bindParam(':idCliente', $idCliente);
     $update->execute();
 

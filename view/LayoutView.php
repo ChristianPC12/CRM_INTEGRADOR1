@@ -89,27 +89,27 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                 <a href="/CRM_INT/CRM/index.php?view=cumple" id="link-cumple"
-                     class="<?= $vista === 'cumple' ? 'active' : '' ?>">
-                     <i class="bi bi-gift"></i> Cumpleaños
-                     <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
-                 </a>   
+                <a href="/CRM_INT/CRM/index.php?view=cumple" id="link-cumple"
+                    class="<?= $vista === 'cumple' ? 'active' : '' ?>">
+                    <i class="bi bi-gift"></i> Cumpleaños
+                    <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
+                </a>
             </li>
-
-             <li>
-                <a href="/CRM_INT/CRM/index.php?view=Bitacora" id="link-Bitacora"
-              class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
-              <i class="bi bi-journal-text"></i> Bitácora
-               </a>
-            </li>
-           
 
             <li>
-             <a href="/CRM_INT/CRM/controller/UsuarioController.php?action=logout" style="color: #dc3545;">
-                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
-            </a>
+                <a href="/CRM_INT/CRM/index.php?view=Bitacora" id="link-Bitacora"
+                    class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
+                    <i class="bi bi-journal-text"></i> Bitácora
+                </a>
             </li>
-            
+
+
+            <li>
+                <a href="/CRM_INT/CRM/controller/UsuarioController.php?action=logout" style="color: #dc3545;">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </li>
+
         </ul>
     </aside>
 
@@ -119,205 +119,206 @@ $vista = $_GET['view'] ?? 'dashboard';
     <div class="content">
         <main class="main-content">
             <?php
-if ($vista === 'clientes') {
-    include 'ClienteView.php';
-} elseif ($vista === 'usuarios') {
-    include 'UsuarioView.php';
-} elseif ($vista === 'recompensas') {
-    include 'RecompensasView.php';
-} elseif ($vista === 'compras') {
-    include 'CompraView.php';
-} elseif ($vista === 'codigo') {
-    include 'CodigoView.php';
-} elseif ($vista === 'analisis') {
-    include 'AnalisisView.php';
-} elseif ($vista === 'cumple') {
-    include 'CumpleView.php';
-} elseif ($vista === 'Bitacora') {
-    include 'BitacoraView.php';
-} else {
-    include 'DashboardView.php';
-}
+            if ($vista === 'clientes') {
+                include 'ClienteView.php';
+            } elseif ($vista === 'usuarios') {
+                include 'UsuarioView.php';
+            } elseif ($vista === 'recompensas') {
+                include 'RecompensasView.php';
+            } elseif ($vista === 'compras') {
+                include 'CompraView.php';
+            } elseif ($vista === 'codigo') {
+                include 'CodigoView.php';
+            } elseif ($vista === 'analisis') {
+                include 'AnalisisView.php';
+            } elseif ($vista === 'cumple') {
+                include 'CumpleView.php';
+            } elseif ($vista === 'Bitacora') {
+                include 'BitacoraView.php';
+            } else {
+                include 'DashboardView.php';
+            }
             ?>
-        <!-- Modal para ingresar número de tarjeta -->
-        <div id="modalTarjeta" class="modal-tarjeta">
-            <div class="modal-contenido">
-                <h3>Ingrese número de tarjeta</h3>
-                <input type="text" id="modalInputTarjeta" placeholder="Ej: 60" />
-                <div id="modalMensajeError" class="modal-mensaje-error"></div>
-                <div class="modal-botones">
-                    <button onclick="cerrarModal()">Cancelar</button>
-                    <button onclick="redirigirCompra()">Buscar</button>
+            <!-- Modal para ingresar número de tarjeta -->
+            <div id="modalTarjeta" class="modal-tarjeta">
+                <div class="modal-contenido">
+                    <h3>Ingrese número de tarjeta</h3>
+                    <input type="text" id="modalInputTarjeta" placeholder="Ej: 60" />
+                    <div id="modalMensajeError" class="modal-mensaje-error"></div>
+                    <div class="modal-botones">
+                        <button onclick="cerrarModal()">Cancelar</button>
+                        <button onclick="redirigirCompra()">Buscar</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    <!-- Scripts Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Scripts Bootstrap -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Script general -->
-    <script src="/CRM_INT/CRM/public/js/Layout.js"></script>
+            <!-- Script general -->
+            <script src="/CRM_INT/CRM/public/js/Layout.js"></script>
+            <script src="/CRM_INT/CRM/public/js/ScannerGlobal.js?v=<?= time() ?>"></script>
+            {}
+            <!-- Scripts específicos -->
+            <?php if ($vista === 'dashboard'): ?>
+            <?php elseif ($vista === 'clientes'): ?>
+                <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
+            <?php endif; ?>
 
-    <!-- Scripts específicos -->
-    <?php if ($vista === 'dashboard'): ?>
-    <?php elseif ($vista === 'clientes'): ?>
-        <script src="/CRM_INT/CRM/public/js/Cliente.js"></script>
-    <?php endif; ?>
-    
-    <?php if ($vista === 'cumple'): ?>
-        <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
-    <?php endif; ?>
+            <?php if ($vista === 'cumple'): ?>
+                <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
+            <?php endif; ?>
 
 
 
-    <!-- Logout automático al cerrar la pestaña -->
-    <script>
-        window.addEventListener('beforeunload', function () {
-            navigator.sendBeacon('/CRM_INT/CRM/controller/LogoutOnClose.php');
-        });
+            <!-- Logout automático al cerrar la pestaña -->
+            <script>
+                window.addEventListener('beforeunload', function () {
+                    navigator.sendBeacon('/CRM_INT/CRM/controller/LogoutOnClose.php');
+                });
 
-        function confirmarCerrarSesion() {
-            if (confirm("¿Seguro que desea cerrar sesión?")) {
-                window.location.href = "index.php?logout=true";
-            }
-        }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Obtener el rol del usuario de localStorage
-            const rol = localStorage.getItem('rolUsuario');
-
-            if (rol === "Salonero") {
-                // Desactivar Usuarios en todas las vistas (acceso restringido)
-                const linkUsuarios = document.getElementById('link-usuarios');
-                if (linkUsuarios) {
-                    linkUsuarios.classList.add('disabled-link');
-                    linkUsuarios.removeAttribute('href');
-                    linkUsuarios.title = "Acceso restringido";
-                }
-
-                // Solo aplicar restricciones de solo lectura en la vista de clientes
-                const currentView = '<?= $vista ?>';
-
-                if (currentView === 'clientes') {
-                    const submitBtn = document.getElementById('submitBtn');
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.classList.add('btn-disabled');
-                        submitBtn.title = "No tienes permisos para guardar clientes";
-                    }
-
-                    const cancelBtn = document.getElementById('cancelBtn');
-                    if (cancelBtn) {
-                        cancelBtn.disabled = true;
-                        cancelBtn.classList.add('btn-disabled');
-                        cancelBtn.title = "No tienes permisos para editar clientes";
-                    }
-
-                    const form = document.getElementById('clienteForm');
-                    if (form) {
-                        const campos = form.querySelectorAll("input, select, textarea");
-                        campos.forEach((campo) => {
-                            campo.readOnly = true;
-                            campo.disabled = true;
-                            campo.classList.add('form-readonly');
-                        });
-                    }
-
-                    const observer = new MutationObserver(() => {
-                        document.querySelectorAll("button.btn-warning").forEach((btn) => {
-                            btn.disabled = true;
-                            btn.classList.add('btn-disabled');
-                            btn.title = "No tienes permisos para editar clientes";
-                        });
-                        document.querySelectorAll("button.btn-danger").forEach((btn) => {
-                            btn.disabled = true;
-                            btn.classList.add('btn-disabled');
-                            btn.title = "No tienes permisos para eliminar clientes";
-                        });
-                    });
-
-                    const lista = document.getElementById("clienteLista");
-                    if (lista) {
-                        observer.observe(lista, { childList: true, subtree: true });
+                function confirmarCerrarSesion() {
+                    if (confirm("¿Seguro que desea cerrar sesión?")) {
+                        window.location.href = "index.php?logout=true";
                     }
                 }
-            } else if (rol === "Administrador") {
-                const linkUsuarios = document.getElementById('link-usuarios');
-                if (linkUsuarios) {
-                    linkUsuarios.classList.add('disabled-link');
-                    linkUsuarios.removeAttribute('href');
-                    linkUsuarios.title = "Acceso restringido";
-                }
+            </script>
 
-                const currentView = '<?= $vista ?>';
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Obtener el rol del usuario de localStorage
+                    const rol = localStorage.getItem('rolUsuario');
 
-                if (currentView === 'clientes') {
-                    const observer = new MutationObserver(() => {
-                        document.querySelectorAll("button.btn-danger").forEach((btn) => {
-                            btn.disabled = true;
-                            btn.classList.add('btn-disabled');
-                            btn.title = "No tienes permisos para eliminar clientes";
+                    if (rol === "Salonero") {
+                        // Desactivar Usuarios en todas las vistas (acceso restringido)
+                        const linkUsuarios = document.getElementById('link-usuarios');
+                        if (linkUsuarios) {
+                            linkUsuarios.classList.add('disabled-link');
+                            linkUsuarios.removeAttribute('href');
+                            linkUsuarios.title = "Acceso restringido";
+                        }
+
+                        // Solo aplicar restricciones de solo lectura en la vista de clientes
+                        const currentView = '<?= $vista ?>';
+
+                        if (currentView === 'clientes') {
+                            const submitBtn = document.getElementById('submitBtn');
+                            if (submitBtn) {
+                                submitBtn.disabled = true;
+                                submitBtn.classList.add('btn-disabled');
+                                submitBtn.title = "No tienes permisos para guardar clientes";
+                            }
+
+                            const cancelBtn = document.getElementById('cancelBtn');
+                            if (cancelBtn) {
+                                cancelBtn.disabled = true;
+                                cancelBtn.classList.add('btn-disabled');
+                                cancelBtn.title = "No tienes permisos para editar clientes";
+                            }
+
+                            const form = document.getElementById('clienteForm');
+                            if (form) {
+                                const campos = form.querySelectorAll("input, select, textarea");
+                                campos.forEach((campo) => {
+                                    campo.readOnly = true;
+                                    campo.disabled = true;
+                                    campo.classList.add('form-readonly');
+                                });
+                            }
+
+                            const observer = new MutationObserver(() => {
+                                document.querySelectorAll("button.btn-warning").forEach((btn) => {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para editar clientes";
+                                });
+                                document.querySelectorAll("button.btn-danger").forEach((btn) => {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para eliminar clientes";
+                                });
+                            });
+
+                            const lista = document.getElementById("clienteLista");
+                            if (lista) {
+                                observer.observe(lista, { childList: true, subtree: true });
+                            }
+                        }
+                    } else if (rol === "Administrador") {
+                        const linkUsuarios = document.getElementById('link-usuarios');
+                        if (linkUsuarios) {
+                            linkUsuarios.classList.add('disabled-link');
+                            linkUsuarios.removeAttribute('href');
+                            linkUsuarios.title = "Acceso restringido";
+                        }
+
+                        const currentView = '<?= $vista ?>';
+
+                        if (currentView === 'clientes') {
+                            const observer = new MutationObserver(() => {
+                                document.querySelectorAll("button.btn-danger").forEach((btn) => {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para eliminar clientes";
+                                });
+                            });
+
+                            const lista = document.getElementById("clienteLista");
+                            if (lista) {
+                                observer.observe(lista, { childList: true, subtree: true });
+                            }
+                        }
+                    }
+
+
+                    const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
+                    const vistaActual = "<?= $vista ?>";
+
+                    // Mostrar el modal automáticamente solo si el rol es salonero Y está en dashboard
+                    if (rolUsuario === "salonero" && vistaActual === "dashboard") {
+                        abrirModal();
+                    }
+                    // Mostrar el modal al hacer click en el logo para cualquier rol
+                    const logo = document.querySelector(".img-header");
+                    if (logo) {
+                        logo.style.cursor = 'pointer';
+                        logo.addEventListener('click', function () {
+                            abrirModal();
                         });
-                    });
+                    }
+                });
+            </script>
 
-                    const lista = document.getElementById("clienteLista");
-                    if (lista) {
-                        observer.observe(lista, { childList: true, subtree: true });
+            <script>
+                // Badge de cumpleaños pendientes
+                function mostrarCumpleBadge(pendientes) {
+                    const badge = document.getElementById('cumple-badge');
+                    if (!badge) return;
+                    if (pendientes) {
+                        badge.style.display = 'inline-block';
+                        badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
+                    } else {
+                        badge.style.display = 'none';
+                        badge.innerHTML = '';
                     }
                 }
-            }
-
-     
-          const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
-          const vistaActual = "<?= $vista ?>";
-
-            // Mostrar el modal automáticamente solo si el rol es salonero Y está en dashboard
-            if (rolUsuario === "salonero" && vistaActual === "dashboard") {
-              abrirModal();
-            }
-            // Mostrar el modal al hacer click en el logo para cualquier rol
-            const logo = document.querySelector(".img-header");
-            if (logo) {
-              logo.style.cursor = 'pointer';
-              logo.addEventListener('click', function() {
-                abrirModal();
-              });
-            }
-        });
-    </script>
-
-    <script>
-// Badge de cumpleaños pendientes
-function mostrarCumpleBadge(pendientes) {
-    const badge = document.getElementById('cumple-badge');
-    if (!badge) return;
-    if (pendientes) {
-        badge.style.display = 'inline-block';
-        badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
-    } else {
-        badge.style.display = 'none';
-        badge.innerHTML = '';
-    }
-}
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'action=readSemana'
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success && Array.isArray(data.data) && data.data.some(c => c.estado === 'Activo')) {
-            mostrarCumpleBadge(true);
-        } else {
-            mostrarCumpleBadge(false);
-        }
-    })
-    .catch(() => mostrarCumpleBadge(false));
-});
-</script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'action=readSemana'
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success && Array.isArray(data.data) && data.data.some(c => c.estado === 'Activo')) {
+                                mostrarCumpleBadge(true);
+                            } else {
+                                mostrarCumpleBadge(false);
+                            }
+                        })
+                        .catch(() => mostrarCumpleBadge(false));
+                });
+            </script>
 
 </body>
 

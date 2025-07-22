@@ -29,7 +29,7 @@
     <h4>Cliente del Mes</h4>
     <p class="valor" id="cliente-mes-nombre">N/A</p>
     <span class="subvalor" id="cliente-mes-valor">$0</span>
-    <a href="CRM_INT/CRM/index.php?view=analisis" class="link-metrica">Ver análisis</a>
+    <a href="CRM_INT/CRM/index.php?view=analisis&seccion=clientesMayorHistorial" class="link-metrica">Ver análisis</a>
   </div>
 
   <!-- Total Ventas -->

@@ -1,9 +1,9 @@
-/* Cumple.css - Diseño profesional consistente con el CRM */
+/* CumpleOptimizado.css – mismos estilos en menos líneas */
 :root {
   --amarillo: #f9c41f;
   --gris: #838886;
-  --negro: #000000;
-  --blanco: #ffffff;
+  --negro: #000;
+  --blanco: #fff;
   --gris-fondo: #f7f7f7;
   --gris-borde: #e0e0e0;
   --success: #28a745;
@@ -11,431 +11,274 @@
   --danger: #dc3545;
   --info: #17a2b8;
 }
-
 * {
   box-sizing: border-box;
 }
-
-/* FORZAR ESTILOS DEL BODY ESPECÍFICAMENTE PARA CUMPLEAÑOS */
+/* ==== Layout base ==== */
 body {
   margin: 0 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   display: flex !important;
   min-height: 100vh !important;
-  background-color: var(--gris) !important;
+  background: var(--gris) !important;
   overflow-x: hidden !important;
 }
-
 body::-webkit-scrollbar {
   display: none !important;
 }
-
-/* Fondo geométrico como otros módulos - MÁS ESPECÍFICO */
-body::before {
-  content: "" !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 40% !important;
-  height: 70% !important;
-  background: var(--amarillo) !important;
-  z-index: -1 !important;
-}
-
+body::before,
 body::after {
-  content: "" !important;
-  position: fixed !important;
-  bottom: 0 !important;
-  right: 0 !important;
-  width: 60% !important;
-  height: 50% !important;
-  background: var(--gris) !important;
+  content: "";
+  position: fixed;
   z-index: -1 !important;
 }
-
-/* CONTENIDO PRINCIPAL ESPECÍFICO */
+body::before {
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 70%;
+  background: var(--amarillo);
+}
+body::after {
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 50%;
+  background: var(--gris);
+}
 .content {
   margin-left: 220px !important;
   padding: 24px !important;
-  flex-grow: 1 !important;
+  flex: 1 !important;
 }
-
 .container {
   max-width: 102% !important;
   transform: translateX(1%) !important;
 }
-
-/* CARDS PRINCIPALES - FORZADOS */
+/* ==== Cards ==== */
 .card {
   border: none !important;
   border-radius: 12px !important;
-  overflow: hidden !important;
   background: var(--blanco) !important;
+  overflow: hidden !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
   margin-bottom: 24px !important;
   transition: box-shadow 0.3s ease !important;
 }
-
 .card:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
 }
-
 .card.shadow.mb-4 {
   box-shadow: 0 0 10px rgba(249, 196, 31, 0.4) !important;
   border-left: 5px solid var(--amarillo) !important;
 }
-
-/* HEADERS DE CARDS - MUY ESPECÍFICO */
-.card-header,
-.card-header.d-flex,
-.card-header.bg-dark,
-.card-header.bg-black,
-.card-header.bg-secondary {
-  background-color: var(--negro) !important;
+.card-header {
+  background: var(--negro) !important;
   color: var(--blanco) !important;
   font-weight: bold !important;
   letter-spacing: 0.5px !important;
   padding: 16px 20px !important;
   border-bottom: 3px solid var(--amarillo) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-
-.card-header h5, 
+.card-header h5,
 .card-header h6 {
-  font-weight: bold !important;
-  margin: 0 !important;
-  font-size: 1.1rem !important;
-  color: var(--blanco) !important;
+  margin: 0;
+  font-size: 1.1rem;
+  color: inherit;
 }
-
 .card-header i {
   color: var(--amarillo) !important;
-  margin-right: 8px !important;
 }
-
-/* BOTONES ESPECÍFICOS */
-.btn-primary {
-  background-color: var(--amarillo) !important;
-  color: var(--negro) !important;
-  font-weight: bold !important;
+/* ==== Botones genéricos ==== */
+.btn {
   border: none !important;
   border-radius: 8px !important;
-  padding: 10px 20px !important;
-  font-size: 1rem !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.3s ease !important;
 }
-
-.btn-primary:hover {
-  background-color: #e6b619 !important;
-  transform: scale(1.03) !important;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15) !important;
-  color: var(--negro) !important;
-}
-
+.btn-primary,
 .btn-warning {
-  background-color: var(--amarillo) !important;
+  background: var(--amarillo) !important;
   color: var(--negro) !important;
-  font-weight: bold !important;
-  border: none !important;
-  border-radius: 8px !important;
-  padding: 8px 16px !important;
-  transition: all 0.3s ease !important;
 }
-
-.btn-warning:hover {
-  background-color: #e6b619 !important;
-  color: var(--negro) !important;
-  transform: scale(1.05) !important;
-}
-
 .btn-success {
-  background-color: var(--success) !important;
+  background: var(--success) !important;
   color: var(--blanco) !important;
-  font-weight: bold !important;
-  border: none !important;
-  border-radius: 8px !important;
-  transition: all 0.3s ease !important;
 }
-
-.btn-success:hover {
-  background-color: #218838 !important;
-  transform: scale(1.05) !important;
-}
-
 .btn-danger {
-  background-color: var(--danger) !important;
+  background: var(--danger) !important;
   color: var(--blanco) !important;
-  font-weight: bold !important;
-  border: none !important;
-  border-radius: 8px !important;
-  transition: all 0.3s ease !important;
 }
-
-.btn-danger:hover {
-  background-color: #c82333 !important;
+.btn:hover {
   transform: scale(1.05) !important;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15) !important;
 }
-
 .btn-sm {
   padding: 6px 12px !important;
   font-size: 0.875rem !important;
 }
-
-/* ALERTAS ESTILIZADAS - FORZADAS */
+/* ==== Alerts ==== */
 .alert {
-  border-radius: 10px !important;
   border: none !important;
+  border-radius: 10px !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
   margin-bottom: 16px !important;
 }
-
 .alert-info {
-  background-color: #e8f4f8 !important;
+  background: #e8f4f8 !important;
   color: #0c5460 !important;
   border-left: 4px solid var(--info) !important;
 }
-
 .alert-warning {
-  background-color: #fff3cd !important;
+  background: #fff3cd !important;
   color: #856404 !important;
   border-left: 4px solid var(--warning) !important;
 }
-
 .alert-success {
-  background-color: #d4edda !important;
+  background: #d4edda !important;
   color: #155724 !important;
   border-left: 4px solid var(--success) !important;
 }
-
-/* TABLAS - MUY ESPECÍFICAS */
+/* ==== Tablas ==== */
 .table,
 .table-bordered,
 .table-hover {
-  background-color: var(--blanco) !important;
+  background: var(--blanco) !important;
   border-radius: 8px !important;
   overflow: hidden !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
 }
-
-.table thead th,
-.table thead td {
-  background-color: var(--negro) !important;
+.table thead th {
+  background: var(--negro) !important;
   color: var(--blanco) !important;
   font-weight: bold !important;
-  border: none !important;
   padding: 12px 15px !important;
   font-size: 0.9rem !important;
-  letter-spacing: 0.5px !important;
   text-align: center !important;
 }
-
-.table tbody td,
-.table tbody th {
+.table tbody td {
   padding: 12px 15px !important;
   border-top: 1px solid var(--gris-borde) !important;
   font-size: 0.9rem !important;
   vertical-align: middle !important;
-  background-color: var(--blanco) !important;
-  color: var(--negro) !important;
   text-align: center !important;
 }
-
 .table tbody tr:hover td {
-  background-color: #f8f9fa !important;
-  transition: background-color 0.2s ease !important;
+  background: #f8f9fa !important;
 }
-
 .table-responsive {
   border-radius: 8px !important;
   overflow: hidden !important;
 }
-
-/* FORMULARIOS */
+/* ==== Formularios ==== */
 .form-control {
   border-radius: 8px !important;
   border: 2px solid var(--gris-borde) !important;
   padding: 10px 12px !important;
-  transition: all 0.3s ease !important;
   font-size: 0.9rem !important;
+  transition: all 0.3s ease !important;
 }
-
 .form-control:focus {
   border-color: var(--amarillo) !important;
   box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2) !important;
-  outline: none !important;
 }
-
 .form-control-sm {
   padding: 6px 10px !important;
   font-size: 0.875rem !important;
 }
-
 .form-label {
   font-weight: 600 !important;
   color: var(--negro) !important;
   margin-bottom: 6px !important;
   font-size: 0.9rem !important;
 }
-
-/* ESTADOS DE CUMPLEAÑOS - BADGES */
-.cumple-badge,
-.table .badge,
-#cumpleLista .badge,
-#historialCumples .badge {
+/* ==== Badges de estado ==== */
+:is(
+    .cumple-badge,
+    .table .badge,
+    #cumpleLista .badge,
+    #historialCumples .badge
+  ) {
   padding: 6px 12px !important;
   border-radius: 20px !important;
   font-size: 0.75rem !important;
   font-weight: bold !important;
   display: inline-block !important;
 }
-
-.cumple-badge.bg-danger,
-.table .badge.bg-danger,
-#cumpleLista .badge.bg-danger,
-#historialCumples .badge.bg-danger {
-  background-color: var(--danger) !important;
+:is(.bg-danger) {
+  background: var(--danger) !important;
   color: var(--blanco) !important;
 }
-
-.cumple-badge.bg-success,
-.table .badge.bg-success,
-#cumpleLista .badge.bg-success,
-#historialCumples .badge.bg-success {
-  background-color: var(--success) !important;
+:is(.bg-success) {
+  background: var(--success) !important;
   color: var(--blanco) !important;
 }
-
-.cumple-badge.bg-warning,
-.table .badge.bg-warning,
-#cumpleLista .badge.bg-warning,
-#historialCumples .badge.bg-warning {
-  background-color: var(--warning) !important;
+:is(.bg-warning) {
+  background: var(--warning) !important;
   color: var(--negro) !important;
 }
-
-/* RANGO DE SEMANA - MÁS ESPECÍFICO */
+/* ==== Rango de semana & loader ==== */
 #rangoSemana {
   background: linear-gradient(135deg, var(--amarillo), #e6b619) !important;
   color: var(--negro) !important;
   font-weight: bold !important;
+  border: none;
   border-radius: 10px !important;
-  border: none !important;
   box-shadow: 0 4px 8px rgba(249, 196, 31, 0.3) !important;
 }
-
-/* LISTA DE RECORDATORIOS */
-#recordatorioLlamadas {
-  animation: fadeIn 0.5s ease-in !important;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* HISTORIAL */
-#historialCumples .table tbody tr:nth-child(even) td {
-  background-color: #f8f9fa !important;
-}
-
-/* LOADING SPINNER */
 .spinner-border.text-warning {
   color: var(--amarillo) !important;
   border-color: rgba(249, 196, 31, 0.3) !important;
   border-top-color: var(--amarillo) !important;
 }
-
-/* REGLAS CON MÁXIMA PRIORIDAD PARA TABLAS JAVASCRIPT */
-/* Estas reglas se aplican al final para sobrescribir cualquier inline style */
-
-/* Encabezados de tabla - JavaScript override */
-#cumpleLista .table thead th,
-#historialCumples .table thead th,
-.cumple-table thead th,
-.table thead th {
-  background-color: var(--negro) !important;
-  color: var(--blanco) !important;
-  border-color: var(--negro) !important;
-  padding: 12px 8px !important;
-  text-align: center !important;
-  font-weight: 600 !important;
-  white-space: nowrap !important;
+/* ==== Animaciones & helpers ==== */
+#recordatorioLlamadas {
+  animation: fadeIn 0.5s ease-in !important;
 }
-
-/* Celdas de tabla - JavaScript override */
-#cumpleLista .table tbody td,
-#historialCumples .table tbody td,
-.cumple-table tbody td,
-.table tbody td {
-  background-color: var(--blanco) !important;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ==== Overrides dinámicos (estilos inline) ==== */
+#cumpleLista [style*="background"],
+#historialCumples [style*="background"],
+.table [style*="background"] {
+  background: var(--blanco) !important;
   color: var(--negro) !important;
-  border-color: #dee2e6 !important;
-  padding: 8px !important;
-  text-align: center !important;
-  vertical-align: middle !important;
 }
-
-/* Filas alternas - JavaScript override */
-#cumpleLista .table tbody tr:nth-child(even) td,
-#historialCumples .table tbody tr:nth-child(even) td,
-.cumple-table tbody tr:nth-child(even) td {
-  background-color: #f8f9fa !important;
+#cumpleLista th[style*="background"],
+#historialCumples th[style*="background"],
+.table th[style*="background"] {
+  background: var(--negro) !important;
+  color: var(--blanco) !important;
 }
-
-/* Badges en tablas - JavaScript override */
-.table .badge {
-  font-size: 0.7em !important;
-  padding: 0.25em 0.5em !important;
-  border-radius: 0.25rem !important;
-}
-
-.table .badge.bg-success {
-  background-color: #198754 !important;
-  color: white !important;
-}
-
-.table .badge.bg-warning {
-  background-color: #ffc107 !important;
-  color: #000 !important;
-}
-
-.table .badge.bg-danger {
-  background-color: #dc3545 !important;
-  color: white !important;
-}
-
-/* Botones en tablas - JavaScript override */
 .table .btn {
   padding: 0.25rem 0.5rem !important;
   font-size: 0.75rem !important;
   line-height: 1.5 !important;
   border-radius: 0.2rem !important;
 }
-
 .table .btn-warning {
-  background-color: var(--amarillo) !important;
+  background: var(--amarillo) !important;
   border-color: var(--amarillo) !important;
   color: var(--negro) !important;
 }
-
 .table .btn-warning:hover {
-  background-color: #e0a800 !important;
+  background: #e0a800 !important;
   border-color: #d39e00 !important;
   color: var(--negro) !important;
 }
-
-/* FORZAR ESTILOS ESPECÍFICOS PARA ELEMENTOS GENERADOS DINÁMICAMENTE */
-.table [style*="background"],
-#cumpleLista [style*="background"],
-#historialCumples [style*="background"] {
-  background-color: var(--blanco) !important;
-  color: var(--negro) !important;
+/* Filas pares en historial */
+#historialCumples .table tbody tr:nth-child(even) td {
+  background: #f8f9fa !important;
 }
-
-.table th[style*="background"],
-#cumpleLista th[style*="background"],
-#historialCumples th[style*="background"] {
-  background-color: var(--negro) !important;
-  color: var(--blanco) !important;
-}
-

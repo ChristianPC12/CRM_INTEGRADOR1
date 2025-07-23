@@ -9,14 +9,13 @@ require_once __DIR__ . '/../model/bitacora/BitacoraMapper.php';
 
 class BitacoraController
 {
-    // Registra la entrada de un usuario
     public function registrarEntrada($idUsuario)
     {
         $db = (new Database())->getConnection();
         $dao = new BitacoraDAO($db);
 
         if ($dao->tieneSesionActiva($idUsuario)) {
-            return false; // Ya tiene una sesión activa
+            return false;
         }
 
         $dto = new BitacoraDTO();
@@ -28,7 +27,6 @@ class BitacoraController
         return $dao->create($dto);
     }
 
-    // Registra la salida en el último registro sin cerrar
     public function registrarSalida($idUsuario)
     {
         $db = (new Database())->getConnection();
@@ -52,8 +50,10 @@ class BitacoraController
 
 // ==== HTTP ====
 if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
+    ob_start(); // 🧹 Limpia cualquier salida previa
+
     try {
-        BitacoraDAO::ejecutarLimpiezaAutomatica(); // ✅ reemplaza AutoCleanup
+        BitacoraDAO::ejecutarLimpiezaAutomatica();
 
         $db = (new Database())->getConnection();
         if (!$db) throw new Exception("No se pudo conectar a la base de datos");
@@ -108,16 +108,15 @@ if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
                     'message' => $ok ? 'Salida registrada' : 'No se pudo registrar salida'
                 ];
                 break;
+
             case 'eliminarExpirados':
-                $dao = new BitacoraDAO((new Database())->getConnection());
                 $eliminados = $dao->eliminarExpirados();
-                echo json_encode([
+                $response = [
                     'success' => true,
                     'message' => "$eliminados registros eliminados correctamente.",
                     'eliminados' => $eliminados
-                ]);
-                return;
-
+                ];
+                break;
 
             default:
                 $response = ['success' => false, 'message' => "Acción no válida en BitacoraController"];
@@ -131,5 +130,7 @@ if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
             'message' => 'Error del servidor: ' . $e->getMessage()
         ]);
     }
+
+    ob_end_flush(); // 🧼 Limpia y muestra solo el JSON
 }
 ?>

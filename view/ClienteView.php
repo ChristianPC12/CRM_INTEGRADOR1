@@ -20,12 +20,14 @@
                     <div class="col-md-4 mb-3">
                         <label for="clienteCedula" class="form-label">Cédula *</label>
                         <input type="text" name="cedula" id="clienteCedula" class="form-control" required
-                            placeholder="Ej: 123456789">
+                            placeholder="Ej: 123456789"
+                            maxlength="14" pattern="\d{9}|\d{14}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="clienteNombre" class="form-label">Nombre Completo *</label>
-                        <input type="text" name="nombre" id="clienteNombre" class="form-control" required
-                            placeholder="Ej: Juan Pérez">
+                        <input type="text" name="nombre" id="clienteNombre" class="form-control" required maxlength="45"
+                            placeholder="Ej: JUAN PÉREZ GONZÁLEZ">
+
                     </div>
                 </div>
 

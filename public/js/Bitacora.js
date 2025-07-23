@@ -6,7 +6,7 @@ function esperarContenedorYcargar() {
     return setTimeout(esperarContenedorYcargar, 100);
   }
 
-  console.log(" contenedorTabla encontrado, cargando bitácora...");
+  console.log("📦 contenedorTabla encontrado, cargando bitácora...");
   cargarBitacora();
 }
 
@@ -19,7 +19,6 @@ async function cargarBitacora() {
     console.log("📦 Respuesta cruda:", text);
     const json = JSON.parse(text);
 
-
     const contenedor = document.getElementById("contenedorTabla");
     if (!contenedor) return;
 
@@ -28,32 +27,51 @@ async function cargarBitacora() {
       return;
     }
 
-   let tablaHTML = `
-  <div class="table-wrapper">
-    <table id="tablaBitacora" border="1" cellpadding="5" cellspacing="0">
-      <thead>
-        <tr>
-          <th>ID Usuario</th>
-          <th>Hora Entrada</th>
-          <th>Hora Salida</th>
-          <th>Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${json.data.map(b => `
-          <tr>
-       
-            <td>${b.idUsuario}</td>
-            <td>${b.horaEntrada}</td>
-            <td>${b.horaSalida}</td>
-            <td>${b.fecha}</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  </div>
-`;
+    function calcularDuracion(horaEntrada, horaSalida) {
+      if (!horaSalida || horaSalida === "00:00:00") return "En curso";
 
+      const [hEntH, hEntM, hEntS] = horaEntrada.split(":").map(Number);
+      const [hSalH, hSalM, hSalS] = horaSalida.split(":").map(Number);
+
+      const entrada = new Date(0, 0, 0, hEntH, hEntM, hEntS);
+      const salida = new Date(0, 0, 0, hSalH, hSalM, hSalS);
+
+      let diff = salida - entrada;
+      if (diff < 0) return "Error";
+
+      const horas = Math.floor(diff / 3600000);
+      const minutos = Math.floor((diff % 3600000) / 60000);
+      const segundos = Math.floor((diff % 60000) / 1000);
+
+      return `${horas}h ${minutos}m ${segundos}s`;
+    }
+
+    let tablaHTML = `
+      <div class="table-wrapper">
+        <table id="tablaBitacora" border="1" cellpadding="5" cellspacing="0">
+          <thead>
+            <tr>
+              <th>ID Usuario</th>
+              <th>Hora Entrada</th>
+              <th>Hora Salida</th>
+              <th>Fecha</th>
+              <th>Duración</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${json.data.map(b => `
+              <tr>
+                <td>${b.idUsuario}</td>
+                <td>${b.horaEntrada}</td>
+                <td>${b.horaSalida}</td>
+                <td>${b.fecha}</td>
+                <td>${calcularDuracion(b.horaEntrada, b.horaSalida)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
 
     contenedor.innerHTML = tablaHTML;
   } catch (e) {
@@ -99,3 +117,5 @@ function exportToExcel() {
   a.download = "bitacora.xls";
   a.click();
 }
+
+// ✅ ¡Fin del archivo sin líneas sueltas ni retornos de objetos!

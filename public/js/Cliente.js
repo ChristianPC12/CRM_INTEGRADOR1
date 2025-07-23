@@ -280,6 +280,7 @@ form.onsubmit = async (e) => {
   const nombre = form.nombre.value.trim();
   const correo = form.correo.value.trim();
   const telefono = form.telefono.value.trim();
+  const telefonoLimpio = telefono.replace("-", "");
   const lugarResidencia = form.lugarResidencia.value.trim();
   const fechaCumpleanos = form.fechaCumpleanos.value;
 
@@ -289,18 +290,26 @@ form.onsubmit = async (e) => {
     return;
   }
 
-  if (!(cedula.length === 9 || cedula.length === 14)) {
-    alert("La cédula debe tener 9 o 14 dígitos.");
+  if (!/^\d{9}$|^\d{14}$/.test(cedula)) {
+    alert("La cédula debe tener exactamente 9 o 14 dígitos numéricos.");
     form.cedula.focus();
     return;
   }
 
 
+
   if (!validaciones.esNombreValido(nombre)) {
-    alert("El nombre solo puede contener letras y espacios, mínimo 2 caracteres.");
+    alert("El nombre solo puede contener letras y espacios.");
     form.nombre.focus();
     return;
   }
+  
+  if (nombre.length > 45) {
+   alert("El nombre no puede tener más de 45 caracteres.");
+    form.nombre.focus();
+    return;
+  }
+
 
 
   if (correo && !validaciones.esEmailValido(correo)) {
@@ -309,11 +318,6 @@ form.onsubmit = async (e) => {
     return;
   }
 
-  if (!validaciones.esTelefonoValido(telefono.replace("-", ""))) {
-    alert("El teléfono debe tener exactamente 8 dígitos.");
-    form.telefono.focus();
-    return;
-  }
 
   if (!validaciones.esFechaValida(fechaCumpleanos)) {
     alert("Por favor ingrese una fecha de cumpleaños válida.");
@@ -322,6 +326,7 @@ form.onsubmit = async (e) => {
   }
 
   const formData = new FormData(form);
+  formData.set("telefono", telefonoLimpio);
   const action = editandoId ? "update" : "create";
   formData.append("action", action);
   if (editandoId) formData.append("id", editandoId);
@@ -968,4 +973,26 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // Detener actualización automática cuando se cambia de página
   window.addEventListener('beforeunload', detenerActualizacionAutomatica);
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const cedulaInput = document.getElementById("clienteCedula");
+
+  cedulaInput.addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "");
+    if (this.value.length > 14) {
+      this.value = this.value.slice(0, 14);
+    }
+  });
+
+  const nombreInput = document.getElementById("clienteNombre");
+
+  nombreInput.addEventListener("input", function () {
+    // Solo letras (mayúsculas, minúsculas) y espacios
+    this.value = this.value.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g, "");
+
+    // Limita a 45 caracteres
+    if (this.value.length > 45) {
+      this.value = this.value.slice(0, 45);
+    }
+  });
 });

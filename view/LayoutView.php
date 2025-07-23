@@ -158,7 +158,7 @@ $vista = $_GET['view'] ?? 'dashboard';
             <!-- Script general -->
             <script src="/CRM_INT/CRM/public/js/Layout.js"></script>
             <script src="/CRM_INT/CRM/public/js/ScannerGlobal.js?v=<?= time() ?>"></script>
-            {}
+            
             <!-- Scripts específicos -->
             <?php if ($vista === 'dashboard'): ?>
             <?php elseif ($vista === 'clientes'): ?>

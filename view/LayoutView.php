@@ -109,7 +109,7 @@ $vista = $_GET['view'] ?? 'dashboard';
             <li>
                 <a href="/CRM_INT/CRM/index.php?view=guia" id="link-guia"
                     class="<?= $vista === 'guia' ? 'active' : '' ?>">
-                    <i class="bi bi-book"></i> Manual de guía
+                    <i class="bi bi-info-circle"></i> Manual de guía
                 </a>
             </li>
 

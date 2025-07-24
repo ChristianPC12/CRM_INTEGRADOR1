@@ -186,10 +186,94 @@ $vista = $_GET['view'] ?? 'dashboard';
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    // Obtener el rol del usuario de localStorage
-                    const rol = localStorage.getItem('rolUsuario');
+                    // Obtener el rol del usuario de localStorage y normalizar a minúsculas
+                    const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
 
-                    if (rol === "Salonero") {
+                    // Si el rol es propietario, acceso total y no ejecutar restricciones
+                    if (rol === "propietario") {
+                        // Acceso total, no ejecutar ninguna restricción
+                        return;
+                    }
+
+                    // Restricción para administrador en Beneficios: no puede eliminar beneficios
+                    if (rol === "administrador" && '<?= $vista ?>' === 'compras') {
+                        function disableDeleteButtons() {
+                            document.querySelectorAll("button").forEach((btn) => {
+                                if (btn.textContent.trim().toLowerCase() === 'eliminar' || btn.classList.contains('btn-danger')) {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para eliminar beneficios";
+                                }
+                            });
+                        }
+                        // Llamar al cargar la vista
+                        disableDeleteButtons();
+                        // Observar cambios en la lista de compras para deshabilitar botones nuevos
+                        const lista = document.getElementById("compraLista") || document.body;
+                        const observer = new MutationObserver(disableDeleteButtons);
+                        observer.observe(lista, { childList: true, subtree: true });
+                    }
+                    // Restricciones para salonero en Beneficios
+                    if (rol === "salonero" && '<?= $vista ?>' === 'compras') {
+                        // Deshabilitar botones de acumular puntos, aplicar descuentos y eliminar beneficios
+                        const observer = new MutationObserver(() => {
+                            document.querySelectorAll("button").forEach((btn) => {
+                                // Acumular puntos
+                                if (btn.textContent.trim().toLowerCase() === 'acumular' || (btn.onclick && btn.onclick.toString().includes('acumular'))) {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para acumular puntos";
+                                }
+                                // Aplicar descuento
+                                if (btn.textContent.trim().toLowerCase() === 'aplicar' || (btn.onclick && btn.onclick.toString().includes('descuento'))) {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para aplicar descuentos";
+                                }
+                                // Eliminar beneficio
+                                if (btn.textContent.trim().toLowerCase() === 'eliminar' || btn.classList.contains('btn-danger')) {
+                                    btn.disabled = true;
+                                    btn.classList.add('btn-disabled');
+                                    btn.title = "No tienes permisos para eliminar beneficios";
+                                }
+                            });
+                            // Deshabilitar input de acumular compra
+                            const inputAcumulada = document.getElementById("cantidadAcumulada");
+                            if (inputAcumulada) {
+                                inputAcumulada.disabled = true;
+                                inputAcumulada.classList.add('form-readonly');
+                                inputAcumulada.title = "No tienes permisos para acumular compras";
+                            }
+                        });
+                        const lista = document.getElementById("compraLista") || document.body;
+                        observer.observe(lista, { childList: true, subtree: true });
+                        // Llamar también al cargar la vista
+                        document.querySelectorAll("button").forEach((btn) => {
+                            if (btn.textContent.trim().toLowerCase() === 'acumular' || (btn.onclick && btn.onclick.toString().includes('acumular'))) {
+                                btn.disabled = true;
+                                btn.classList.add('btn-disabled');
+                                btn.title = "No tienes permisos para acumular puntos";
+                            }
+                            if (btn.textContent.trim().toLowerCase() === 'aplicar' || (btn.onclick && btn.onclick.toString().includes('descuento'))) {
+                                btn.disabled = true;
+                                btn.classList.add('btn-disabled');
+                                btn.title = "No tienes permisos para aplicar descuentos";
+                            }
+                            if (btn.textContent.trim().toLowerCase() === 'eliminar' || btn.classList.contains('btn-danger')) {
+                                btn.disabled = true;
+                                btn.classList.add('btn-disabled');
+                                btn.title = "No tienes permisos para eliminar beneficios";
+                            }
+                        });
+                        // Deshabilitar input de acumular compra al cargar
+                        const inputAcumulada = document.getElementById("cantidadAcumulada");
+                        if (inputAcumulada) {
+                            inputAcumulada.disabled = true;
+                            inputAcumulada.classList.add('form-readonly');
+                            inputAcumulada.title = "No tienes permisos para acumular compras";
+                        }
+                    }
+                    if (rol === "salonero") {
                         // Desactivar Usuarios en todas las vistas (acceso restringido)
                         const linkUsuarios = document.getElementById('link-usuarios');
                         if (linkUsuarios) {
@@ -197,9 +281,30 @@ $vista = $_GET['view'] ?? 'dashboard';
                             linkUsuarios.removeAttribute('href');
                             linkUsuarios.title = "Acceso restringido";
                         }
+                        // Desactivar Análisis en todas las vistas (acceso restringido)
+                        const linkAnalisis = document.getElementById('link-analisis');
+                        if (linkAnalisis) {
+                            linkAnalisis.classList.add('disabled-link');
+                            linkAnalisis.removeAttribute('href');
+                            linkAnalisis.title = "Acceso restringido";
+                        }
+                        // Desactivar Bitácora en todas las vistas (acceso restringido)
+                        const linkBitacora = document.getElementById('link-Bitacora');
+                        if (linkBitacora) {
+                            linkBitacora.classList.add('disabled-link');
+                            linkBitacora.removeAttribute('href');
+                            linkBitacora.title = "Acceso restringido";
+                        }
 
                         // Solo aplicar restricciones de solo lectura en la vista de clientes
                         const currentView = '<?= $vista ?>';
+
+                        // OCULTAR MÉTRICAS EN DASHBOARD PARA SALONERO
+                        if (currentView === 'dashboard') {
+                            document.querySelectorAll('.tarjeta-metrica').forEach(div => {
+                                div.style.display = 'none';
+                            });
+                        }
 
                         if (currentView === 'clientes') {
                             const submitBtn = document.getElementById('submitBtn');
@@ -237,6 +342,14 @@ $vista = $_GET['view'] ?? 'dashboard';
                                     btn.classList.add('btn-disabled');
                                     btn.title = "No tienes permisos para eliminar clientes";
                                 });
+                                // Deshabilitar botón de reasignar en vez de ocultar
+                                document.querySelectorAll('button').forEach((btn) => {
+                                    if (btn.textContent.trim() === 'Reasignar' || (btn.onclick && btn.onclick.toString().includes('abrirModalReasignar'))) {
+                                        btn.disabled = true;
+                                        btn.classList.add('btn-disabled');
+                                        btn.title = "No tienes permisos para reasignar clientes";
+                                    }
+                                });
                             });
 
                             const lista = document.getElementById("clienteLista");
@@ -244,12 +357,38 @@ $vista = $_GET['view'] ?? 'dashboard';
                                 observer.observe(lista, { childList: true, subtree: true });
                             }
                         }
-                    } else if (rol === "Administrador") {
+                        if (currentView === 'codigo') {
+                            function disableImprimirBtns() {
+                                document.querySelectorAll('button').forEach((btn) => {
+                                    if (btn.onclick && btn.onclick.toString().includes('imprimirCodigo')) {
+                                        btn.disabled = true;
+                                        btn.classList.add('btn-disabled');
+                                        btn.title = "No tienes permisos para imprimir";
+                                    }
+                                });
+                            }
+                            window.disableImprimirBtns = disableImprimirBtns;
+                            const observer = new MutationObserver(disableImprimirBtns);
+                            const lista = document.getElementById("codigoLista");
+                            if (lista) {
+                                observer.observe(lista, { childList: true, subtree: true });
+                            }
+                            // Llamar también al cargar la vista
+                            disableImprimirBtns();
+                        }
+                    } else if (rol === "administrador") {
                         const linkUsuarios = document.getElementById('link-usuarios');
                         if (linkUsuarios) {
                             linkUsuarios.classList.add('disabled-link');
                             linkUsuarios.removeAttribute('href');
                             linkUsuarios.title = "Acceso restringido";
+                        }
+                        // Desactivar Bitácora en todas las vistas (acceso restringido)
+                        const linkBitacora = document.getElementById('link-Bitacora');
+                        if (linkBitacora) {
+                            linkBitacora.classList.add('disabled-link');
+                            linkBitacora.removeAttribute('href');
+                            linkBitacora.title = "Acceso restringido";
                         }
 
                         const currentView = '<?= $vista ?>';
@@ -261,6 +400,14 @@ $vista = $_GET['view'] ?? 'dashboard';
                                     btn.classList.add('btn-disabled');
                                     btn.title = "No tienes permisos para eliminar clientes";
                                 });
+                                // Deshabilitar botón de reasignar igual que eliminar
+                                document.querySelectorAll('button').forEach((btn) => {
+                                    if (btn.textContent.trim() === 'Reasignar' || (btn.onclick && btn.onclick.toString().includes('abrirModalReasignar'))) {
+                                        btn.disabled = true;
+                                        btn.classList.add('btn-disabled');
+                                        btn.title = "No tienes permisos para reasignar clientes";
+                                    }
+                                });
                             });
 
                             const lista = document.getElementById("clienteLista");
@@ -268,6 +415,29 @@ $vista = $_GET['view'] ?? 'dashboard';
                                 observer.observe(lista, { childList: true, subtree: true });
                             }
                         }
+
+                        // === BLOQUE PARA CÓDIGO DE BARRAS ===
+                        if (currentView === 'codigo') {
+                            function disableImprimirBtns() {
+                                document.querySelectorAll('button').forEach((btn) => {
+                                    if (btn.onclick && btn.onclick.toString().includes('imprimirCodigo')) {
+                                        btn.disabled = true;
+                                        btn.classList.add('btn-disabled');
+                                        btn.title = "No tienes permisos para imprimir";
+                                    }
+                                });
+                            }
+                            window.disableImprimirBtns = disableImprimirBtns;
+                            const lista = document.getElementById("codigoLista");
+                            if (lista) {
+                                const observer = new MutationObserver(disableImprimirBtns);
+                                observer.observe(lista, { childList: true, subtree: true });
+                            }
+                            // Llamar también al cargar la vista
+                            disableImprimirBtns();
+                        }
+                    } else if (rol === "propietario") {
+                        // El propietario tiene acceso total, no se aplican restricciones.
                     }
 
 

@@ -899,10 +899,6 @@ const mostrarHistorialReasignaciones = (historialPorCliente) => {
   }).join('');
 
   contenedor.innerHTML = `
-    <div class="alert alert-info alert-sm mb-3">
-      <i class="fas fa-info-circle me-2"></i>
-      <small>Haz clic en cualquier fila para ver el detalle de todas las reasignaciones de ese cliente.</small>
-    </div>
     <table class="table table-striped table-hover mt-2">
       <thead class="table-dark">
         <tr>

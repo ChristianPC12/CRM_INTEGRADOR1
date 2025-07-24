@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-// Carga clases necesarias
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/bitacora/BitacoraDAO.php';
 require_once __DIR__ . '/../model/bitacora/BitacoraDTO.php';
@@ -50,7 +49,7 @@ class BitacoraController
 
 // ==== HTTP ====
 if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
-    ob_start(); // 🧹 Limpia cualquier salida previa
+    ob_start();
 
     try {
         BitacoraDAO::ejecutarLimpiezaAutomatica();
@@ -82,7 +81,20 @@ if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
                 break;
 
             case 'readAll':
-                $response = ['success' => true, 'data' => $dao->readAll()];
+                $bitacoras = $dao->readAll();
+                $data = [];
+
+                foreach ($bitacoras as $b) {
+                    $data[] = [
+                        'idUsuario' => $b->idUsuario,
+                        'nombreUsuario' => $b->nombreUsuario ?? '',
+                        'horaEntrada' => $b->horaEntrada,
+                        'horaSalida' => $b->horaSalida,
+                        'fecha' => $b->fecha
+                    ];
+                }
+
+                $response = ['success' => true, 'data' => $data];
                 break;
 
             case 'update':
@@ -131,6 +143,7 @@ if (php_sapi_name() !== 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
         ]);
     }
 
-    ob_end_flush(); // 🧼 Limpia y muestra solo el JSON
+    ob_end_flush();
 }
 ?>
+

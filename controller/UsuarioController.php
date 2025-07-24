@@ -90,7 +90,7 @@ try {
             echo json_encode([
                 'success' => true,
                 'message' => 'Login exitoso',
-                'usuario' => $usuarioEncontrado->usuario,
+                'usuario' => $usuarioEncontrado->nombre,
                 'rol' => $usuarioEncontrado->rol,
                 'redirect' => '/CRM_INT/CRM/index.php?view=dashboard'
             ]);

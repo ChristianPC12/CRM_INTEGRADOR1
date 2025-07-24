@@ -105,10 +105,10 @@ document.addEventListener("DOMContentLoaded", function () {
         let mensaje = "";
         switch (rol) {
           case "Administrador":
-            mensaje = "Como administrador, puede acceder completamente al Dashboard. En la sección de Clientes VIP puede ver, agregar y editar clientes, pero no eliminarlos. En la sección de Beneficios puede usar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios.";
+            mensaje = "Como administrador, tiene acceso completo al Dashboard. En la sección de Clientes VIP, puede ver, agregar y editar clientes, pero no puede eliminarlos ni reasignarles tarjetas. En la sección de Beneficios, puede utilizar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios. En Código de Barras, puede utilizar todas las funcionalidades, incluyendo la exportación a PDF, pero no puede imprimir directamente desde impresora.Tiene acceso completo al módulo de Análisis y a la sección de Cumpleaños, con todas sus funcionalidades.No tiene acceso al módulo de Bitácora.";
             break;
           case "Salonero":
-            mensaje = "Como salonero, puede ver todo el contenido del Dashboard. En la sección de Clientes VIP solo puede ver la información, pero no puede agregar, editar ni eliminar clientes. En la sección de Beneficios puede hacer búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios.";
+            mensaje = "Como salonero, puede ver solo la sección de Tareas en el Dashboard. En la sección de Clientes VIP, solo puede visualizar la información; no puede agregar, editar, eliminar clientes ni reasignar tarjetas. En la sección de Beneficios, puede realizar búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios. En Código de Barras, tiene permitido realizar búsquedas, actualizar y utilizar la funcionalidad del código de barra, pero no puede exportar a PDF ni imprimir. No tiene permiso de acceso al módulo de Análisis. Tiene acceso completo a Cumpleaños, con todas sus funcionalidades. No tiene acceso permitido a Bitácora.";
             break;
           case "Propietario":
             mensaje = "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción.";

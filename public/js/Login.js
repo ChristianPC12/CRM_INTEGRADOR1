@@ -86,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
     formData.append("contrasena", contrasena);
 
     fetch("controller/UsuarioController.php", {
-
       method: "POST",
       body: formData,
       credentials: "same-origin",
@@ -108,10 +107,17 @@ document.addEventListener("DOMContentLoaded", function () {
               localStorage.removeItem("rolUsuario");
             }
 
+            if (data.usuario) {
+              localStorage.setItem("nombreUsuario", data.usuario);
+            } else {
+              localStorage.removeItem("nombreUsuario");
+            }
+
             showSuccessMessage();
 
             setTimeout(() => {
-              window.location.href = data.redirect || "/CRM_INT/CRM/index.php?view=dashboard";
+              window.location.href =
+                data.redirect || "/CRM_INT/CRM/index.php?view=dashboard";
             }, 1500);
           } else {
             showLoginError(data.message || "Credenciales incorrectas");

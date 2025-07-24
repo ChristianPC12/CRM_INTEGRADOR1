@@ -25,6 +25,7 @@ class BitacoraMapper
         $dto->horaEntrada = $row['HoraEntrada'] ?? null;
         $dto->horaSalida = $row['HoraSalida'] ?? null;
         $dto->fecha = $row['Fecha'] ?? null;
+        $dto->nombreUsuario = $row['nombreUsuario'] ?? ''; // ← Añadido
 
         return $dto;
     }

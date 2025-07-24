@@ -9,21 +9,27 @@
   <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Dashboard.css" />
 </head>
 
-<body>
+<body data-nombre="<?= $_SESSION['usuario'] ?? 'Usuario' ?>">
+
+
   <div id="container-dashboard">
 
     <!-- Panal de metricas-->
   </div>
   <div class="resumen-metricas">
 
-
     <!-- Bienvenida -->
     <div class="tarjeta-metrica">
       <i class="bi bi-person-circle icon-metrica"></i>
       <h4>Bienvenido</h4>
       <p class="valor" id="bienvenida-nombre">Usuario</p>
-      <span class="subvalor">¡Nos alegra tenerte de vuelta!</span>
+      <span class="subvalor">
+        Rol: <span id="bienvenida-rol">Invitado</span><br>
+        ¡Nos alegra tenerte de vuelta!
+      </span>
     </div>
+
+
 
     <!-- Cumpleaños -->
     <div class="tarjeta-metrica">

@@ -28,7 +28,7 @@ async function cargarBitacora() {
     }
 
     function calcularDuracion(horaEntrada, horaSalida) {
-      if (!horaSalida || horaSalida === "00:00:00") return "En curso";
+      if (!horaSalida || horaSalida === "00:00:00") return "EN CURSO";
 
       const [hEntH, hEntM, hEntS] = horaEntrada.split(":").map(Number);
       const [hSalH, hSalM, hSalS] = horaSalida.split(":").map(Number);
@@ -118,4 +118,3 @@ function exportToExcel() {
   a.click();
 }
 
-// ✅ ¡Fin del archivo sin líneas sueltas ni retornos de objetos!

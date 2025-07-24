@@ -11,7 +11,6 @@ $mostrarAlerta = json_decode($expiracionJson, true)['mostrarAlerta'] ?? false;
   <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Bitacora.css?v=<?= time() ?>">
 </head>
 <body>
-  <h2>Bitácora de Usuarios</h2>
 
   <div class="alert">
     Los registros se eliminan automáticamente al cumplir 30 días. 

@@ -1,20 +1,24 @@
 :root {
   --amarillo: #f9c41f;
   --gris: #838886;
-  --negro: #000000;
-  --blanco: #ffffff;
+  --negro: #000;
+  --blanco: #fff;
+  --gris-fondo: #f7f7f7;
+  --sombra: rgba(0, 0, 0, 0.1);
+  --sombra-hover: rgba(0, 0, 0, 0.15);
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* ==== Layout base mejorado ==== */
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   min-height: 100vh;
-  background-color: var(--gris);
+  background: var(--gris) !important;
   overflow-x: hidden;
 }
 
@@ -22,91 +26,100 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-body::before {
+/* Fondo decorativo optimizado */
+body::before,
+body::after {
   content: "";
   position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
   top: 0;
   left: 0;
   width: 40%;
   height: 70%;
   background: var(--amarillo);
-  z-index: -1;
 }
 
 body::after {
-  content: "";
-  position: fixed;
   bottom: 0;
   right: 0;
   width: 60%;
   height: 50%;
   background: var(--gris);
-  z-index: -1;
 }
 
-/* Botones */
+/* ==== Contenido principal ==== */
+.content {
+  margin-left: 220px;
+  padding: 24px;
+  flex: 1;
+}
+
+.container {
+  max-width: 102%;
+  transform: translateX(1%);
+}
+
+/* ==== Botones mejorados ==== */
 .btn-primary {
   background-color: var(--amarillo);
   color: var(--negro);
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px var(--sombra);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
   background-color: #e6b619;
-  transform: scale(1.03);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--sombra-hover);
 }
 
 .btn-primary:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.5);
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.3);
 }
 
 .btn-danger:hover {
   background-color: #bb2d3b;
   border-color: #a52834;
+  transform: translateY(-1px);
 }
 
-/* Cards */
+/* ==== Cards mejoradas ==== */
 .card {
   border: none;
   border-radius: 12px;
-  overflow: hidden;
   background: var(--blanco);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-shadow: 0 2px 8px var(--sombra);
+  margin-bottom: 24px;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px var(--sombra-hover);
 }
 
 .card.shadow.mb-4 {
-  box-shadow: 0 0 10px rgba(249, 196, 31, 0.4);
-  border-left: 5px solid var(--amarillo);
+  box-shadow: 0 0 10px rgba(249, 196, 31, 0.3);
+  border-left: 4px solid var(--amarillo);
 }
 
 .card-header {
-  background-color: var(--negro) !important;
+  background: var(--negro) !important;
   color: var(--blanco) !important;
   font-weight: bold;
   letter-spacing: 0.5px;
-}
-
-/* Sidebar */
-/* Los estilos del sidebar se heredan de Layout.css */
-
-/* Contenido principal */
-.content {
-  margin-left: 220px;
-  padding: 24px;
-  flex-grow: 1;
-}
-
-.container {
-  max-width: 102%;
-  transform: translateX(1%);
+  padding: 16px 20px;
 }
 
 /* Lista de clientes con scroll */
@@ -129,6 +142,12 @@ body::after {
   margin-bottom: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.celda-correo {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .table-container table {

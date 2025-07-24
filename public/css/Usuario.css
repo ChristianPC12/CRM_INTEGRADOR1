@@ -1,8 +1,46 @@
 :root {
   --amarillo: #f9c41f;
   --gris: #838886;
-  --negro: #000000;
-  --blanco: #ffffff;
+  --negro: #000;
+  --blanco: #fff;
+  --gris-fondo: #f7f7f7;
+  --sombra: rgba(0, 0, 0, 0.1);
+  --sombra-hover: rgba(0, 0, 0, 0.15);
+}
+
+/* ==== Layout base ==== */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background: var(--gris) !important;
+  overflow-x: hidden;
+}
+
+/* Fondo decorativo */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 70%;
+  background: var(--amarillo);
+}
+
+body::after {
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 50%;
+  background: var(--gris);
 }
 
 /* ====== ESTILOS PARA USUARIOS ====== */
@@ -10,30 +48,63 @@
 #usuario-container {
   max-width: 1100px;
   margin: auto;
-  padding: 1rem;
-  background-color: var(--GRIS);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px var(--sombra);
   border-radius: 12px;
+  border-left: 4px solid var(--amarillo);
 }
 
 #usuarioForm .form-label {
   font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 0.5rem;
 }
 
 #usuarioForm input,
 #usuarioForm select,
 #usuarioForm textarea {
   font-size: 0.95rem;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#usuarioForm input:focus,
+#usuarioForm select:focus,
+#usuarioForm textarea:focus {
+  border-color: var(--amarillo);
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
+  outline: none;
 }
 
 #usuarioForm textarea {
   resize: vertical;
-  min-height: 90px;
+  min-height: 100px;
 }
 
+/* ==== Botones mejorados ==== */
 .btn {
   min-width: 120px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--amarillo);
+  color: var(--negro);
+  box-shadow: 0 2px 4px var(--sombra);
+}
+
+.btn-primary:hover {
+  background: #e6b619;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--sombra-hover);
 }
 
 .table-responsive {
@@ -60,26 +131,34 @@ html::-webkit-scrollbar,
 
 /* ====== DECORACIÓN FONDO ====== */
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 40%;
-  height: 70%;
-  background: var(--amarillo);
-  z-index: -1;
+html body {
+  background: var(--gris) !important;
+  overflow-x: hidden !important;
+  min-height: 100vh !important;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 60%;
-  height: 50%;
-  background: var(--gris);
-  z-index: -1;
+html body::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 40% !important;
+  height: 70% !important;
+  background: var(--amarillo) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+html body::after {
+  content: "" !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 60% !important;
+  height: 50% !important;
+  background: var(--gris) !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
 }
 
 /* ====== COMPONENTES ====== */

@@ -2,22 +2,30 @@
   --amarillo: #f9c41f;
   --gris: #838886;
   --blanco: #ffffff;
-  --negro: #000000;
+  --negro: #000;
+  --gris-fondo: #f7f7f7;
+  --sombra: rgba(0, 0, 0, 0.1);
+  --sombra-hover: rgba(0, 0, 0, 0.15);
   --header-h: 72px;
   --card-max-w: 1100px;
 }
 
-/* === DECORACIÓN GLOBAL ======================================= */
+/* === LAYOUT BASE MEJORADO ======================================= */
 body, html {
   margin: 0;
 }
 
 body {
-  background: var(--gris);
+  background: var(--gris) !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Cintas decorativas */
-body::before, body::after {
+/* Fondo decorativo optimizado */
+body::before, 
+body::after {
   content: "";
   position: fixed;
   z-index: -1;
@@ -40,25 +48,121 @@ body::after {
   background: var(--gris);
 }
 
+/* === CONTENIDO PRINCIPAL OPTIMIZADO === */
+.content {
+  margin-left: 220px;
+  padding: 12px 24px;
+  flex: 1;
+  display: flex;
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+/* === CARDS Y FORMULARIOS MEJORADOS === */
+.card {
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px var(--sombra);
+  margin-bottom: 16px; /* Reducido de 24px a 16px */
+  transition: box-shadow 0.3s ease;
+  border-left: 4px solid var(--amarillo);
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px var(--sombra-hover);
+}
+
+.card-header {
+  background: var(--negro) !important;
+  color: var(--blanco) !important;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding: 16px 20px;
+}
+
+/* === TABLAS TRANSPARENTES === */
+.table {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  background: var(--amarillo);
+  color: var(--negro);
+  font-weight: bold;
+  border: none;
+}
+
+.table td {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* === BOTONES MEJORADOS === */
+.btn-primary {
+  background: var(--amarillo);
+  color: var(--negro);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px var(--sombra);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #e6b619;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--sombra-hover);
+}
+
+/* === CONTENEDORES === */
+.container {
+  max-width: 102%;
+  transform: translateX(1%);
+}
+
+/* === FORMULARIOS MEJORADOS === */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--amarillo);
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
+  outline: none;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 0.5rem;
+}
+
 /* === CONTENEDOR DE TABLA ===================================== */
 .card {
   max-width: var(--card-max-w);
-  margin: 2rem auto;
+  margin: 0; /* Eliminamos márgenes para mejor centrado */
   border: none;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--blanco);
+  background: rgba(255, 255, 255, 0.95) !important; /* Semi-transparente para mostrar fondo decorativo */
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   border-left: 5px solid var(--amarillo);
-  max-height: calc(100vh - 4rem - var(--header-h));
+  max-height: calc(100vh - 6rem); /* Más altura disponible */
   display: flex;
   flex-direction: column;
+  width: 100%; /* Asegura que use todo el ancho disponible */
 }
 
 .card-header {
   background: var(--negro);
   color: var(--blanco);
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem; /* Reducido de 0.75rem a 0.5rem */
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -84,10 +188,10 @@ body::after {
 #codigoLista {
   flex: 1 1 auto;
   overflow-y: auto !important;
-  padding: 1rem !important;
+  padding: 0.75rem !important;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
-  max-height: 400px; /* Altura máxima para forzar scroll */
+  max-height: calc(100vh - 12rem); /* Ajustado para usar más espacio vertical */
 }
 
 #codigoLista::-webkit-scrollbar {
@@ -153,7 +257,7 @@ body::after {
 .mover-derecha {
   max-width: 98.5%;
   margin-left: 1.6%;
-  margin-top: -2.2%;
+  margin-top: 0; /* Eliminamos el margen negativo para mejor centrado */
 }
 
 /* === MEDIA-QUERIES =========================================== */
@@ -177,6 +281,14 @@ body::after {
     width: 45%;
     height: 45%;
   }
+  .content {
+    padding: 8px 16px;
+    align-items: flex-start; /* En móviles, no centrar verticalmente */
+  }
+  .card {
+    margin: 0.5rem 0; /* Pequeño margen en móviles */
+    max-height: calc(100vh - 4rem);
+  }
   #buscarCodigo {
     width: 100%;
   }
@@ -188,9 +300,14 @@ body::after {
   body::before, body::after {
     display: none;
   }
+  .content {
+    align-items: flex-start; /* En móviles pequeños, alineación superior */
+    padding: 4px 8px;
+  }
   .card {
-    margin: 1rem 0.5rem;
+    margin: 0.5rem 0;
     border-left-width: 3px;
+    max-height: calc(100vh - 2rem);
   }
   .card-header {
     flex-direction: column;

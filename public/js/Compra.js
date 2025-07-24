@@ -190,6 +190,48 @@ if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
       document.getElementById("compraCardForm").style.display = "block";
       document.getElementById("compraIndicacion").style.display = "none";
       cargarHistorialCompras(idClienteActual);
+      // Lógica de confeti si el cumpleaños es esta semana
+      if (data.fechaCumpleanos) {
+        function esCumpleEstaSemana(fechaCumpleanos) {
+          const hoy = new Date();
+          // Obtener el lunes de la semana actual
+          const diaSemana = hoy.getDay() === 0 ? 7 : hoy.getDay(); // 1 (lunes) a 7 (domingo)
+          const lunes = new Date(hoy);
+          lunes.setHours(0,0,0,0);
+          lunes.setDate(hoy.getDate() - (diaSemana - 1));
+          // Obtener el domingo de la semana actual
+          const domingo = new Date(lunes);
+          domingo.setDate(lunes.getDate() + 6);
+          domingo.setHours(23,59,59,999);
+
+          // Fecha de cumpleaños de este año
+          const cumple = new Date(fechaCumpleanos);
+          cumple.setFullYear(hoy.getFullYear());
+
+          // ¿El cumpleaños cae entre lunes y domingo de esta semana?
+          return cumple >= lunes && cumple <= domingo;
+        }
+        if (typeof confetti === 'function' && esCumpleEstaSemana(data.fechaCumpleanos)) {
+          // Centro
+          confetti({
+            particleCount: 100,
+            spread: 120,
+            origin: { y: 0.6, x: 0.5 }
+          });
+          // Izquierda
+          confetti({
+            particleCount: 80,
+            spread: 120,
+            origin: { y: 0.6, x: 0.1 }
+          });
+          // Derecha
+          confetti({
+            particleCount: 80,
+            spread: 120,
+            origin: { y: 0.6, x: 0.9 }
+          });
+        }
+      }
     } catch {
       alert("Error de conexión con el servidor.");
     }

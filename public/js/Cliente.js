@@ -102,9 +102,10 @@ const mostrarClientes = (clientes) => {
                     <td>${cliente.id}</td>
                     <td>${cliente.cedula}</td>
                     <td>${cliente.nombre.toUpperCase()}</td>
-                    <td>${
+                    <td class="celda-correo">${
                       cliente.correo ? cliente.correo.toUpperCase() : ""
                     }</td>
+
                     <td>${cliente.telefono}</td>
                     <td>${
                       cliente.lugarResidencia
@@ -296,6 +297,13 @@ form.onsubmit = async (e) => {
     return;
   }
 
+  if (telefonoLimpio.length !== 8) {
+    alert("El teléfono debe tener exactamente 8 dígitos.");
+    form.telefono.focus();
+    return;
+  }
+
+
 
 
   if (!validaciones.esNombreValido(nombre)) {
@@ -309,8 +317,6 @@ form.onsubmit = async (e) => {
     form.nombre.focus();
     return;
   }
-
-
 
   if (correo && !validaciones.esEmailValido(correo)) {
     alert("Por favor ingrese un correo electrónico válido.");

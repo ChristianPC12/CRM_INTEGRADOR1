@@ -3,7 +3,6 @@
 <div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
 
 <div class="container mt-4 mover-derecha">
-    <h2 class="text-center mb-4">Gestión de Clientes</h2>
 
     <!-- Formulario -->
     <div class="card shadow mb-4">
@@ -35,7 +34,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="clienteCorreo" class="form-label">Correo Electrónico *</label>
                         <input type="email" name="correo" id="clienteCorreo" class="form-control"
-                            placeholder="ejemplo@correo.com">
+                            placeholder="ejemplo@correo.com"  maxlength="30">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="clienteTelefono" class="form-label">Teléfono *</label>

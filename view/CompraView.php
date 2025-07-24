@@ -97,6 +97,7 @@
         </div>
         <div class="compra-barra-derecha"></div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="/CRM_INT/CRM/public/js/Compra.js"></script>
 </body>
 

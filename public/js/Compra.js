@@ -230,6 +230,11 @@ if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
             spread: 120,
             origin: { y: 0.6, x: 0.9 }
           });
+          
+          // Mostrar modal de cumpleaños después del confeti
+          setTimeout(() => {
+            mostrarModalCumpleanos(data.nombre);
+          }, 1000); // Esperar 1 segundo después del confeti
         }
       }
     } catch {
@@ -305,3 +310,33 @@ if (opcion === "compra" && btnBuscar.textContent === "Acumular") {
     }
   };
 });
+
+/**
+ * Muestra el modal de cumpleaños
+ */
+function mostrarModalCumpleanos(nombreCliente) {
+  // Verificar si el modal existe
+  const modal = document.getElementById('modalCumpleanos');
+  if (!modal) {
+    console.log('Modal de cumpleaños no encontrado en esta vista');
+    return;
+  }
+  
+  // Actualizar el nombre en el modal
+  const nombreElement = document.getElementById('nombreCumpleanero');
+  if (nombreElement) {
+    nombreElement.textContent = nombreCliente;
+  }
+  
+  // Mostrar el modal
+  const modalInstance = new bootstrap.Modal(modal);
+  modalInstance.show();
+  
+  // Configurar el botón de ir a cumpleaños
+  const btnIrCumpleanos = document.getElementById('btnIrCumpleanos');
+  if (btnIrCumpleanos) {
+    btnIrCumpleanos.onclick = function() {
+      window.location.href = '/CRM_INT/CRM/index.php?view=cumple';
+    };
+  }
+}

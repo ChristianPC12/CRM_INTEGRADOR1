@@ -10,7 +10,6 @@
             <h5 class="mb-0 flex-grow-1 titulo-usuarios">Registro de Usuario</h5>
         </div>
         <div class="card-body">
-            <h3 id="usuarioFormTitulo" class="mb-3">Registrar Usuario</h3>
             <form id="usuarioForm">
                 <input type="hidden" id="usuarioId" value="">
                 <div class="row">

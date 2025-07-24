@@ -97,8 +97,46 @@
         </div>
         <div class="compra-barra-derecha"></div>
     </div>
+
+    <!-- Modal de Cumpleaños -->
+    <div class="modal fade" id="modalCumpleanos" tabindex="-1" aria-labelledby="modalCumpleanosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: 3px solid #f9c41f; border-radius: 15px;">
+                <div class="modal-header"
+                    style="background: linear-gradient(135deg, #f9c41f 0%, #e6b619 100%); color: #000;">
+                    <h5 class="modal-title fw-bold" id="modalCumpleanosLabel">
+                        🎉 ¡CUMPLEAÑOS ESPECIAL! 🎂
+                    </h5>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-birthday-cake" style="font-size: 3rem; color: #f9c41f;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3" id="nombreCumpleanero" style="color: #000;"></h4>
+                    <p class="lead mb-4" style="color: #555;">
+                        ¡Está celebrando su cumpleaños esta semana! 🎊
+                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-gift me-2"></i>
+                        <strong>¡Recordale que puede reclamar su regalo especial!</strong>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center" style="border-top: 2px solid #f9c41f;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnIrCumpleanos"
+                        style="background: #f9c41f; border-color: #f9c41f; color: #000; font-weight: bold;">
+                        <i class="fas fa-birthday-cake"></i> Ir a Cumpleaños
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="/CRM_INT/CRM/public/js/Compra.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </body>
 
 </html>

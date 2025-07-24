@@ -253,6 +253,53 @@ body::after {
   font-size: 0.9rem;
 }
 
+/* === MODAL DE CUMPLEAÑOS === */
+#modalCumpleanos .modal-content {
+  border: 3px solid var(--amarillo) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 10px 30px rgba(249, 196, 31, 0.3) !important;
+}
+
+#modalCumpleanos .modal-header {
+  background: linear-gradient(135deg, var(--amarillo) 0%, #e6b619 100%) !important;
+  color: var(--negro) !important;
+  border-bottom: 2px solid var(--amarillo) !important;
+}
+
+#modalCumpleanos .modal-footer {
+  border-top: 2px solid var(--amarillo) !important;
+}
+
+#modalCumpleanos .btn-primary {
+  background: var(--amarillo) !important;
+  border-color: var(--amarillo) !important;
+  color: var(--negro) !important;
+  font-weight: bold !important;
+}
+
+#modalCumpleanos .btn-primary:hover {
+  background: #e6b619 !important;
+  border-color: #e6b619 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(249, 196, 31, 0.4) !important;
+}
+
+#modalCumpleanos .fas.fa-birthday-cake {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
 /* === UTILITY ================================================= */
 .mover-derecha {
   max-width: 98.5%;

@@ -26,18 +26,25 @@ class BitacoraDAO {
     }
 
     // Leer todas las entradas
-    public function readAll() {
-        $stmt = $this->conn->prepare("CALL BitacoraReadAll()");
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Leer todas las entradas con el nombre del usuario
+public function readAll() {
+    $sql = "SELECT b.*, u.Usuario AS nombreUsuario 
+            FROM bitacora b 
+            JOIN usuario u ON b.IdUsuario = u.Id
+            ORDER BY b.Fecha DESC, b.HoraEntrada DESC";
 
-        $bitacoras = [];
-        foreach ($result as $row) {
-            $bitacoras[] = BitacoraMapper::mapRowToDTO($row);
-        }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $bitacoras;
+    $bitacoras = [];
+    foreach ($result as $row) {
+        $bitacoras[] = BitacoraMapper::mapRowToDTO($row);
     }
+
+    return $bitacoras;
+}
+
 
     // Actualizar la hora de salida (💡usamos múltiples condiciones para identificar la entrada)
     public function update(BitacoraDTO $dto) {

@@ -31,7 +31,11 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Bitacora.css">
     <?php elseif ($vista === 'cumple'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cumple.css?v=<?= time() ?>">
+    <?php elseif ($vista === 'guia'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual.css?v=<?= time() ?>">
     <?php endif; ?>
+
+
     <!-- CSS general -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Layout.css?v=<?= time() ?>">
     <!-- CSS de usuarios (cargado al final para mayor prioridad) -->
@@ -102,6 +106,13 @@ $vista = $_GET['view'] ?? 'dashboard';
                     <i class="bi bi-journal-text"></i> Bitácora
                 </a>
             </li>
+            <li>
+                <a href="/CRM_INT/CRM/index.php?view=guia" id="link-guia"
+                    class="<?= $vista === 'guia' ? 'active' : '' ?>">
+                    <i class="bi bi-info-circle"></i> Manual de guía
+                </a>
+            </li>
+
 
 
             <li>
@@ -135,6 +146,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'CumpleView.php';
             } elseif ($vista === 'Bitacora') {
                 include 'BitacoraView.php';
+            } elseif ($vista === 'guia') {
+                include 'ManualView.php';
             } else {
                 include 'DashboardView.php';
             }
@@ -158,7 +171,7 @@ $vista = $_GET['view'] ?? 'dashboard';
             <!-- Script general -->
             <script src="/CRM_INT/CRM/public/js/Layout.js"></script>
             <script src="/CRM_INT/CRM/public/js/ScannerGlobal.js?v=<?= time() ?>"></script>
-            
+
             <!-- Scripts específicos -->
             <?php if ($vista === 'dashboard'): ?>
             <?php elseif ($vista === 'clientes'): ?>
@@ -167,6 +180,10 @@ $vista = $_GET['view'] ?? 'dashboard';
 
             <?php if ($vista === 'cumple'): ?>
                 <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
+            <?php endif; ?>
+
+            <?php if ($vista === 'guia'): ?>
+                <script src="/CRM_INT/CRM/public/js/Manual.js"></script>
             <?php endif; ?>
 
 

@@ -52,3 +52,11 @@
   font-size: 0.95rem;
   line-height: 1.5;
 }
+.img-header {
+  width: 100px; 
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}

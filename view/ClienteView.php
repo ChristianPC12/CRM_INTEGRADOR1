@@ -160,8 +160,6 @@
                     <div class="alert alert-info alert-compact mt-3" role="alert">
                         <i class="fas fa-info-circle me-2"></i>
                         <small><strong>Proceso:</strong> Se generará un nuevo código VIP automáticamente.</small>
-                        <br>
-                        <small><i class="fas fa-keyboard me-1"></i><em>Tip: Puedes cerrar este modal presionando ESC o usando el botón X</em></small>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">

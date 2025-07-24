@@ -336,7 +336,7 @@ const formatearFecha = (fechaStr) => {
         day: "2-digit",
         month: "long",
         year: "numeric"
-    });
+    }).toUpperCase();;
 };
 function cargarHistorial() {
     fetch('/CRM_INT/CRM/controller/CumpleController.php', {

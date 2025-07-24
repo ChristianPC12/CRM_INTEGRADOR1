@@ -5,6 +5,7 @@ class BitacoraDTO {
     public $horaEntrada;
     public $horaSalida;
     public $fecha;
+    public $nombreUsuario; // <-- Nuevo campo
 
     public function getId() {
         return $this->id;
@@ -39,6 +40,13 @@ class BitacoraDTO {
     }
     public function setFecha($fecha) {
         $this->fecha = $fecha;
+    }
+
+    public function getNombreUsuario() {
+        return $this->nombreUsuario;
+    }
+    public function setNombreUsuario($nombreUsuario) {
+        $this->nombreUsuario = $nombreUsuario;
     }
 }
 ?>

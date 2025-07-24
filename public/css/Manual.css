@@ -32,14 +32,20 @@
 }
 
 .guia-header {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--amarillo);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 10px;
+  white-space: nowrap;
 }
+
+.guia-header i {
+  margin-right: 10px;
+  font-size: 1.3rem;
+}
+
 
 .guia-body {
   color: var(--gris);

@@ -6,4 +6,5 @@ class UsuarioDTO
     public $usuario;
     public $contrasena;
     public $rol;
+    public $nombre;
 }

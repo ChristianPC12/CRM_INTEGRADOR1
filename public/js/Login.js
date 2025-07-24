@@ -72,6 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function handleLogin() {
+    // Limpiar el rol antes de intentar login
+    localStorage.removeItem("rolUsuario");
     const usuario = emailInput.value.trim();
     const contrasena = passwordInput.value;
 

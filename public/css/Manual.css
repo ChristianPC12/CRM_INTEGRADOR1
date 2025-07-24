@@ -1,0 +1,48 @@
+:root {
+  --amarillo: #f9c41f;
+  --negro: #000000;
+  --blanco: #ffffff;
+  --gris: #838886;
+}
+
+.guia-container {
+  background-color: var(--blanco);
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.guia-titulo {
+  color: var(--negro);
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+.guia-card {
+  background-color: var(--blanco);
+  border: 2px solid var(--amarillo);
+  border-left: 6px solid var(--amarillo);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.guia-card:hover {
+  transform: scale(1.015);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.guia-header {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--amarillo);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guia-body {
+  color: var(--gris);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}

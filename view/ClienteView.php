@@ -3,7 +3,6 @@
 <div class="decor-line" style="top: 250px; left: 20%; width: 80px;"></div>
 
 <div class="container mt-4 mover-derecha">
-    <h2 class="text-center mb-4">Gestión de Clientes</h2>
 
     <!-- Formulario -->
     <div class="card shadow mb-4">

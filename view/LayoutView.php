@@ -206,12 +206,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas
                     const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
 
-                    // Si el rol es propietario, acceso total y no ejecutar restricciones
-                    if (rol === "propietario") {
-                        // Acceso total, no ejecutar ninguna restricción
-                        return;
-                    }
-
                     // Restricción para administrador en Beneficios: no puede eliminar beneficios
                     if (rol === "administrador" && '<?= $vista ?>' === 'compras') {
                         function disableDeleteButtons() {
@@ -248,6 +242,14 @@ $vista = $_GET['view'] ?? 'dashboard';
                                     btn.title = "No tienes permisos para aplicar descuentos";
                                 }
                                 // Eliminar beneficio
+                    // Mostrar el modal al hacer click en el logo para cualquier rol (fuera de restricciones)
+                    const logo = document.querySelector(".img-header");
+                    if (logo) {
+                        logo.style.cursor = 'pointer';
+                        logo.addEventListener('click', function () {
+                            abrirModal();
+                        });
+                    }
                                 if (btn.textContent.trim().toLowerCase() === 'eliminar' || btn.classList.contains('btn-danger')) {
                                     btn.disabled = true;
                                     btn.classList.add('btn-disabled');

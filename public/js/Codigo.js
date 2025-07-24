@@ -319,6 +319,10 @@ function mostrarCodigos(codigos) {
                 console.log('window.location.href ejecutado');
             });
         });
+        // Refuerzo: deshabilitar botones de imprimir si la función global existe
+        if (window.disableImprimirBtns) {
+            window.disableImprimirBtns();
+        }
     }, 100);
 }
 

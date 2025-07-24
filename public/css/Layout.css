@@ -326,3 +326,12 @@ body {
 .modal-botones button:hover {
   opacity: 0.9;
 }
+/* Hacer scroll invisible en el sidebar */
+.sidebar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Opera */
+}

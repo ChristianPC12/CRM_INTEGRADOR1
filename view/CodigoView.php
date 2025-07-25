@@ -3,7 +3,7 @@
         <h5 class="mb-0">Lista de Tarjetas</h5>
         <div class="d-flex gap-2">
             <input type="text" id="buscarCodigo" class="form-control form-control-sm w-auto"
-                placeholder="Buscar por # tarjeta">
+                placeholder="N° tarjeta o Nombre">
             <button id="btnBuscarTarjeta" class="btn btn-sm btn-warning" title="Ir a Beneficios">
                 <i class="bi bi-search"></i> Buscar
             </button>

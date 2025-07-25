@@ -229,11 +229,7 @@ window.redirigirCompra = function(idCliente) {
  */
 function mostrarCodigos(codigos) {
     const contenedor = document.getElementById("codigoLista");
-    if (!codigos || codigos.length === 0) {
-        contenedor.innerHTML = '<div class="alert alert-info">No hay tarjetas activas</div>';
-        return;
-    }
-
+   
     let filas = codigos.map((codigo, index) => {
         const barcodeId = `barcode-${index}`;
         return `
@@ -346,6 +342,9 @@ document.getElementById('buscarCodigo').addEventListener('input', function () {
 /**
  * Función para redirigir a beneficios desde el campo de búsqueda
  */
+/**
+ * Función para redirigir a beneficios desde el campo de búsqueda
+ */
 function buscarEnBeneficios() {
     const valor = document.getElementById('buscarCodigo').value.trim();
     if (!valor) {
@@ -353,9 +352,21 @@ function buscarEnBeneficios() {
         return;
     }
     
+    // Validar que solo contenga números
+    const esNumerico = /^\d+$/.test(valor);
+    if (!esNumerico) {
+        alert('Por favor ingrese solo números');
+        return;
+    }
+    
     console.log('Redirigiendo a beneficios desde búsqueda con tarjeta:', valor);
     window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(valor)}&buscar=auto`;
 }
+
+/**
+ * Event listener para el botón de búsqueda
+ */
+document.getElementById('btnBuscarTarjeta').addEventListener('click', buscarEnBeneficios);
 
 /**
  * Event listener para el botón de búsqueda
@@ -528,4 +539,30 @@ window.testClick = function(idCliente) {
     }
     console.log('Probando con ID:', idCliente);
     redirigirCompra(idCliente);
+
+
+    const inputBuscar = document.getElementById('buscarCodigo');
+const btnBuscar = document.getElementById('btnBuscarTarjeta');
+
+function validarBotonBuscarTarjeta() {
+    const valor = inputBuscar.value.trim();
+    const esNumero = /^\d+$/.test(valor); // Solo números enteros positivos
+
+    if (esNumero) {
+        btnBuscar.disabled = false;
+        btnBuscar.classList.remove('btn-disabled');
+    } else {
+        btnBuscar.disabled = true;
+        btnBuscar.classList.add('btn-disabled');
+    }
 }
+
+// Validar al escribir
+inputBuscar.addEventListener('input', validarBotonBuscarTarjeta);
+
+// Validar al cargar
+validarBotonBuscarTarjeta();
+
+}
+
+

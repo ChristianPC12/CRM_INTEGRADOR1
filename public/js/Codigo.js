@@ -335,9 +335,11 @@ document.getElementById('buscarCodigo').addEventListener('input', function () {
         mostrarCodigos(codigosGlobal);
         return;
     }
-    const filtrados = codigosGlobal.filter(c =>
-        String(c.idCliente).toLowerCase().includes(valor.toLowerCase())
-    );
+    const filtrados = codigosGlobal.filter(c => {
+        const tarjeta = String(c.idCliente).toLowerCase();
+        const nombre = (c.nombre || '').toLowerCase();
+        return tarjeta.includes(valor.toLowerCase()) || nombre.includes(valor.toLowerCase());
+    });
     mostrarCodigos(filtrados);
 });
 

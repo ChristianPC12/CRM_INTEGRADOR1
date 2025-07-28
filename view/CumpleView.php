@@ -27,7 +27,7 @@
 </div>
 
 <!-- FORMULARIO DE ENVÍO DE CORREO -->
-<div class="card shadow-sm mt-3" style="max-width: 1100px; margin: 0 auto; border-left: 5px solid #f9c41f;">
+<div class="card shadow-sm mt-3" style="border-left: 5px solid #f9c41f;">
     <div class="card-header bg-black text-warning py-2">
         <h6 class="mb-0"><i class="fas fa-envelope"></i> Enviar correo de felicitación</h6>
     </div>
@@ -68,7 +68,7 @@
 </div>
 
 <!-- HISTORIAL DE ENVÍOS -->
-<div class="card shadow-sm mt-3" style="max-width: 1100px; margin: 0 auto;">
+<div class="card shadow-sm mt-3">
     <div class="card-header bg-secondary text-white py-2">
         <h6 class="mb-0"><i class="fas fa-history"></i> Historial de cumpleaños atendidos</h6>
     </div>

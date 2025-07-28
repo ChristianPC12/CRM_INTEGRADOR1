@@ -142,8 +142,9 @@ body::after {
 /* Mejorando el select cuando no se ha seleccionado nada */
 #usuarioForm select:invalid,
 #usuarioForm select[value=""] {
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(0, 0, 0, 0.4) !important; /* Igualado al placeholder */
   font-style: italic;
+  font-weight: 400; /* Igualado al placeholder */
 }
 
 #usuarioForm select option {
@@ -153,8 +154,9 @@ body::after {
 }
 
 #usuarioForm select option:first-child {
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(0, 0, 0, 0.4) !important; /* Igualado al placeholder */
   font-style: italic;
+  font-weight: 400; /* Igualado al placeholder */
 }
 
 #usuarioForm input:focus,

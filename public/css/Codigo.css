@@ -1,28 +1,39 @@
+/* Codigo.css - versión moderna con fondo decorativo y sombras avanzadas */
 :root {
   --amarillo: #f9c41f;
-  --gris: #838886;
+  --negro: #121212;
   --blanco: #ffffff;
-  --negro: #000;
+  --gris: #838886;
+  --gris-claro: #e0e0e0;
+  --gris-muy-claro: #f5f5f5;
+  --gris-oscuro: #666666;
   --gris-fondo: #f7f7f7;
+  --naranja: #ff8c00;
+  --fondo-blanco: rgba(255, 255, 255, 0.95);
   --sombra: rgba(0, 0, 0, 0.1);
   --sombra-hover: rgba(0, 0, 0, 0.15);
+  --sombra-moderna: rgba(0, 0, 0, 0.06);
+  --sombra-elevada: 0 8px 32px rgba(0, 0, 0, 0.12);
   --header-h: 72px;
-  --card-max-w: 1100px;
+  --card-max-w: 1200px;
 }
 
-/* === LAYOUT BASE === */
-body, html { margin: 0; }
+/* === LAYOUT BASE - Modernizado === */
+body, html { 
+  margin: 0; 
+}
 
 body {
   background: var(--gris) !important;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Fondo decorativo */
-body::before, body::after {
+/* Fondo decorativo moderno */
+body::before, 
+body::after {
   content: "";
   position: fixed;
   z-index: -1;
@@ -34,7 +45,8 @@ body::before {
   left: 0;
   width: 40%;
   height: 70%;
-  background: var(--amarillo);
+  background: linear-gradient(135deg, var(--amarillo), #ffd700);
+  opacity: 0.9;
 }
 
 body::after {
@@ -42,108 +54,197 @@ body::after {
   right: 0;
   width: 60%;
   height: 50%;
-  background: var(--gris);
+  background: linear-gradient(45deg, var(--gris), #a8a8a8);
+  opacity: 0.8;
 }
 
-/* === CONTENIDO PRINCIPAL === */
+/* === CONTENIDO PRINCIPAL - Modernizado === */
 .content {
   margin-left: 220px;
-  padding: 12px 24px;
+  padding: 20px 32px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* === CARDS === */
+/* === CARDS - Modernizadas === */
 .card {
-  border: none;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95) !important;
-  box-shadow: 0 2px 8px var(--sombra);
-  margin-bottom: 16px;
-  transition: box-shadow 0.3s ease;
-  border-left: 4px solid var(--amarillo);
-  max-width: var(--card-max-w);
+  border: 1px solid var(--gris-muy-claro);
+  border-radius: 20px;
+  background: var(--fondo-blanco) !important;
+  box-shadow: var(--sombra-elevada);
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
   margin: 0;
   overflow: hidden;
   max-height: calc(100vh - 6rem);
   display: flex;
   flex-direction: column;
   width: 100%;
+  backdrop-filter: blur(10px);
+  position: relative;
 }
 
-.card:hover { box-shadow: 0 4px 12px var(--sombra-hover); }
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amarillo), var(--naranja));
+  border-radius: 20px 20px 0 0;
+}
+
+.card:hover { 
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
 
 .card-header {
-  background: var(--negro) !important;
-  color: var(--blanco) !important;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--negro), #2a2a2a) !important;
+  color: var(--amarillo) !important;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-/* === TABLAS === */
-.table {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
+  position: relative;
   overflow: hidden;
 }
 
-.table th {
-  background: var(--amarillo);
-  color: var(--negro);
-  font-weight: bold;
-  border: none;
+.card-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+      transparent 30%, 
+      rgba(249, 196, 31, 0.05) 50%, 
+      transparent 70%);
+  pointer-events: none;
 }
 
-.table td { border-color: rgba(0, 0, 0, 0.1); }
+/* === TABLAS - Modernizadas === */
+.table {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--sombra-elevada);
+  backdrop-filter: blur(10px);
+}
+
+.table th {
+  background: linear-gradient(135deg, var(--amarillo), var(--naranja));
+  color: var(--negro);
+  font-weight: 700;
+  border: none;
+  padding: 1rem 0.75rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.table td { 
+  border-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem 0.75rem;
+  transition: all 0.3s ease;
+  color: var(--negro) !important; /* Asegura que el texto sea negro */
+  background: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr:hover {
+  background: linear-gradient(135deg, rgba(249, 196, 31, 0.15), rgba(255, 255, 255, 0.95));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 196, 31, 0.2);
+}
+
+.table tbody tr:hover td {
+  background: transparent !important;
+  color: var(--negro) !important;
+}
 
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  border-radius: 16px;
 }
 
 .table-responsive table {
   width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
 }
 
-/* === BOTONES === */
+/* === BOTONES - Modernizados === */
 .btn-primary {
-  background: var(--amarillo);
+  background: linear-gradient(135deg, var(--amarillo), var(--naranja));
   color: var(--negro);
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  box-shadow: 0 2px 4px var(--sombra);
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(249, 196, 31, 0.3);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
 }
 
 .btn-primary:hover {
-  background: #e6b619;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px var(--sombra-hover);
+  background: linear-gradient(135deg, #e6b619, var(--amarillo));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(249, 196, 31, 0.4);
 }
 
 #btnActualizar {
-  background: var(--negro);
-  color: var(--blanco);
-  border: 1px solid var(--blanco);
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  transition: 0.2s;
+  background: transparent;
+  color: var(--amarillo);
+  border: 2px solid var(--amarillo);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
 }
 
 #btnActualizar:hover {
-  background: var(--blanco);
+  background: var(--amarillo);
   color: var(--negro);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 196, 31, 0.3);
 }
 
 /* === CONTENEDORES === */
@@ -152,18 +253,43 @@ body::after {
   transform: translateX(1%);
 }
 
-/* === FORMULARIOS === */
+/* === FORMULARIOS - Modernizados === */
 .form-control {
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 10px 12px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  color: var(--blanco);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
 }
 
 .form-control:focus {
   border-color: var(--amarillo);
-  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(249, 196, 31, 0.2), 0 4px 20px rgba(249, 196, 31, 0.15);
   outline: none;
+  transform: translateY(-2px);
+}
+
+.form-group {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.form-label {
+  color: var(--blanco);
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .form-label {
@@ -172,45 +298,95 @@ body::after {
   margin-bottom: 0.5rem;
 }
 
-/* === LISTA DE CÓDIGOS === */
+/* === LISTA DE CÓDIGOS - Modernizada === */
 #codigoLista {
   flex: 1 1 auto;
   overflow-y: auto !important;
-  padding: 0.75rem !important;
+  padding: 1rem !important;
   scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
+  scrollbar-color: var(--amarillo) rgba(255, 255, 255, 0.1);
   max-height: calc(100vh - 12rem);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
 }
 
-#codigoLista::-webkit-scrollbar { width: 6px; }
-#codigoLista::-webkit-scrollbar-track { background: transparent; }
-#codigoLista::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-#codigoLista::-webkit-scrollbar-thumb:hover { background: #999; }
+#codigoLista::-webkit-scrollbar { width: 8px; }
+#codigoLista::-webkit-scrollbar-track { 
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 8px;
+}
+#codigoLista::-webkit-scrollbar-thumb { 
+  background: linear-gradient(135deg, var(--amarillo), var(--naranja)); 
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(249, 196, 31, 0.3);
+}
+#codigoLista::-webkit-scrollbar-thumb:hover { 
+  background: linear-gradient(135deg, #e6b619, var(--amarillo));
+}
 
 #codigoLista th, #codigoLista td {
   text-align: center;
-  vertical-align: top;
-  padding: 0.5rem;
+  vertical-align: middle;
+  padding: 12px 8px;
   word-wrap: break-word;
   word-break: break-word;
   white-space: normal;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#codigoLista th {
+  background: linear-gradient(135deg, var(--amarillo), var(--naranja));
+  color: var(--negro);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 #codigoLista td {
-  min-height: 2.5rem;
-  line-height: 1.4;
+  min-height: 3rem;
+  line-height: 1.5;
+  color: var(--negro) !important; /* Cambio a texto negro para que se vea */
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+#codigoLista tbody tr:hover td {
+  background: rgba(249, 196, 31, 0.15) !important;
+  color: var(--negro) !important; /* Mantener texto negro en hover */
 }
 
 #buscarCodigo {
-  width: 12rem;
+  width: 14rem;
   max-width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--blanco);
+  padding: 12px 16px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+#buscarCodigo::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#buscarCodigo:focus {
+  border-color: var(--amarillo);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
+  outline: none;
 }
 
 /* === MODAL CUMPLEAÑOS === */
@@ -257,35 +433,122 @@ body::after {
   margin-top: 0;
 }
 
-/* === MEDIA QUERIES === */
+/* === MEDIA QUERIES - Modernizadas === */
 @media (max-width: 992px) {
-  .card { max-width: 90vw; }
-  .table-responsive table { min-width: 560px; }
+  .table-responsive table { min-width: 600px; }
+  .content { padding: 16px 24px; }
+  .card { margin: 0.75rem 0; }
 }
 
 @media (max-width: 768px) {
-  body::before { width: 55%; height: 60%; }
-  body::after { width: 45%; height: 45%; }
-  .content { padding: 8px 16px; align-items: flex-start; }
-  .card { margin: 0.5rem 0; max-height: calc(100vh - 4rem); }
-  #buscarCodigo { width: 100%; }
+  body::before { 
+    width: 60%; 
+    height: 65%; 
+    background: radial-gradient(circle, rgba(249, 196, 31, 0.08) 0%, transparent 70%);
+  }
+  body::after { 
+    width: 50%; 
+    height: 50%; 
+    background: radial-gradient(circle, rgba(255, 159, 28, 0.06) 0%, transparent 70%);
+  }
+  
+  .content { 
+    padding: 12px 20px; 
+    align-items: flex-start; 
+  }
+  
+  .card { 
+    margin: 0.75rem 0; 
+    max-height: calc(100vh - 5rem);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  #buscarCodigo { 
+    width: 100%; 
+    margin-bottom: 1rem;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 20px 24px;
+  }
 }
 
 @media (max-width: 576px) {
   body::before, body::after { display: none; }
-  .content { align-items: flex-start; padding: 4px 8px; }
-  .card { margin: 0.5rem 0; border-left-width: 3px; max-height: calc(100vh - 2rem); }
-  .card-header { flex-direction: column; gap: 0.5rem; text-align: center; }
   
-  .table-responsive table { min-width: 100%; white-space: normal; table-layout: auto; }
+  .content { 
+    align-items: flex-start; 
+    padding: 8px 12px; 
+  }
+  
+  .card { 
+    margin: 0.5rem 0; 
+    border-left: 4px solid var(--amarillo);
+    max-height: calc(100vh - 3rem);
+    border-radius: 12px;
+  }
+  
+  .table-responsive table { 
+    min-width: 100%; 
+    white-space: normal; 
+    table-layout: auto; 
+  }
+  
   #codigoLista th { display: none; }
-  #codigoLista td { display: block; text-align: left; max-width: none; }
-  #codigoLista tr { margin-bottom: 1rem; display: block; border: 1px solid #eee; border-radius: 8px; background: #fafafa; }
-  #codigoLista td::before { content: attr(data-label); font-weight: 600; display: block; margin-bottom: 0.25rem; color: var(--negro); }
+  
+  #codigoLista td { 
+    display: block; 
+    text-align: left; 
+    max-width: none;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  #codigoLista tr { 
+    margin-bottom: 1.5rem; 
+    display: block; 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    border-radius: 12px; 
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  #codigoLista td::before { 
+    content: attr(data-label); 
+    font-weight: 700; 
+    display: block; 
+    margin-bottom: 8px; 
+    color: var(--amarillo);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+  }
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 480px) {
   body { overflow-y: auto; }
-  .card { height: auto; max-height: none; }
-  #codigoLista { max-height: none; overflow-y: visible; }
+  
+  .card { 
+    height: auto; 
+    max-height: none;
+    margin: 0.5rem 0;
+  }
+  
+  #codigoLista { 
+    max-height: none; 
+    overflow-y: visible; 
+    padding: 0.75rem !important;
+  }
+  
+  .content {
+    padding: 8px;
+  }
+  
+  .card-header h2 {
+    font-size: 1.25rem;
+  }
 }

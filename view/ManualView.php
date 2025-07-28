@@ -132,39 +132,41 @@
       </div>
     </div>
 
-    <!-- LOGO -->
-    <div class="col">
-      <div class="guia-card shadow">
-        <div class="guia-header">
-          <i class="bi bi-box-arrow-in-down-left"></i>
-          <span class="guia-link-seccion" data-ir-a="#abrirModalLogo">Logo de Bastos</span>
-        </div>
-        <div class="guia-body">
-          Al hacer clic en el logo se abre una ventana.  
-          Puedes ingresar el número de una tarjeta.  
-          El sistema busca al cliente automáticamente.  
-          Te lleva directo a la sección de beneficios.
-        </div>
-      </div>
+   <!-- LOGO DE BASTOS -->
+<div class="col">
+  <div class="guia-card shadow">
+    <div class="guia-header">
+      <i class="bi bi-box-arrow-in-down-left"></i>
+      <span class="guia-link-seccion" onclick="abrirModal()">Logo de Bastos</span>
     </div>
-
-    <!-- CERRAR SESIÓN -->
-    <div class="col">
-      <div class="guia-card shadow">
-        <div class="guia-header">
-          <i class="bi bi-box-arrow-right"></i>
-          <span class="guia-link-seccion" data-ir-a="/CRM_INT/CRM/controller/SesionController.php?action=logout">Cerrar Sesión</span>
-        </div>
-        <div class="guia-body">
-          Este botón cierra tu sesión de forma segura.  
-          Si estás inactivo por 30 minutos, se cerrará.  
-          Para volver a entrar, pide tu contraseña.  
-          Ayuda a proteger la información del sistema.
-        </div>
-      </div>
+    <div class="guia-body">
+      Al hacer clic en el logo se abre una ventana.  
+      Puedes ingresar el número de una tarjeta.  
+      El sistema busca al cliente automáticamente.  
+      Te lleva directo a la sección de beneficios.
     </div>
   </div>
 </div>
+
+
+<!-- CERRAR SESIÓN -->
+<div class="col">
+  <div class="guia-card shadow">
+    <div class="guia-header">
+      <i class="bi bi-box-arrow-right"></i>
+      <span class="guia-link-seccion" onclick="window.location.href='/CRM_INT/CRM/controller/UsuarioController.php?action=logout'">
+        Cerrar Sesión
+      </span>
+    </div>
+    <div class="guia-body">
+      Este botón cierra tu sesión de forma segura.  
+      Si estás inactivo por 30 minutos, se cerrará.  
+      Para volver a entrar, pide tu contraseña.  
+      Ayuda a proteger la información del sistema.
+    </div>
+  </div>
+</div>
+
 
 <!-- Script del manual -->
 <script src="/CRM_INT/CRM/public/js/Manual.js?v=1"></script>

@@ -3,13 +3,16 @@ $(document).ready(function () {
   const $inputDescripcion = $("#descripcion");
   const $contador = $("#contador-caracteres");
 
-  // Mostrar nombre desde localStorage
-  const nombreUsuario = localStorage.getItem("nombreUsuario") || "Usuario";
-  $("#bienvenida-nombre").text(nombreUsuario.toUpperCase());
+  const nombreUsuario = localStorage.getItem("nombreUsuario");
+  const rolUsuario = localStorage.getItem("rolUsuario");
 
-  // Mostrar rol desde localStorage sin sobreescribir el mensaje
-  const rolUsuario = localStorage.getItem("rolUsuario") || "Invitado";
-  $("#bienvenida-rol").text(rolUsuario);
+  // Mostrar nombre y rol solo si existen en localStorage
+  if (nombreUsuario) {
+    $("#bienvenida-nombre").text(nombreUsuario);
+  }
+  if (rolUsuario) {
+    $("#bienvenida-rol").text(rolUsuario);
+  }
 
   // Contador de caracteres para el input
   $inputDescripcion.on("input", function () {

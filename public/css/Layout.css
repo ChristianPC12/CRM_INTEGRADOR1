@@ -1,337 +1,568 @@
+/* Layout.css - versión moderna con sidebar elegante y navegación fluida */
 :root {
     --amarillo: #f9c41f;
     --gris: #838886;
     --negro: #000000;
     --blanco: #ffffff;
+    --gris-fondo: #f7f7f7;
+    --gris-borde: #e0e0e0;
+    --sombra: rgba(0, 0, 0, 0.1);
+    --sombra-hover: rgba(0, 0, 0, 0.15);
+    --sombra-moderna: rgba(0, 0, 0, 0.06);
+    --sombra-elevada: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --sidebar-width: 220px;
 }
 
 body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
+    background: var(--gris) !important;
     display: flex;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* Bloquear para que no se pueda utilizar horizontalmente */
+/* Excepción para la página de Bitácora - fondo blanco */
+body:has([data-view="bitacora"]),
+body.bitacora-page,
+.bitacora body {
+    background: #ffffff !important;
+}
+
+/* Fondo decorativo moderno */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::before {
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 70%;
+    background: var(--amarillo);
+}
+
+body::after {
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 50%;
+    background: var(--gris);
+}
+
+/* Bloquear scroll horizontal */
 html, 
 body {
     max-width: 100vw;
     overflow-x: hidden;
 }
 
-
-/* SIDEBAR */
+/* SIDEBAR MODERNO */
 .sidebar {
-    width: 220px;
-    background-color: var(--negro);
+    width: var(--sidebar-width);
+    background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%);
     color: var(--blanco);
-    padding: 20px;
+    padding: 24px 20px;
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     overflow-y: auto;
+    box-shadow: var(--sombra-elevada);
+    z-index: 1000;
+    transition: all 0.3s ease;
 }
 
-/* HEADER DEL SIDEBAR CON IMAGEN Y TEXTO */
+/* Hacer scroll invisible en el sidebar */
+.sidebar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
+}
+
+/* HEADER DEL SIDEBAR MODERNIZADO */
 .sidebar-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 1.5rem;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+    padding: 16px 12px;
+    border-radius: 12px;
+    background: rgba(249, 196, 31, 0.1);
+    border: 1px solid rgba(249, 196, 31, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
 }
 
 .img-header {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
-    border-radius: 6px;
-    background-color: var(--gris);
-    padding: 4px;
-    transition: transform 0.3s ease;
+    border-radius: 8px;
+    background: rgba(249, 196, 31, 0.2);
+    padding: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .img-header:hover {
-    transform: scale(1.2);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 16px rgba(249, 196, 31, 0.3);
 }
 
 .sidebar-header h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     margin: 0;
-    font-weight: bold;
+    font-weight: 700;
+    color: var(--amarillo);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* MENÚ DEL SIDEBAR */
+/* MENÚ DEL SIDEBAR MODERNIZADO */
 .sidebar ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar ul li {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .sidebar ul li a {
     color: var(--blanco);
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
+    gap: 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
     font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar ul li a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
+    transition: width 0.3s ease;
+    z-index: -1;
 }
 
 .sidebar ul li a i {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 .sidebar ul li a:hover {
-    background-color: var(--amarillo);
-    color: var(--negro);
+    background: rgba(249, 196, 31, 0.15);
+    color: var(--amarillo);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(249, 196, 31, 0.2);
+}
+
+.sidebar ul li a:hover::before {
+    width: 4px;
+}
+
+.sidebar ul li a:hover i {
+    transform: scale(1.1);
+    color: var(--amarillo);
 }
 
 .sidebar ul li a.active {
-    background-color: var(--amarillo);
+    background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
     color: var(--negro);
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
+    transform: translateX(2px);
 }
 
+.sidebar ul li a.active i {
+    color: var(--negro);
+    transform: scale(1.1);
+}
 
-/* CONTENIDO PRINCIPAL */
+/* CONTENIDO PRINCIPAL MODERNIZADO */
 .content {
-    margin-left: 220px;
+    margin-left: var(--sidebar-width);
     flex-grow: 1;
-    padding: 20px;
+    padding: 24px;
+    min-height: 100vh;
 }
 
 .topbar {
-    background-color: var(--blanco);
-    padding: 16px 24px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 28px;
+    border-radius: 16px;
+    box-shadow: var(--sombra-elevada);
+    margin-bottom: 24px;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.topbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
+}
+
+.topbar:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.topbar h4 {
+    margin: 0;
+    color: var(--negro);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* ======================= */
+/* ELEMENTOS DE ESTADO MODERNIZADOS */
+/* ======================= */
+
+/* Links deshabilitados */
+.disabled-link {
+    color: rgba(255, 255, 255, 0.4) !important;
+    cursor: not-allowed !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    opacity: 0.6 !important;
+    pointer-events: none !important;
+    border-radius: 8px !important;
+}
+
+.disabled-link i {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Botones deshabilitados */
+.btn-disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(50%);
+    transition: all 0.3s ease;
+}
+
+/* Campos de formulario de solo lectura */
+.form-readonly {
+    background: rgba(248, 249, 250, 0.8) !important;
+    color: #6c757d !important;
+    cursor: not-allowed !important;
+    border: 2px solid rgba(224, 224, 224, 0.5) !important;
+    border-radius: 8px !important;
+}
+
+/* Elementos con acceso restringido */
+.access-restricted {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+    filter: grayscale(30%);
+}
+
+/* ======================= */
+/* MENÚ HAMBURGUESA MODERNO */
+/* ======================= */
+.btn-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1.4rem;
+    color: var(--negro);
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-menu-toggle:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(249, 196, 31, 0.5);
+}
+
+.btn-menu-toggle:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* RESPONSIVIDAD MODERNA */
+@media (max-width: 992px) {
+    .content {
+        margin-left: 0;
+        padding: 20px 16px;
+    }
+    
+    .topbar {
+        padding: 16px 20px;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .btn-menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar.activa {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 16px 12px;
+        padding-top: 80px; /* espacio para el botón hamburguesa */
+    }
+    
+    .topbar {
+        padding: 16px 20px;
+        border-radius: 12px;
+    }
+    
+    /* Overlay cuando el sidebar está abierto */
+    .sidebar.activa::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 100%;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+}
+
+@media (max-width: 480px) {
+    body::before, 
+    body::after {
+        display: none;
+    }
+    
+    body {
+        background: var(--gris-fondo) !important;
+    }
+    
+    .content {
+        padding: 12px 8px;
+        padding-top: 75px;
+    }
+    
+    .topbar {
+        padding: 12px 16px;
+        margin-bottom: 16px;
+    }
+    
+    .sidebar {
+        width: 280px;
+        padding: 20px 16px;
+    }
 }
 
 @media (max-width: 320px) {
     html,
-     body {
+    body {
         max-width: 100vw;
         overflow-x: hidden;
     }
 
     .sidebar {
-        width: 135px;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 8px;
-    }
-
-    .sidebar ul {
-        display: block;
-        width: 100%;
-    }
-
-    .sidebar ul li {
-        width: 100%;
+        width: 100vw;
+        padding: 16px 12px;
     }
 
     .sidebar ul li a {
-        font-size: 0.82rem;
-        padding: 6px 10px;
-        width: 100%;
+        font-size: 0.9rem;
+        padding: 12px 14px;
     }
 
     .img-header {
-        width: 24px;
-        height: 24px;
+        width: 36px;
+        height: 36px;
     }
 
     .sidebar-header h3 {
-        font-size: 0.95rem;
+        font-size: 1.1rem;
     }
 
     .topbar h4 {
-        font-size: 0.9rem;
+        font-size: 1rem;
         text-align: center;
     }
 
     .content {
-        margin-left: 0;
-        padding: 14px;
+        padding: 10px 6px;
+        padding-top: 70px;
+    }
+    
+    .btn-menu-toggle {
+        padding: 10px 14px;
+        font-size: 1.2rem;
     }
 }
-.disabled-link {
-  color: #ccc !important;
-  cursor: not-allowed !important;
-  background: none !important;
-  opacity: 0.5 !important;
-  pointer-events: none !important;
-}
-.disabled-link i {
-  color: #ccc !important;
-}
 
 /* ======================= */
-/* MENÚ HAMBURGUESA MÓVIL  */
+/* MODALES MODERNOS */
 /* ======================= */
-.btn-menu-toggle {
-  display: none;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 1000;
-  background-color: var(--amarillo);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 1.5rem;
-  color: var(--negro);
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-/* Mostrar el botón en pantallas pequeñas */
-@media (max-width: 768px) {
-  .btn-menu-toggle {
-    display: block;
-  }
-
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 999;
-  }
-
-  .sidebar.activa {
-    transform: translateX(0);
-  }
-
-  .content {
-    margin-left: 0;
-    padding-top: 60px; /* espacio para el botón hamburguesa */
-  }
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    z-index: 999;
-  }
-
-  .sidebar.activa {
-    transform: translateX(0%);
-  }
-
-  .content {
-    margin-left: 0;
-    padding-top: 60px;
-  }
-}
-
-/* ======================= */
-/* ESTILOS PARA ELEMENTOS DESHABILITADOS */
-/* ======================= */
-
-/* Botones deshabilitados */
-.btn-disabled {
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-}
-
-/* Campos de formulario de solo lectura */
-.form-readonly {
-  background-color: #f8f9fa !important;
-  color: #6c757d !important;
-  cursor: not-allowed !important;
-}
-
-/* Elementos con acceso restringido */
-.access-restricted {
-  opacity: 0.5 !important;
-  pointer-events: none !important;
-  cursor: not-allowed !important;
-}
 .modal-tarjeta {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
 }
 
 .modal-contenido {
-  background: var(--blanco);
-  color: var(--negro);
-  padding: 2em;
-  border-radius: 12px;
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    background: var(--blanco);
+    color: var(--negro);
+    padding: 2.5rem;
+    border-radius: 16px;
+    text-align: center;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: var(--sombra-elevada);
+    position: relative;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-contenido::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
 }
 
 .modal-contenido h3 {
-  margin-bottom: 1em;
-  font-size: 1.4em;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--negro);
+    font-weight: 600;
 }
 
 .modal-contenido input {
-  width: 100%;
-  padding: 0.6em;
-  font-size: 1em;
-  border: 2px solid var(--gris);
-  border-radius: 6px;
-  outline: none;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 2px solid rgba(224, 224, 224, 0.6);
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.modal-contenido input:focus {
+    border-color: var(--amarillo);
+    box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
 }
 
 .modal-mensaje-error {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 0.5em;
-  min-height: 1.2em;
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+    min-height: 1.3rem;
+    font-weight: 500;
 }
 
 .modal-botones {
-  margin-top: 1.5em;
-  display: flex;
-  justify-content: space-between;
+    margin-top: 2rem;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
 .modal-botones button {
-  padding: 0.6em 1.5em;
-  font-size: 1em;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
 }
 
 .modal-botones button:first-child {
-  background: #444a47;
-  color: var(--blanco);
+    background: #6c757d;
+    color: var(--blanco);
+}
+
+.modal-botones button:first-child:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
 }
 
 .modal-botones button:last-child {
-  background: var(--amarillo);
-  color: var(--negro);
+    background: var(--amarillo);
+    color: var(--negro);
+    box-shadow: 0 4px 12px rgba(249, 196, 31, 0.3);
 }
 
-.modal-botones button:hover {
-  opacity: 0.9;
-}
-/* Hacer scroll invisible en el sidebar */
-.sidebar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE y Edge */
-}
-
-.sidebar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari y Opera */
+.modal-botones button:last-child:hover {
+    background: #e6b01f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
 }

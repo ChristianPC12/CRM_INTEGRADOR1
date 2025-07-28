@@ -20,10 +20,10 @@
   --resplandor-dorado: 0 0 40px rgba(244, 180, 0, 0.4);
   
   /* 🎯 OPTIMIZACIÓN ZOOM 110% */
-  --escala-zoom: 0.909; /* Compensación más precisa para zoom 110% */
-  --padding-zoom: 0.91;
-  --font-zoom: 0.91;
-  --margin-zoom: 0.91;
+  --escala-zoom: 1.0; /* Tamaño normal para adaptarse a cualquier pantalla */
+  --padding-zoom: 1.0;
+  --font-zoom: 1.0;
+  --margin-zoom: 1.0;
 }
 
 /* 🎭 Reset y configuración base */
@@ -126,7 +126,7 @@ body::after {
 
 /* 💎 TARJETA DE LOGIN */
 .login-card {
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--blanco);
   padding: 60px 48px;
   border-radius: 32px;
   border: 2px solid transparent;
@@ -135,7 +135,6 @@ body::after {
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(25px);
-  background-image: var(--gradiente-premium);
 }
 
 .login-card::before {
@@ -347,7 +346,7 @@ body::after {
     0 0 0 6px rgba(244, 180, 0, 0.15),
     var(--resplandor-dorado);
   transform: translateY(-4px) scale(calc(1.01 * var(--escala-zoom)));
-  background: linear-gradient(135deg, #fffbf0 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: var(--blanco);
 }
 
 .input-field::placeholder,
@@ -410,15 +409,28 @@ body::after {
 /* 🎯 OPTIMIZACIÓN ZOOM 110% */
 @media screen and (min-resolution: 110dpi), screen and (-webkit-min-device-pixel-ratio: 1.1) {
   .login-container {
-    max-width: calc(450px * var(--escala-zoom));
+    max-width: 440px; /* Contenedor un poco más pequeño */
   }
   
   .login-card {
-    padding: calc(50px * var(--escala-zoom)) calc(45px * var(--escala-zoom));
+    padding: 45px 40px; /* Padding más compacto para que quepa */
+  }
+  
+  .header {
+    margin-bottom: 36px; /* Menos espacio en header */
+    padding-bottom: 24px;
   }
   
   .header h2 {
-    font-size: calc(2.2rem * var(--font-zoom));
+    font-size: 2.2rem; /* Título un poco más pequeño */
+  }
+  
+  .form-group {
+    margin-bottom: 24px; /* Menos espacio entre campos */
+  }
+  
+  .logo-container {
+    margin-bottom: 36px; /* Menos espacio del logo */
   }
 }
 

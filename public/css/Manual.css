@@ -1,62 +1,151 @@
 :root {
-  --amarillo: #f9c41f;
+  --amarillo: #f4b400;         /* Dorado intenso premium */
+  --amarillo-claro: #fff8e1;
+  --amarillo-texto: #f4d03f;
   --negro: #000000;
   --blanco: #ffffff;
-  --gris: #838886;
+  --gris: #2a2a2a;
+  --gris-fondo: #f8f9fa;
+  --sombra-elevada: 0 16px 48px rgba(0, 0, 0, 0.15);
+  --sombra: rgba(0, 0, 0, 0.4);
 }
 
+/* Contenedor principal - Ultra Premium */
 .guia-container {
-  background-color: var(--blanco);
-  padding: 2rem;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 0.95) 100%);
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: var(--sombra-elevada);
+  border: 1px solid rgba(244, 180, 0, 0.1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
 }
 
+.guia-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 50%, #ffed4e 100%);
+  z-index: 1;
+}
+
+/* Título principal - Premium */
 .guia-titulo {
-  color: var(--negro);
-  font-weight: bold;
-  font-size: 1.8rem;
+  color: var(--amarillo);
+  font-weight: 800;
+  font-size: 2.5rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-bottom: 20px;
 }
 
+.guia-titulo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amarillo), #ffd700);
+  border-radius: 2px;
+}
+
+/* Tarjetas de guía - Ultra Premium */
 .guia-card {
-  background-color: var(--blanco);
+  background: rgba(255, 255, 255, 0.98);
   border: 2px solid var(--amarillo);
-  border-left: 6px solid var(--amarillo);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: transform 0.2s ease-in-out;
+  border-left: 8px solid var(--amarillo);
+  border-radius: 20px;
+  padding: 32px;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.guia-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
+  border-radius: 0 0 0 60px;
+  opacity: 0.1;
+  transition: all 0.3s ease;
 }
 
 .guia-card:hover {
-  transform: scale(1.015);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--sombra-elevada);
+  border-color: #ffd700;
 }
 
+.guia-card:hover::before {
+  opacity: 0.2;
+  width: 80px;
+  height: 80px;
+}
+
+/* Headers de sección - Premium */
 .guia-header {
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: var(--amarillo);
-  margin-bottom: 0.5rem;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .guia-header i {
-  margin-right: 10px;
-  font-size: 1.3rem;
+  margin-right: 16px;
+  font-size: 1.6rem;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
+  color: var(--negro);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(244, 180, 0, 0.3);
 }
 
 
+/* Contenido del cuerpo - Premium */
 .guia-body {
   color: var(--gris);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  font-weight: 400;
+  padding-left: 8px;
 }
+
+/* Imagen de header - Premium */
 .img-header {
-  width: 100px; 
+  width: 120px; 
   height: auto;
   max-width: 100%;
   object-fit: contain;
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.img-header:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 48px rgba(244, 180, 0, 0.2);
 }

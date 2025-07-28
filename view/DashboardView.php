@@ -22,9 +22,9 @@
     <div class="tarjeta-metrica">
       <i class="bi bi-person-circle icon-metrica"></i>
       <h4>Bienvenido</h4>
-      <p class="valor" id="bienvenida-nombre">Usuario</p>
+      <p class="valor" id="bienvenida-nombre"></p>
       <span class="subvalor">
-        Rol: <span id="bienvenida-rol">Invitado</span><br>
+        Rol: <span id="bienvenida-rol"></span><br>
         ¡Nos alegra tenerte de vuelta!
       </span>
     </div>

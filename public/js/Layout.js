@@ -50,6 +50,44 @@ window.addEventListener("load", function () {
     return;
   }
 
+  // 🎯 MANTENER POSICIÓN DEL SCROLL EN SIDEBAR
+  // Restaurar posición del scroll al cargar la página
+  const savedScrollPosition = localStorage.getItem('sidebarScrollPosition');
+  if (savedScrollPosition && sidebar) {
+    sidebar.scrollTop = parseInt(savedScrollPosition);
+  }
+
+  // Guardar posición del scroll cuando se hace scroll en el sidebar
+  if (sidebar) {
+    sidebar.addEventListener('scroll', function() {
+      localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
+    });
+  }
+
+  // 💫 CENTRAR ELEMENTO ACTIVO EN VISTA
+  function centrarElementoActivo() {
+    const elementoActivo = sidebar.querySelector('.active');
+    if (elementoActivo && sidebar) {
+      const offsetTop = elementoActivo.offsetTop;
+      const sidebarHeight = sidebar.clientHeight;
+      const elementHeight = elementoActivo.clientHeight;
+      
+      // Calcular posición para centrar el elemento
+      const scrollPosition = offsetTop - (sidebarHeight / 2) + (elementHeight / 2);
+      
+      sidebar.scrollTo({
+        top: Math.max(0, scrollPosition),
+        behavior: 'smooth'
+      });
+      
+      // Guardar la nueva posición
+      localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
+    }
+  }
+
+  // Centrar elemento activo al cargar la página
+  setTimeout(centrarElementoActivo, 100);
+
   // Forzar sidebar cerrado en móvil al cargar
   if (window.innerWidth <= 992) {
     sidebar.classList.remove("show");
@@ -78,6 +116,11 @@ window.addEventListener("load", function () {
   // Cerrar al hacer click en un enlace (solo en móvil)
   sidebarLinks.forEach(link => {
     link.addEventListener("click", function () {
+      // 🎯 GUARDAR POSICIÓN ANTES DE NAVEGAR
+      if (sidebar) {
+        localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
+      }
+      
       if (window.innerWidth <= 992) {
         sidebar.classList.remove("show");
         sidebar.classList.remove("activa");
@@ -199,6 +242,23 @@ window.actualizarCumpleBadgeSidebar = function() {
 };
 document.addEventListener('DOMContentLoaded', function() {
     window.actualizarCumpleBadgeSidebar();
+    
+    // Event listener para cerrar modal al hacer clic fuera
+    const modal = document.getElementById('modalTarjeta');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                cerrarModal();
+            }
+        });
+        
+        // Event listener para cerrar con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                cerrarModal();
+            }
+        });
+    }
 });
 
 

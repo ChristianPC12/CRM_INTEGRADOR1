@@ -1,18 +1,26 @@
+/* Cliente.css - versión moderna con fondo decorativo y sombras avanzadas */
 :root {
   --amarillo: #f9c41f;
+  --negro: #121212;
+  --blanco: #ffffff;
   --gris: #838886;
-  --negro: #000;
-  --blanco: #fff;
+  --gris-claro: #e0e0e0;
+  --gris-muy-claro: #f5f5f5;
+  --gris-oscuro: #666666;
   --gris-fondo: #f7f7f7;
+  --naranja: #ff8c00;
+  --fondo-blanco: rgba(255, 255, 255, 0.95);
   --sombra: rgba(0, 0, 0, 0.1);
   --sombra-hover: rgba(0, 0, 0, 0.15);
+  --sombra-moderna: rgba(0, 0, 0, 0.06);
+  --sombra-elevada: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* ==== Layout base mejorado ==== */
+/* ==== Layout base modernizado ==== */
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -26,7 +34,7 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-/* Fondo decorativo optimizado */
+/* Fondo decorativo moderno */
 body::before,
 body::after {
   content: "";
@@ -51,7 +59,7 @@ body::after {
   background: var(--gris);
 }
 
-/* ==== Contenido principal ==== */
+/* ==== Contenido principal modernizado ==== */
 .content {
   margin-left: 220px;
   padding: 24px;
@@ -63,63 +71,89 @@ body::after {
   transform: translateX(1%);
 }
 
-/* ==== Botones mejorados ==== */
+/* ==== Botones modernos ==== */
 .btn-primary {
-  background-color: var(--amarillo);
+  background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
   color: var(--negro);
-  font-weight: bold;
+  font-weight: 600;
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
   font-size: 0.95rem;
-  box-shadow: 0 2px 4px var(--sombra);
+  box-shadow: 0 4px 12px rgba(249, 196, 31, 0.3);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background-color: #e6b619;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px var(--sombra-hover);
+  background: linear-gradient(135deg, #e6b01f 0%, #ffcc00 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
 }
 
 .btn-primary:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.3);
+  box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.2);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: var(--blanco);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-danger:hover {
-  background-color: #bb2d3b;
-  border-color: #a52834;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
 }
 
-/* ==== Cards mejoradas ==== */
+/* ==== Cards modernas ==== */
 .card {
   border: none;
-  border-radius: 12px;
-  background: var(--blanco);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
   overflow: hidden;
-  box-shadow: 0 2px 8px var(--sombra);
+  box-shadow: var(--sombra-elevada);
   margin-bottom: 24px;
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px var(--sombra-hover);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card.shadow.mb-4 {
-  box-shadow: 0 0 10px rgba(249, 196, 31, 0.3);
-  border-left: 4px solid var(--amarillo);
+  box-shadow: var(--sombra-elevada);
+  border-left: none;
 }
 
 .card-header {
-  background: var(--negro) !important;
+  background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%) !important;
   color: var(--blanco) !important;
-  font-weight: bold;
+  font-weight: 600;
   letter-spacing: 0.5px;
-  padding: 16px 20px;
+  padding: 20px 24px;
+  border: none;
 }
 
 /* Lista de clientes con scroll */
@@ -134,14 +168,29 @@ body::after {
   display: none;
 }
 
-/* Tabla con scroll horizontal */
+/* Tabla con scroll horizontal - Modernizada */
 .table-container {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  border-radius: 16px;
+  background: var(--fondo-blanco);
+  box-shadow: var(--sombra-elevada);
+  border: 1px solid var(--gris-muy-claro);
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+
+.table-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amarillo), var(--naranja));
+  border-radius: 16px 16px 0 0;
 }
 
 .celda-correo {
@@ -155,7 +204,9 @@ body::after {
   table-layout: fixed;
   min-width: 700px;
   white-space: nowrap;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
 }
 
 .table-container th,
@@ -163,47 +214,91 @@ body::after {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 250px;
-  padding: 12px 15px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gris-muy-claro);
+  transition: all 0.3s ease;
 }
 
 .table-container th {
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, var(--gris-muy-claro), #f8f9fa);
   font-weight: 600;
   text-align: left;
+  color: var(--negro);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-container th:first-child {
+  border-radius: 0 0 0 16px;
+}
+
+.table-container th:last-child {
+  border-radius: 0 0 16px 0;
+}
+
+.table-container tr:hover td {
+  background: linear-gradient(135deg, #fff9e6, #fffbf0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 196, 31, 0.1);
 }
 
 .table-container td:hover {
   overflow: visible;
   white-space: normal;
   word-break: break-all;
-  z-index: 10;
+  z-index: 15;
   position: relative;
-  background: white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background: var(--fondo-blanco);
+  box-shadow: var(--sombra-elevada);
+  border-radius: 8px;
 }
 
-/* Estilos para historial de reasignaciones */
+/* Estilos para historial de reasignaciones - Modernizado */
 .fila-cliente:hover {
-  background-color: #e9ecef !important;
+  background: linear-gradient(135deg, rgba(249, 196, 31, 0.1), rgba(255, 255, 255, 0.9)) !important;
+  transform: translateX(4px);
+  transition: all 0.3s ease;
+  box-shadow: 4px 0 12px rgba(249, 196, 31, 0.15);
 }
 
 .codigo-barra {
-  font-family: 'Courier New', monospace;
-  background-color: #f8f9fa;
-  padding: 2px 6px;
-  border-radius: 3px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  background: linear-gradient(135deg, var(--gris-muy-claro), #f1f3f4);
+  padding: 6px 12px;
+  border-radius: 8px;
   font-size: 0.85em;
-  color: #495057;
+  color: var(--negro);
+  border: 1px solid var(--gris-claro);
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.codigo-barra:hover {
+  background: linear-gradient(135deg, var(--amarillo), #fff3cd);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(249, 196, 31, 0.2);
 }
 
 .codigo-barra-small {
-  font-family: 'Courier New', monospace;
-  background-color: #f8f9fa;
-  padding: 1px 4px;
-  border-radius: 2px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  background: linear-gradient(135deg, var(--gris-muy-claro), #f8f9fa);
+  padding: 4px 8px;
+  border-radius: 6px;
   font-size: 0.75em;
-  color: #6c757d;
+  color: var(--gris-oscuro);
+  border: 1px solid var(--gris-claro);
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.codigo-barra-small:hover {
+  background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+  transform: scale(1.05);
 }
 
 .motivo-cell {
@@ -219,38 +314,71 @@ body::after {
 }
 
 .detalle-reasignacion {
-  background-color: #f8f9fa;
-  border-left: 3px solid #0d6efd;
+  background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+  border-left: 4px solid var(--amarillo);
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 8px rgba(249, 196, 31, 0.1);
+  transition: all 0.3s ease;
+}
+
+.detalle-reasignacion:hover {
+  transform: translateX(2px);
+  box-shadow: 0 4px 16px rgba(249, 196, 31, 0.15);
 }
 
 .alert-sm {
-  padding: 0.5rem 0.75rem;
+  padding: 12px 16px;
   font-size: 0.875rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  color: var(--negro);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .table th {
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid var(--gris-claro);
   font-weight: 600;
   font-size: 0.9em;
+  background: linear-gradient(135deg, var(--gris-muy-claro), #f8f9fa);
+  color: var(--negro);
 }
 
 .table td {
   vertical-align: middle;
   font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.table tbody tr:hover td {
+  background: linear-gradient(135deg, rgba(249, 196, 31, 0.05), rgba(255, 255, 255, 0.9));
 }
 
 .badge {
   font-size: 0.75em;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  background: linear-gradient(135deg, var(--amarillo), #fff3cd);
+  color: var(--negro);
+  border: 1px solid rgba(249, 196, 31, 0.3);
+  box-shadow: 0 2px 4px rgba(249, 196, 31, 0.1);
 }
 
-/* Responsive para móviles */
+/* Responsive para móviles - Modernizado */
+@media (max-width: 992px) {
+  .content {
+    margin-left: 0;
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   body::before,
   body::after {
     display: none;
   }
-
-  /* Los estilos responsivos del sidebar se heredan de Layout.css */
 
   .content {
     margin-left: 0;
@@ -263,21 +391,30 @@ body::after {
     text-align: center;
     font-size: 1.2rem;
     margin-bottom: 1rem;
+    color: var(--negro);
   }
 
   .card {
     width: 95%;
-    margin: 0 auto 1rem auto;
+    margin: 0 auto 1.5rem auto;
+    border-radius: 16px;
+    box-shadow: var(--sombra-elevada);
   }
 
   .card-header {
     font-size: 1rem;
     text-align: center;
+    background: linear-gradient(135deg, var(--amarillo), #fff3cd);
+    color: var(--negro);
+    border-radius: 16px 16px 0 0;
+    border: none;
   }
 
   .card.shadow.mb-4 {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+    box-shadow: var(--sombra-elevada);
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: var(--fondo-blanco);
   }
 
   .container {
@@ -290,7 +427,9 @@ body::after {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--sombra-elevada);
   }
 
   .table-container table {
@@ -302,66 +441,150 @@ body::after {
     .clientes-header {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.5rem;
+        gap: 1rem;
+        padding: 1rem !important;
     }
+    
     .buscador-clientes {
         max-width: 100%;
         min-width: 0;
+        border-radius: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .titulo-clientes {
+        font-size: 1rem;
+        text-align: center;
+    }
+    
+    .card {
+        width: 100%;
+        margin: 0 0 1rem 0;
+        border-radius: 12px;
+    }
+    
+    .table-container {
+        border-radius: 8px;
+        margin-bottom: 1rem;
     }
 }
 
-/* Header de clientes */
+@media (max-width: 480px) {
+    .content {
+        padding: 0.5rem;
+    }
+    
+    .card {
+        margin: 0 0 0.75rem 0;
+        border-radius: 8px;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+    
+    .table-container th,
+    .table-container td {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Header de clientes - Modernizado */
 .clientes-header {
-    background: var(--negro) !important;
-    border-bottom: 3px solid var(--amarillo);
-    padding: 1rem 1.5rem !important;
+    background: linear-gradient(135deg, var(--negro), #1a1a1a) !important;
+    border-bottom: 4px solid var(--amarillo);
+    padding: 1.5rem 2rem !important;
+    box-shadow: var(--sombra-elevada);
+    position: relative;
+    overflow: hidden;
+}
+
+.clientes-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(249, 196, 31, 0.05) 50%, 
+        transparent 70%);
+    pointer-events: none;
 }
 
 .titulo-clientes {
     color: var(--amarillo);
-    font-weight: bold;
+    font-weight: 700;
     margin-bottom: 0;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
 }
 
 .buscador-clientes {
-    max-width: 300px;
-    min-width: 220px;
+    max-width: 350px;
+    min-width: 250px;
     font-weight: 500;
     border-radius: 24px;
-    background: #fff;
-    color: #222;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border: 1px solid #ddd;
-    padding: 8px 16px;
+    background: var(--blanco);
+    color: var(--negro);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--gris-claro);
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 1;
 }
 
 .buscador-clientes::placeholder {
-    color: #888;
+    color: var(--gris-oscuro);
     font-weight: 400;
+    opacity: 1;
 }
 
 .buscador-clientes:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(249, 196, 31, 0.3);
+    box-shadow: 0 0 0 4px rgba(249, 196, 31, 0.3);
     border-color: var(--amarillo);
+    transform: translateY(-2px);
+    background: var(--blanco);
+    color: var(--negro);
 }
 
-/* Botón actualizar en el header */
+/* Cuando el campo tiene contenido */
+.buscador-clientes:not(:placeholder-shown) {
+    background: var(--blanco);
+    color: var(--negro);
+    font-weight: 600;
+}
+
+/* Botón actualizar en el header - Modernizado */
 .clientes-header .btn-outline-light {
     border: 2px solid var(--amarillo);
     color: var(--amarillo);
     background: transparent;
     font-weight: 600;
-    border-radius: 8px;
-    padding: 6px 16px;
+    border-radius: 12px;
+    padding: 10px 20px;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(8px);
 }
 
 .clientes-header .btn-outline-light:hover {
     background: var(--amarillo);
     color: var(--negro);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(249, 196, 31, 0.3);
 }
 
 @media (max-width: 576px) {

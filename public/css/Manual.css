@@ -149,3 +149,95 @@
   transform: scale(1.05);
   box-shadow: 0 12px 48px rgba(244, 180, 0, 0.2);
 }
+
+
+/* ==============  RESPONSIVE  ============== */
+
+/* Tablets ≥576 px – ≤991 px (iPad vertical, tablets medianas) */
+@media (max-width: 991.98px) {
+  .guia-container {
+    padding: 32px;                 /* Menos relleno */
+    border-radius: 18px;
+  }
+
+  .guia-titulo {
+    font-size: 2rem;               /* Reducir título */
+    margin-bottom: 1.5rem;
+  }
+
+  .guia-card {
+    padding: 24px;                 /* Cartas más compactas */
+    border-left-width: 6px;
+    border-radius: 16px;
+  }
+
+  .guia-header {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+
+  .guia-header i {
+    font-size: 1.4rem;
+    padding: 10px;
+  }
+
+  .guia-body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .img-header {
+    width: 90px;
+    margin-bottom: 20px;
+  }
+}
+
+/* Teléfonos ≤575 px (modo móvil) */
+@media (max-width: 575.98px) {
+  .guia-container {
+    padding: 20px;                 /* Relleno mínimo */
+    border-radius: 14px;
+  }
+
+  .guia-titulo {
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    padding-bottom: 14px;
+  }
+
+  .guia-titulo::after {
+    width: 70px;                   /* Línea decorativa más corta */
+  }
+
+  .guia-card {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left-width: 5px;
+    border-radius: 14px;
+  }
+
+  .guia-card:hover {
+    transform: translateY(-4px) scale(1.01);  /* Animación más sutil */
+  }
+
+  .guia-header {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+
+  .guia-header i {
+    font-size: 1.2rem;
+    padding: 8px;
+  }
+
+  .guia-body {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding-left: 0;               /* Ajustar sangría */
+  }
+
+  .img-header {
+    width: 70px;
+    margin-bottom: 16px;
+  }
+}

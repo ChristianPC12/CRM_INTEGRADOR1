@@ -90,15 +90,29 @@ h2::after {
   transition: all 0.3s ease;
 }
 
+/* ───── Alerta (ajuste ícono más a la izquierda) ───── */
+.alert {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1c1c1c 100%);
+  padding: 1rem 1.5rem 1rem 36px;   /* padding-left aumentado para el ícono */
+  border-radius: 16px;
+  border-left: 6px solid var(--amarillo);
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--amarillo-texto);
+  box-shadow: 0 8px 32px var(--sombra);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
 .alert::before {
   content: "ℹ️";
   position: absolute;
-  left: 20px;
+  left: 8px;                        /* mucho más a la izquierda */
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
 }
-
 .alert:hover {
   transform: translateY(-2px);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
@@ -196,7 +210,6 @@ tr:hover {
   background-color: #333;
 }
 
-/* 🔸 Responsivo */
 @media (max-width: 768px) {
   h2 {
     font-size: 1.4rem;
@@ -204,7 +217,18 @@ tr:hover {
 
   .alert {
     font-size: 0.9rem;
-    padding: 0.75rem;
+    padding: 0.75rem 2.2rem 1.5rem 1rem;  /* padding-right y padding-bottom aumentados */
+    position: relative;
+    text-align: left;                     /* opcional, puedes dejarlo centrado si prefieres */
+  }
+  .alert::before {
+    right: 8px;
+    bottom: 8px;
+    left: auto;
+    top: auto;
+    transform: none;
+    font-size: 1.1rem;
+    position: absolute;
   }
 
   .btn {
@@ -221,6 +245,7 @@ tr:hover {
     padding: 6px;
   }
 }
+
 
 /* === OVERRIDE ESPECÍFICO PARA BITÁCORA === */
 /* Forzar fondo blanco en la página de bitácora */

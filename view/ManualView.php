@@ -47,7 +47,8 @@
           Solo el propietario accede a esta sección.  
           Aquí se crean usuarios con roles y claves.  
           Puedes editar, eliminar y buscar usuarios.  
-          Ni admins ni saloneros pueden entrar aquí.
+          Los usuarios con el rol salonero o administrador, 
+          no tendrán acceso.
         </div>
       </div>
     </div>

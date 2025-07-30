@@ -1,5 +1,6 @@
 let usuariosOriginales = []; // Nueva variable para guardar TODOS los usuarios
 let usuariosActuales = []; // Guardará los usuarios filtrados para la tabla
+let ultimoUsuarioGuardado = null; // Para hacer focus al usuario recién guardado
 
 document.addEventListener("DOMContentLoaded", function () {
   let editandoId = null;
@@ -68,9 +69,13 @@ document.addEventListener("DOMContentLoaded", function () {
         datos.append("action", "update");
         datos.append("id", editandoId);
         if (contrasena) datos.append("contrasena", contrasena);
+        // Guardar el ID del usuario que se está editando para hacer focus
+        ultimoUsuarioGuardado = editandoId;
       } else {
         datos.append("action", "create");
         datos.append("contrasena", contrasena);
+        // Para usuarios nuevos, guardaremos el nombre para buscarlo después
+        ultimoUsuarioGuardado = usuario;
       }
 
       fetch("/CRM_INT/CRM/controller/UsuarioController.php", {
@@ -82,9 +87,20 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.success) {
             alert(editandoId ? "Usuario editado correctamente." : "Usuario guardado correctamente.");
             form.reset();
+            const esEdicion = editandoId !== null;
             editandoId = null;
             if (formTitulo) formTitulo.textContent = "Registrar Usuario";
-            cargarUsuarios();
+            
+            // Recargar usuarios y hacer focus en el usuario guardado/editado
+            cargarUsuarios().then(() => {
+              if (esEdicion) {
+                // Si fue edición, hacer focus por ID
+                hacerFocusEnUsuario(ultimoUsuarioGuardado, 'id');
+              } else {
+                // Si fue creación, hacer focus por nombre de usuario
+                hacerFocusEnUsuario(ultimoUsuarioGuardado, 'usuario');
+              }
+            });
           } else {
             alert("No se pudo guardar: " + (data.message || "Error desconocido."));
           }
@@ -94,6 +110,78 @@ document.addEventListener("DOMContentLoaded", function () {
           alert("Error al guardar usuario.");
         });
     });
+  }
+
+  // Función para hacer focus en un usuario específico de la tabla
+  function hacerFocusEnUsuario(valor, tipo = 'id') {
+    setTimeout(() => {
+      let selector;
+      if (tipo === 'id') {
+        selector = `.fila-usuario[data-id="${valor}"]`;
+      } else if (tipo === 'usuario') {
+        // Buscar por nombre de usuario en los datos
+        const usuarioEncontrado = usuariosOriginales.find(u => 
+          u.usuario.toLowerCase() === valor.toLowerCase()
+        );
+        if (usuarioEncontrado) {
+          selector = `.fila-usuario[data-id="${usuarioEncontrado.id}"]`;
+        }
+      }
+
+      if (selector) {
+        const filaUsuario = document.querySelector(selector);
+        if (filaUsuario) {
+          // Hacer scroll hacia el elemento
+          filaUsuario.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+          
+          // Agregar clase de highlight temporal
+          filaUsuario.classList.add('usuario-destacado');
+          
+          // Remover la clase después de 3 segundos
+          setTimeout(() => {
+            filaUsuario.classList.remove('usuario-destacado');
+          }, 3000);
+        }
+      }
+    }, 500); // Pequeño delay para asegurar que la tabla se haya renderizado
+  }
+
+  // Función para llenar el formulario automáticamente
+  function llenarFormularioAutomatico(usuario) {
+    editandoId = usuario.id;
+
+    if (formTitulo) formTitulo.textContent = "Editar Usuario";
+    if (usuarioIdInput) usuarioIdInput.value = usuario.id;
+
+    const usuarioInput = document.getElementById("usuario");
+    const rolInput = document.getElementById("rol");
+    const contrasenaInput = document.getElementById("contrasena");
+    const privilegiosInput = document.getElementById("privilegios");
+
+    if (usuarioInput) usuarioInput.value = usuario.usuario;
+    if (rolInput) rolInput.value = usuario.rol;
+    if (contrasenaInput) contrasenaInput.value = "";
+
+    // Llenar privilegios basado en el rol
+    if (privilegiosInput) {
+      const mensajesPrivilegios = {
+        "Administrador": "Como administrador, tiene acceso completo al Dashboard. En la sección de Clientes VIP, puede ver, agregar y editar clientes, pero no puede eliminarlos ni reasignarles tarjetas. En la sección de Beneficios, puede utilizar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios. En Código de Barras, puede utilizar todas las funcionalidades, incluyendo la exportación a PDF, pero no puede imprimir directamente desde impresora. Tiene acceso completo al módulo de Análisis y a la sección de Cumpleaños, con todas sus funcionalidades. No tiene acceso al módulo de Bitácora.",
+        "Salonero": "Como salonero, puede ver solo la sección de Tareas en el Dashboard. En la sección de Clientes VIP, solo puede visualizar la información; no puede agregar, editar, eliminar clientes ni reasignar tarjetas. En la sección de Beneficios, puede realizar búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios. En Código de Barras, tiene permitido realizar búsquedas, actualizar y utilizar la funcionalidad del código de barra, pero no puede exportar a PDF ni imprimir. No tiene permiso de acceso al módulo de Análisis. Tiene acceso completo a Cumpleaños, con todas sus funcionalidades. No tiene acceso permitido a Bitácora.",
+        "Propietario": "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción."
+      };
+      privilegiosInput.value = mensajesPrivilegios[usuario.rol] || "";
+    }
+
+    // Solo hacer focus en el primer campo sin scroll
+    if (usuarioInput) {
+      setTimeout(() => {
+        usuarioInput.focus();
+        usuarioInput.select(); // Seleccionar todo el texto para facilitar edición
+      }, 300);
+    }
   }
 
   document.addEventListener("click", function (e) {
@@ -238,7 +326,7 @@ function mostrarUsuarios(usuarios) {
     <tbody>`;
 
   usuarios.forEach(usuario => {
-    html += `<tr class="fila-usuario" data-id="${usuario.id}">
+    html += `<tr class="fila-usuario" data-id="${usuario.id}" style="cursor: pointer;">
         <td>${usuario.id}</td>
         <td>${usuario.usuario}</td>
         <td>${usuario.rol.toUpperCase()}</td>
@@ -255,48 +343,68 @@ function mostrarUsuarios(usuarios) {
   // --- Auto-llenado de formulario al dar click en la fila (NO en los botones)
   document.querySelectorAll(".fila-usuario").forEach(fila => {
     fila.addEventListener("click", function(e) {
+      // Prevenir si se hace clic en botones
       if (e.target.tagName === "BUTTON" || e.target.closest("button")) return;
+      
       const id = this.getAttribute("data-id");
 
       // Buscar en usuariosOriginales el usuario correspondiente
       const usuario = usuariosOriginales.find(u => u.id == id);
 
       if (usuario) {
-        editandoId = usuario.id;
-
-        if (formTitulo) formTitulo.textContent = "Editar Usuario";
-        if (usuarioIdInput) usuarioIdInput.value = usuario.id;
-
-        const usuarioInput = document.getElementById("usuario");
-        const rolInput = document.getElementById("rol");
-        const contrasenaInput = document.getElementById("contrasena");
-
-        if (usuarioInput) usuarioInput.value = usuario.usuario;
-        if (rolInput) rolInput.value = usuario.rol;
-        if (contrasenaInput) contrasenaInput.value = "";
-        if (usuarioInput) usuarioInput.focus();
-
-        const privilegiosInput = document.getElementById("privilegios");
-        if (rolInput && privilegiosInput) {
-          let mensaje = "";
-          switch (usuario.rol) {
-            case "Administrador":
-              mensaje = "Como administrador, puede acceder completamente al Dashboard...";
-              break;
-            case "Salonero":
-              mensaje = "Como salonero, puede ver todo el contenido del Dashboard...";
-              break;
-            case "Propietario":
-              mensaje = "Como propietario, tiene acceso total a todas las funciones y secciones...";
-              break;
-            default:
-              mensaje = "";
-          }
-          privilegiosInput.value = mensaje;
-        }
+        llenarFormularioAutomatico(usuario);
       }
     });
+
+    // Agregar efecto hover visual para indicar que es clickeable
+    fila.addEventListener("mouseenter", function(e) {
+      if (!e.target.closest("button")) {
+        this.style.backgroundColor = "#f8f9fa";
+      }
+    });
+
+    fila.addEventListener("mouseleave", function() {
+      this.style.backgroundColor = "";
+    });
   });
+}
+
+// Función para llenar el formulario automáticamente
+function llenarFormularioAutomatico(usuario) {
+  editandoId = usuario.id;
+
+  const formTitulo = document.querySelector('.titulo-usuarios');
+  const usuarioIdInput = document.getElementById("usuarioId");
+
+  if (formTitulo) formTitulo.textContent = "Editar Usuario";
+  if (usuarioIdInput) usuarioIdInput.value = usuario.id;
+
+  const usuarioInput = document.getElementById("usuario");
+  const rolInput = document.getElementById("rol");
+  const contrasenaInput = document.getElementById("contrasena");
+  const privilegiosInput = document.getElementById("privilegios");
+
+  if (usuarioInput) usuarioInput.value = usuario.usuario;
+  if (rolInput) rolInput.value = usuario.rol;
+  if (contrasenaInput) contrasenaInput.value = "";
+
+  // Llenar privilegios basado en el rol
+  if (privilegiosInput) {
+    const mensajesPrivilegios = {
+      "Administrador": "Como administrador, tiene acceso completo al Dashboard. En la sección de Clientes VIP, puede ver, agregar y editar clientes, pero no puede eliminarlos ni reasignarles tarjetas. En la sección de Beneficios, puede utilizar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios. En Código de Barras, puede utilizar todas las funcionalidades, incluyendo la exportación a PDF, pero no puede imprimir directamente desde impresora. Tiene acceso completo al módulo de Análisis y a la sección de Cumpleaños, con todas sus funcionalidades. No tiene acceso al módulo de Bitácora.",
+      "Salonero": "Como salonero, puede ver solo la sección de Tareas en el Dashboard. En la sección de Clientes VIP, solo puede visualizar la información; no pueden agregar, editar, eliminar clientes ni reasignar tarjetas. En la sección de Beneficios, puede realizar búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios. En Código de Barras, tiene permitido realizar búsquedas, actualizar y utilizar la funcionalidad del código de barra, pero no puede exportar a PDF ni imprimir. No tiene permiso de acceso al módulo de Análisis. Tiene acceso completo a Cumpleaños, con todas sus funcionalidades. No tiene acceso permitido a Bitácora.",
+      "Propietario": "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción."
+    };
+    privilegiosInput.value = mensajesPrivilegios[usuario.rol] || "";
+  }
+
+  // Solo hacer focus en el primer campo sin scroll
+  if (usuarioInput) {
+    setTimeout(() => {
+      usuarioInput.focus();
+      usuarioInput.select(); // Seleccionar todo el texto para facilitar edición
+    }, 300);
+  }
 }
 
 // Función para inicializar o actualizar la lista completa de usuarios
@@ -307,26 +415,29 @@ const cargarUsuariosCompletos = (usuarios) => {
 
 window.cargarUsuarios = function () {
   const contenedor = document.getElementById("usuarioLista");
-  if (!contenedor) return;
+  if (!contenedor) return Promise.reject("Contenedor no encontrado");
 
   contenedor.innerHTML = `<div class="text-center p-3">
     <div class="spinner-border text-primary" role="status"></div>
     <p class="mt-2">Cargando usuarios...</p>
   </div>`;
 
-  fetch("/CRM_INT/CRM/controller/UsuarioController.php?action=readAll")
+  return fetch("/CRM_INT/CRM/controller/UsuarioController.php?action=readAll")
     .then((res) => res.json())
     .then((data) => {
       if (data.success && Array.isArray(data.data)) {
         // CAMBIO IMPORTANTE: Usar la nueva función en lugar de mostrarUsuarios directamente
         cargarUsuariosCompletos(data.data);
+        return data.data; // Retornar los datos para poder usar en el promise
       } else {
         contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
+        throw new Error("Error al cargar usuarios");
       }
     })
     .catch((err) => {
       console.error("Error al cargar usuarios:", err);
       contenedor.innerHTML = "<p class='text-danger'>Error al cargar usuarios.</p>";
+      throw err;
     });
 };
 
@@ -364,3 +475,40 @@ document.getElementById("usuarioForm").addEventListener("keydown", function(e) {
     this.requestSubmit(); // Lanza el submit (respeta validaciones)
   }
 });
+
+// Función para hacer focus en un usuario específico de la tabla
+function hacerFocusEnUsuario(valor, tipo = 'id') {
+  setTimeout(() => {
+    let selector;
+    if (tipo === 'id') {
+      selector = `.fila-usuario[data-id="${valor}"]`;
+    } else if (tipo === 'usuario') {
+      // Buscar por nombre de usuario en los datos
+      const usuarioEncontrado = usuariosOriginales.find(u => 
+        u.usuario.toLowerCase() === valor.toLowerCase()
+      );
+      if (usuarioEncontrado) {
+        selector = `.fila-usuario[data-id="${usuarioEncontrado.id}"]`;
+      }
+    }
+
+    if (selector) {
+      const filaUsuario = document.querySelector(selector);
+      if (filaUsuario) {
+        // Hacer scroll hacia el elemento
+        filaUsuario.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        
+        // Agregar clase de highlight temporal
+        filaUsuario.classList.add('usuario-destacado');
+        
+        // Remover la clase después de 3 segundos
+        setTimeout(() => {
+          filaUsuario.classList.remove('usuario-destacado');
+        }, 3000);
+      }
+    }
+  }, 500); // Pequeño delay para asegurar que la tabla se haya renderizado
+}

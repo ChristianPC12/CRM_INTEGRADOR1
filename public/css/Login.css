@@ -100,10 +100,10 @@ body::after {
   }
 }
 
-/* 🏆 CONTENEDOR UNIVERSAL - CENTRADO PERFECTO */
+/* 🏆 CONTENEDOR MÁS ESTRECHO - ELEGANTE Y CENTRADO */
 .login-container {
   width: 100%;
-  max-width: min(400px, 90vw, 90vh);
+  max-width: clamp(320px, 70vw, 380px);
   margin: 0 auto;
   position: relative;
   z-index: 10;
@@ -114,8 +114,8 @@ body::after {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  /* Límites estrictos para no exceder pantalla */
-  max-height: 95vh;
+  /* Límites elegantes sin rigidez */
+  max-height: 92vh;
   overflow: visible;
 }
 
@@ -130,11 +130,11 @@ body::after {
   }
 }
 
-/* 💎 TARJETA UNIVERSAL - SIN LÍMITES EXCEDIDOS */
+/* 💎 TARJETA MÁS ESTRECHA - PROPORCIÓN PERFECTA */
 .login-card {
   background: var(--blanco);
-  padding: min(2.5rem, 4vh) min(2rem, 3vw);
-  border-radius: min(1.2rem, 2vh);
+  padding: clamp(2rem, 4.5vh, 3rem) clamp(1.5rem, 3.5vw, 2rem);
+  border-radius: clamp(1.5rem, 3vh, 2.2rem);
   border: 2px solid transparent;
   box-shadow: var(--sombra-elevada), var(--sombra-magica);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -143,8 +143,8 @@ body::after {
   backdrop-filter: blur(25px);
   width: 100%;
   max-width: 100%;
-  max-height: 90vh;
-  /* Control estricto de límites */
+  max-height: 88vh;
+  /* Elegancia estrecha y alta */
   box-sizing: border-box;
   overflow-y: auto;
   scrollbar-width: none;
@@ -162,7 +162,7 @@ body::after {
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 32px;
+  border-radius: clamp(1.5rem, 3vh, 2.2rem);
   padding: 2px;
   background: var(--gradiente-dorado);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -178,10 +178,10 @@ body::after {
   top: 0;
   left: 0;
   width: 100%;
-  height: min(5px, 1vh);
+  height: clamp(4px, 1vh, 8px);
   background: var(--gradiente-dorado);
   z-index: 1;
-  border-radius: min(1.2rem, 2vh) min(1.2rem, 2vh) 0 0;
+  border-radius: clamp(1.5rem, 3vh, 2.2rem) clamp(1.5rem, 3vh, 2.2rem) 0 0;
   box-shadow: var(--resplandor-dorado);
 }
 
@@ -194,18 +194,18 @@ body::after {
   border-color: rgba(244, 180, 0, 0.3);
 }
 
-/* 🏮 LOGO UNIVERSAL */
+/* 🏮 LOGO ELEGANTE */
 .logo-container {
   text-align: center;
-  margin-bottom: min(1.8rem, 3vh);
+  margin-bottom: clamp(1.5rem, 3.5vh, 2.2rem);
   position: relative;
   z-index: 2;
 }
 
 .logo {
-  width: min(140px, 20vw, 15vh);
+  width: clamp(120px, 22vw, 160px);
   height: auto;
-  margin-bottom: min(1rem, 2vh);
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
   transition: all 0.4s ease;
   filter: drop-shadow(0 8px 24px rgba(244, 180, 0, 0.3));
   animation: logo-resplandor 3s ease-in-out infinite;
@@ -230,11 +230,11 @@ body::after {
   filter: drop-shadow(0 16px 40px rgba(244, 180, 0, 0.6));
 }
 
-/* 🎯 HEADER UNIVERSAL */
+/* 🎯 HEADER ELEGANTE */
 .header {
   text-align: center;
-  margin-bottom: min(1.8rem, 3vh);
-  padding-bottom: min(1.2rem, 2vh);
+  margin-bottom: clamp(1.5rem, 3.5vh, 2.2rem);
+  padding-bottom: clamp(1rem, 2.5vh, 1.5rem);
   position: relative;
 }
 
@@ -244,8 +244,8 @@ body::after {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: min(100px, 15vw);
-  height: min(3px, 0.5vh);
+  width: clamp(80px, 18vw, 120px);
+  height: clamp(3px, 0.6vh, 4px);
   background: var(--gradiente-dorado);
   border-radius: 2px;
   box-shadow: var(--resplandor-dorado);
@@ -253,14 +253,14 @@ body::after {
 }
 
 @keyframes linea-pulso {
-  0%, 100% { width: min(100px, 15vw); opacity: 0.8; }
-  50% { width: min(120px, 18vw); opacity: 1; }
+  0%, 100% { width: clamp(80px, 18vw, 120px); opacity: 0.8; }
+  50% { width: clamp(100px, 22vw, 140px); opacity: 1; }
 }
 
 .header h2 {
   color: var(--negro);
-  font-size: min(2rem, 4vw, 4vh);
-  margin-bottom: min(0.8rem, 1.5vh);
+  font-size: clamp(1.8rem, 4.5vw, 2.3rem);
+  margin-bottom: clamp(0.6rem, 1.8vh, 0.8rem);
   font-weight: 700;
   letter-spacing: -0.5px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -280,13 +280,13 @@ body::after {
 
 .subtitle {
   color: var(--gris-oscuro);
-  font-size: min(0.9rem, 2.5vw, 2vh);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
   font-weight: 400;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-transform: uppercase;
-  letter-spacing: min(0.6px, 0.1vw);
+  letter-spacing: clamp(0.5px, 0.1vw, 0.8px);
   opacity: 0.8;
-  margin-bottom: min(0.5rem, 1vh);
+  margin-bottom: clamp(0.4rem, 1vh, 0.6rem);
   line-height: 1.3;
 }
 
@@ -296,48 +296,48 @@ body::after {
   position: relative;
 }
 
-/* 🎨 GRUPOS DE FORMULARIO UNIVERSALES */
+/* 🎨 GRUPOS DE FORMULARIO ELEGANTES */
 .form-group {
-  margin-bottom: min(1.4rem, 2.5vh);
+  margin-bottom: clamp(1.2rem, 2.8vh, 1.6rem);
   position: relative;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: min(0.6rem, 1vh);
+  margin-bottom: clamp(0.5rem, 1.2vh, 0.7rem);
   color: var(--amarillo);
   font-weight: 600;
-  font-size: min(0.9rem, 2.2vw, 2vh);
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
   text-transform: uppercase;
-  letter-spacing: min(0.4px, 0.08vw);
+  letter-spacing: clamp(0.3px, 0.08vw, 0.5px);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-shadow: 0 0 10px rgba(244, 180, 0, 0.3);
 }
 
-/* 💛 INPUT FIELDS UNIVERSALES */
+/* 💛 INPUT FIELDS ELEGANTES */
 .input-group {
   position: relative;
-  margin-bottom: min(1.4rem, 2.5vh);
+  margin-bottom: clamp(1.2rem, 2.8vh, 1.6rem);
 }
 
 .input-label {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 600;
   color: var(--amarillo);
-  font-size: min(0.9rem, 2.2vw, 2vh);
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
   display: block;
-  margin-bottom: min(0.6rem, 1vh);
+  margin-bottom: clamp(0.5rem, 1.2vh, 0.7rem);
   text-transform: uppercase;
-  letter-spacing: min(0.4px, 0.08vw);
+  letter-spacing: clamp(0.3px, 0.08vw, 0.5px);
   text-shadow: 0 0 10px rgba(244, 180, 0, 0.3);
 }
 
 .input-field {
   width: 100%;
-  padding: min(1rem, 2vh) min(1.2rem, 2.5vw);
+  padding: clamp(0.9rem, 2.2vh, 1.1rem) clamp(1rem, 2.5vw, 1.2rem);
   border: 2px solid var(--gris-claro);
-  border-radius: min(0.7rem, 1.5vh);
-  font-size: min(1rem, 2.2vw, 2.2vh);
+  border-radius: clamp(1rem, 2vh, 1.4rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--negro);
   background: rgba(255, 255, 255, 0.98);
@@ -348,13 +348,13 @@ body::after {
   box-sizing: border-box;
 }
 
-/* Estilos para form-group input también - UNIVERSAL */
+/* Estilos para form-group input también - MÁS ESTRECHOS */
 .form-group input {
   width: 100%;
-  padding: min(1rem, 2vh) min(1.2rem, 2.5vw);
+  padding: clamp(0.9rem, 2.2vh, 1.1rem) clamp(1rem, 2.5vw, 1.2rem);
   border: 2px solid var(--gris-claro);
-  border-radius: min(0.7rem, 1.5vh);
-  font-size: min(1rem, 2.2vw, 2.2vh);
+  border-radius: clamp(1rem, 2vh, 1.4rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--negro);
   background: rgba(255, 255, 255, 0.98);
@@ -368,9 +368,9 @@ body::after {
 .form-group input:focus {
   border-color: var(--amarillo);
   box-shadow: 
-    0 0 0 min(4px, 0.8vh) rgba(244, 180, 0, 0.15),
+    0 0 0 clamp(3px, 0.8vh, 5px) rgba(244, 180, 0, 0.15),
     var(--resplandor-dorado);
-  transform: translateY(min(-2px, -0.3vh)) scale(1.005);
+  transform: translateY(clamp(-1px, -0.3vh, -2px)) scale(1.005);
   background: var(--blanco);
 }
 
@@ -380,28 +380,28 @@ body::after {
   opacity: 0.7;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: min(0.4px, 0.08vw);
+  letter-spacing: clamp(0.3px, 0.08vw, 0.5px);
 }
 
-/* 🚀 BOTÓN UNIVERSAL - CENTRADO PERFECTO */
+/* 🚀 BOTÓN MÁS ESTRECHO - PROPORCIÓN PERFECTA */
 .btn-primary {
   width: 100%;
-  padding: min(1.1rem, 2.2vh) min(1.5rem, 3vw);
+  padding: clamp(1rem, 2.5vh, 1.25rem) clamp(1.2rem, 2.8vw, 1.5rem);
   background: var(--gradiente-dorado);
   color: var(--negro);
   border: none;
-  border-radius: min(0.7rem, 1.5vh);
-  font-size: min(1rem, 2.2vw, 2.2vh);
+  border-radius: clamp(1rem, 2vh, 1.4rem);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: min(0.6px, 0.1vw);
+  letter-spacing: clamp(0.5px, 0.1vw, 0.8px);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: var(--sombra-magica);
   position: relative;
   overflow: hidden;
-  margin-top: min(1rem, 2vh);
+  margin-top: clamp(0.8rem, 2vh, 1.2rem);
   box-sizing: border-box;
 }
 
@@ -423,7 +423,7 @@ body::after {
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--amarillo), var(--dorado));
   color: var(--negro);
-  transform: translateY(min(-1px, -0.2vh)) scale(1.005);
+  transform: translateY(clamp(-0.5px, -0.2vh, -1px)) scale(1.005);
   box-shadow: 0 8px 24px rgba(249, 196, 31, 0.3);
 }
 

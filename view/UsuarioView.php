@@ -15,15 +15,17 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="usuario" class="form-label">Usuario *</label>
-                       <input type="text" class="form-control" id="usuario" name="usuario"
-    placeholder="Por favor introduzca un nombre" required maxlength="16">
+                        <input type="text" class="form-control" id="usuario" name="usuario"
+                            placeholder="Por favor introduzca un nombre" required maxlength="16">
 
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="contrasena" class="form-label">Contraseña *</label>
-                        <input type="password" class="form-control" id="contrasena" name="contrasena" required maxlength="16">
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" required
+                            maxlength="16">
                         <div class="form-text">
-                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra mayúscula, 1 número y 1 carácter especial (ej: !, @, #, $).
+                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra mayúscula, 1 número y 1
+                            carácter especial (ej: !, @, #, $).
                         </div>
                     </div>
                 </div>

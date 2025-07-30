@@ -17,6 +17,11 @@
           También puedes gestionar tareas pendientes.  
           Saloneros solo acceden a sus tareas del día.
         </div>
+            <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/cArJc3AYv1I?si=JChAp4gugGbFwrnz" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -33,6 +38,11 @@
           Saloneros pueden ver, pero no modificar nada.  
           Las tarjetas reasignadas cambian su código.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/1i7hQ7flifM?si=s52SBb00rK9KbjRq" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -50,6 +60,11 @@
           Los usuarios con el rol salonero o administrador, 
           no tendrán acceso.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/qwNIR5arTzE?si=r4cbbBOTa1dznBG1" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -66,6 +81,11 @@
           El historial se guarda debajo automáticamente.  
           Solo el propietario puede eliminar registros.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/87y8dIxn53E?si=oRwdmydUcIkupe5V" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -82,6 +102,11 @@
           El sistema detecta la tarjeta automáticamente.  
           Ahorra tiempo y evita errores en la búsqueda.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/VjLMbioyhU0?si=lDxA8fHvJyZsYskh" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -98,6 +123,11 @@
           Puedes buscar por nombre o zona de origen.  
           Incluye ventas por mes, año y más métricas.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/Jcp5VphSJSY?si=MldkXLtmSiYSojMv" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -114,6 +144,11 @@
           El estado cambia a “lista” si ya fue atendido.  
           Todos los roles pueden acceder sin restricción.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/fqbSpK9z4dk?si=_ltZEZEIde2g3vHo" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 
@@ -130,6 +165,11 @@
           Puedes descargar en Word o en PDF si deseas.  
           Los datos se eliminan automáticamente al mes.
         </div>
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/ZeDhF-_G8Ng?si=Wu0gM59Hjbi43hDt" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
       </div>
     </div>
 

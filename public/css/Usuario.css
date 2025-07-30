@@ -753,4 +753,60 @@ html::-webkit-scrollbar,
   transition: all 0.3s ease;
 }
 
+/* Estilos para el highlight del usuario recién guardado */
+.usuario-destacado {
+  background-color: #d4edda !important;
+  border-left: 4px solid #28a745 !important;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
+  animation: pulseHighlight 2s ease-in-out;
+}
+
+@keyframes pulseHighlight {
+  0% {
+    background-color: #d4edda;
+    transform: scale(1);
+  }
+  50% {
+    background-color: #c3e6cb;
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: #d4edda;
+    transform: scale(1);
+  }
+}
+
+/* Mejorar la interactividad visual de las filas clickeables */
+.fila-usuario {
+  transition: all 0.2s ease-in-out;
+}
+
+.fila-usuario:hover {
+  background-color: #f8f9fa !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+/* Indicador visual de que la fila es clickeable */
+.fila-usuario td:first-child::before {
+  content: "👆";
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  margin-right: 8px;
+}
+
+.fila-usuario:hover td:first-child::before {
+  opacity: 0.5;
+}
+
+/* Mejorar la apariencia de los botones en la tabla */
+.fila-usuario .btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.fila-usuario .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
 /* === FIN DE MODERNIZACIÓN USUARIO.CSS === */

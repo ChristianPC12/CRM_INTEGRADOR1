@@ -31,12 +31,14 @@
 body {
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
   background: linear-gradient(135deg, 
-    var(--negro) 0%, 
-    var(--negro-suave) 25%, 
-    #2c2c2c 50%, 
-    var(--negro-suave) 75%, 
-    var(--negro) 100%
+    #ffffff 0%, 
+    #f8f9fa 25%, 
+    #e9ecef 50%, 
+    #f8f9fa 75%, 
+    #ffffff 100%
   );
+  /* Fallback sólido para móviles */
+  background-color: #ffffff;
   min-height: 100vh;
   height: 100vh;
   display: flex;
@@ -47,6 +49,12 @@ body {
   position: relative;
   /* Centrado universal para cualquier tamaño */
   box-sizing: border-box;
+  
+  /* 📱 FORZAR FONDO BLANCO EN MÓVILES */
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 /* ✨ PARTÍCULAS FLOTANTES */
@@ -65,8 +73,8 @@ body::before {
   width: 80%;
   height: 100%;
   background: radial-gradient(circle at 30% 40%, 
-    rgba(244, 180, 0, 0.15) 0%, 
-    rgba(255, 215, 0, 0.08) 30%, 
+    rgba(244, 180, 0, 0.08) 0%, 
+    rgba(255, 215, 0, 0.04) 30%, 
     transparent 70%
   );
   animation: orbita-magica 20s linear infinite;
@@ -78,8 +86,8 @@ body::after {
   width: 90%;
   height: 110%;
   background: radial-gradient(circle at 70% 60%, 
-    rgba(255, 255, 255, 0.08) 0%, 
-    rgba(244, 180, 0, 0.05) 40%, 
+    rgba(108, 117, 125, 0.05) 0%, 
+    rgba(244, 180, 0, 0.03) 40%, 
     transparent 80%
   );
   animation: orbita-magica 25s linear infinite reverse;
@@ -454,6 +462,131 @@ body::after {
   }
 }
 
+/* 📱 OPTIMIZACIÓN TOTAL PARA TODOS LOS MÓVILES Y TABLETS */
+@media (max-width: 1024px) {
+  body {
+    align-items: center !important;
+    justify-content: center !important;
+    padding: clamp(4px, 1.5vh, 12px) !important;
+    min-height: 100vh !important;
+    height: 100vh !important;
+  }
+  
+  .login-container {
+    max-height: 95vh !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    top: 0 !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    /* Optimización para tablets grandes */
+    max-width: clamp(320px, 75vw, 450px) !important;
+  }
+  
+  .login-card {
+    margin: 0 !important;
+    padding: clamp(1.5rem, 3.5vh, 2.8rem) clamp(1.2rem, 3vw, 2rem) !important;
+  }
+}
+
+/* 📱 MÓVILES MEDIANOS Y PEQUEÑOS (hasta 768px) */
+@media (max-width: 768px) {
+  body {
+    padding: clamp(6px, 1vh, 10px) !important;
+    /* 🎨 FONDO BLANCO PURO PARA MÓVILES - SIN TEXTURAS */
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    /* Desactivar partículas en móviles */
+    /* 🎯 CENTRADO PERFECTO EN MÓVILES */
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* 🚫 OCULTAR PARTÍCULAS EN MÓVILES */
+  body::before,
+  body::after {
+    display: none !important;
+  }
+  
+  .login-container {
+    max-width: clamp(300px, 85vw, 400px) !important;
+    max-height: 96vh !important;
+    margin: 0 auto !important;
+  }
+  
+  .login-card {
+    padding: clamp(1.3rem, 3vh, 2.2rem) clamp(1rem, 2.5vw, 1.6rem) !important;
+    /* Fondo más sólido en móviles */
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  .header h2 {
+    font-size: clamp(1.6rem, 5vw, 2rem) !important;
+  }
+  
+  .logo {
+    width: clamp(100px, 20vw, 140px) !important;
+  }
+}
+
+/* 📱 MÓVILES PEQUEÑOS (hasta 480px) */
+@media (max-width: 480px) {
+  body {
+    padding: clamp(4px, 0.8vh, 8px) !important;
+    /* 🎨 FONDO BLANCO PURO Y LIMPIO PARA MÓVILES PEQUEÑOS */
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    /* 🎯 CENTRADO PERFECTO EN MÓVILES PEQUEÑOS */
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* 🚫 ASEGURAR QUE NO HAY PARTÍCULAS */
+  body::before,
+  body::after {
+    display: none !important;
+    opacity: 0 !important;
+  }
+  
+  .login-container {
+    max-width: clamp(280px, 92vw, 360px) !important;
+    max-height: 98vh !important;
+    margin: 0 auto !important;
+  }
+  
+  .login-card {
+    padding: clamp(1.2rem, 2.5vh, 2rem) clamp(0.8rem, 2vw, 1.4rem) !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(244, 180, 0, 0.05) !important;
+  }
+}
+
+/* 📱 MÓVILES MUY PEQUEÑOS (hasta 320px) */
+@media (max-width: 320px) {
+  .login-container {
+    max-width: 95vw !important;
+  }
+  
+  .login-card {
+    padding: clamp(1rem, 2vh, 1.8rem) clamp(0.6rem, 1.5vw, 1.2rem) !important;
+  }
+  
+  .header h2 {
+    font-size: clamp(1.4rem, 6vw, 1.8rem) !important;
+  }
+}
+
 /* Solo para pantallas muy altas (monitores verticales) */
 @media (min-aspect-ratio: 1/2) {
   .login-container {
@@ -627,8 +760,8 @@ body::after {
   box-shadow: var(--sombra-moderna) !important;
 }
 
-/* Líneas decorativas responsivas */
-@media (max-width: 768px) {
+/* Líneas decorativas responsivas y CENTRADO UNIVERSAL MÓVIL */
+@media (max-width: 1024px) {
   .decor-line {
     display: none !important;
   }
@@ -640,5 +773,83 @@ body::after {
   
   .table-responsive {
     padding: 1rem !important;
+  }
+  
+  /* 📱 CENTRADO PERFECTO PARA TODOS LOS DISPOSITIVOS MÓVILES */
+  body {
+    padding: clamp(4px, 1.5vh, 12px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    
+    /* 🔧 MÓVILES: FONDO BLANCO PURO SIN TEXTURAS */
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    -webkit-background-size: auto !important;
+    background-size: auto !important;
+    background-attachment: scroll !important;
+    background-repeat: no-repeat !important;
+  }
+  
+  /* 🚫 DESACTIVAR PARTÍCULAS EN TODOS LOS MÓVILES */
+  body::before,
+  body::after {
+    display: none !important;
+  }
+  
+  .login-container {
+    position: relative !important;
+    top: 0 !important;
+    transform: none !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: auto !important;
+    max-height: 95vh !important;
+    width: 100% !important;
+  }
+  
+  .login-card {
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Optimización específica para inputs en móviles */
+  .input-field,
+  .form-group input {
+    font-size: max(16px, clamp(0.95rem, 2.2vw, 1.05rem)) !important;
+    /* Evita zoom en iOS */
+  }
+  
+  .btn-primary {
+    font-size: max(16px, clamp(0.95rem, 2.2vw, 1.05rem)) !important;
+    padding: clamp(1rem, 2.8vh, 1.4rem) clamp(1.2rem, 2.5vw, 1.5rem) !important;
+  }
+}
+
+/* 🔄 ORIENTACIÓN LANDSCAPE EN MÓVILES */
+@media (max-width: 768px) and (orientation: landscape) {
+  .login-container {
+    max-height: 90vh !important;
+  }
+  
+  .login-card {
+    padding: clamp(1rem, 2vh, 1.8rem) clamp(1rem, 2.5vw, 1.6rem) !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+  }
+  
+  .logo {
+    width: clamp(80px, 15vw, 120px) !important;
+  }
+  
+  .header {
+    margin-bottom: clamp(1rem, 2vh, 1.5rem) !important;
   }
 }

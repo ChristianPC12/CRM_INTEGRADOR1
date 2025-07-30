@@ -1000,4 +1000,46 @@ textarea:not(:focus)[value=""]:hover {
   transform: scale(1.05);
 }
 
-/* === FIN DE MODERNIZACIÓN === */
+/* === RESPONSIVE FINAL SIN OCULTAR TH - Cumple.css === */
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+
+  .content,
+  .container,
+  .table-responsive,
+  .card,
+  .card-body {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    box-sizing: border-box;
+  }
+
+  .table {
+    table-layout: auto !important;
+    min-width: 700px !important; /* Para evitar que se compriman columnas */
+  }
+
+  .table thead th,
+  .table tbody td {
+    white-space: nowrap !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+
+  .table .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    min-width: 2rem !important;
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .table .badge {
+    display: inline-block !important;
+    min-width: 80px;
+    text-align: center;
+  }
+}

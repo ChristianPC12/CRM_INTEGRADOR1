@@ -22,7 +22,7 @@
                         <label for="contrasena" class="form-label">Contraseña *</label>
                         <input type="password" class="form-control" id="contrasena" name="contrasena" required maxlength="16">
                         <div class="form-text">
-                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra, 1 número y 1 carácter especial (ej: !, @, #, $).
+                            La contraseña debe tener entre 6 y 16 caracteres, al menos 1 letra mayúscula, 1 número y 1 carácter especial (ej: !, @, #, $).
                         </div>
                     </div>
                 </div>

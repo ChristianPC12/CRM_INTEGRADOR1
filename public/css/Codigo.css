@@ -552,3 +552,80 @@ body::after {
     font-size: 1.25rem;
   }
 }
+/* === RESPONSIVE FINAL ADAPTATIONS === */
+@media (max-width: 480px) {
+  .form-group,
+  .form-control,
+  .btn-primary,
+  #btnActualizar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+  }
+
+  .card-header {
+    padding: 16px;
+    font-size: 1rem;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table td, .table th {
+    font-size: 0.8rem;
+    padding: 10px 6px;
+  }
+
+  #modalCumpleanos .modal-dialog {
+    margin: 1rem auto;
+    max-width: 95%;
+  }
+
+  #modalCumpleanos .modal-content {
+    padding: 0.5rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .content {
+    padding: 4px;
+    flex-direction: column;
+  }
+}
+/* === FIX FINAL: Eliminar scroll horizontal en móvil === */
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+
+  .content,
+  .main-content,
+  .table-responsive,
+  #codigoLista {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box;
+  }
+
+  .card {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .btn,
+  .form-control,
+  #buscarCodigo {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}

@@ -568,3 +568,54 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
 }
+
+/* === Sidebar sticky header === */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* el resto de tu sidebar ya lo tiene */
+}
+
+.sidebar-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(249,196,31,0.10);
+  /* Repite border-radius y border si lo deseas, o déjalo así */
+  /* La sombra y padding ya la tienes */
+}
+
+/* El ul ocupa el resto del sidebar y hace scroll */
+.sidebar ul {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* Para evitar que quede muy pegado abajo: */
+  padding-bottom: 1.5rem;
+  /* Para evitar que el header lo tape al scrollear hacia arriba */
+  scroll-padding-top: 88px; /* aprox header+gap */
+}
+
+/* RESPONSIVO: sidebar sigue sticky en móvil */
+@media (max-width: 768px) {
+  .sidebar {
+    height: 100vh; /* mantiene altura fija en móvil también */
+  }
+  .sidebar-header {
+    top: 0;
+  }
+  .sidebar ul {
+    padding-bottom: 2rem;
+  }
+}
+
+/* Scroll invisible para el menú de la sidebar */
+.sidebar ul {
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE y Edge */
+}
+
+.sidebar ul::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari, Opera */
+}

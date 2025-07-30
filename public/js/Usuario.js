@@ -372,11 +372,8 @@ function mostrarUsuarios(usuarios) {
 // Función para llenar el formulario automáticamente
 function llenarFormularioAutomatico(usuario) {
   editandoId = usuario.id;
-
-  const formTitulo = document.querySelector('.titulo-usuarios');
+  
   const usuarioIdInput = document.getElementById("usuarioId");
-
-  if (formTitulo) formTitulo.textContent = "Editar Usuario";
   if (usuarioIdInput) usuarioIdInput.value = usuario.id;
 
   const usuarioInput = document.getElementById("usuario");
@@ -391,9 +388,9 @@ function llenarFormularioAutomatico(usuario) {
   // Llenar privilegios basado en el rol
   if (privilegiosInput) {
     const mensajesPrivilegios = {
-      "Administrador": "Como administrador, tiene acceso completo al Dashboard. En la sección de Clientes VIP, puede ver, agregar y editar clientes, pero no puede eliminarlos ni reasignarles tarjetas. En la sección de Beneficios, puede utilizar todas las funciones, excepto eliminar beneficios ya registrados. No tiene acceso al módulo de Usuarios. En Código de Barras, puede utilizar todas las funcionalidades, incluyendo la exportación a PDF, pero no puede imprimir directamente desde impresora. Tiene acceso completo al módulo de Análisis y a la sección de Cumpleaños, con todas sus funcionalidades. No tiene acceso al módulo de Bitácora.",
-      "Salonero": "Como salonero, puede ver solo la sección de Tareas en el Dashboard. En la sección de Clientes VIP, solo puede visualizar la información; no pueden agregar, editar, eliminar clientes ni reasignar tarjetas. En la sección de Beneficios, puede realizar búsquedas, pero no puede acumular puntos, aplicar descuentos ni eliminar beneficios. No tiene permitido ingresar al módulo de Usuarios. En Código de Barras, tiene permitido realizar búsquedas, actualizar y utilizar la funcionalidad del código de barra, pero no puede exportar a PDF ni imprimir. No tiene permiso de acceso al módulo de Análisis. Tiene acceso completo a Cumpleaños, con todas sus funcionalidades. No tiene acceso permitido a Bitácora.",
-      "Propietario": "Como propietario, tiene acceso total a todas las funciones y secciones del sistema. No tiene ninguna restricción."
+      "Administrador": "...",
+      "Salonero": "...",
+      "Propietario": "..."
     };
     privilegiosInput.value = mensajesPrivilegios[usuario.rol] || "";
   }
@@ -406,6 +403,7 @@ function llenarFormularioAutomatico(usuario) {
     }, 300);
   }
 }
+
 
 // Función para inicializar o actualizar la lista completa de usuarios
 const cargarUsuariosCompletos = (usuarios) => {

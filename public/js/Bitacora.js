@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", esperarContenedorYcargar);
 
 async function cargarBitacora() {
   try {
-    const res = await fetch("http://localhost/CRM_INT/CRM/controller/BitacoraController.php?action=readAll");
+    const res = await fetch(`http://${location.hostname}/CRM_INT/CRM/controller/BitacoraController.php?action=readAll`);
+
     const text = await res.text();
     console.log("📦 Respuesta cruda:", text);
     const json = JSON.parse(text);

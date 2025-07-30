@@ -19,7 +19,7 @@
         </div>
             <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/cArJc3AYv1I?si=JChAp4gugGbFwrnz" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/CIjYfjxSJbI?si=7me4rHv6fB14vybo" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -40,7 +40,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/1i7hQ7flifM?si=s52SBb00rK9KbjRq" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/ozohxbb4A5A?si=Kn2UQJNVEYlu0hgU" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -62,7 +62,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/qwNIR5arTzE?si=r4cbbBOTa1dznBG1" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/p7yA0D90Qj0?si=mtPWxuZH-JNK_uCv" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -83,7 +83,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/87y8dIxn53E?si=oRwdmydUcIkupe5V" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/5cDW7KrH2iI?si=NAb4K-DzqQbYpKpE" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -104,7 +104,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/VjLMbioyhU0?si=lDxA8fHvJyZsYskh" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/7QINQ76tyZA?si=vPqJmA5uND3Udwdb" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -125,7 +125,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/Jcp5VphSJSY?si=MldkXLtmSiYSojMv" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/OmVzLpIc1Gc?si=td3KOpJ3IFzSuCwF" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -146,7 +146,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/fqbSpK9z4dk?si=_ltZEZEIde2g3vHo" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/Bcup9Lkpank?si=M5blbmA4gFUGznIB" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>
@@ -167,7 +167,7 @@
         </div>
                <!-- Video explicativo -->
       <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/ZeDhF-_G8Ng?si=Wu0gM59Hjbi43hDt" 
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/pkPX4K3yCd8?si=OFnah6d-e9Vu-1G0" 
           title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
       </div>
       </div>

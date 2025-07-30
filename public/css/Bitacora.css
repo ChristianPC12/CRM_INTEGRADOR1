@@ -112,6 +112,7 @@ h2::after {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+   text-align: left;
 }
 .alert:hover {
   transform: translateY(-2px);
@@ -246,6 +247,12 @@ tr:hover {
   }
 }
 
+td:first-child {
+  text-align: left;
+  padding-left: 20px;
+  word-break: break-word;
+}
+
 
 /* === OVERRIDE ESPECÍFICO PARA BITÁCORA === */
 /* Forzar fondo blanco en la página de bitácora */
@@ -261,4 +268,31 @@ body {
 html {
   background: #ffffff !important;
   background-color: #ffffff !important;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(to bottom, #000, #111);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  overflow-y: auto; /* ✅ Scroll vertical cuando sea necesario */
+  overflow-x: hidden; /* ⛔ Previene scroll lateral */
+  scrollbar-width: thin; /* (opcional, Firefox) */
+  scrollbar-color: var(--amarillo) transparent;
+}
+
+/* Estilo scroll para WebKit (Chrome, Safari) */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--amarillo);
+  border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
 }

@@ -250,7 +250,8 @@ document.querySelectorAll(".fila-usuario").forEach(fila => {
         const id = this.getAttribute("data-id");
         
         // Buscar en usuariosOriginales en lugar de usuariosActuales
-        const usuario = usuariosOriginales.find(u => u.id == id);
+usuariosOriginales = [...usuarios].sort((a, b) => b.id - a.id); // Más reciente primero
+mostrarUsuarios(usuariosOriginales);
         
         if (usuario) {
             editandoId = usuario.id;
@@ -303,9 +304,10 @@ document.querySelectorAll(".fila-usuario").forEach(fila => {
 
 // Función para inicializar o actualizar la lista completa de usuarios
 const cargarUsuariosCompletos = (usuarios) => {
-  usuariosOriginales = [...usuarios]; // Guardar copia completa
-  mostrarUsuarios(usuarios);
+  usuariosOriginales = [...usuarios].sort((a, b) => b.id - a.id); // Más reciente primero
+  mostrarUsuarios(usuariosOriginales);
 };
+
 
 window.cargarUsuarios = function () {
     const contenedor = document.getElementById("usuarioLista");

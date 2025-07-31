@@ -501,9 +501,11 @@ body::after {
     background-color: #ffffff !important;
     background-image: none !important;
     /* Desactivar partículas en móviles */
-    /* 🎯 CENTRADO PERFECTO EN MÓVILES */
+    /* 🎯 COMPENSAR BARRA DEL NAVEGADOR - SUBIR LOGIN */
     align-items: center !important;
     justify-content: center !important;
+    /* 🔧 Compensar barra de navegación móvil */
+    padding-bottom: clamp(60px, 8vh, 80px) !important;
   }
   
   /* 🚫 OCULTAR PARTÍCULAS EN MÓVILES */
@@ -516,6 +518,10 @@ body::after {
     max-width: clamp(300px, 85vw, 400px) !important;
     max-height: 96vh !important;
     margin: 0 auto !important;
+    /* 🔝 Transformación para subir ligeramente */
+    transform: translateY(-15px) !important;
+    position: relative !important;
+    top: 0 !important;
   }
   
   .login-card {
@@ -543,9 +549,11 @@ body::after {
     background: #ffffff !important;
     background-color: #ffffff !important;
     background-image: none !important;
-    /* 🎯 CENTRADO PERFECTO EN MÓVILES PEQUEÑOS */
+    /* 🎯 COMPENSAR BARRA DEL NAVEGADOR EN MÓVILES PEQUEÑOS */
     align-items: center !important;
     justify-content: center !important;
+    /* 🔧 Más compensación para móviles pequeños */
+    padding-bottom: clamp(70px, 10vh, 90px) !important;
   }
   
   /* 🚫 ASEGURAR QUE NO HAY PARTÍCULAS */
@@ -559,6 +567,10 @@ body::after {
     max-width: clamp(280px, 92vw, 360px) !important;
     max-height: 98vh !important;
     margin: 0 auto !important;
+    /* 🔝 Subir más en móviles pequeños */
+    transform: translateY(-15px) !important;
+    position: relative !important;
+    top: 0 !important;
   }
   
   .login-card {
@@ -783,6 +795,8 @@ body::after {
     justify-content: center !important;
     min-height: 100vh !important;
     overflow-x: hidden !important;
+    /* 🔧 COMPENSAR BARRA DEL NAVEGADOR MÓVIL UNIVERSALMENTE */
+    padding-bottom: clamp(50px, 6vh, 70px) !important;
     
     /* 🔧 MÓVILES: FONDO BLANCO PURO SIN TEXTURAS */
     background: #ffffff !important;
@@ -803,7 +817,7 @@ body::after {
   .login-container {
     position: relative !important;
     top: 0 !important;
-    transform: none !important;
+    transform: translateY(-15px) !important;
     margin: 0 auto !important;
     display: flex !important;
     flex-direction: column !important;

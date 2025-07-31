@@ -173,11 +173,44 @@ body::after {
   border-radius: clamp(1.5rem, 3vh, 2.2rem);
   padding: 2px;
   background: var(--gradiente-dorado);
+  
+  /* ✅ SOLUCIÓN UNIVERSAL PARA TODOS LOS NAVEGADORES */
+  /* Webkit (Chrome, Safari, Edge) */
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: xor;
   -webkit-mask-composite: xor;
+  
+  /* 🦊 FIREFOX ESPECÍFICO - BORDE DORADO */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  
   z-index: -1;
   opacity: 0.8;
+}
+
+/* 🦊 SOLUCIÓN ESPECÍFICA PARA FIREFOX */
+@-moz-document url-prefix() {
+  .login-card {
+    border: 2px solid var(--amarillo) !important;
+    background: var(--blanco) !important;
+  }
+  
+  .login-card::before {
+    display: none !important;
+  }
+}
+
+/* 🔧 DETECCIÓN MODERNA DE SOPORTE PARA MÁSCARA */
+@supports not (mask-composite: xor) {
+  .login-card {
+    border: 2px solid var(--amarillo);
+    background: var(--blanco);
+  }
+  
+  .login-card::before {
+    display: none;
+  }
 }
 
 .login-card::after {

@@ -554,6 +554,14 @@ textarea:not(:focus)[value=""]:hover {
 .card-body {
   position: relative;
 }
+td.correo {
+  white-space: normal;
+  word-break: break-all;
+}
+td.contacto {
+  white-space: normal;
+  word-break: break-word;
+}
 
 .card-body::before {
   content: "";
@@ -1000,6 +1008,11 @@ textarea:not(:focus)[value=""]:hover {
   transform: scale(1.05);
 }
 
+.tabla-ajustada td {
+  white-space: normal;
+  word-break: break-word;
+}
+
 /* === RESPONSIVE FINAL SIN OCULTAR TH - Cumple.css === */
 @media (max-width: 480px) {
   html, body {
@@ -1041,5 +1054,32 @@ textarea:not(:focus)[value=""]:hover {
     display: inline-block !important;
     min-width: 80px;
     text-align: center;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #historialCumples, #historialCumples * {
+    visibility: visible !important;
+  }
+
+  #historialCumples {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white !important;
+    padding: 20px;
+  }
+
+  .btn,
+  header,
+  nav,
+  footer,
+  aside {
+    display: none !important;
   }
 }

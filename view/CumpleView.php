@@ -74,6 +74,16 @@
     </div>
     <div class="card-body p-3">
         <div class="table-responsive">
+            <!-- Botones PDF / Imprimir -->
+            <div class="d-flex justify-content-end align-items-center gap-2 mb-2 me-2">
+                <button id="btnExportPDF" class="btn border border-danger text-danger">
+                    <i class="bi bi-file-earmark-pdf"></i> PDF
+                </button>
+                <button id="btnImprimir" class="btn border border-success text-success">
+                    <i class="bi bi-printer"></i> Imprimir
+                </button>
+            </div>
+
             <div id="historialCumples" class="p-2">
                 <!-- Aquí se inyectará el historial desde JS -->
             </div>
@@ -84,3 +94,6 @@
 <!-- SCRIPTS NECESARIOS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
+<!-- PDF libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>

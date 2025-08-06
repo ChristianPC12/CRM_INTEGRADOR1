@@ -16,14 +16,16 @@ class ClienteDAO
     public function create($cliente)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?, ?, ?, ?)");
             return $stmt->execute([
                 $cliente->cedula,
                 $cliente->nombre,
                 $cliente->correo,
                 $cliente->telefono,
                 $cliente->lugarResidencia,
-                $cliente->fechaCumpleanos
+                $cliente->fechaCumpleanos,
+                $cliente->alergias,
+                $cliente->gustosEspeciales
             ]);
         } catch (PDOException $e) {
             echo json_encode([
@@ -79,17 +81,16 @@ class ClienteDAO
             $stmt = $this->conn->prepare("CALL ClienteExisteCedula(?, ?)");
             $stmt->execute([$cedula, $id]);
             return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
-    } catch (PDOException $e) {
+        } catch (PDOException $e) {
             error_log("Error al verificar cédula duplicada: " . $e->getMessage());
             return true; 
         }
     }
 
-
     public function update($cliente)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             return $stmt->execute([
                 $cliente->id,
                 $cliente->cedula,
@@ -98,15 +99,15 @@ class ClienteDAO
                 $cliente->telefono,
                 $cliente->lugarResidencia,
                 $cliente->fechaCumpleanos,
-                $cliente->acumulado
+                $cliente->acumulado,
+                $cliente->alergias,
+                $cliente->gustosEspeciales
             ]);
         } catch (PDOException $e) {
             error_log("Error al actualizar cliente: " . $e->getMessage());
             return false;
         }
     }
-
-
 
     public function delete($id)
     {

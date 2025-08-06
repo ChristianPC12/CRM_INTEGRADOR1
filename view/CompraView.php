@@ -20,8 +20,10 @@
                     <div class="compra-titulo">Elije una opción</div>
                     <button class="compra-btn-opcion" id="compraOpcionCompra">Compra</button>
                     <button class="compra-btn-opcion" id="compraOpcionDescuento">Descuento</button>
+                    <button class="compra-btn-opcion" id="compraOpcionExpress" style="display:none;">Express</button>
+
                     <div class="compra-input-container">
-                        <input type="text" class="compra-input-id" id="compraInputId" placeholder="# de Tarjeta">
+                        <input type="number" class="compra-input-id" id="compraInputId" placeholder="# de Tarjeta">
                         <!-- Ícono de búsqueda que aparece solo cuando se está en modo "Acumular" -->
                         <button class="compra-btn-buscar-icon" id="compraBtnBuscarIcon" style="display: none;"
                             title="Buscar otra tarjeta">
@@ -99,7 +101,8 @@
     </div>
 
     <!-- Modal de Cumpleaños -->
-    <div class="modal fade" id="modalCumpleanos" tabindex="-1" aria-labelledby="modalCumpleanosLabel" aria-hidden="true">
+    <div class="modal fade" id="modalCumpleanos" tabindex="-1" aria-labelledby="modalCumpleanosLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border: 3px solid #f9c41f; border-radius: 15px;">
                 <div class="modal-header"
@@ -133,6 +136,32 @@
             </div>
         </div>
     </div>
+
+    <!-- ⬇️ Modal Express – colócalo después del modal de cumpleaños -->
+    <div class="modal fade" id="modalExpress" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered">
+            <div class="modal-content" style="border:3px solid var(--amarillo);border-radius:15px;">
+                <div class="modal-header"
+                    style="background:linear-gradient(135deg,#f9c41f 0%,#e6b619 100%);color:#000;">
+                    <h5 class="modal-title fw-bold">🚀 EXPRESS</h5>
+                </div>
+
+                <div class="modal-body text-center p-4">
+                    <p class="lead mb-3">Estás por usar el apartado <strong>Express</strong></p>
+                    <p><strong>Cliente:</strong> <span id="expressNombre"></span></p>
+                    <p><strong>Correo:</strong> <span id="expressCorreo"></span></p>
+                </div>
+
+                <div class="modal-footer justify-content-center" style="border-top:2px solid var(--amarillo);">
+                    <button type="button" class="btn btn-primary" id="btnEnviarCorreoExpress"
+                        style="background:var(--amarillo);border-color:var(--amarillo);color:#000;font-weight:bold;">
+                        <i class="bi bi-envelope-fill"></i> Enviar correo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="/CRM_INT/CRM/public/js/Compra.js"></script>

@@ -113,21 +113,15 @@ const mostrarClientes = (clientes) => {
                         : ""
                     }</td>
                     <td>${cliente.fechaCumpleanos}</td>
-                    <td>
-                        <div class="acciones-cliente">
-                            <div class="columna-izquierda">
-                                <button class="btn btn-sm btn-warning" onclick="editarCliente('${
-                                  cliente.id
-                                }')">Editar</button>
-                                <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${
-                                  cliente.id
-                                }')">Eliminar</button>
-                            </div>
-                            <div class="columna-derecha">
-                                <button class="btn btn-sm" style="background-color: #111; color: #FFD600; border: none;" onclick="abrirModalReasignar(${cliente.id}, \`${cliente.nombre}\`, '${cliente.cedula}')">Reasignar</button>
-                            </div>
-                        </div>
-                    </td>
+                  <td>
+  <div class="acciones-cliente d-grid gap-1" style="grid-template-columns: repeat(2, 1fr); display: grid;">
+    <button class="btn btn-sm btn-warning" onclick="editarCliente('${cliente.id}')">Editar</button>
+    <button class="btn btn-sm btn-danger" onclick="eliminarCliente('${cliente.id}')">Eliminar</button>
+    <button class="btn btn-sm" style="background-color: #111; color: #FFD600; border: none;" onclick="abrirModalReasignar(${cliente.id}, \`${cliente.nombre}\`, '${cliente.cedula}')">Reasignar</button>
+    <button class="btn btn-sm btn-info text-white" onclick="mostrarInfoCliente(${cliente.id})">Info</button>
+  </div>
+</td>
+
                 </tr>
               `
               )
@@ -967,6 +961,38 @@ const detenerActualizacionAutomatica = () => {
     intervaloActualizacion = null;
   }
 };
+window.mostrarInfoCliente = (id) => {
+  const cliente = clientesActuales.find(c => c.id == id);
+  if (!cliente) {
+    Swal.fire({
+      icon: "error",
+      title: "Cliente no encontrado",
+      text: "No se pudo encontrar el cliente seleccionado.",
+    });
+    return;
+  }
+
+  const alergias = cliente.alergias?.trim() || "Sin datos registrados";
+  const gustos = cliente.gustosEspeciales?.trim() || "Sin datos registrados";
+
+  Swal.fire({
+    title: `🧠 Información de ${cliente.nombre}`,
+    html: `
+      <div class="text-start">
+        <strong>Alergias:</strong><br>
+        <p>${alergias}</p>
+        <strong>Gustos Especiales:</strong><br>
+        <p>${gustos}</p>
+      </div>
+    `,
+    icon: "info",
+    confirmButtonText: "Cerrar",
+    customClass: {
+      popup: "text-left"
+    }
+  });
+};
+
 
 // Cargar historial al inicializar la página
 document.addEventListener("DOMContentLoaded", function() {

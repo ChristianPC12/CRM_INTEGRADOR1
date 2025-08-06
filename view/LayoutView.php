@@ -152,7 +152,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'DashboardView.php';
             }
             ?>
-            <!-- Modal para ingresar número de tarjeta -->
+            <!-- COMENTADO: Modal para ingresar número de tarjeta -->
+            <!-- 
             <div id="modalTarjeta" class="modal-tarjeta">
                 <div class="modal-contenido">
                     <h3>Ingrese número de tarjeta</h3>
@@ -161,6 +162,30 @@ $vista = $_GET['view'] ?? 'dashboard';
                     <div class="modal-botones">
                         <button onclick="cerrarModal()">Cancelar</button>
                         <button onclick="redirigirCompra()">Buscar</button>
+                    </div>
+                </div>
+            </div>
+            -->
+
+            <!-- NUEVO: Modal para mostrar cumpleaños de la semana -->
+            <div id="modalCumples" class="modal-cumples" style="display: none;">
+                <div class="modal-contenido-cumples">
+                    <div class="modal-header-cumples">
+                        <h3><i class="bi bi-gift"></i> Cumpleaños de la Semana</h3>
+                        <button class="btn-cerrar-cumples" onclick="cerrarModalCumples()">&times;</button>
+                    </div>
+                    <div class="modal-body-cumples">
+                        <div id="rangoCumplesSemana" class="alert alert-info text-center fw-bold">
+                            <!-- Aquí se mostrará el rango de la semana -->
+                        </div>
+                        <div id="listaCumpleanos" class="cumples-container">
+                            <!-- Aquí se cargarán los cumpleaños -->
+                        </div>
+                    </div>
+                    <div class="modal-footer-cumples">
+                        <button class="btn-ir-cumples" onclick="irACumpleanos()">
+                            <i class="bi bi-arrow-right-circle"></i> Ir a Cumpleaños
+                        </button>
                     </div>
                 </div>
             </div>
@@ -203,6 +228,26 @@ $vista = $_GET['view'] ?? 'dashboard';
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+                    // CONFIGURACIÓN GLOBAL: Modal de cumpleaños 
+                    const logo = document.querySelector(".img-header");
+                    if (logo) {
+                        logo.style.cursor = 'pointer';
+                        logo.addEventListener('click', function () {
+                            console.log('Click en logo detectado'); // Debug
+                            abrirModalCumples();
+                        });
+                    }
+
+                    // NUEVO: Mostrar modal automáticamente al cargar el dashboard
+                    const vistaActual = '<?= $vista ?>';
+                    if (vistaActual === 'dashboard') {
+                        console.log('Dashboard detectado, mostrando modal automáticamente');
+                        // Esperar un poco para que se cargue todo el DOM
+                        setTimeout(function() {
+                            abrirModalCumples();
+                        }, 1000); // 1 segundo de delay
+                    }
+
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas
                     const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
 
@@ -242,14 +287,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                                     btn.title = "No tienes permisos para aplicar descuentos";
                                 }
                                 // Eliminar beneficio
-                    // Mostrar el modal al hacer click en el logo para cualquier rol (fuera de restricciones)
-                    const logo = document.querySelector(".img-header");
-                    if (logo) {
-                        logo.style.cursor = 'pointer';
-                        logo.addEventListener('click', function () {
-                            abrirModal();
-                        });
-                    }
                                 if (btn.textContent.trim().toLowerCase() === 'eliminar' || btn.classList.contains('btn-danger')) {
                                     btn.disabled = true;
                                     btn.classList.add('btn-disabled');
@@ -459,22 +496,19 @@ $vista = $_GET['view'] ?? 'dashboard';
                         // El propietario tiene acceso total, no se aplican restricciones.
                     }
 
-
-                    const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
-                    const vistaActual = "<?= $vista ?>";
-
-                    // Mostrar el modal automáticamente solo si el rol es salonero Y está en dashboard
-                    if (rolUsuario === "salonero" && vistaActual === "dashboard") {
-                        abrirModal();
-                    }
-                    // Mostrar el modal al hacer click en el logo para cualquier rol
-                    const logo = document.querySelector(".img-header");
-                    if (logo) {
-                        logo.style.cursor = 'pointer';
-                        logo.addEventListener('click', function () {
-                            abrirModal();
-                        });
-                    }
+                    // COMENTADO: Código duplicado y conflictivo eliminado
+                    // const rolUsuario = "<?= isset($_SESSION['rol']) ? strtolower($_SESSION['rol']) : '' ?>";
+                    // const vistaActual = "<?= $vista ?>";
+                    // if (rolUsuario === "salonero" && vistaActual === "dashboard") {
+                    //     abrirModal(); // Esta función ya no existe
+                    // }
+                    // const logo = document.querySelector(".img-header");
+                    // if (logo) {
+                    //     logo.style.cursor = 'pointer';
+                    //     logo.addEventListener('click', function () {
+                    //         abrirModal(); // Esta función ya no existe
+                    //     });
+                    // }
                 });
             </script>
 

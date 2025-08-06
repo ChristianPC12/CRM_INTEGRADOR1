@@ -14,4 +14,7 @@ class ClienteDTO
 
     public $totalHistorico;        // <─ NUEVO
 
+    public $alergias;             // <─ NUEVO
+    public $gustosEspeciales;     // <─ NUEVO
+
 }

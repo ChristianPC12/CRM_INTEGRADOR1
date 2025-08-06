@@ -13,7 +13,8 @@ require_once __DIR__ . '/../model/codigo/CodigoDAO.php';
 require_once __DIR__ . '/../model/codigo/CodigoDTO.php';
 
 
-function generarCodigoBarra($cliente) {
+function generarCodigoBarra($cliente)
+{
     // Ejemplo: cédula + fecha y hora actual para unicidad
     return $cliente->cedula . date('YmdHis');
 }
@@ -36,20 +37,23 @@ try {
             $cliente->lugarResidencia = $_POST['lugarResidencia'] ?? '';
             $cliente->fechaCumpleanos = $_POST['fechaCumpleanos'] ?? '';
             $cliente->acumulado = $_POST['acumulado'] ?? 0;
+            $cliente->alergias = $_POST['alergias'] ?? '';
+            $cliente->gustosEspeciales = $_POST['gustosEspeciales'] ?? '';
+
             if ($dao->existeTelefonoOCorreo($cliente->telefono, $cliente->correo)) {
                 echo json_encode([
-                 'success' => false,
-                 'message' => 'El teléfono o correo ya están registrados para otro cliente.'
-            ]);
-            exit;
+                    'success' => false,
+                    'message' => 'El teléfono o correo ya están registrados para otro cliente.'
+                ]);
+                exit;
             }
             if ($dao->existeCedula($cliente->cedula, null)) {
                 echo json_encode([
-                'success' => false,
-                'message' => 'La cédula ya está registrada.'
+                    'success' => false,
+                    'message' => 'La cédula ya está registrada.'
                 ]);
                 exit;
-            }   
+            }
             $result = $dao->create($cliente);
 
             if ($result) {
@@ -93,17 +97,17 @@ try {
             $cliente->acumulado = $_POST['acumulado'] ?? null;
             if ($dao->existeTelefonoOCorreo($cliente->telefono, $cliente->correo, $cliente->id)) {
                 echo json_encode([
-                 'success' => false,
-                 'message' => 'El teléfono o correo ya están registrados para otro cliente.'
+                    'success' => false,
+                    'message' => 'El teléfono o correo ya están registrados para otro cliente.'
                 ]);
-                 exit;
+                exit;
             }
             if ($dao->existeCedula($cliente->cedula, $cliente->id)) {
                 echo json_encode([
-                'success' => false,
-                 'message' => 'La cédula ya está registrada.'
+                    'success' => false,
+                    'message' => 'La cédula ya está registrada.'
                 ]);
-                 exit;
+                exit;
             }
             $result = $dao->update($cliente);
             echo json_encode(['success' => $result, 'message' => $result ? 'Cliente actualizado exitosamente' : 'Error al actualizar cliente']);
@@ -134,13 +138,13 @@ try {
 
         case 'getHistorialReasignaciones':
             $codigoDAO = new CodigoDAO($db);
-            
+
             // Obtener TODOS los códigos usando el procedimiento existente
             $resultCodigos = $codigoDAO->readAll();
-            
+
             // Obtener TODOS los clientes
             $resultClientes = $dao->readAll();
-            
+
             if ($resultCodigos['success'] && $resultClientes) {
                 echo json_encode([
                     'success' => true,

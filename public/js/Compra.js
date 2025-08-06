@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     nombreClienteActual: null,
     datosClienteActual: null,
     expressTimer: null, // Para manejar el temporizador
+    expressValidado: false, // Para saber si Express ya fue validado
   };
 
   // Configuración de botones
@@ -135,7 +136,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function selectButton(type) {
-    deselectAllButtons();
+    // Si Express ya está validado, no deseleccionarlo nunca
+    if (state.expressValidado) {
+      // Solo deseleccionar los otros botones (no Express)
+      elements.btns.forEach((b) => {
+        if (getButtonType(b) !== "express") {
+          b.classList.remove("selected");
+        }
+      });
+      
+      // Asegurar que Express se mantenga seleccionado
+      elements.btnExpress.classList.add("selected");
+    } else {
+      deselectAllButtons();
+    }
 
     const button =
       type === "compra"
@@ -160,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
     state.idClienteActual = null;
     state.nombreClienteActual = null;
     state.datosClienteActual = null;
+    state.expressValidado = false; // Resetear estado Express
 
     // Limpiar temporizador si existe
     if (state.expressTimer) {
@@ -220,6 +235,12 @@ document.addEventListener("DOMContentLoaded", function () {
         elements.btnBuscar.style.background = config.acumularBackground;
         elements.btnBuscar.style.color = config.acumularColor;
         elements.btnBuscarIcon.style.display = "block";
+      } else if (type === "descuento" && state.expressValidado) {
+        // Cambiar texto del botón cuando Express está validado
+        elements.btnBuscar.textContent = "Aplicar";
+        elements.btnBuscar.style.background = "#28a745"; // Verde más brillante
+        elements.btnBuscar.style.color = "white";
+        elements.btnBuscarIcon.style.display = config.showIcon ? "block" : "none";
       } else {
         elements.btnBuscar.textContent = config.buscarText;
         elements.btnBuscar.style.background = config.background;
@@ -232,11 +253,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getSelectedOption() {
-    if (elements.btnCompra.classList.contains("selected")) return "compra";
-    if (elements.btnDescuento.classList.contains("selected"))
-      return "descuento";
-    if (elements.btnExpress.classList.contains("selected")) return "express";
-    return null;
+    const opciones = [];
+    if (elements.btnCompra.classList.contains("selected")) opciones.push("compra");
+    if (elements.btnDescuento.classList.contains("selected")) opciones.push("descuento");
+    if (elements.btnExpress.classList.contains("selected")) opciones.push("express");
+    
+    // Para compatibilidad con código existente, devolver la primera opción no-express
+    // o express si es la única seleccionada
+    const nonExpress = opciones.find(op => op !== "express");
+    return nonExpress || (opciones.includes("express") ? "express" : null);
   }
 
   async function manejarAccion() {
@@ -278,16 +303,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function handleDescuento() {
-    if (elements.btnBuscar.textContent !== "Aplicar") return;
+    const isExpressMode = state.expressValidado && elements.btnExpress.classList.contains("selected");
+    const descuentoAplicar = isExpressMode ? 20000 : 50000;
+    const nombreDescuento = isExpressMode ? "Express" : "VIP";
+    
+    if (elements.btnBuscar.textContent !== "Aplicar" && elements.btnBuscar.textContent !== "Aplicar Express") return;
 
     let saldo = parseFloat(document.getElementById("totalActual").value) || 0;
-    if (saldo < 50000) {
+    
+    if (saldo < descuentoAplicar) {
       return alert(
-        "El saldo actual es insuficiente para aplicar el descuento."
+        `El saldo actual (₡${saldo.toLocaleString("es-CR")}) es insuficiente para aplicar el descuento ${nombreDescuento} de ₡${descuentoAplicar.toLocaleString("es-CR")}.`
       );
     }
 
-    let saldoFinal = saldo - 50000;
+    let saldoFinal = saldo - descuentoAplicar;
 
     try {
       const response = await fetch(
@@ -309,12 +339,20 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("totalActual").value = saldoFinal;
       state.datosClienteActual.acumulado = saldoFinal;
 
-      alert(
-        `Descuento exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
-          `El saldo actual cambió de ₡${saldo.toLocaleString(
-            "es-CR"
-          )} a ₡${saldoFinal.toLocaleString("es-CR")}.`
-      );
+      // Mensaje personalizado según el tipo de descuento
+      let mensaje = "";
+      if (isExpressMode) {
+        mensaje = `¡Descuento Express aplicado exitosamente!\n\n` +
+                 `✅ Se descontaron ₡${descuentoAplicar.toLocaleString("es-CR")} de tu saldo\n` +
+                 `💰 Saldo anterior: ₡${saldo.toLocaleString("es-CR")}\n` +
+                 `💰 Saldo actual: ₡${saldoFinal.toLocaleString("es-CR")}\n\n` +
+                 `🎉 ¡El Express ahora es GRATIS para ${state.nombreClienteActual}!`;
+      } else {
+        mensaje = `Descuento VIP exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
+                 `El saldo actual cambió de ₡${saldo.toLocaleString("es-CR")} a ₡${saldoFinal.toLocaleString("es-CR")}.`;
+      }
+      
+      alert(mensaje);
     } catch {
       alert("Error de servidor.");
     }
@@ -669,6 +707,9 @@ document.addEventListener("DOMContentLoaded", function () {
         clearInterval(state.expressTimer);
         state.expressTimer = null;
         
+        // MARCAR EXPRESS COMO VALIDADO
+        state.expressValidado = true;
+        
         // Cerrar modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('modalExpress'));
         if (modal) {
@@ -676,10 +717,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         // Mostrar confirmación
-        alert('¡Código validado correctamente! Beneficio aplicado.');
+        alert('¡Código validado correctamente! Express activado.');
         
-        // Mantener Express seleccionado para que se pueda combinar con otras opciones
-        console.log("Express validado, manteniendo selección para combinar con otras opciones");
+        // MANTENER EXPRESS SELECCIONADO y actualizar estado visual
+        elements.btnExpress.classList.add("selected");
+        
+        // Agregar indicador visual de Express validado
+        if (!elements.btnExpress.querySelector('.express-validado')) {
+          const indicator = document.createElement('span');
+          indicator.className = 'express-validado';
+          indicator.innerHTML = ' ✓';
+          indicator.style.color = '#28a745';
+          indicator.style.fontWeight = 'bold';
+          elements.btnExpress.appendChild(indicator);
+        }
+        
+        // Si hay otra opción seleccionada, actualizar su estado
+        const otherSelected = getSelectedOption();
+        if (otherSelected && otherSelected !== "express") {
+          updateButtonState(otherSelected);
+        }
+        
+        console.log("Express validado y persistente para combinar con otras opciones");
         
       } else {
         msgExpress.textContent = json.message || 'Código incorrecto';

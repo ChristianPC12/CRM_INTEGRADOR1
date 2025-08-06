@@ -16,7 +16,9 @@ class ClienteMapper
         $dto->fechaCumpleanos = $row['FechaCumpleanos'];
         $dto->acumulado = $row['Acumulado'];
         $dto->fechaRegistro = $row['FechaRegistro']; 
-        $dto->totalHistorico = $row['TotalHistorico'];   // <─ NUEVO
+        $dto->alergias = $row['Alergias'];                   // <─ NUEVO
+        $dto->gustosEspeciales = $row['GustosEspeciales'];   // <─ NUEVO
+        $dto->totalHistorico = $row['TotalHistorico'];       // <─ EXISTENTE
         return $dto;
     }
 }

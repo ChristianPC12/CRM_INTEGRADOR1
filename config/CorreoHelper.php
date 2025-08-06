@@ -6,7 +6,8 @@ require_once __DIR__ . '/../LIB/phpmailer/PHPMailer.php';
 require_once __DIR__ . '/../LIB/phpmailer/SMTP.php';
 require_once __DIR__ . '/../LIB/phpmailer/Exception.php';
 
-function enviarCorreoCumple($destinatario, $nombre, $mensaje) {
+function enviarCorreoCumple($destinatario, $nombre, $mensaje)
+{
     $mail = new PHPMailer(true);
 
     try {
@@ -18,12 +19,12 @@ function enviarCorreoCumple($destinatario, $nombre, $mensaje) {
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->SMTPOptions = [
-    'ssl' => [
-        'verify_peer' => false,
-        'verify_peer_name' => false,
-        'allow_self_signed' => true
-    ]
-];
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ];
 
 
         // IMPORTANTE: el remitente debe ser el mismo correo del SMTP o uno verificado en Brevo

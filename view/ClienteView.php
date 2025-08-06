@@ -6,9 +6,9 @@
 
     <!-- Formulario -->
     <div class="card shadow mb-4">
-<div class="card-header clientes-header d-flex align-items-center">
-    <h5 class="mb-0 flex-grow-1 titulo-clientes">Registro de Cliente</h5>
-</div>
+        <div class="card-header clientes-header d-flex align-items-center">
+            <h5 class="mb-0 flex-grow-1 titulo-clientes">Registro de Cliente</h5>
+        </div>
         <div class="card-body">
             <form id="clienteForm">
                 <div class="row">
@@ -19,8 +19,7 @@
                     <div class="col-md-4 mb-3">
                         <label for="clienteCedula" class="form-label">Cédula *</label>
                         <input type="text" name="cedula" id="clienteCedula" class="form-control" required
-                            placeholder="Ej: 123456789"
-                            maxlength="14" pattern="\d{9}|\d{14}">
+                            placeholder="Ej: 123456789" maxlength="14" pattern="\d{9}|\d{14}">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="clienteNombre" class="form-label">Nombre Completo *</label>
@@ -34,7 +33,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="clienteCorreo" class="form-label">Correo Electrónico *</label>
                         <input type="email" name="correo" id="clienteCorreo" class="form-control"
-                            placeholder="ejemplo@correo.com"  maxlength="30">
+                            placeholder="ejemplo@correo.com" maxlength="30">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="clienteTelefono" class="form-label">Teléfono *</label>
@@ -46,8 +45,8 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="clienteLugar" class="form-label">Lugar de Residencia *</label>
-                        <input list="listaCantones" name="lugarResidencia" id="clienteLugar" class="form-control" required
-                        placeholder="Ej: San José, Costa Rica">
+                        <input list="listaCantones" name="lugarResidencia" id="clienteLugar" class="form-control"
+                            required placeholder="Ej: San José, Costa Rica">
                         <datalist id="listaCantones"></datalist>
                     </div>
 
@@ -56,6 +55,20 @@
                         <input type="date" name="fechaCumpleanos" id="clienteFecha" class="form-control" required>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="clienteAlergias" class="form-label">Alergias</label>
+                        <textarea name="alergias" id="clienteAlergias" class="form-control" rows="2" maxlength="255"
+                            placeholder="Ej: Maní, lácteos, gluten..."></textarea>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="clienteGustos" class="form-label">Gustos Especiales</label>
+                        <textarea name="gustosEspeciales" id="clienteGustos" class="form-control" rows="2"
+                            maxlength="255"
+                            placeholder="Ej: Prefiere platillos sin picante, jugos naturales..."></textarea>
+                    </div>
+                </div>
+
 
                 <div class="d-flex justify-content-end">
                     <button type="button" id="cancelBtn" class="btn btn-secondary me-2"
@@ -96,7 +109,8 @@
                 <i class="fas fa-sync-alt me-1"></i>
                 <span id="estadoActualizacion">Actualización automática activa</span>
             </small>
-            <button class="btn btn-sm btn-outline-light ms-2" onclick="cargarHistorialReasignaciones(true)" title="Actualizar manualmente">
+            <button class="btn btn-sm btn-outline-light ms-2" onclick="cargarHistorialReasignaciones(true)"
+                title="Actualizar manualmente">
                 <i class="fas fa-refresh me-1"></i>Actualizar
             </button>
         </div>
@@ -110,14 +124,16 @@
     </div>
 
     <!-- Modal para reasignación de código -->
-    <div class="modal fade" id="modalReasignar" tabindex="-1" aria-labelledby="modalReasignarLabel" aria-hidden="true" data-bs-backdrop="false" data-bs-keyboard="true">
+    <div class="modal fade" id="modalReasignar" tabindex="-1" aria-labelledby="modalReasignarLabel" aria-hidden="true"
+        data-bs-backdrop="false" data-bs-keyboard="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header reasignar-header">
                     <h6 class="modal-title" id="modalReasignarLabel">
                         <i class="fas fa-sync-alt me-2"></i>Reasignar Código
                     </h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="cliente-info-card-compact">
@@ -129,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mt-3">
                         <label for="motivoReasignacion" class="form-label">
                             <strong><i class="fas fa-edit me-1"></i>Motivo:</strong> *
@@ -144,18 +160,12 @@
                             <option value="Solicitud del cliente">Solicitud del cliente</option>
                             <option value="Otro">Otro (especificar)</option>
                         </select>
-                        <textarea 
-                            class="form-control motivo-textarea-compact" 
-                            id="motivoReasignacion" 
-                            rows="2" 
-                            placeholder="Descripción del motivo..."
-                            maxlength="100"
-                            style="display: none;"
-                            required>
+                        <textarea class="form-control motivo-textarea-compact" id="motivoReasignacion" rows="2"
+                            placeholder="Descripción del motivo..." maxlength="100" style="display: none;" required>
                         </textarea>
                         <div class="form-text">Máximo 100 caracteres</div>
                     </div>
-                    
+
                     <div class="alert alert-info alert-compact mt-3" role="alert">
                         <i class="fas fa-info-circle me-2"></i>
                         <small><strong>Proceso:</strong> Se generará un nuevo código VIP automáticamente.</small>
@@ -165,7 +175,8 @@
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i>Cancelar
                     </button>
-                    <button type="button" class="btn btn-warning btn-sm" id="btnConfirmarReasignacion" onclick="procesarReasignacion()">
+                    <button type="button" class="btn btn-warning btn-sm" id="btnConfirmarReasignacion"
+                        onclick="procesarReasignacion()">
                         <i class="fas fa-sync-alt me-1"></i>Confirmar
                     </button>
                 </div>
@@ -177,3 +188,5 @@
 
     <!-- Script exclusivo de esta vista -->
     <script src="/CRM_INT/CRM/public/js/Cliente.js?v=<?= time() ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+

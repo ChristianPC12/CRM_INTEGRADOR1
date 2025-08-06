@@ -143,11 +143,27 @@ body {
   outline: none;
   background: #f9fafb;
   transition: border-color 0.2s;
-  margin-left: 96px;
+  margin-left: 0;
   display: block;
+}
+
+/* Ocultar flechas del input number sin warnings */
+.compra-input-id::-webkit-outer-spin-button,
+.compra-input-id::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
 .compra-input-id:focus {
   border-color: var(--amarillo);
+}
+
+.compra-input-container {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  vertical-align: top;
+  margin-left: auto;
 }
 
 .compra-btn-buscar {
@@ -162,7 +178,7 @@ body {
   letter-spacing: 1px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   font-size: 1em;
-  margin-left: auto;
+  margin-left: 0.5em;
   display: block;
 }
 .compra-btn-buscar:hover {
@@ -253,13 +269,6 @@ body {
 /* Clase para mostrar el mensaje cuando sea necesario */
 .mensaje-error.show {
   display: block;
-}
-/* Estilos para el contenedor del input y el ícono de búsqueda */
-.compra-input-container {
-  position: relative;
-  display: inline-block;
-  width: auto;
-  vertical-align: top;
 }
 
 /* Estilos para el botón con ícono de búsqueda */
@@ -366,6 +375,7 @@ body {
 
   .compra-input-container {
     width: 100%;
+    margin-left: 0;
   }
 
   .compra-indicacion {
@@ -408,6 +418,10 @@ body {
   }
 
   .compra-btn-buscar {
+    margin-left: 0;
+  }
+
+  .compra-input-container {
     margin-left: 0;
   }
 }

@@ -399,6 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function buscarCliente() {
     const inputId = elements.inputId.value.trim();
+ console.log("Valor que se envía al servidor:", inputId);
 
     try {
       const response = await fetch(

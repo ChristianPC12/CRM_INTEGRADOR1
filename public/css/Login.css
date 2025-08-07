@@ -238,9 +238,40 @@ body::after {
 /* 🏮 LOGO ELEGANTE */
 .logo-container {
   text-align: center;
-  margin-bottom: clamp(1.5rem, 3.5vh, 2.2rem);
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
   position: relative;
   z-index: 2;
+}
+
+/* 🏛️ LOGO BASTOS - COMPACTO Y ELEGANTE */
+.logo-bastos {
+  width: clamp(40px, 10vw, 55px);
+  height: clamp(40px, 10vw, 55px);
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 3px 12px rgba(244, 180, 0, 0.2));
+  animation: bastos-resplandor 3s ease-in-out infinite;
+  display: block;
+  margin: 0 auto clamp(0.3rem, 0.8vh, 0.5rem) auto;
+  opacity: 0.95;
+}
+
+@keyframes bastos-resplandor {
+  0%, 100% { 
+    filter: drop-shadow(0 3px 12px rgba(244, 180, 0, 0.2)); 
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% { 
+    filter: drop-shadow(0 4px 16px rgba(244, 180, 0, 0.3)); 
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+.logo-bastos:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 20px rgba(244, 180, 0, 0.4));
+  opacity: 1;
 }
 
 .logo {
@@ -274,7 +305,7 @@ body::after {
 /* 🎯 HEADER ELEGANTE */
 .header {
   text-align: center;
-  margin-bottom: clamp(1.5rem, 3.5vh, 2.2rem);
+  margin-bottom: clamp(1.8rem, 4vh, 2.5rem);
   padding-bottom: clamp(1rem, 2.5vh, 1.5rem);
   position: relative;
 }
@@ -300,10 +331,10 @@ body::after {
 
 .header h2 {
   color: var(--negro);
-  font-size: clamp(1.8rem, 4.5vw, 2.3rem);
-  margin-bottom: clamp(0.6rem, 1.8vh, 0.8rem);
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  margin-bottom: clamp(0.5rem, 1.5vh, 0.7rem);
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   background: var(--gradiente-dorado);
@@ -311,7 +342,7 @@ body::after {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: titulo-brillo 2s ease-in-out infinite;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 @keyframes titulo-brillo {
@@ -493,6 +524,11 @@ body::after {
   .logo {
     width: min(100px, 18vw, 12vh);
   }
+  
+  .logo-bastos {
+    width: clamp(25px, 6vw, 35px) !important;
+    height: clamp(25px, 6vw, 35px) !important;
+  }
 }
 
 /* 📱 OPTIMIZACIÓN TOTAL PARA TODOS LOS MÓVILES Y TABLETS */
@@ -571,6 +607,11 @@ body::after {
   
   .logo {
     width: clamp(100px, 20vw, 140px) !important;
+  }
+  
+  .logo-bastos {
+    width: clamp(30px, 7vw, 40px) !important;
+    height: clamp(30px, 7vw, 40px) !important;
   }
 }
 
@@ -894,6 +935,11 @@ body::after {
   
   .logo {
     width: clamp(80px, 15vw, 120px) !important;
+  }
+  
+  .logo-bastos {
+    width: clamp(25px, 6vw, 35px) !important;
+    height: clamp(25px, 6vw, 35px) !important;
   }
   
   .header {

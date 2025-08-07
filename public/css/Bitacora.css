@@ -1,187 +1,239 @@
-:root {
-  --amarillo: #f4b400;         /* Dorado intenso */
-  --amarillo-claro: #fff8e1;
-  --amarillo-texto: #f4d03f;
-  --gris: #2a2a2a;
-  --negro: #000000;
-  --sombra: rgba(0, 0, 0, 0.4);
-}
-
 body {
-  background: #ffffff !important;
+  background: #838886 !important;
   font-family: 'Segoe UI', sans-serif;
- 
   margin: 0;
-  color: var(--amarillo-texto);
+  color: #333;
   position: relative;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* Contenedor centrado - Modernizado */
+/* Fondo decorativo - igual que las otras secciones */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 70%;
+  background: #f9c41f;
+}
+
+body::after {
+  bottom: 0;
+  right: 0;
+  width: 60%;
+  height: 50%;
+  background: #838886;
+}
+
+/* Contenedor centrado con efectos mejorados */
 .contenedor-bitacora {
-  margin-left: 280px; /* espacio para sidebar + separación */
+  margin: 0 auto;
   padding: 40px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  position: relative;
+  max-width: 1200px;
+  overflow: hidden;
 }
 
-/* 🟡 Línea superior decorativa */
+/* Línea superior decorativa */
 .contenedor-bitacora::before {
   content: "";
   position: absolute;
   top: 0;
-  left: 280px;
-  width: calc(100% - 280px);
-  height: 6px;
-  background: linear-gradient(90deg, var(--amarillo), #ffd700, #ffed4e);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #f9c41f 0%, #ffd700 100%);
+  z-index: 1;
 }
 
-/* 🔔 Alerta */
+/* Contenedor de tabla con scroll personalizado */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Scroll personalizado */
+.table-responsive::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f9c41f, #ffd700);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(249, 196, 31, 0.3);
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #e6b619, #f9c41f);
+}
+
+/* Alerta con efectos mejorados */
 .alert {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1c1c1c 100%);
-  color: var(--amarillo-texto);
-  padding: 1rem 1.5rem 1rem 36px;
-  border-left: 6px solid var(--amarillo);
-  border-radius: 14px;
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+  color: #f9c41f;
+  padding: 1rem 1.5rem;
+  border-left: 6px solid #f9c41f;
+  border-radius: 12px;
   margin-bottom: 24px;
-  position: relative;
-  box-shadow: 0 8px 24px var(--sombra);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.alert::before {
-  content: "ℹ️  ";
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-}
 .alert:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 24px rgba(249, 196, 31, 0.2);
 }
 
-/* 🔸 Botones - Modernizados */
+/* Botones con efectos mejorados */
 .btn {
-  padding: 16px 32px;
+  padding: 14px 28px;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   border-radius: 12px;
   margin: 8px 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px var(--sombra);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
 }
 
-.btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-  left: 100%;
-}
-
 .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px var(--sombra);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .btn-pdf {
-  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
   color: white;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
 }
 
 .btn-pdf:hover {
-  background: linear-gradient(135deg, #a93226, #c0392b);
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  box-shadow: 0 8px 24px rgba(231, 76, 60, 0.4);
 }
 
 .btn-excel {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
   color: white;
+  box-shadow: 0 4px 16px rgba(46, 204, 113, 0.3);
 }
 
 .btn-excel:hover {
-  background: linear-gradient(135deg, #229954, #27ae60);
+  background: linear-gradient(135deg, #27ae60, #229954);
+  box-shadow: 0 8px 24px rgba(46, 204, 113, 0.4);
 }
 
-/* 🔸 Tabla */
+/* Tabla con efectos de hover como las otras secciones */
 table {
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* asegura columnas uniformes */
-  background-color: var(--gris);
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
   margin-top: 1rem;
-  box-shadow: 0 4px 12px var(--sombra);
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
-  font-size: 0.95rem;
-  color: var(--amarillo-texto);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  table-layout: fixed;
 }
 
 th {
-  background-color: var(--amarillo);
-  color: var(--negro);
+  background: linear-gradient(135deg, #f9c41f 0%, #ffd700 100%);
+  color: #000;
   font-weight: bold;
-  padding: 12px;
+  padding: 16px 12px;
   text-align: center;
-  border-bottom: 2px solid #444;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 td {
-  padding: 12px;
+  padding: 14px 12px;
   text-align: center;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+  transition: all 0.3s ease;
+  vertical-align: middle;
 }
 
-tr:nth-child(even) {
-  background-color: #1a1a1a;
+/* Efectos de hover para las filas - igual que otras secciones */
+tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-tr:hover {
-  background-color: #333;
+tbody tr:hover {
+  background: linear-gradient(135deg, rgba(249, 196, 31, 0.15), rgba(255, 255, 255, 0.95));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 196, 31, 0.2);
+}
+
+tbody tr:hover td {
+  background: transparent !important;
+  color: #000 !important;
+}
+
+tbody tr:nth-child(even) td {
+  background-color: rgba(248, 249, 250, 0.6);
+}
+
+tbody tr:nth-child(even):hover td {
+  background: transparent !important;
+  color: #000 !important;
+}
+
+td:first-child {
+  text-align: left;
+  font-weight: 500;
+  padding-left: 20px;
 }
 
 @media (max-width: 768px) {
-  h2 {
-    font-size: 1.4rem;
+  .contenedor-bitacora {
+    margin: 12px;
+    padding: 20px;
   }
 
-  .alert {
-    font-size: 0.9rem;
-    padding: 0.75rem 2.2rem 1.5rem 1rem;  /* padding-right y padding-bottom aumentados */
-    position: relative;
-    text-align: left;                     /* opcional, puedes dejarlo centrado si prefieres */
+  body::before {
+    width: 60%;
+    height: 50%;
   }
-  .alert::before {
-    right: 8px;
-    bottom: 8px;
-    left: auto;
-    top: auto;
-    transform: none;
-    font-size: 1.1rem;
-    position: absolute;
+  
+  body::after {
+    width: 55%;
+    height: 40%;
   }
 
   .btn {
     width: 100%;
-    margin: 0.3rem 0;
+    margin: 8px 0;
     font-size: 0.9rem;
   }
 
@@ -190,80 +242,19 @@ tr:hover {
   }
 
   th, td {
-    padding: 6px;
+    padding: 8px 6px;
   }
 }
 
-td:first-child {
-  text-align: left;
-  padding-left: 20px;
-  word-break: break-word;
-}
-
-
-/* === OVERRIDE ESPECÍFICO PARA BITÁCORA === */
-/* Forzar fondo blanco en la página de bitácora */
-body[class*="bitacora"],
-body[data-page="bitacora"],
-.bitacora-page,
-.bitacora body,
-body {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-}
-
-html {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-}
-
-
-/* SIDEBAR MODERNO */
-.sidebar {
-    width: var(--sidebar-width);
-    background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%);
-    color: var(--blanco);
-    padding: 24px 20px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    overflow-y: auto;
-    box-shadow: var(--sombra-elevada);
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
-
-/* Hacer scroll invisible en el sidebar */
-.sidebar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE y Edge */
-}
-
-.sidebar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari y Opera */
-}
-
-/* HEADER DEL SIDEBAR MODERNIZADO */
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 2rem;
-    padding: 16px 12px;
+@media (max-width: 480px) {
+  body::before,
+  body::after {
+    display: none;
+  }
+  
+  .contenedor-bitacora {
+    margin: 4px;
+    padding: 12px;
     border-radius: 12px;
-    background: rgba(249, 196, 31, 0.1);
-    border: 1px solid rgba(249, 196, 31, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.sidebar-header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
+  }
 }

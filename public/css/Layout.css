@@ -22,13 +22,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Excepción para la página de Bitácora - fondo blanco */
-body:has([data-view="bitacora"]),
-body.bitacora-page,
-.bitacora body {
-    background: #ffffff !important;
-}
-
 /* Fondo decorativo moderno */
 body::before,
 body::after {

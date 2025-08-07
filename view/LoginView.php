@@ -11,6 +11,10 @@
 <body>
     <div class="login-container">
         <div class="login-card">
+            <div class="logo-container">
+                <img src="public/img/Principal_Amarillo.png" alt="Logo Bastos" class="logo-bastos">
+            </div>
+            
             <div class="header">
                 <h2>CRM BASTOS</h2>
                 <div class="subtitle">Inicio de sesión</div>

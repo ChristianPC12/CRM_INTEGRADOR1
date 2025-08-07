@@ -31,7 +31,13 @@ public function readAll() {
     $sql = "SELECT b.*, u.Usuario AS nombreUsuario 
             FROM bitacora b 
             JOIN usuario u ON b.IdUsuario = u.Id
-            ORDER BY b.Fecha DESC, b.HoraEntrada DESC";
+            ORDER BY 
+                CASE 
+                    WHEN b.horaSalida IS NULL OR b.horaSalida = '00:00:00' THEN 0 
+                    ELSE 1 
+                END,
+                b.Fecha DESC, 
+                b.HoraEntrada DESC";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();

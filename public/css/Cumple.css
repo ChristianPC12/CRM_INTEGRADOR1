@@ -1083,3 +1083,216 @@ td.contacto {
     display: none !important;
   }
 }
+
+/* === ALTURA FIJA Y SCROLL INVISIBLE PARA TABLAS === */
+
+/* Div "Cumpleaños de la Semana" con altura fija y scroll */
+.card-body .table-responsive {
+  max-height: 400px !important; /* Ajusta esta altura según necesites */
+  overflow-y: auto !important;
+  overflow-x: auto !important; /* Scroll horizontal habilitado */
+  scrollbar-width: none !important; /* Firefox - ocultar scrollbar */
+  -ms-overflow-style: none !important; /* IE/Edge - ocultar scrollbar */
+}
+
+/* Ocultar scrollbar en WebKit (Chrome, Safari, Edge) - AMBOS scrollbars */
+.card-body .table-responsive::-webkit-scrollbar {
+  display: none !important;
+}
+
+.card-body .table-responsive::-webkit-scrollbar-horizontal {
+  display: none !important;
+}
+
+.card-body .table-responsive::-webkit-scrollbar-vertical {
+  display: none !important;
+}
+
+/* Específico para el historial que necesita más altura */
+.card.shadow-sm .card-body .table-responsive {
+  max-height: 500px !important; /* Altura mayor para el historial */
+  overflow-y: auto !important;
+  overflow-x: auto !important; /* Scroll horizontal habilitado */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.card.shadow-sm .card-body .table-responsive::-webkit-scrollbar {
+  display: none !important;
+}
+
+.card.shadow-sm .card-body .table-responsive::-webkit-scrollbar-horizontal {
+  display: none !important;
+}
+
+.card.shadow-sm .card-body .table-responsive::-webkit-scrollbar-vertical {
+  display: none !important;
+}
+
+/* Asegurar que los contenedores internos no desborden */
+#cumpleLista,
+#historialCumples {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Smooth scroll para mejor experiencia */
+.card-body .table-responsive {
+  scroll-behavior: smooth !important;
+}
+
+/* Efecto fade en los bordes para indicar que hay más contenido */
+.card-body .table-responsive::before {
+  content: "";
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.card-body .table-responsive::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Responsive - Ajustar alturas en dispositivos móviles */
+@media (max-width: 768px) {
+  .card-body .table-responsive {
+    max-height: 300px !important;
+  }
+  
+  .card.shadow-sm .card-body .table-responsive {
+    max-height: 350px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-body .table-responsive {
+    max-height: 250px !important;
+  }
+  
+  .card.shadow-sm .card-body .table-responsive {
+    max-height: 300px !important;
+  }
+}
+
+/* === ESTILOS PARA BUSCADOR DE HISTORIAL DE CUMPLEAÑOS === */
+
+/* Input de búsqueda por cédula */
+#buscadorCedula {
+  border-left: 3px solid #f9c41f !important;
+  transition: all 0.3s ease !important;
+}
+
+#buscadorCedula:focus {
+  border-left-color: #e6b619 !important;
+  box-shadow: 0 0 0 0.2rem rgba(249, 196, 31, 0.25) !important;
+}
+
+/* Botón limpiar búsqueda */
+#limpiarBusqueda {
+  border-color: #f9c41f !important;
+  color: #f9c41f !important;
+  transition: all 0.3s ease !important;
+}
+
+#limpiarBusqueda:hover {
+  background-color: #f9c41f !important;
+  color: #000 !important;
+  transform: scale(1.05);
+}
+
+/* Alertas pequeñas para mensajes de resultado */
+.alert-sm {
+  font-size: 0.875rem !important;
+  border-radius: 8px !important;
+}
+
+/* Animación suave para filas de la tabla cuando se filtran */
+#tablaHistorial tbody tr {
+  transition: opacity 0.3s ease, transform 0.2s ease !important;
+}
+
+#tablaHistorial tbody tr[style*="display: none"] {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* Efecto hover mejorado para el input group */
+.input-group:hover #buscadorCedula {
+  border-left-width: 4px !important;
+  border-left-color: #e6b619 !important;
+}
+
+/* Mejorar el ícono de búsqueda */
+i.fa-search {
+  transition: transform 0.3s ease;
+}
+
+.input-group:hover i.fa-search {
+  transform: scale(1.1);
+}
+
+/* Efecto focus en el contenedor completo */
+.input-group:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 196, 31, 0.15);
+}
+
+/* Estilo para el texto de ayuda */
+.text-muted i.fa-info-circle {
+  color: #f9c41f !important;
+  opacity: 0.7;
+}
+
+/* Responsive para el buscador */
+@media (max-width: 576px) {
+  #buscadorCedula {
+    font-size: 0.875rem !important;
+    padding: 8px 12px !important;
+  }
+  
+  #limpiarBusqueda {
+    padding: 8px 10px !important;
+  }
+}
+
+/* === ANIMACIÓN === */
+@keyframes bigPulse {
+  0% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(2); 
+    box-shadow: 0 0 50px rgba(249, 196, 31, 0.9);
+  }
+  100% { 
+    transform: scale(1); 
+  }
+}
+
+/* === BOTÓN ENVIAR CORREO === */
+#btnEnviarCorreo {
+  transition: all 0.3s ease;
+}
+
+#btnEnviarCorreo:focus {
+  outline: 3px solid rgba(249, 196, 31, 0.4);
+  outline-offset: 2px;
+}
+
+/* === CLASE DE INTERACCIÓN === */
+.btn-highlight {
+  animation: bigPulse 0.8s ease-in-out !important;
+}

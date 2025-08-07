@@ -1,6 +1,6 @@
 body {
   background: #838886 !important;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   margin: 0;
   color: #333;
   position: relative;
@@ -190,7 +190,11 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: linear-gradient(135deg, rgba(249, 196, 31, 0.15), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(249, 196, 31, 0.15),
+    rgba(255, 255, 255, 0.95)
+  );
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(249, 196, 31, 0.2);
 }
@@ -225,7 +229,7 @@ td:first-child {
     width: 60%;
     height: 50%;
   }
-  
+
   body::after {
     width: 55%;
     height: 40%;
@@ -241,7 +245,8 @@ td:first-child {
     font-size: 0.85rem;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px 6px;
   }
 }
@@ -251,10 +256,76 @@ td:first-child {
   body::after {
     display: none;
   }
-  
+
   .contenedor-bitacora {
     margin: 4px;
     padding: 12px;
     border-radius: 12px;
+  }
+
+  /* === OVERRIDE ESPECÍFICO PARA BITÁCORA === */
+  /* Forzar fondo blanco en la página de bitácora */
+  body[class*="bitacora"],
+  body[data-page="bitacora"],
+  .bitacora-page,
+  .bitacora body,
+  body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+  }
+
+  html {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+  }
+
+  /* SIDEBAR MODERNO */
+  .sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%);
+    color: var(--blanco);
+    padding: 24px 20px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: var(--sombra-elevada);
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+
+  /* Hacer scroll invisible en el sidebar */
+  .sidebar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
+  }
+
+  /* HEADER DEL SIDEBAR MODERNIZADO */
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    padding: 16px 12px;
+    border-radius: 12px;
+    background: rgba(249, 196, 31, 0.1);
+    border: 1px solid rgba(249, 196, 31, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidebar-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
   }
 }

@@ -48,30 +48,31 @@ async function cargarBitacora() {
     }
 
     let tablaHTML = `
-  <div class="table-wrapper">
-    <table id="tablaBitacora" border="1" cellpadding="5" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Usuario</th>
-          <th>Hora Entrada</th>
-          <th>Hora Salida</th>
-          <th>Fecha</th>
-          <th>Duración</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${json.data.map(b => `
+      <table id="tablaBitacora" border="1" cellpadding="5" cellspacing="0">
+        <thead>
           <tr>
-            <td>${b.nombreUsuario}</td>
-            <td>${b.horaEntrada}</td>
-            <td>${b.horaSalida}</td>
-            <td>${b.fecha}</td>
-            <td>${calcularDuracion(b.horaEntrada, b.horaSalida)}</td>
+            <th>Usuario</th>
+            <th>Hora Entrada</th>
+            <th>Hora Salida</th>
+            <th>Fecha</th>
+            <th>Duración</th>
           </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          ${json.data.map(b => {
+            const duracion = calcularDuracion(b.horaEntrada, b.horaSalida);
+            return `
+            <tr>
+              <td>${b.nombreUsuario}</td>
+              <td>${b.horaEntrada}</td>
+              <td>${b.horaSalida}</td>
+              <td>${b.fecha}</td>
+              <td>${duracion}</td>
+            </tr>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
 `;
 
     contenedor.innerHTML = tablaHTML;

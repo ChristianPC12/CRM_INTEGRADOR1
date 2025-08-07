@@ -309,6 +309,30 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
     btn.disabled = true;
   } else {
     btn.disabled = false;
+    
+    // NUEVO: Focus inmediato al botón
+    setTimeout(() => {
+      // Scroll suave al botón
+      btn.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+      
+      // Focus y efecto visual
+      setTimeout(() => {
+        btn.focus();
+        btn.style.transition = "all 0.3s ease";
+        btn.style.transform = "scale(1.02)";
+        btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
+        
+        // Restaurar estilo después de 1.5 segundos
+        setTimeout(() => {
+          btn.style.transform = "scale(1)";
+          btn.style.boxShadow = "";
+        }, 1500);
+      }, 600);
+    }, 200);
   }
 };
 
@@ -516,3 +540,175 @@ document.getElementById("btnExportPDF").addEventListener("click", function () {
 
   doc.save("historial_cumpleanos.pdf");
 });
+
+// === MEJORAS PARA EL SISTEMA DE CUMPLEAÑOS ===
+
+// 1. BUSCADOR POR CÉDULA PARA EL HISTORIAL
+function agregarBuscadorHistorial() {
+  // Buscar el contenedor donde vamos a agregar el input
+  const historialContainer = document.getElementById("historialCumples");
+  if (!historialContainer) return;
+
+  // Verificar si ya existe el buscador para evitar duplicados
+  if (document.getElementById("buscadorCedula")) return;
+
+  // Crear el input de búsqueda
+  const buscadorHTML = `
+    <div class="mb-3">
+      <div class="input-group input-group-sm">
+        <input 
+          type="text" 
+          id="buscadorCedula" 
+          class="form-control" 
+          placeholder="Buscar por cédula (ej: 504590528)..."
+          autocomplete="off"
+        >
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary" 
+          id="limpiarBusqueda"
+          title="Limpiar búsqueda">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <small class="text-muted">
+        <i class="fas fa-info-circle"></i> 
+        Escribí la cédula para filtrar los resultados
+      </small>
+    </div>
+  `;
+
+  // Insertar el buscador antes del contenido de la tabla
+  historialContainer.insertAdjacentHTML('afterbegin', buscadorHTML);
+
+  // Event listeners para el buscador
+  const inputBuscador = document.getElementById("buscadorCedula");
+  const btnLimpiar = document.getElementById("limpiarBusqueda");
+
+  // Función de filtrado
+  function filtrarTabla() {
+    const termino = inputBuscador.value.toLowerCase().trim();
+    const tabla = document.getElementById("tablaHistorial");
+    
+    if (!tabla) return;
+
+    const filas = tabla.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    let filasVisibles = 0;
+
+    for (let i = 0; i < filas.length; i++) {
+      const celdaCedula = filas[i].getElementsByTagName('td')[0]; // Primera columna (Cédula)
+      
+      if (celdaCedula) {
+        const textoCedula = celdaCedula.textContent.toLowerCase();
+        
+        if (termino === "" || textoCedula.includes(termino)) {
+          filas[i].style.display = "";
+          filasVisibles++;
+        } else {
+          filas[i].style.display = "none";
+        }
+      }
+    }
+
+    // Mostrar mensaje si no hay resultados
+    mostrarMensajeResultados(filasVisibles, termino);
+  }
+
+  // Función para mostrar mensaje de resultados
+  function mostrarMensajeResultados(cantidad, termino) {
+    // Remover mensaje anterior si existe
+    const mensajeAnterior = document.getElementById("mensajeResultados");
+    if (mensajeAnterior) {
+      mensajeAnterior.remove();
+    }
+
+    // Si hay término de búsqueda, mostrar contador
+    if (termino !== "") {
+      const mensaje = document.createElement("div");
+      mensaje.id = "mensajeResultados";
+      mensaje.className = cantidad > 0 ? "alert alert-info alert-sm py-1 px-2 mb-2" : "alert alert-warning alert-sm py-1 px-2 mb-2";
+      mensaje.innerHTML = cantidad > 0 
+        ? `<small><i class="fas fa-filter"></i> Se encontraron <strong>${cantidad}</strong> resultados para "<strong>${termino}</strong>"</small>`
+        : `<small><i class="fas fa-exclamation-triangle"></i> No se encontraron resultados para "<strong>${termino}</strong>"</small>`;
+      
+      inputBuscador.parentNode.parentNode.insertAdjacentElement('afterend', mensaje);
+    }
+  }
+
+  // Event listeners
+  inputBuscador.addEventListener("input", filtrarTabla);
+  inputBuscador.addEventListener("keyup", function(e) {
+    if (e.key === "Escape") {
+      this.value = "";
+      filtrarTabla();
+      this.blur();
+    }
+  });
+
+  btnLimpiar.addEventListener("click", function() {
+    inputBuscador.value = "";
+    filtrarTabla();
+    inputBuscador.focus();
+  });
+}
+
+// 2. FUNCIÓN PARA HACER SCROLL Y FOCUS AL FORMULARIO
+function scrollYFocusFormulario() {
+  // Primero hacer scroll al formulario
+  const formularioCard = document.querySelector('.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]');
+  
+  if (formularioCard) {
+    // Scroll suave al formulario
+    formularioCard.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+    
+    // Después del scroll, hacer focus al botón
+    setTimeout(() => {
+      const btnEnviarCorreo = document.getElementById("btnEnviarCorreo");
+      if (btnEnviarCorreo) {
+        // Añadir efecto visual
+        btnEnviarCorreo.style.transition = "all 0.3s ease";
+        btnEnviarCorreo.style.transform = "scale(1.05)";
+        btnEnviarCorreo.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.6)";
+        
+        // Focus al botón
+        btnEnviarCorreo.focus();
+        
+        // Remover efecto después de 2 segundos
+        setTimeout(() => {
+          btnEnviarCorreo.style.transform = "scale(1)";
+          btnEnviarCorreo.style.boxShadow = "0 4px 16px rgba(249, 196, 31, 0.3)";
+        }, 2000);
+      }
+    }, 800); // Esperar a que termine el scroll
+  }
+}
+
+// === MODIFICACIONES A LAS FUNCIONES EXISTENTES ===
+
+// Modificar la función cargarHistorial para agregar el buscador
+const cargarHistorialOriginal = cargarHistorial;
+cargarHistorial = function() {
+  cargarHistorialOriginal.call(this);
+  
+  // Agregar el buscador después de que se cargue la tabla
+  setTimeout(() => {
+    agregarBuscadorHistorial();
+  }, 100);
+};
+
+// Modificar la función seleccionarCumple para agregar el scroll/focus
+const seleccionarCumpleOriginal = seleccionarCumple;
+seleccionarCumple = function(id, nombre, cedula, correo, telefono, fecha) {
+  // Ejecutar la función original
+  seleccionarCumpleOriginal.call(this, id, nombre, cedula, correo, telefono, fecha);
+  
+  // Agregar el scroll y focus al formulario
+  setTimeout(() => {
+    scrollYFocusFormulario();
+  }, 300); // Pequeña pausa para que se complete la selección
+};
+

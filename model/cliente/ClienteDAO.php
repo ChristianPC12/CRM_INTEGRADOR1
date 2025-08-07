@@ -50,20 +50,36 @@ class ClienteDAO
     }
 
     public function readAll()
-    {
-        try {
-            $stmt = $this->conn->prepare("CALL ClienteReadAll()");
-            $stmt->execute();
-            $clientes = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $clientes[] = ClienteMapper::mapRowToDTO($row);
-            }
-            return $clientes;
-        } catch (PDOException $e) {
-            error_log("Error al leer todos los clientes: " . $e->getMessage());
-            return [];
+{
+    try {
+        $stmt = $this->conn->prepare("CALL ClienteReadAll()");
+        $stmt->execute();
+        $clientes = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // Obtener total histórico manualmente por cliente
+            $row['TotalHistorico'] = $this->obtenerTotalHistoricoPorCliente($row['Id']);
+            $clientes[] = ClienteMapper::mapRowToDTO($row);
         }
+        return $clientes;
+    } catch (PDOException $e) {
+        error_log("Error al leer todos los clientes: " . $e->getMessage());
+        return [];
     }
+}
+
+private function obtenerTotalHistoricoPorCliente($idCliente)
+{
+    try {
+        $stmt = $this->conn->prepare("SELECT IFNULL(SUM(Monto), 0) AS Total FROM compra WHERE IdCliente = ?");
+        $stmt->execute([$idCliente]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['Total'] : 0;
+    } catch (PDOException $e) {
+        error_log("Error al obtener total histórico: " . $e->getMessage());
+        return 0;
+    }
+}
+
     
     public function existeTelefonoOCorreo($telefono, $correo, $id = null) {
         try {

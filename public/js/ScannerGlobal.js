@@ -33,12 +33,12 @@
       activeElement.closest('[contenteditable="true"]') ||
       activeElement.closest('.modal') // No procesar en modales
     )) {
-      console.log(`🚫 Scanner deshabilitado - usuario escribiendo en: ${activeElement.tagName}`);
+      console.log(` Scanner deshabilitado - usuario escribiendo en: ${activeElement.tagName}`);
       return; // Salir sin procesar
     }
 
     // DEBUG: Confirmar que el scanner está activo
-    console.log(`🔍 Scanner ACTIVO en: ${currentView || 'dashboard'} - Tecla: ${e.key}`);
+    console.log(` Scanner ACTIVO en: ${currentView || 'dashboard'} - Tecla: ${e.key}`);
 
     const now = Date.now();
     const diff = now - lastKeyTime;

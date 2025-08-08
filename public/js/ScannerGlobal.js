@@ -19,6 +19,42 @@
   }
 
   document.addEventListener('keydown', e => {
+    // DEBUG: Mostrar información sobre el contexto actual
+    const currentView = new URLSearchParams(window.location.search).get('view');
+    const currentPath = window.location.pathname;
+    
+    // SOLO PROCESAR en módulos específicos donde el scanner debe funcionar
+    const allowedViews = ['compras']; // Solo en el módulo de compras
+    
+    // Si no estamos en un módulo permitido, NO procesar
+    if (currentView && !allowedViews.includes(currentView)) {
+      console.log(`🚫 Scanner deshabilitado en módulo: ${currentView}`);
+      return; 
+    }
+    
+    // Si no hay view (dashboard), también deshabilitar
+    if (!currentView) {
+      console.log(`🚫 Scanner deshabilitado en dashboard`);
+      return; // Salir completamente
+    }
+
+    // NO PROCESAR si el usuario está escribiendo en un input, textarea, o elemento editable
+    const activeElement = document.activeElement;
+    if (activeElement && (
+      activeElement.tagName === 'INPUT' ||
+      activeElement.tagName === 'TEXTAREA' ||
+      activeElement.tagName === 'SELECT' ||
+      activeElement.isContentEditable ||
+      activeElement.closest('[contenteditable="true"]') ||
+      activeElement.closest('.modal') // No procesar en modales
+    )) {
+      console.log(` Scanner deshabilitado - elemento activo: ${activeElement.tagName}`);
+      return; // Salir sin procesar
+    }
+
+    // DEBUG: Confirmar que el scanner está activo
+    console.log(` Scanner ACTIVO en: ${currentView || 'dashboard'} - Tecla: ${e.key}`);
+
     const now = Date.now();
     const diff = now - lastKeyTime;
     lastKeyTime = now;

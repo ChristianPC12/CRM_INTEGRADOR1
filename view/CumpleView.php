@@ -58,7 +58,10 @@
             <input type="hidden" id="mensajeCorreo">
             <input type="hidden" id="fechaCumple">
 
-            <div class="col-12 text-end mt-2">
+            <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                <button id="btnEnviarWhats" type="button" class="btn btn-sm btn-success">
+                    <i class="bi bi-whatsapp"></i> Enviar WhatsApp
+                </button>
                 <button id="btnEnviarCorreo" type="submit" class="btn btn-sm btn-warning text-black">
                     <i class="fas fa-paper-plane"></i> Enviar correo
                 </button>
@@ -93,7 +96,6 @@
 
 <!-- SCRIPTS NECESARIOS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/CRM_INT/CRM/public/js/Cumple.js"></script>
 <!-- PDF libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>

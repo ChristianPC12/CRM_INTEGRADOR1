@@ -1,0 +1,48 @@
+# 🚫 Archivos de Sistema que NO deben subirse a Git
+
+# === WHATSAPP SESSION DATA (PERSONAL) ===
+bridge-node/session/
+bridge-node/.wwebjs_cache/
+bridge-node/.wwebjs_auth/
+
+# === NODE.JS ===
+bridge-node/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === LOGS ===
+*.log
+logs/
+
+# === BASES DE DATOS LOCALES ===
+*.db
+*.sqlite
+*.sqlite3
+
+# === ARCHIVOS DE CONFIGURACIÓN LOCAL ===
+bridge-node/.env
+config/local.php
+
+# === ARCHIVOS TEMPORALES ===
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# === PM2 LOGS ===
+.pm2/
+
+# === BACKUP ARCHIVOS ===
+*.bak
+*.backup
+
+# === ARCHIVOS DE EDITOR ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === ARCHIVOS XAMPP ESPECÍFICOS ===
+.htaccess.local
+php_errors.log

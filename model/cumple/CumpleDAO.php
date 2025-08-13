@@ -11,30 +11,30 @@ class CumpleDAO
         $this->conn = $db;
     }
 
-  public function obtenerCumplesSemana()
-{
-    try {
-        $stmt = $this->conn->prepare("CALL ClienteCumpleSemana()");
-        $stmt->execute();
-        $clientes = [];
+    public function obtenerCumplesSemana()
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteCumpleSemana()");
+            $stmt->execute();
+            $clientes = [];
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $clientes[] = CumpleMapper::mapRowToDTO($row);
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $clientes[] = CumpleMapper::mapRowToDTO($row);
+            }
+
+            // Opcional: ordenar por fecha de cumpleaños
+            usort($clientes, function ($a, $b) {
+                $fechaA = new DateTime($a->fechaCumpleanos);
+                $fechaB = new DateTime($b->fechaCumpleanos);
+                return $fechaA <=> $fechaB;
+            });
+
+            return $clientes;
+        } catch (PDOException $e) {
+            error_log("Error al obtener cumpleaños de la semana: " . $e->getMessage());
+            return [];
         }
-
-        // Opcional: ordenar por fecha de cumpleaños
-        usort($clientes, function($a, $b) {
-            $fechaA = new DateTime($a->fechaCumpleanos);
-            $fechaB = new DateTime($b->fechaCumpleanos);
-            return $fechaA <=> $fechaB;
-        });
-
-        return $clientes;
-    } catch (PDOException $e) {
-        error_log("Error al obtener cumpleaños de la semana: " . $e->getMessage());
-        return [];
     }
-}
 
 
     public function actualizarEstado($id, $estado)
@@ -43,46 +43,63 @@ class CumpleDAO
         return true;
     }
 
-public function obtenerHistorial()
-{
-    try {
-        // ✅ Actualiza los vencidos antes de consultar
-        $this->marcarCumplesVencidos();
+    public function obtenerHistorial()
+    {
+        try {
 
-        $sql = "SELECT c.Id, cl.Cedula, cl.Nombre, cl.Correo, cl.Telefono, cl.FechaCumpleanos, 
+            // ✅ Actualiza los vencidos antes de consultar
+            $this->marcarCumplesVencidos();
+
+            // ✅ Purga los registros con más de 30 días
+            $this->purgarHistorial30Dias();
+            // ✅ Actualiza los vencidos antes de consultar
+            $this->marcarCumplesVencidos();
+
+            $sql = "SELECT c.Id, cl.Cedula, cl.Nombre, cl.Correo, cl.Telefono, cl.FechaCumpleanos, 
                c.FechaLlamada, c.Vence, c.Vencido
         FROM cumple c
         INNER JOIN cliente cl ON c.IdCliente = cl.Id
         ORDER BY FechaLlamada DESC";
 
-                
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
 
-        $historial = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $historial[] = CumpleMapper::mapRowToDTO($row);
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            $historial = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $historial[] = CumpleMapper::mapRowToDTO($row);
+            }
+
+            return $historial;
+        } catch (PDOException $e) {
+            error_log("Error al obtener historial: " . $e->getMessage());
+            return [];
         }
-
-        return $historial;
-    } catch (PDOException $e) {
-        error_log("Error al obtener historial: " . $e->getMessage());
-        return [];
     }
-}
 
-private function marcarCumplesVencidos()
-{
-    try {
-        $sql = "UPDATE cumple 
+    private function marcarCumplesVencidos()
+    {
+        try {
+            $sql = "UPDATE cumple 
                 SET Vencido = 'SI' 
                 WHERE Vencido = 'NO' AND Vence < CURDATE()";
 
-        $this->conn->exec($sql);
-    } catch (PDOException $e) {
-        error_log("Error al marcar vencidos: " . $e->getMessage());
+            $this->conn->exec($sql);
+        } catch (PDOException $e) {
+            error_log("Error al marcar vencidos: " . $e->getMessage());
+        }
     }
-}
+    private function purgarHistorial30Dias()
+    {
+        try {
+            $sql = "DELETE FROM cumple 
+                WHERE FechaLlamada < (NOW() - INTERVAL 1 MINUTE)";
+            $this->conn->exec($sql);
+        } catch (PDOException $e) {
+            error_log("Error al purgar historial: " . $e->getMessage());
+        }
+    }
+
 
 
 

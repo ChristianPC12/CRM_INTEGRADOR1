@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarCumples();
   cargarHistorial();
   document.getElementById("btnEnviarCorreo").disabled = true;
+  // Botón WhatsApp inicialmente deshabilitado
+  const btnWhats = document.getElementById("btnEnviarWhats");
+  if (btnWhats) btnWhats.disabled = true;
 
   // Función para actualizar el badge de cumpleaños pendientes en el sidebar
   function actualizarCumpleBadgeSidebar() {
@@ -80,6 +83,81 @@ document.addEventListener("DOMContentLoaded", () => {
         Swal.fire("Error", "No se pudo conectar con el servidor", "error");
       }
     });
+
+  // Handler Enviar WhatsApp
+  if (btnWhats) {
+    btnWhats.addEventListener("click", async () => {
+      const id = document.getElementById("idCumple").value;
+      const nombre = document.getElementById("nombreCorreo").value;
+  let telefono = document.getElementById("telefonoCorreo").value;
+
+      if (!telefono || telefono.trim() === "") {
+        Swal.fire({
+          icon: "info",
+          title: "Sin teléfono",
+          text: `${nombre} no tiene teléfono registrado.`,
+        });
+        return;
+      }
+      if (!id || !nombre || !telefono) return;
+
+      // Normalizar: quitar no dígitos y prefijar 506 si parece local (8 dígitos)
+      const soloDigitos = (telefono || '').replace(/\D+/g, '');
+      if (soloDigitos.length === 8) {
+        telefono = '506' + soloDigitos;
+      } else if (soloDigitos.length > 8) {
+        telefono = soloDigitos; // ya tiene prefijo
+      } else {
+        telefono = soloDigitos; // dejar lo que haya para que backend valide
+      }
+
+      const mensaje = `¡Hola ${nombre}! En Bastos sabemos que estás de cumpleaños. Visítanos para celebrarlo juntos y reclamar tu regalía 🎉🎁`;
+
+      const formData = new URLSearchParams();
+      formData.append("action", "enviarWhatsCumple");
+      formData.append("nombre", nombre);
+      formData.append("telefono", telefono);
+      formData.append("mensaje", mensaje);
+      formData.append("idCliente", id);
+
+      try {
+        btnWhats.disabled = true;
+        btnWhats.innerText = "Enviando...";
+        const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString(),
+        });
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); } catch (e) {
+          console.error('Respuesta no JSON:', text);
+          throw new Error('Respuesta no válida del servidor');
+        }
+        
+        if (data.success) {
+          await cambiarEstado(id, "LISTA");
+          Swal.fire("¡Éxito!", data.message, "success");
+          document.getElementById("formCorreo").reset();
+          document.getElementById("btnEnviarCorreo").disabled = true;
+          if (btnWhats) btnWhats.disabled = true;
+          cargarCumples();
+          cargarHistorial();
+          if (window.actualizarCumpleBadgeSidebar)
+            window.actualizarCumpleBadgeSidebar();
+        } else {
+          Swal.fire("Error", data.message, "error");
+        }
+        
+      } catch (err) {
+        console.error("Error al enviar WhatsApp:", err);
+        Swal.fire("Error", (err && err.message) ? err.message : "No se pudo conectar con el servidor", "error");
+      } finally {
+        btnWhats.innerHTML = '<i class="bi bi-whatsapp"></i> Enviar WhatsApp';
+        btnWhats.disabled = false;
+      }
+    });
+  }
 });
 
 const mostrarSemanaActual = () => {
@@ -299,6 +377,7 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
   document.getElementById("fechaCumple").value = fecha;
 
   const btn = document.getElementById("btnEnviarCorreo");
+  const btnWhats2 = document.getElementById("btnEnviarWhats");
   if (!correo) {
     Swal.fire({
       icon: "warning",
@@ -306,14 +385,16 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
       text: "Recordá llamarlo o escribirle un mensaje.",
       confirmButtonText: "Entendido",
     });
-    btn.disabled = true;
+  btn.disabled = true;
+  if (btnWhats2) btnWhats2.disabled = !telefono;
   } else {
-    btn.disabled = false;
+  btn.disabled = false;
+  if (btnWhats2) btnWhats2.disabled = !telefono;
     
     // NUEVO: Focus inmediato al botón
     setTimeout(() => {
       // Scroll suave al botón
-      btn.scrollIntoView({
+  btn.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
         inline: 'nearest'
@@ -321,7 +402,7 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
       
       // Focus y efecto visual
       setTimeout(() => {
-        btn.focus();
+  btn.focus();
         btn.style.transition = "all 0.3s ease";
         btn.style.transform = "scale(1.02)";
         btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
@@ -686,8 +767,6 @@ function scrollYFocusFormulario() {
     }, 800); // Esperar a que termine el scroll
   }
 }
-
-// === MODIFICACIONES A LAS FUNCIONES EXISTENTES ===
 
 // Modificar la función cargarHistorial para agregar el buscador
 const cargarHistorialOriginal = cargarHistorial;

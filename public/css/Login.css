@@ -122,8 +122,8 @@ body::after {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  /* Límites elegantes sin rigidez */
-  max-height: 92vh;
+  /* Límites elegantes sin rigidez - SOLO OPTIMIZACIÓN MÍNIMA */
+  max-height: 94vh;
   overflow: visible;
 }
 
@@ -151,8 +151,8 @@ body::after {
   backdrop-filter: blur(25px);
   width: 100%;
   max-width: 100%;
-  max-height: 88vh;
-  /* Elegancia estrecha y alta */
+  max-height: 90vh;
+  /* Elegancia estrecha y alta - MANTENER DISEÑO ORIGINAL */
   box-sizing: border-box;
   overflow-y: auto;
   scrollbar-width: none;
@@ -305,7 +305,7 @@ body::after {
 /* 🎯 HEADER ELEGANTE */
 .header {
   text-align: center;
-  margin-bottom: clamp(1.8rem, 4vh, 2.5rem);
+  margin-bottom: clamp(1.6rem, 3.5vh, 2.2rem);
   padding-bottom: clamp(1rem, 2.5vh, 1.5rem);
   position: relative;
 }
@@ -370,7 +370,7 @@ body::after {
 
 /* 🎨 GRUPOS DE FORMULARIO ELEGANTES */
 .form-group {
-  margin-bottom: clamp(1.2rem, 2.8vh, 1.6rem);
+  margin-bottom: clamp(1.2rem, 2.6vh, 1.5rem);
   position: relative;
 }
 
@@ -389,7 +389,7 @@ body::after {
 /* 💛 INPUT FIELDS ELEGANTES */
 .input-group {
   position: relative;
-  margin-bottom: clamp(1.2rem, 2.8vh, 1.6rem);
+  margin-bottom: clamp(1.2rem, 2.6vh, 1.5rem);
 }
 
 .input-label {
@@ -531,18 +531,18 @@ body::after {
   }
 }
 
-/* 📱 OPTIMIZACIÓN TOTAL PARA TODOS LOS MÓVILES Y TABLETS */
+/* 📱 OPTIMIZACIÓN MÍNIMA PARA TODOS LOS MÓVILES Y TABLETS */
 @media (max-width: 1024px) {
   body {
     align-items: center !important;
     justify-content: center !important;
-    padding: clamp(4px, 1.5vh, 12px) !important;
+    padding: clamp(4px, 1.2vh, 10px) !important;
     min-height: 100vh !important;
     height: 100vh !important;
   }
   
   .login-container {
-    max-height: 95vh !important;
+    max-height: 96vh !important;
     margin: 0 auto !important;
     position: relative !important;
     top: 0 !important;
@@ -557,14 +557,15 @@ body::after {
   
   .login-card {
     margin: 0 !important;
-    padding: clamp(1.5rem, 3.5vh, 2.8rem) clamp(1.2rem, 3vw, 2rem) !important;
+    padding: clamp(1.8rem, 4vh, 2.6rem) clamp(1.4rem, 3.2vw, 1.9rem) !important;
+    max-height: 93vh !important;
   }
 }
 
 /* 📱 MÓVILES MEDIANOS Y PEQUEÑOS (hasta 768px) */
 @media (max-width: 768px) {
   body {
-    padding: clamp(6px, 1vh, 10px) !important;
+    padding: clamp(4px, 0.8vh, 8px) !important;
     /* 🎨 FONDO BLANCO PURO PARA MÓVILES - SIN TEXTURAS */
     background: #ffffff !important;
     background-color: #ffffff !important;
@@ -573,8 +574,8 @@ body::after {
     /* 🎯 COMPENSAR BARRA DEL NAVEGADOR - SUBIR LOGIN */
     align-items: center !important;
     justify-content: center !important;
-    /* 🔧 Compensar barra de navegación móvil */
-    padding-bottom: clamp(60px, 8vh, 80px) !important;
+    /* 🔧 Compensación moderada para mantener diseño */
+    padding-bottom: clamp(30px, 4vh, 50px) !important;
   }
   
   /* 🚫 OCULTAR PARTÍCULAS EN MÓVILES */
@@ -584,41 +585,58 @@ body::after {
   }
   
   .login-container {
-    max-width: clamp(300px, 85vw, 400px) !important;
+    max-width: clamp(300px, 88vw, 400px) !important;
     max-height: 96vh !important;
     margin: 0 auto !important;
-    /* 🔝 Transformación para subir ligeramente */
-    transform: translateY(-15px) !important;
+    /* 🔝 Transformación ligera para mantener elegancia */
+    transform: translateY(-8px) !important;
     position: relative !important;
     top: 0 !important;
   }
   
   .login-card {
-    padding: clamp(1.3rem, 3vh, 2.2rem) clamp(1rem, 2.5vw, 1.6rem) !important;
+    padding: clamp(1.4rem, 3.2vh, 2.4rem) clamp(1.2rem, 2.8vw, 1.7rem) !important;
     /* Fondo más sólido en móviles */
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    max-height: 94vh !important;
+  }
+  
+  .header {
+    margin-bottom: clamp(1.2rem, 2.8vh, 1.8rem) !important;
+    padding-bottom: clamp(0.8rem, 1.8vh, 1.2rem) !important;
   }
   
   .header h2 {
     font-size: clamp(1.6rem, 5vw, 2rem) !important;
+    margin-bottom: clamp(0.4rem, 1.2vh, 0.6rem) !important;
+  }
+  
+  .form-group {
+    margin-bottom: clamp(1rem, 2.2vh, 1.3rem) !important;
+  }
+  
+  .input-group {
+    margin-bottom: clamp(1rem, 2.2vh, 1.3rem) !important;
   }
   
   .logo {
     width: clamp(100px, 20vw, 140px) !important;
+    margin-bottom: clamp(0.8rem, 1.8vh, 1.2rem) !important;
   }
   
   .logo-bastos {
     width: clamp(30px, 7vw, 40px) !important;
     height: clamp(30px, 7vw, 40px) !important;
+    margin-bottom: clamp(0.3rem, 0.8vh, 0.5rem) !important;
   }
 }
 
 /* 📱 MÓVILES PEQUEÑOS (hasta 480px) */
 @media (max-width: 480px) {
   body {
-    padding: clamp(4px, 0.8vh, 8px) !important;
+    padding: clamp(3px, 0.6vh, 6px) !important;
     /* 🎨 FONDO BLANCO PURO Y LIMPIO PARA MÓVILES PEQUEÑOS */
     background: #ffffff !important;
     background-color: #ffffff !important;
@@ -626,8 +644,8 @@ body::after {
     /* 🎯 COMPENSAR BARRA DEL NAVEGADOR EN MÓVILES PEQUEÑOS */
     align-items: center !important;
     justify-content: center !important;
-    /* 🔧 Más compensación para móviles pequeños */
-    padding-bottom: clamp(70px, 10vh, 90px) !important;
+    /* 🔧 Compensación moderada para mantener diseño */
+    padding-bottom: clamp(25px, 3vh, 45px) !important;
   }
   
   /* 🚫 ASEGURAR QUE NO HAY PARTÍCULAS */
@@ -638,38 +656,107 @@ body::after {
   }
   
   .login-container {
-    max-width: clamp(280px, 92vw, 360px) !important;
-    max-height: 98vh !important;
+    max-width: clamp(280px, 94vw, 360px) !important;
+    max-height: 97vh !important;
     margin: 0 auto !important;
-    /* 🔝 Subir más en móviles pequeños */
-    transform: translateY(-15px) !important;
+    /* 🔝 Transformación suave para mantener elegancia */
+    transform: translateY(-5px) !important;
     position: relative !important;
     top: 0 !important;
   }
   
   .login-card {
-    padding: clamp(1.2rem, 2.5vh, 2rem) clamp(0.8rem, 2vw, 1.4rem) !important;
+    padding: clamp(1.2rem, 2.8vh, 2rem) clamp(1rem, 2.2vw, 1.5rem) !important;
     background: #ffffff !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     box-shadow: 
       0 4px 20px rgba(0, 0, 0, 0.08),
       0 2px 8px rgba(244, 180, 0, 0.05) !important;
+    max-height: 95vh !important;
+  }
+  
+  .header {
+    margin-bottom: clamp(1rem, 2.4vh, 1.6rem) !important;
+    padding-bottom: clamp(0.6rem, 1.4vh, 1rem) !important;
+  }
+  
+  .header h2 {
+    font-size: clamp(1.5rem, 5.2vw, 1.9rem) !important;
+    margin-bottom: clamp(0.3rem, 1vh, 0.5rem) !important;
+  }
+  
+  .form-group {
+    margin-bottom: clamp(0.9rem, 2vh, 1.2rem) !important;
+  }
+  
+  .input-group {
+    margin-bottom: clamp(0.9rem, 2vh, 1.2rem) !important;
+  }
+  
+  .form-group label,
+  .input-label {
+    margin-bottom: clamp(0.4rem, 1vh, 0.6rem) !important;
+    font-size: clamp(0.82rem, 2.1vw, 0.92rem) !important;
+  }
+  
+  .input-field,
+  .form-group input {
+    padding: clamp(0.85rem, 2vh, 1.05rem) clamp(0.9rem, 2.2vw, 1.1rem) !important;
+    font-size: max(16px, clamp(0.92rem, 2.2vw, 1.02rem)) !important;
+  }
+  
+  .btn-primary {
+    padding: clamp(0.9rem, 2.2vh, 1.15rem) clamp(1.1rem, 2.4vw, 1.3rem) !important;
+    font-size: max(16px, clamp(0.92rem, 2.2vw, 1.02rem)) !important;
+    margin-top: clamp(0.6rem, 1.4vh, 1rem) !important;
+  }
+  
+  .logo {
+    width: clamp(95px, 19vw, 125px) !important;
+    margin-bottom: clamp(0.6rem, 1.4vh, 1rem) !important;
+  }
+  
+  .logo-bastos {
+    width: clamp(28px, 6.5vw, 38px) !important;
+    height: clamp(28px, 6.5vw, 38px) !important;
+    margin-bottom: clamp(0.2rem, 0.6vh, 0.4rem) !important;
   }
 }
 
 /* 📱 MÓVILES MUY PEQUEÑOS (hasta 320px) */
 @media (max-width: 320px) {
   .login-container {
-    max-width: 95vw !important;
+    max-width: 96vw !important;
   }
   
   .login-card {
-    padding: clamp(1rem, 2vh, 1.8rem) clamp(0.6rem, 1.5vw, 1.2rem) !important;
+    padding: clamp(1rem, 2.4vh, 1.8rem) clamp(0.8rem, 1.8vw, 1.3rem) !important;
   }
   
   .header h2 {
-    font-size: clamp(1.4rem, 6vw, 1.8rem) !important;
+    font-size: clamp(1.3rem, 5.8vw, 1.7rem) !important;
+  }
+}
+
+/* 🖥️ SOLO PANTALLAS MUY PEQUEÑAS EN ALTURA - OPTIMIZACIÓN MÍNIMA */
+@media (max-height: 640px) {
+  .login-card {
+    padding: clamp(1.2rem, 2.5vh, 2rem) clamp(1.2rem, 2.8vw, 1.8rem) !important;
+    max-height: 92vh !important;
+  }
+  
+  .header {
+    margin-bottom: clamp(1rem, 2.2vh, 1.6rem) !important;
+    padding-bottom: clamp(0.6rem, 1.4vh, 1rem) !important;
+  }
+  
+  .form-group {
+    margin-bottom: clamp(0.9rem, 1.8vh, 1.2rem) !important;
+  }
+  
+  .input-group {
+    margin-bottom: clamp(0.9rem, 1.8vh, 1.2rem) !important;
   }
 }
 
@@ -861,16 +948,16 @@ body::after {
     padding: 1rem !important;
   }
   
-  /* 📱 CENTRADO PERFECTO PARA TODOS LOS DISPOSITIVOS MÓVILES */
+  /* 📱 CENTRADO ELEGANTE PARA TODOS LOS DISPOSITIVOS MÓVILES */
   body {
-    padding: clamp(4px, 1.5vh, 12px) !important;
+    padding: clamp(3px, 1.2vh, 10px) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     min-height: 100vh !important;
     overflow-x: hidden !important;
-    /* 🔧 COMPENSAR BARRA DEL NAVEGADOR MÓVIL UNIVERSALMENTE */
-    padding-bottom: clamp(50px, 6vh, 70px) !important;
+    /* 🔧 COMPENSACIÓN MODERADA PARA MANTENER ELEGANCIA */
+    padding-bottom: clamp(25px, 3vh, 45px) !important;
     
     /* 🔧 MÓVILES: FONDO BLANCO PURO SIN TEXTURAS */
     background: #ffffff !important;
@@ -891,14 +978,14 @@ body::after {
   .login-container {
     position: relative !important;
     top: 0 !important;
-    transform: translateY(-15px) !important;
+    transform: translateY(-5px) !important;
     margin: 0 auto !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
     height: auto !important;
-    max-height: 95vh !important;
+    max-height: 96vh !important;
     width: 100% !important;
   }
   
@@ -906,6 +993,7 @@ body::after {
     margin: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    max-height: 94vh !important;
   }
   
   /* Optimización específica para inputs en móviles */
@@ -921,28 +1009,50 @@ body::after {
   }
 }
 
-/* 🔄 ORIENTACIÓN LANDSCAPE EN MÓVILES */
+/* 🔄 ORIENTACIÓN LANDSCAPE EN MÓVILES - MANTENER ELEGANCIA */
 @media (max-width: 768px) and (orientation: landscape) {
+  body {
+    padding: 2px !important;
+    padding-bottom: 8px !important;
+  }
+  
   .login-container {
-    max-height: 90vh !important;
+    max-height: 96vh !important;
+    transform: translateY(-3px) !important;
   }
   
   .login-card {
-    padding: clamp(1rem, 2vh, 1.8rem) clamp(1rem, 2.5vw, 1.6rem) !important;
-    max-height: 85vh !important;
+    padding: clamp(1rem, 2.2vh, 1.6rem) clamp(1rem, 2.4vw, 1.5rem) !important;
+    max-height: 93vh !important;
     overflow-y: auto !important;
   }
   
+  .header {
+    margin-bottom: clamp(0.8rem, 1.8vh, 1.2rem) !important;
+    padding-bottom: clamp(0.5rem, 1.2vh, 0.8rem) !important;
+  }
+  
+  .header h2 {
+    font-size: clamp(1.3rem, 4.2vw, 1.7rem) !important;
+    margin-bottom: clamp(0.2rem, 0.6vh, 0.4rem) !important;
+  }
+  
+  .form-group {
+    margin-bottom: clamp(0.7rem, 1.6vh, 1.1rem) !important;
+  }
+  
+  .input-group {
+    margin-bottom: clamp(0.7rem, 1.6vh, 1.1rem) !important;
+  }
+  
   .logo {
-    width: clamp(80px, 15vw, 120px) !important;
+    width: clamp(75px, 12vw, 105px) !important;
+    margin-bottom: clamp(0.4rem, 1vh, 0.8rem) !important;
   }
   
   .logo-bastos {
-    width: clamp(25px, 6vw, 35px) !important;
-    height: clamp(25px, 6vw, 35px) !important;
-  }
-  
-  .header {
-    margin-bottom: clamp(1rem, 2vh, 1.5rem) !important;
+    width: clamp(22px, 5vw, 32px) !important;
+    height: clamp(22px, 5vw, 32px) !important;
+    margin-bottom: clamp(0.15rem, 0.4vh, 0.3rem) !important;
   }
 }

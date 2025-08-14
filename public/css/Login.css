@@ -41,6 +41,8 @@ body {
   background-color: #ffffff;
   min-height: 100vh;
   height: 100vh;
+  /* Permitir que el contenido se ajuste siempre al centro sin scroll */
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,7 +125,8 @@ body::after {
   justify-content: center;
   box-sizing: border-box;
   /* Límites elegantes sin rigidez - SOLO OPTIMIZACIÓN MÍNIMA */
-  max-height: 94vh;
+  /* Eliminar max-height para que nunca corte el contenido */
+  max-height: none;
   overflow: visible;
 }
 
@@ -151,10 +154,10 @@ body::after {
   backdrop-filter: blur(25px);
   width: 100%;
   max-width: 100%;
-  max-height: 90vh;
-  /* Elegancia estrecha y alta - MANTENER DISEÑO ORIGINAL */
+  /* Eliminar max-height y overflow para que el botón nunca quede oculto */
+  max-height: none;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow: visible;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -542,7 +545,7 @@ body::after {
   }
   
   .login-container {
-    max-height: 96vh !important;
+    max-height: none !important;
     margin: 0 auto !important;
     position: relative !important;
     top: 0 !important;
@@ -558,7 +561,7 @@ body::after {
   .login-card {
     margin: 0 !important;
     padding: clamp(1.8rem, 4vh, 2.6rem) clamp(1.4rem, 3.2vw, 1.9rem) !important;
-    max-height: 93vh !important;
+    max-height: none !important;
   }
 }
 
@@ -586,7 +589,7 @@ body::after {
   
   .login-container {
     max-width: clamp(300px, 88vw, 400px) !important;
-    max-height: 96vh !important;
+    max-height: none !important;
     margin: 0 auto !important;
     /* 🔝 Transformación ligera para mantener elegancia */
     transform: translateY(-8px) !important;
@@ -600,7 +603,7 @@ body::after {
     background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    max-height: 94vh !important;
+    max-height: none !important;
   }
   
   .header {
@@ -657,7 +660,7 @@ body::after {
   
   .login-container {
     max-width: clamp(280px, 94vw, 360px) !important;
-    max-height: 97vh !important;
+    max-height: none !important;
     margin: 0 auto !important;
     /* 🔝 Transformación suave para mantener elegancia */
     transform: translateY(-5px) !important;
@@ -673,7 +676,7 @@ body::after {
     box-shadow: 
       0 4px 20px rgba(0, 0, 0, 0.08),
       0 2px 8px rgba(244, 180, 0, 0.05) !important;
-    max-height: 95vh !important;
+    max-height: none !important;
   }
   
   .header {
@@ -743,7 +746,7 @@ body::after {
 @media (max-height: 640px) {
   .login-card {
     padding: clamp(1.2rem, 2.5vh, 2rem) clamp(1.2rem, 2.8vw, 1.8rem) !important;
-    max-height: 92vh !important;
+    max-height: none !important;
   }
   
   .header {

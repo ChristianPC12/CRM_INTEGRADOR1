@@ -239,24 +239,35 @@ $vista = $_GET['view'] ?? 'dashboard';
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    // CONFIGURACIÓN GLOBAL: Modal de cumpleaños 
+                    // MODAL DE CUMPLEAÑOS SOLO PARA SALONERO
                     const logo = document.querySelector(".img-header");
                     if (logo) {
                         logo.style.cursor = 'pointer';
                         logo.addEventListener('click', function () {
-                            console.log('Click en logo detectado'); // Debug
-                            abrirModal(); // ⬅️ abrir modal de TARJETA
+                            const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
+                            if (rol === 'salonero') {
+                                abrirModalCumples();
+                            }
                         });
                     }
 
-                    // NUEVO: Mostrar modal automáticamente al cargar el dashboard
+                    // Mostrar modal automáticamente al cargar el dashboard SOLO para salonero
                     const vistaActual = '<?= $vista ?>';
                     if (vistaActual === 'dashboard') {
-                        console.log('Dashboard detectado, mostrando modal automáticamente');
-                        // Esperar un poco para que se cargue todo el DOM
-                        setTimeout(function () {
-                            abrirModalCumples();
-                        }, 1000); // 1 segundo de delay
+                        // Esperar a que el rol esté disponible en localStorage
+                        let intentos = 0;
+                        const maxIntentos = 20; // 2 segundos máx
+                        const intervalo = setInterval(function () {
+                            const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
+                            if (rol === 'salonero') {
+                                abrirModalCumples();
+                                clearInterval(intervalo);
+                            }
+                            intentos++;
+                            if (intentos >= maxIntentos) {
+                                clearInterval(intervalo);
+                            }
+                        }, 100);
                     }
 
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas

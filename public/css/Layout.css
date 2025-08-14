@@ -696,54 +696,6 @@ body {
     color: var(--negro);
 }
 
-/* COMENTADO: Estilos de botones de acción que ya no se usan
-.cumple-acciones {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.btn-cumple {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-correo {
-    background: #007bff;
-    color: white;
-}
-
-.btn-correo:hover {
-    background: #0056b3;
-    transform: translateY(-1px);
-}
-
-.btn-telefono {
-    background: #28a745;
-    color: white;
-}
-
-.btn-telefono:hover {
-    background: #1e7e34;
-    transform: translateY(-1px);
-}
-
-.btn-listo {
-    background: var(--amarillo);
-    color: var(--negro);
-}
-
-.btn-listo:hover {
-    background: #e6b01f;
-    transform: translateY(-1px);
-}
-*/
-
 .alerta-sin-cumples {
     text-align: center;
     padding: 3rem 2rem;
@@ -791,4 +743,115 @@ body {
   box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
   transform: translateX(2px);
   outline: none;
+}
+
+/* ======================= */
+/* MODAL TARJETA (buscar por número) */
+/* ======================= */
+
+.modal-tarjeta {
+  position: fixed;
+  inset: 0;                  /* top:0; right:0; bottom:0; left:0 */
+  width: 100vw;
+  height: 100vh;
+  display: none;             /* se muestra como flex desde JS */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000000;          /* por encima del resto */
+}
+
+.modal-tarjeta .modal-contenido {
+  width: min(500px, 92vw);
+  background: var(--blanco);
+  color: var(--negro);
+  border-radius: 16px;
+  box-shadow: var(--sombra-elevada);
+  padding: 24px 20px;
+  animation: modalSlideIn .25s ease-out; /* reutiliza el keyframes ya definido */
+}
+
+.modal-tarjeta h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.modal-tarjeta input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--gris-borde);
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+  transition: border .2s ease, box-shadow .2s ease;
+}
+
+.modal-tarjeta input:focus {
+  border-color: var(--amarillo);
+  box-shadow: 0 0 0 4px rgba(249,196,31,.2);
+}
+
+.modal-mensaje-error {
+  color: #dc3545;
+  min-height: 1.2em;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.modal-botones {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-botones button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  transition: transform .15s, box-shadow .15s;
+}
+
+.modal-botones button:first-child {
+  background: var(--gris-fondo);
+  color: var(--negro);
+}
+
+.modal-botones button:first-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+.modal-botones button:last-child {
+  background: var(--amarillo);
+  color: var(--negro);
+}
+
+.modal-botones button:last-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(249,196,31,.45);
+}
+
+@media (max-width: 480px){
+  .modal-tarjeta .modal-contenido { padding: 18px 16px; }
+}
+
+/* Evita scroll del documento mientras un modal está abierto */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Redundante pero seguro: centra ambos tipos de modal */
+.modal-tarjeta,
+.modal-cumples {
+  display: none;            /* se activa a 'flex' desde JS */
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
 }

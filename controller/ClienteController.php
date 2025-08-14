@@ -18,6 +18,21 @@ function generarCodigoBarra($cliente)
     // Ejemplo: cédula + fecha y hora actual para unicidad
     return $cliente->cedula . date('YmdHis');
 }
+ //Valida una fecha de cumpleaños con reglas estrictas.
+function validarFechaCumpleEstricto(string $s): bool {
+    // Formato exacto AAAA-MM-DD
+    $dt = DateTime::createFromFormat('Y-m-d', $s);
+    if (!$dt || $dt->format('Y-m-d') !== $s) return false;
+
+    // Rango permitido
+    $min = new DateTime('1900-01-01');
+    $hoy = new DateTime('today');
+    if ($dt < $min || $dt > $hoy) return false;
+
+    // Edad 0–120
+    $edad = (int)$dt->diff($hoy)->y;
+    return $edad >= 0 && $edad <= 120;
+}
 
 try {
     $db = (new Database())->getConnection();

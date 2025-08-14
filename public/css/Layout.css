@@ -783,3 +783,12 @@ body {
         justify-content: center;
     }
 }
+.sidebar ul li a:focus-visible,
+.sidebar ul li a[aria-current="page"] {
+  background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
+  color: var(--negro);
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
+  transform: translateX(2px);
+  outline: none;
+}

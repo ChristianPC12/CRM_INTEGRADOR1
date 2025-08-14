@@ -36,14 +36,39 @@ const validaciones = {
     // Solo letras, espacios y acentos, mínimo 2 caracteres
     return /^[a-zA-ZÀ-ÿ\s]{2,}$/.test(nombre);
   },
-
+   // Se usa UTC para validar que la fecha exista y local para comparar con “hoy”, evitando desfases de zona horaria
+ 
   esFechaValida: (fecha) => {
     if (!fecha) return false;
-    const fechaNacimiento = new Date(fecha);
+  
+    // Formato exacto AAAA-MM-DD
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return false;
+  
+    const [y, m, d] = fecha.split("-").map(Number);
+  
+    // Fecha real (evita 2024-02-31, etc.)
+    const dtUTC = new Date(Date.UTC(y, m - 1, d));
+    const esReal =
+      dtUTC.getUTCFullYear() === y &&
+      dtUTC.getUTCMonth() + 1 === m &&
+      dtUTC.getUTCDate() === d;
+    if (!esReal) return false;
+  
     const hoy = new Date();
-    const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+    const min = new Date("1900-01-01T00:00:00Z");
+    const dtLocal = new Date(y, m - 1, d); // para comparar con hoy en local
+  
+    // Rango permitido: [1900-01-01, hoy]
+    if (dtUTC < min || dtLocal > hoy) return false;
+  
+    // Edad 0–120
+    const edad =
+      hoy.getFullYear() - y -
+      ((hoy.getMonth() + 1 < m || ((hoy.getMonth() + 1) === m && hoy.getDate() < d)) ? 1 : 0);
+  
     return edad >= 0 && edad <= 120;
   },
+  
   esTextoLibreValido: (texto) => {
     const regex = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ0-9\s.,\-]{0,100}$/;
     return regex.test(texto);
@@ -179,25 +204,26 @@ const cargarClientesCompletos = (clientes) => {
 // Buscador en tiempo real por número de tarjeta (ID) o nombre
 document.addEventListener("DOMContentLoaded", () => {
   const buscador = document.getElementById("buscadorClientes");
-  if (buscador) {
-    buscador.addEventListener("input", function () {
-      const valor = this.value.trim().toLowerCase();
+  if (!buscador) return;
 
-      // CLAVE: Siempre filtra sobre la lista ORIGINAL completa
-      if (!valor) {
-        mostrarClientes(clientesOriginales); // Mostrar TODOS los clientes
-        return;
-      }
+  buscador.placeholder = "Buscar por Tarjeta (ID) o Cédula";
 
-      const filtrados = clientesOriginales.filter(
-        (c) =>
-          (c.nombre && c.nombre.toLowerCase().includes(valor)) ||
-          (c.id && c.id.toString().includes(valor))
-      );
+  buscador.addEventListener("input", function () {
+    const valor = this.value.trim();
+    if (!valor) { mostrarClientes(clientesOriginales); return; }
 
-      mostrarClientes(filtrados);
+    const digitos = valor.replace(/\D/g, ""); // usar solo números
+
+    const filtrados = clientesOriginales.filter((c) => {
+      const idMatch = c.id && String(c.id).includes(digitos);
+      const cedulaMatch =
+        c.cedula &&
+        c.cedula.toString().replace(/\D/g, "").includes(digitos);
+      return idMatch || cedulaMatch;
     });
-  }
+
+    mostrarClientes(filtrados);
+  });
 });
 
 /**
@@ -1197,4 +1223,13 @@ document.addEventListener("DOMContentLoaded", () => {
     option.value = canton;
     datalist.appendChild(option);
   });
+  document.addEventListener("DOMContentLoaded", () => {
+    const f = document.getElementById("clienteFecha"); // <- tu id en la vista
+    if (f) {
+      const hoy = new Date().toISOString().slice(0, 10);
+      f.setAttribute("min", "1900-01-01");
+      f.setAttribute("max", hoy);
+    }
+  });
+  
 });

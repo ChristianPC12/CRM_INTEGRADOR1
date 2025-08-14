@@ -239,6 +239,7 @@ $vista = $_GET['view'] ?? 'dashboard';
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+<<<<<<< Updated upstream
                     // CONFIGURACIÓN GLOBAL: Modal de cumpleaños 
                     const logo = document.querySelector(".img-header");
                     if (logo) {
@@ -246,17 +247,41 @@ $vista = $_GET['view'] ?? 'dashboard';
                         logo.addEventListener('click', function () {
                             console.log('Click en logo detectado'); // Debug
                             abrirModal(); // ⬅️ abrir modal de TARJETA
+=======
+                    // Mostrar modal de cumpleaños al hacer clic en el logo del sidebar SOLO para salonero
+                    const logoSidebar = document.querySelector('.img-header');
+                    if (logoSidebar) {
+                        logoSidebar.style.cursor = 'pointer';
+                        logoSidebar.addEventListener('click', function () {
+                            const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
+                            if (rol === 'salonero') {
+                                abrirModalCumples();
+                            }
+>>>>>>> Stashed changes
                         });
                     }
 
-                    // NUEVO: Mostrar modal automáticamente al cargar el dashboard
+                    // Mostrar modal de cumpleaños automáticamente SOLO para salonero en dashboard (espera a que el rol esté en localStorage)
                     const vistaActual = '<?= $vista ?>';
                     if (vistaActual === 'dashboard') {
+<<<<<<< Updated upstream
                         console.log('Dashboard detectado, mostrando modal automáticamente');
                         // Esperar un poco para que se cargue todo el DOM
                         setTimeout(function () {
                             abrirModalCumples();
                         }, 1000); // 1 segundo de delay
+=======
+                        let intentos = 0;
+                        const intervalo = setInterval(function() {
+                            const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
+                            if (rol === 'salonero') {
+                                abrirModalCumples();
+                                clearInterval(intervalo);
+                            }
+                            intentos++;
+                            if (intentos > 30) clearInterval(intervalo); // Máximo 3 segundos
+                        }, 100);
+>>>>>>> Stashed changes
                     }
 
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas

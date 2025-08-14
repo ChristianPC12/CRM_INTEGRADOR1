@@ -1,0 +1,201 @@
+:root {
+  --amarillo: #f4b400;
+  --amarillo-claro: #fff8e1;
+  --amarillo-texto: #f4d03f;
+  --negro: #000000;
+  --blanco: #ffffff;
+  --gris: #2a2a2a;
+  --gris-fondo: #f8f9fa;
+  --sombra-elevada: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenedor y título */
+.guia-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 249, 250, 0.95) 100%);
+  padding: 48px;
+  border-radius: 24px;
+  box-shadow: var(--sombra-elevada);
+  border: 1px solid rgba(244, 180, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+
+  /* 👉 Más angosto + más alto */
+  max-width: 900px;     /* ancho como lo tenías */
+  min-height: 85vh;     /* NUEVO: más alto para mejor proporción */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.guia-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 6px;
+  background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 50%, #ffed4e 100%);
+  z-index: 1;
+}
+
+.guia-titulo {
+  color: var(--amarillo);
+  font-weight: 800;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 16px;
+  text-align: center;
+}
+
+.guia-titulo::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 4px;
+  background: linear-gradient(90deg, var(--amarillo), #ffd700);
+  border-radius: 2px;
+}
+
+/* Acordeón (details/summary) */
+.guia-accordion {
+  display: grid;
+  gap: 14px;
+}
+
+.acc-item {
+  background: #fff;
+  border: 1px solid rgba(244, 180, 0, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.acc-item[open] {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+.acc-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  font-weight: 700;
+  color: var(--negro);
+  background: rgba(249, 196, 31, 0.08);
+}
+
+.acc-summary::-webkit-details-marker { display: none; }
+
+.acc-summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.2;
+}
+
+.acc-summary .bi { font-size: 1.1rem; }
+
+.acc-arrow {
+  transition: transform 0.2s ease;
+  font-size: 1rem;
+}
+
+.acc-item[open] > .acc-summary .acc-arrow { transform: rotate(180deg); }
+
+/* Transición suave al abrir/cerrar */
+.acc-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  border-top: 0;
+  transition: max-height .35s ease, padding .2s ease, border-top-color .2s ease;
+  will-change: max-height;
+}
+
+.acc-item[open] > .acc-content {
+  max-height: 1200px;
+  padding: 12px 16px 16px;
+  border-top: 1px dashed rgba(249, 196, 31, 0.45);
+}
+
+/* Acordeón anidado (videos) */
+.acc-item.nested {
+  margin: 10px 10px 0 10px;
+  background: #fffdf5;
+  border-color: rgba(249, 196, 31, 0.35);
+}
+.acc-item.nested .acc-summary {
+  font-weight: 600;
+  font-size: 1rem;
+  background: rgba(249, 196, 31, 0.07);
+}
+.acc-item.nested .acc-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 14px;
+  border-top: 0;
+  transition: max-height .3s ease, padding .2s ease;
+}
+.acc-item.nested[open] > .acc-content {
+  max-height: 1000px;
+  padding: 10px 14px 14px;
+  border-top: 1px dashed rgba(249, 196, 31, 0.35);
+}
+
+/* Placeholders y listas */
+.placeholder { color: var(--amarillo-texto); font-style: italic; }
+.pasos-list { margin: 0; padding-left: 1.2rem; }
+
+/* Evitar “empujes” por márgenes colapsados del primer/último hijo */
+.acc-content > *:first-child { margin-top: 0; }
+.acc-content > *:last-child  { margin-bottom: 0; }
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .guia-container { padding: 32px; border-radius: 18px; min-height: 78vh; }
+  .guia-titulo { font-size: 2rem; }
+}
+@media (max-width: 575.98px) {
+  .guia-container { padding: 20px; border-radius: 14px; max-width: 100%; min-height: 72vh; }
+  .guia-titulo { font-size: 1.6rem; letter-spacing: 1px; }
+  .acc-summary { font-size: 1rem; padding: 12px 14px; }
+}
+
+/* ===== Ocultar barra vertical del body (mantener scroll) ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;   /* Firefox */
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* ==== SOLO para el acordeón anidado de "Videos": scroll vertical invisible ==== */
+.acc-item.nested[open] > .acc-content {
+  /* limita la altura del cajón de videos y permite scroll interno */
+  max-height: min(600px, 60vh);   /* ajusta a tu gusto: 500px, 70vh, etc. */
+  overflow-y: auto;               /* scroll vertical dentro del bloque */
+  overflow-x: hidden;             /* sin scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* suave en móviles */
+
+  /* oculta la barra de scroll vertical en todos los navegadores */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE/Edge antiguo */
+}
+.acc-item.nested[open] > .acc-content::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;                  /* Chrome/Edge/Safari */
+}

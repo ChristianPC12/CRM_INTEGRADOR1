@@ -9,126 +9,101 @@
 # Desde la raíz del proyecto CRM
 cd bridge-node
 npm install
+
+# Desde la raíz del proyecto CRM aca es donde les va a mandar el link para escanear el qr 
 ```
 
-## 🔧 Instalación PM2 como Servicio de Windows (Recomendado)
+## 🔧 Instalación como Servicio de Windows (Método Definitivo)
 
-### Paso 1: Instalar PM2 y el wrapper de servicio
+### Paso 1: Instalar node-windows
 **Requiere PowerShell/CMD como Administrador**
 ```bash
-npm i -g pm2 pm2-windows-service
+npm install -g node-windows
 ```
 
-### Paso 2: Definir la carpeta de estado de PM2
-```bash
-setx PM2_HOME "C:\pm2"
-```
-**⚠️ Importante:** Cierra y vuelve a abrir la consola Admin para que tome la variable.
-
-### Paso 3: Instalar el servicio de PM2
-```bash
-pm2-service-install -n PM2
-```
-
-**Respuestas a las preguntas interactivas:**
-- `? Perform environment setup (recommended)? (Y/n)` → **Y**
-- `? Set PM2_HOME? (Y/n)` → **Y** 
-- `? PM2_HOME value (...): (C:\pm2)` → **[Enter]** (acepta el valor por defecto)
-- `? Set PM2_SERVICE_SCRIPTS (...)? (Y/n)` → **Y**
-- `? Set the list of startup scripts (...) ()` → **[Enter]** (deja vacío)
-- `? Set PM2_SERVICE_PM2_DIR (...)? [recommended] (Y/n)` → **Y**
-- `PM2_SERVICE_PM2_DIR (...): (C:\USERS\...\pm2\index.js)` → **[Enter]** (acepta el valor por defecto)
-
-Si te pregunta usuario/clave y no quieres usar una cuenta, deja **LocalSystem**.
-
-### Paso 4: Arrancar la aplicación con PM2
+### Paso 2: Navegar al directorio del bridge
 ```bash
 cd C:\xampp\htdocs\CRM_INT\CRM\bridge-node
-pm2 start server.js --name whatsapp-bridge
-pm2 save
 ```
 
-### Paso 5: Reiniciar el servicio PM2 (prueba)
+### Paso 3: Instalar node-windows localmente
 ```bash
-pm2-service-restart
+npm install node-windows
 ```
 
-### Paso 6: Verificar que todo funciona
+### Paso 4: Ejecutar el instalador del servicio
 ```bash
-pm2 status
-sc query PM2
+node install-service.cjs
 ```
 
-## 🔄 Solución de Problemas
+**✅ El script automáticamente:**
+- Instala el servicio "WhatsApp Bridge CRM"
+- Lo inicia automáticamente
+- Lo configura para arrancar con Windows
+- ¡Ya no necesitas mantener CMD abierto!
 
-### Si aparece error EPERM //./pipe/rpc.sock:
-1. **Reiniciar servicio PM2:**
-   ```bash
-   pm2-service-restart
-   ```
-
-2. **O usar comandos de Windows:**
-   ```bash
-   net stop PM2
-   net start PM2
-   ```
-
-3. **Si persiste, limpiar PM2 y reiniciar:**
-   ```bash
-   pm2 kill
-   pm2 start server.js --name whatsapp-bridge
-   pm2 save
-   ```
-
-## 📋 Comandos de Gestión Diaria
-
-### Ver estado del bridge
-```bash
-pm2 status
-```
-
-### Ver logs en tiempo real
-```bash
-pm2 logs whatsapp-bridge
-```
-
-### Reiniciar el bridge
-```bash
-pm2 restart whatsapp-bridge
-```
-
-### Parar/Iniciar el bridge
-```bash
-pm2 stop whatsapp-bridge
-pm2 start whatsapp-bridge
-```
-
-### Verificar que WhatsApp está conectado
+### Paso 5: Verificar que funciona
 ```bash
 curl http://localhost:3001/status-json
 ```
-**Respuesta esperada:** `{"ready":true,"qr":null}`
 
-## 🎯 Beneficios de PM2 como Servicio
+**Respuesta esperada:** `{"ready":false,"qr":null}` (luego hacer login de WhatsApp)
 
-✅ **El proceso sobrevive al cerrar la consola**  
+## 🎯 Ventajas del Servicio de Windows
+
+✅ **Funciona independientemente de CMD/PowerShell**  
+✅ **Inicia automáticamente con Windows**  
+✅ **No se cierra al cerrar la consola**  
 ✅ **Reinicio automático en caso de crash**  
-✅ **Inicio automático con Windows**  
-✅ **Gestión centralizada de logs**  
-✅ **Monitoreo de memoria y CPU**
+✅ **Gestión desde Services de Windows**  
+✅ **Logs automáticos del sistema**
 
-## 🔗 URLs Importantes
+## 🔄 Gestión del Servicio
 
-- **Estado visual:** http://localhost:3001/status
-- **Estado JSON:** http://localhost:3001/status-json  
-- **Debug info:** http://localhost:3001/debug
-- **QR Raw:** http://localhost:3001/raw-qr
+### Verificar estado del servicio
+```bash
+sc query "WhatsApp Bridge CRM"
+```
 
-## ⚡ Uso en el CRM
+### Parar el servicio
+```bash
+sc stop "WhatsApp Bridge CRM"
+```
 
-El CRM ya está configurado para usar el bridge automáticamente:
-- **Controlador:** `controller/CumpleController.php`
-- **Servicio:** `LIB/phpmailer/WhatsAppService.php`
-- **Action:** `enviarWhatsCumple`
+### Iniciar el servicio
+```bash
+sc start "WhatsApp Bridge CRM"
+```
+
+### Desinstalar el servicio (si es necesario)
+**Crear archivo uninstall-service.cjs:**
+```javascript
+var Service = require('node-windows').Service;
+
+var svc = new Service({
+  name: 'WhatsApp Bridge CRM',
+  script: 'C:\\xampp\\htdocs\\CRM_INT\\CRM\\bridge-node\\server.js'
+});
+
+svc.on('uninstall', function(){
+  console.log('✅ Servicio WhatsApp Bridge desinstalado');
+});
+
+svc.uninstall();
+```
+
+**Ejecutar:** `node uninstall-service.cjs`
+
+## 🔄 Solución de Problemas
+
+### Si el servicio no inicia:
+1. **Verificar permisos de administrador**
+2. **Revisar logs del servicio en Event Viewer**
+3. **Reinstalar el servicio:**
+   ```bash
+   node uninstall-service.cjs
+   node install-service.cjs
+   ```
+
 
 

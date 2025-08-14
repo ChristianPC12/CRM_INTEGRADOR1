@@ -11,18 +11,21 @@ class CumpleDAO
         $this->conn = $db;
     }
 
-    public function obtenerCumplesSemana()
+    public function obtenerCumplesSemana(int $offset = 0)
     {
         try {
-            $stmt = $this->conn->prepare("CALL ClienteCumpleSemana()");
+            // 0 = semana actual, 1 = semana siguiente
+            $stmt = $this->conn->prepare("CALL ClienteCumpleSemanaOffset(:o)");
+            $stmt->bindValue(':o', $offset, PDO::PARAM_INT);
             $stmt->execute();
-            $clientes = [];
 
+            $clientes = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $clientes[] = CumpleMapper::mapRowToDTO($row);
             }
+            $stmt->closeCursor();
 
-            // Opcional: ordenar por fecha de cumpleaños
+            // (Opcional) ordenar por fecha de cumpleaños
             usort($clientes, function ($a, $b) {
                 $fechaA = new DateTime($a->fechaCumpleanos);
                 $fechaB = new DateTime($b->fechaCumpleanos);
@@ -35,6 +38,7 @@ class CumpleDAO
             return [];
         }
     }
+
 
 
     public function actualizarEstado($id, $estado)
@@ -92,13 +96,13 @@ class CumpleDAO
     private function purgarHistorial30Dias()
     {
         try {
-            $sql = "DELETE FROM cumple 
-                WHERE FechaLlamada < (NOW() - INTERVAL 1 MINUTE)";
-            $this->conn->exec($sql);
+            $stmt = $this->conn->prepare("CALL PurgarHistorialCumple30Dias()");
+            $stmt->execute();
         } catch (PDOException $e) {
             error_log("Error al purgar historial: " . $e->getMessage());
         }
     }
+
 
 
 

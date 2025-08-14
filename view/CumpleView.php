@@ -2,6 +2,12 @@
 <div class="card shadow mb-4">
     <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
         <h5 class="mb-0">Cumpleaños de la Semana</h5>
+        <div class="d-flex align-items-center gap-2">
+            <button id="btnPrevSemana" class="btn-nav-week" title="Semana actual" disabled>&lsaquo;</button>
+            <span id="lblSemana" class="badge bg-warning text-dark">SEMANA ACTUAL</span>
+            <button id="btnNextSemana" class="btn-nav-week" title="Semana siguiente">&rsaquo;</button>
+        </div>
+
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -90,6 +96,7 @@
             <div id="historialCumples" class="p-2">
                 <!-- Aquí se inyectará el historial desde JS -->
             </div>
+            
         </div>
     </div>
 </div>

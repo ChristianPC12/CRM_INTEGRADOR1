@@ -1,32 +1,23 @@
 // Archivo: public/js/Layout.js
 // Detectar cuando se cierra la ventana/pestaña y cerrar sesión
 
+// Flag para saber si es navegación interna (dentro del CRM)
+window.__navInterna = false;
+
 document.addEventListener("DOMContentLoaded", function () {
-  // Detectar cierre de ventana/pestaña
-  window.addEventListener("beforeunload", function (e) {
-    // Enviar petición síncrona para cerrar sesión
+  const sendClose = () =>
     navigator.sendBeacon(
       "/CRM_INT/CRM/controller/SessionController.php",
       JSON.stringify({ action: "close_session" })
     );
+  window.addEventListener("beforeunload", function () {
+    if (window.__navInterna) return;
+    sendClose();
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   });
-
-  // También detectar cuando se abandona la página
-  window.addEventListener("unload", function (e) {
-    // Backup por si beforeunload no funciona
-    navigator.sendBeacon(
-      "/CRM_INT/CRM/controller/SessionController.php",
-      JSON.stringify({ action: "close_session" })
-    );
-  });
-
-  // Detectar cambio de visibilidad de la página (opcional, más agresivo)
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") {
-      // Opcional: cerrar sesión cuando se oculta la página
-      // Descomenta la siguiente línea si quieres que sea más estricto
-      // navigator.sendBeacon('/CRM_INT/CRM/controller/SessionController.php', JSON.stringify({action: 'close_session'}));
-    }
+  window.addEventListener("unload", function () {
+    if (window.__navInterna) return;
+    sendClose();
   });
 });
 
@@ -35,8 +26,6 @@ function confirmarCerrarSesion() {
   if (confirm("¿Cerrar sesión?")) {
     window.location.href = "/CRM_INT/CRM/index.php?logout=1";
   }
-
-  
 }
 
 window.addEventListener("load", function () {
@@ -45,6 +34,9 @@ window.addEventListener("load", function () {
   const overlay = document.getElementById("sidebarOverlay");
   const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
 
+  // ⚠️ El scroll real está en el <ul> dentro del sidebar
+  const sc = sidebar.querySelector("ul") || sidebar;
+
   if (!toggleBtn || !sidebar) {
     console.warn("⚠️ No se encontró el botón ☰ o el sidebar.");
     return;
@@ -52,41 +44,56 @@ window.addEventListener("load", function () {
 
   // 🎯 MANTENER POSICIÓN DEL SCROLL EN SIDEBAR
   // Restaurar posición del scroll al cargar la página
-  const savedScrollPosition = localStorage.getItem('sidebarScrollPosition');
-  if (savedScrollPosition && sidebar) {
-    sidebar.scrollTop = parseInt(savedScrollPosition);
+  const savedScrollPosition = localStorage.getItem("sidebarScrollPosition");
+  if (savedScrollPosition && sc) {
+    sc.scrollTop = parseInt(savedScrollPosition, 10);
   }
 
   // Guardar posición del scroll cuando se hace scroll en el sidebar
-  if (sidebar) {
-    sidebar.addEventListener('scroll', function() {
-      localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
+  if (sc) {
+    sc.addEventListener("scroll", function () {
+      localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
     });
   }
 
   // 💫 CENTRAR ELEMENTO ACTIVO EN VISTA
   function centrarElementoActivo() {
-    const elementoActivo = sidebar.querySelector('.active');
-    if (elementoActivo && sidebar) {
-      const offsetTop = elementoActivo.offsetTop;
-      const sidebarHeight = sidebar.clientHeight;
-      const elementHeight = elementoActivo.clientHeight;
-      
-      // Calcular posición para centrar el elemento
-      const scrollPosition = offsetTop - (sidebarHeight / 2) + (elementHeight / 2);
-      
-      sidebar.scrollTo({
-        top: Math.max(0, scrollPosition),
-        behavior: 'smooth'
-      });
-      
-      // Guardar la nueva posición
-      localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
-    }
+    const elementoActivo = sidebar.querySelector(".active");
+    if (!elementoActivo || !sc) return;
+
+    // Posición del elemento activo relativa al contenedor que scrollea (ul)
+    const elRect = elementoActivo.getBoundingClientRect();
+    const contRect = sc.getBoundingClientRect();
+    const elTopWithin = elRect.top - contRect.top + sc.scrollTop;
+
+    const target =
+      elTopWithin - sc.clientHeight / 2 + elementoActivo.clientHeight / 2;
+
+    sc.scrollTo({
+      top: Math.max(0, target),
+      behavior: "instant" in HTMLElement.prototype ? "instant" : "auto",
+    });
+
+    localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
   }
 
-  // Centrar elemento activo al cargar la página
-  setTimeout(centrarElementoActivo, 100);
+ setTimeout(() => {
+  const lastId = localStorage.getItem("lastSidebarFocusId");
+  const activo = sidebar.querySelector(".active");
+  const objetivo = (lastId && document.getElementById(lastId)) || activo;
+  if (!objetivo) return;
+
+  // Guardar y restaurar el scroll del contenedor real (ul) para evitar el "salto"
+  const prev = sc.scrollTop;
+  try {
+    objetivo.focus({ preventScroll: true });
+  } catch (e) {
+    objetivo.focus();
+  }
+  sc.scrollTop = prev;       // <- asegura que NO se mueva
+  // (opcional) vuelve a centrar por si otro script movió el scroll
+  // centrarElementoActivo();
+}, 140);
 
   // Forzar sidebar cerrado en móvil al cargar
   if (window.innerWidth <= 992) {
@@ -113,14 +120,12 @@ window.addEventListener("load", function () {
     });
   }
 
-  // Cerrar al hacer click en un enlace (solo en móvil)
-  sidebarLinks.forEach(link => {
+  sidebarLinks.forEach((link) => {
     link.addEventListener("click", function () {
-      // 🎯 GUARDAR POSICIÓN ANTES DE NAVEGAR
-      if (sidebar) {
-        localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop);
-      }
-      
+      window.__navInterna = true;
+      if (this.id) localStorage.setItem("lastSidebarFocusId", this.id);
+      if (sc) localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
+
       if (window.innerWidth <= 992) {
         sidebar.classList.remove("show");
         sidebar.classList.remove("activa");
@@ -138,7 +143,7 @@ window.addEventListener("load", function () {
     }
   });
 });
-  //  COMENTADO: Logica del modal de tarjeta
+//  COMENTADO: Logica del modal de tarjeta
 // function mostrarModal() {
 //   document.getElementById('modalTarjeta').style.display = 'flex';
 //   document.getElementById('modalInputTarjeta').value = '';
@@ -200,46 +205,46 @@ window.addEventListener("load", function () {
 
 // NUEVO: Lógica del modal de cumpleaños
 function abrirModalCumples() {
-  console.log('abrirModalCumples() llamada'); // Debug
-  const modal = document.getElementById('modalCumples');
-  console.log('Modal encontrado:', modal); // Debug
-  
+  console.log("abrirModalCumples() llamada"); // Debug
+  const modal = document.getElementById("modalCumples");
+  console.log("Modal encontrado:", modal); // Debug
+
   if (modal) {
-    modal.style.display = 'flex';
+    modal.style.display = "flex";
     cargarCumpleanosSemana();
   } else {
-    console.error('Modal modalCumples no encontrado en el DOM');
+    console.error("Modal modalCumples no encontrado en el DOM");
   }
 }
 
 function cerrarModalCumples() {
-  const modal = document.getElementById('modalCumples');
+  const modal = document.getElementById("modalCumples");
   if (modal) {
-    modal.style.display = 'none';
+    modal.style.display = "none";
   }
 }
 
 function irACumpleanos() {
   cerrarModalCumples();
-  window.location.href = '/CRM_INT/CRM/index.php?view=cumple';
+  window.location.href = "/CRM_INT/CRM/index.php?view=cumple";
 }
 
 async function cargarCumpleanosSemana() {
-  console.log('cargarCumpleanosSemana() llamada'); // Debug
-  const contenedor = document.getElementById('listaCumpleanos');
-  const rangoDiv = document.getElementById('rangoCumplesSemana');
-  
-  console.log('Contenedor:', contenedor); // Debug
-  console.log('RangoDiv:', rangoDiv); // Debug
-  
+  console.log("cargarCumpleanosSemana() llamada"); // Debug
+  const contenedor = document.getElementById("listaCumpleanos");
+  const rangoDiv = document.getElementById("rangoCumplesSemana");
+
+  console.log("Contenedor:", contenedor); // Debug
+  console.log("RangoDiv:", rangoDiv); // Debug
+
   if (!contenedor || !rangoDiv) {
-    console.error('No se encontraron los elementos del modal');
+    console.error("No se encontraron los elementos del modal");
     return;
   }
-  
+
   // Mostrar el rango de la semana
   mostrarRangoSemana(rangoDiv);
-  
+
   // Mostrar loading
   contenedor.innerHTML = `
     <div class="text-center p-3">
@@ -249,11 +254,14 @@ async function cargarCumpleanosSemana() {
   `;
 
   try {
-    const response = await fetch('/CRM_INT/CRM/controller/CumpleController.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'action=readSemana'
-    });
+    const response = await fetch(
+      "/CRM_INT/CRM/controller/CumpleController.php",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "action=readSemana",
+      }
+    );
 
     const data = await response.json();
 
@@ -263,7 +271,7 @@ async function cargarCumpleanosSemana() {
       contenedor.innerHTML = `<div class="alert alert-danger text-center">${data.message}</div>`;
     }
   } catch (error) {
-    console.error('Error cargando cumpleaños:', error);
+    console.error("Error cargando cumpleaños:", error);
     contenedor.innerHTML = `<div class="alert alert-danger text-center">Error al cargar los cumpleaños.</div>`;
   }
 }
@@ -276,16 +284,16 @@ function mostrarRangoSemana(div) {
   const domingo = new Date(lunes);
   domingo.setDate(lunes.getDate() + 6);
 
-  const opciones = { day: '2-digit', month: 'long' };
-  const formatoLunes = lunes.toLocaleDateString('es-CR', opciones);
-  const formatoDomingo = domingo.toLocaleDateString('es-CR', opciones);
+  const opciones = { day: "2-digit", month: "long" };
+  const formatoLunes = lunes.toLocaleDateString("es-CR", opciones);
+  const formatoDomingo = domingo.toLocaleDateString("es-CR", opciones);
 
   div.innerHTML = `📆 Semana actual: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
 }
 
 function renderizarCumpleanos(cumples, contenedor) {
-  const pendientes = cumples.filter(c => c.estado === 'Activo');
-  
+  const pendientes = cumples.filter((c) => c.estado === "Activo");
+
   if (pendientes.length === 0) {
     contenedor.innerHTML = `
       <div class="alerta-sin-cumples">
@@ -297,17 +305,19 @@ function renderizarCumpleanos(cumples, contenedor) {
     return;
   }
 
-  let html = '';
-  
-  pendientes.forEach(cumple => {
-    const tieneCorreo = cumple.correo && cumple.correo.trim() !== '';
-    const cardClass = tieneCorreo ? 'cumple-card' : 'cumple-card sin-correo';
-    
+  let html = "";
+
+  pendientes.forEach((cumple) => {
+    const tieneCorreo = cumple.correo && cumple.correo.trim() !== "";
+    const cardClass = tieneCorreo ? "cumple-card" : "cumple-card sin-correo";
+
     html += `
       <div class="${cardClass}">
         <div class="cumple-header">
           <h4 class="cumple-nombre">${cumple.nombre}</h4>
-          <span class="cumple-fecha">${formatearFechaCumple(cumple.fechaCumpleanos)}</span>
+          <span class="cumple-fecha">${formatearFechaCumple(
+            cumple.fechaCumpleanos
+          )}</span>
         </div>
         
         <div class="cumple-info">
@@ -318,20 +328,24 @@ function renderizarCumpleanos(cumples, contenedor) {
             <span class="cumple-label">Teléfono:</span> ${cumple.telefono}
           </div>
           <div class="cumple-detalle">
-            <span class="cumple-label">Correo:</span> ${tieneCorreo ? cumple.correo : '<span style="color: #ff6b6b;">Sin correo</span>'}
+            <span class="cumple-label">Correo:</span> ${
+              tieneCorreo
+                ? cumple.correo
+                : '<span style="color: #ff6b6b;">Sin correo</span>'
+            }
           </div>
         </div>
       </div>
     `;
   });
-  
+
   contenedor.innerHTML = html;
 }
 
 function formatearFechaCumple(fecha) {
-  return new Date(fecha).toLocaleDateString('es-CR', { 
-    day: '2-digit', 
-    month: 'short' 
+  return new Date(fecha).toLocaleDateString("es-CR", {
+    day: "2-digit",
+    month: "short",
   });
 }
 
@@ -340,7 +354,6 @@ function formatearFechaCumple(fecha) {
 // async function llamarCliente(telefono, nombre) { ... }
 // async function marcarComoListo(id, nombre) { ... }
 // async function cambiarEstadoCumple(id, estado) { ... }
-
 
 // COMENTADO: Event listeners del modal de tarjeta
 // document.addEventListener("DOMContentLoaded", function () {
@@ -357,67 +370,64 @@ function formatearFechaCumple(fecha) {
 
 // Badge de cumpleaños pendientes (global)
 // (Eliminar las funciones window.mostrarCumpleBadge y window.actualizarCumpleBadgeSidebar)
-window.actualizarCumpleBadgeSidebar = function() {
-    fetch('/CRM_INT/CRM/controller/CumpleController.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'action=readSemana'
-    })
-    .then(res => res.json())
-    .then(data => {
-        const badge = document.getElementById('cumple-badge');
-        if (!badge) return;
-        if (data.success && data.data && data.data.length > 0) {
-            badge.style.display = 'inline-block';
-            badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
-        } else {
-            badge.style.display = 'none';
-            badge.innerHTML = '';
-        }
+window.actualizarCumpleBadgeSidebar = function () {
+  fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "action=readSemana",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const badge = document.getElementById("cumple-badge");
+      if (!badge) return;
+      if (data.success && data.data && data.data.length > 0) {
+        badge.style.display = "inline-block";
+        badge.innerHTML = `<span style="display:inline-block;width:12px;height:12px;background:#f9c41f;border-radius:50%;border:2px solid #000;box-shadow:0 0 2px #000;vertical-align:middle;"></span>`;
+      } else {
+        badge.style.display = "none";
+        badge.innerHTML = "";
+      }
     })
     .catch(() => {
-        const badge = document.getElementById('cumple-badge');
-        if (badge) {
-            badge.style.display = 'none';
-            badge.innerHTML = '';
-        }
+      const badge = document.getElementById("cumple-badge");
+      if (badge) {
+        badge.style.display = "none";
+        badge.innerHTML = "";
+      }
     });
 };
-document.addEventListener('DOMContentLoaded', function() {
-    window.actualizarCumpleBadgeSidebar();
-    
-    // COMENTADO: Event listeners del modal de tarjeta
-    // const modal = document.getElementById('modalTarjeta');
-    // if (modal) {
-    //     modal.addEventListener('click', function(e) {
-    //         if (e.target === modal) {
-    //             cerrarModal();
-    //         }
-    //     });
-        
-    //     document.addEventListener('keydown', function(e) {
-    //         if (e.key === 'Escape' && modal.style.display === 'flex') {
-    //             cerrarModal();
-    //         }
-    //     });
-    // }
+document.addEventListener("DOMContentLoaded", function () {
+  window.actualizarCumpleBadgeSidebar();
 
-    // NUEVO: Event listeners para el modal de cumpleaños
-    const modalCumples = document.getElementById('modalCumples');
-    if (modalCumples) {
-        modalCumples.addEventListener('click', function(e) {
-            if (e.target === modalCumples) {
-                cerrarModalCumples();
-            }
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modalCumples.style.display === 'flex') {
-                cerrarModalCumples();
-            }
-        });
-    }
+  // COMENTADO: Event listeners del modal de tarjeta
+  // const modal = document.getElementById('modalTarjeta');
+  // if (modal) {
+  //     modal.addEventListener('click', function(e) {
+  //         if (e.target === modal) {
+  //             cerrarModal();
+  //         }
+  //     });
+
+  //     document.addEventListener('keydown', function(e) {
+  //         if (e.key === 'Escape' && modal.style.display === 'flex') {
+  //             cerrarModal();
+  //         }
+  //     });
+  // }
+
+  // NUEVO: Event listeners para el modal de cumpleaños
+  const modalCumples = document.getElementById("modalCumples");
+  if (modalCumples) {
+    modalCumples.addEventListener("click", function (e) {
+      if (e.target === modalCumples) {
+        cerrarModalCumples();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modalCumples.style.display === "flex") {
+        cerrarModalCumples();
+      }
+    });
+  }
 });
-
-
-

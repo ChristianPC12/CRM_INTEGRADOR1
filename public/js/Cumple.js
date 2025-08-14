@@ -2,6 +2,27 @@ document.addEventListener("DOMContentLoaded", () => {
   mostrarSemanaActual(); // ⬅️ NUEVO: Mostrar el rango apenas cargue
   cargarCumples();
   cargarHistorial();
+  // --- Navegación de semana (flechas del header)
+  const btnPrev = document.getElementById("btnPrevSemana");
+  const btnNext = document.getElementById("btnNextSemana");
+  const lblSemana = document.getElementById("lblSemana");
+
+  if (btnPrev && btnNext) {
+    btnPrev.addEventListener("click", () => {
+      semanaOffset = 0;
+      mostrarSemanaActual(); // repinta rango
+      cargarCumples(); // recarga datos
+      actualizarNavSemanaUI();
+    });
+    btnNext.addEventListener("click", () => {
+      semanaOffset = 1;
+      mostrarSemanaActual();
+      cargarCumples();
+      actualizarNavSemanaUI();
+    });
+    actualizarNavSemanaUI(); // estado inicial (‹ deshabilitado)
+  }
+
   document.getElementById("btnEnviarCorreo").disabled = true;
   // Botón WhatsApp inicialmente deshabilitado
   const btnWhats = document.getElementById("btnEnviarWhats");
@@ -89,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnWhats.addEventListener("click", async () => {
       const id = document.getElementById("idCumple").value;
       const nombre = document.getElementById("nombreCorreo").value;
-  let telefono = document.getElementById("telefonoCorreo").value;
+      let telefono = document.getElementById("telefonoCorreo").value;
 
       if (!telefono || telefono.trim() === "") {
         Swal.fire({
@@ -102,9 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!id || !nombre || !telefono) return;
 
       // Normalizar: quitar no dígitos y prefijar 506 si parece local (8 dígitos)
-      const soloDigitos = (telefono || '').replace(/\D+/g, '');
+      const soloDigitos = (telefono || "").replace(/\D+/g, "");
       if (soloDigitos.length === 8) {
-        telefono = '506' + soloDigitos;
+        telefono = "506" + soloDigitos;
       } else if (soloDigitos.length > 8) {
         telefono = soloDigitos; // ya tiene prefijo
       } else {
@@ -123,18 +144,23 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         btnWhats.disabled = true;
         btnWhats.innerText = "Enviando...";
-        const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formData.toString(),
-        });
+        const res = await fetch(
+          "/CRM_INT/CRM/controller/CumpleController.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString(),
+          }
+        );
         const text = await res.text();
         let data;
-        try { data = JSON.parse(text); } catch (e) {
-          console.error('Respuesta no JSON:', text);
-          throw new Error('Respuesta no válida del servidor');
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("Respuesta no JSON:", text);
+          throw new Error("Respuesta no válida del servidor");
         }
-        
+
         if (data.success) {
           await cambiarEstado(id, "LISTA");
           Swal.fire("¡Éxito!", data.message, "success");
@@ -148,10 +174,15 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           Swal.fire("Error", data.message, "error");
         }
-        
       } catch (err) {
         console.error("Error al enviar WhatsApp:", err);
-        Swal.fire("Error", (err && err.message) ? err.message : "No se pudo conectar con el servidor", "error");
+        Swal.fire(
+          "Error",
+          err && err.message
+            ? err.message
+            : "No se pudo conectar con el servidor",
+          "error"
+        );
       } finally {
         btnWhats.innerHTML = '<i class="bi bi-whatsapp"></i> Enviar WhatsApp';
         btnWhats.disabled = false;
@@ -160,24 +191,54 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+let semanaOffset = 0; // 0 = actual, 1 = siguiente
+
 const mostrarSemanaActual = () => {
+  // Hoy
   const hoy = new Date();
-  const diaActual = hoy.getDay(); // 0 (Domingo) a 6 (Sábado)
-  const diffInicio = hoy.getDate() - diaActual + (diaActual === 0 ? -6 : 1);
-  const lunes = new Date(hoy.setDate(diffInicio));
-  const domingo = new Date(lunes);
-  domingo.setDate(lunes.getDate() + 6);
+  const diaActual = hoy.getDay(); // 0 (Dom) a 6 (Sáb)
+
+  // Mover a lunes de la semana actual
+  const diffInicio = diaActual === 0 ? -6 : 1 - diaActual;
+  const lunes = new Date(
+    hoy.getFullYear(),
+    hoy.getMonth(),
+    hoy.getDate() + diffInicio + semanaOffset * 7
+  );
+  const domingo = new Date(
+    lunes.getFullYear(),
+    lunes.getMonth(),
+    lunes.getDate() + 6
+  );
 
   const opciones = { day: "2-digit", month: "long" };
-
   const formatoLunes = lunes.toLocaleDateString("es-CR", opciones);
   const formatoDomingo = domingo.toLocaleDateString("es-CR", opciones);
 
+  // Rango en la franja azul
   const div = document.getElementById("rangoSemana");
   if (div) {
-    div.innerHTML = `📆 Semana actual: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
+    const etiqueta = semanaOffset === 0 ? "Semana actual" : "Semana siguiente";
+    div.innerHTML = `📆 ${etiqueta}: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
   }
+
+  // Badge del header (por si no querés usar actualizarNavSemanaUI aquí)
+  const lbl = document.getElementById("lblSemana");
+  if (lbl)
+    lbl.textContent = semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
 };
+
+function actualizarNavSemanaUI() {
+  const btnPrev = document.getElementById("btnPrevSemana");
+  const btnNext = document.getElementById("btnNextSemana");
+  const lblSemana = document.getElementById("lblSemana");
+
+  if (btnPrev) btnPrev.disabled = semanaOffset === 0;
+  if (btnNext) btnNext.disabled = semanaOffset === 1;
+  if (lblSemana)
+    lblSemana.textContent =
+      semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
+}
 
 const cargarCumples = async () => {
   const contenedor = document.getElementById("cumpleLista");
@@ -186,27 +247,34 @@ const cargarCumples = async () => {
             <div class="spinner-border text-warning" role="status"></div>
             <p class="mt-2">Cargando cumpleaños...</p>
         </div>
-    `;
+  `;
 
   try {
+    // ⬅️ ENVÍA EL OFFSET (0 = actual, 1 = siguiente)
+    const body = `action=readSemana&offset=${encodeURIComponent(semanaOffset)}`;
+
     const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "action=readSemana",
+      body
     });
 
     const data = await res.json();
 
     if (data.success) {
       renderizarTabla(data.data);
+      // repinta el rango y actualiza flechas/badge
+      mostrarSemanaActual();
+      if (typeof actualizarNavSemanaUI === 'function') actualizarNavSemanaUI();
     } else {
-      contenedor.innerHTML = `<div class="alert alert-danger text-center">${data.message}</div>`;
+      contenedor.innerHTML = `<div class="alert alert-danger text-center">${data.message || 'No se pudo cargar.'}</div>`;
     }
   } catch (error) {
     console.error("Error cargando cumpleaños:", error);
     contenedor.innerHTML = `<div class="alert alert-danger text-center">Error al cargar los cumpleaños.</div>`;
   }
 };
+
 
 const renderizarTabla = (cumples) => {
   const contenedor = document.getElementById("cumpleLista");
@@ -385,28 +453,28 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
       text: "Recordá llamarlo o escribirle un mensaje.",
       confirmButtonText: "Entendido",
     });
-  btn.disabled = true;
-  if (btnWhats2) btnWhats2.disabled = !telefono;
+    btn.disabled = true;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
   } else {
-  btn.disabled = false;
-  if (btnWhats2) btnWhats2.disabled = !telefono;
-    
+    btn.disabled = false;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
+
     // NUEVO: Focus inmediato al botón
     setTimeout(() => {
       // Scroll suave al botón
-  btn.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest'
+      btn.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
       });
-      
+
       // Focus y efecto visual
       setTimeout(() => {
-  btn.focus();
+        btn.focus();
         btn.style.transition = "all 0.3s ease";
         btn.style.transform = "scale(1.02)";
         btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
-        
+
         // Restaurar estilo después de 1.5 segundos
         setTimeout(() => {
           btn.style.transform = "scale(1)";
@@ -660,7 +728,7 @@ function agregarBuscadorHistorial() {
   `;
 
   // Insertar el buscador antes del contenido de la tabla
-  historialContainer.insertAdjacentHTML('afterbegin', buscadorHTML);
+  historialContainer.insertAdjacentHTML("afterbegin", buscadorHTML);
 
   // Event listeners para el buscador
   const inputBuscador = document.getElementById("buscadorCedula");
@@ -670,18 +738,20 @@ function agregarBuscadorHistorial() {
   function filtrarTabla() {
     const termino = inputBuscador.value.toLowerCase().trim();
     const tabla = document.getElementById("tablaHistorial");
-    
+
     if (!tabla) return;
 
-    const filas = tabla.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    const filas = tabla
+      .getElementsByTagName("tbody")[0]
+      .getElementsByTagName("tr");
     let filasVisibles = 0;
 
     for (let i = 0; i < filas.length; i++) {
-      const celdaCedula = filas[i].getElementsByTagName('td')[0]; // Primera columna (Cédula)
-      
+      const celdaCedula = filas[i].getElementsByTagName("td")[0]; // Primera columna (Cédula)
+
       if (celdaCedula) {
         const textoCedula = celdaCedula.textContent.toLowerCase();
-        
+
         if (termino === "" || textoCedula.includes(termino)) {
           filas[i].style.display = "";
           filasVisibles++;
@@ -707,18 +777,25 @@ function agregarBuscadorHistorial() {
     if (termino !== "") {
       const mensaje = document.createElement("div");
       mensaje.id = "mensajeResultados";
-      mensaje.className = cantidad > 0 ? "alert alert-info alert-sm py-1 px-2 mb-2" : "alert alert-warning alert-sm py-1 px-2 mb-2";
-      mensaje.innerHTML = cantidad > 0 
-        ? `<small><i class="fas fa-filter"></i> Se encontraron <strong>${cantidad}</strong> resultados para "<strong>${termino}</strong>"</small>`
-        : `<small><i class="fas fa-exclamation-triangle"></i> No se encontraron resultados para "<strong>${termino}</strong>"</small>`;
-      
-      inputBuscador.parentNode.parentNode.insertAdjacentElement('afterend', mensaje);
+      mensaje.className =
+        cantidad > 0
+          ? "alert alert-info alert-sm py-1 px-2 mb-2"
+          : "alert alert-warning alert-sm py-1 px-2 mb-2";
+      mensaje.innerHTML =
+        cantidad > 0
+          ? `<small><i class="fas fa-filter"></i> Se encontraron <strong>${cantidad}</strong> resultados para "<strong>${termino}</strong>"</small>`
+          : `<small><i class="fas fa-exclamation-triangle"></i> No se encontraron resultados para "<strong>${termino}</strong>"</small>`;
+
+      inputBuscador.parentNode.parentNode.insertAdjacentElement(
+        "afterend",
+        mensaje
+      );
     }
   }
 
   // Event listeners
   inputBuscador.addEventListener("input", filtrarTabla);
-  inputBuscador.addEventListener("keyup", function(e) {
+  inputBuscador.addEventListener("keyup", function (e) {
     if (e.key === "Escape") {
       this.value = "";
       filtrarTabla();
@@ -726,7 +803,7 @@ function agregarBuscadorHistorial() {
     }
   });
 
-  btnLimpiar.addEventListener("click", function() {
+  btnLimpiar.addEventListener("click", function () {
     inputBuscador.value = "";
     filtrarTabla();
     inputBuscador.focus();
@@ -736,16 +813,18 @@ function agregarBuscadorHistorial() {
 // 2. FUNCIÓN PARA HACER SCROLL Y FOCUS AL FORMULARIO
 function scrollYFocusFormulario() {
   // Primero hacer scroll al formulario
-  const formularioCard = document.querySelector('.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]');
-  
+  const formularioCard = document.querySelector(
+    '.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]'
+  );
+
   if (formularioCard) {
     // Scroll suave al formulario
     formularioCard.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'nearest'
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
     });
-    
+
     // Después del scroll, hacer focus al botón
     setTimeout(() => {
       const btnEnviarCorreo = document.getElementById("btnEnviarCorreo");
@@ -754,14 +833,15 @@ function scrollYFocusFormulario() {
         btnEnviarCorreo.style.transition = "all 0.3s ease";
         btnEnviarCorreo.style.transform = "scale(1.05)";
         btnEnviarCorreo.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.6)";
-        
+
         // Focus al botón
         btnEnviarCorreo.focus();
-        
+
         // Remover efecto después de 2 segundos
         setTimeout(() => {
           btnEnviarCorreo.style.transform = "scale(1)";
-          btnEnviarCorreo.style.boxShadow = "0 4px 16px rgba(249, 196, 31, 0.3)";
+          btnEnviarCorreo.style.boxShadow =
+            "0 4px 16px rgba(249, 196, 31, 0.3)";
         }, 2000);
       }
     }, 800); // Esperar a que termine el scroll
@@ -770,9 +850,9 @@ function scrollYFocusFormulario() {
 
 // Modificar la función cargarHistorial para agregar el buscador
 const cargarHistorialOriginal = cargarHistorial;
-cargarHistorial = function() {
+cargarHistorial = function () {
   cargarHistorialOriginal.call(this);
-  
+
   // Agregar el buscador después de que se cargue la tabla
   setTimeout(() => {
     agregarBuscadorHistorial();
@@ -781,13 +861,20 @@ cargarHistorial = function() {
 
 // Modificar la función seleccionarCumple para agregar el scroll/focus
 const seleccionarCumpleOriginal = seleccionarCumple;
-seleccionarCumple = function(id, nombre, cedula, correo, telefono, fecha) {
+seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
   // Ejecutar la función original
-  seleccionarCumpleOriginal.call(this, id, nombre, cedula, correo, telefono, fecha);
-  
+  seleccionarCumpleOriginal.call(
+    this,
+    id,
+    nombre,
+    cedula,
+    correo,
+    telefono,
+    fecha
+  );
+
   // Agregar el scroll y focus al formulario
   setTimeout(() => {
     scrollYFocusFormulario();
   }, 300); // Pequeña pausa para que se complete la selección
 };
-

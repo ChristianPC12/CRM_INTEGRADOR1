@@ -33,6 +33,8 @@ $vista = $_GET['view'] ?? 'dashboard';
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cumple.css?v=<?= time() ?>">
     <?php elseif ($vista === 'guia'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual.css?v=<?= time() ?>">
+    <?php elseif ($vista === 'guia2'): ?>
+        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual2.css?v=<?= time() ?>">
     <?php endif; ?>
 
 
@@ -109,11 +111,16 @@ $vista = $_GET['view'] ?? 'dashboard';
             <li>
                 <a href="/CRM_INT/CRM/index.php?view=guia" id="link-guia"
                     class="<?= $vista === 'guia' ? 'active' : '' ?>">
-                    <i class="bi bi-info-circle"></i> Manual de guía
+                    <i class="bi bi-info-circle"></i> Manual de uso
                 </a>
             </li>
 
-
+            <li>
+                <a href="/CRM_INT/CRM/index.php?view=guia2" id="link-guia"
+                    class="<?= $vista === 'guia2' ? 'active' : '' ?>">
+                    <i class="bi bi-info-circle"></i> Manual de usuario
+                </a>
+            </li>
 
             <li>
                 <a href="/CRM_INT/CRM/controller/UsuarioController.php?action=logout" style="color: #dc3545;">
@@ -148,12 +155,13 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'BitacoraView.php';
             } elseif ($vista === 'guia') {
                 include 'ManualView.php';
+            } elseif ($vista === 'guia2') {
+                include 'Manual2View.php';
             } else {
                 include 'DashboardView.php';
             }
             ?>
-            <!-- COMENTADO: Modal para ingresar número de tarjeta -->
-            <!-- 
+            
             <div id="modalTarjeta" class="modal-tarjeta">
                 <div class="modal-contenido">
                     <h3>Ingrese número de tarjeta</h3>
@@ -165,7 +173,6 @@ $vista = $_GET['view'] ?? 'dashboard';
                     </div>
                 </div>
             </div>
-            -->
 
             <!-- NUEVO: Modal para mostrar cumpleaños de la semana -->
             <div id="modalCumples" class="modal-cumples" style="display: none;">
@@ -211,6 +218,10 @@ $vista = $_GET['view'] ?? 'dashboard';
                 <script src="/CRM_INT/CRM/public/js/Manual.js"></script>
             <?php endif; ?>
 
+            <?php if ($vista === 'guia2'): ?>
+                <script src="/CRM_INT/CRM/public/js/Manual2.js"></script>
+            <?php endif; ?>
+
 
 
             <!-- Logout automático al cerrar la pestaña -->
@@ -234,7 +245,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                         logo.style.cursor = 'pointer';
                         logo.addEventListener('click', function () {
                             console.log('Click en logo detectado'); // Debug
-                            abrirModalCumples();
+                            abrirModal(); // ⬅️ abrir modal de TARJETA
                         });
                     }
 
@@ -243,7 +254,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                     if (vistaActual === 'dashboard') {
                         console.log('Dashboard detectado, mostrando modal automáticamente');
                         // Esperar un poco para que se cargue todo el DOM
-                        setTimeout(function() {
+                        setTimeout(function () {
                             abrirModalCumples();
                         }, 1000); // 1 segundo de delay
                     }

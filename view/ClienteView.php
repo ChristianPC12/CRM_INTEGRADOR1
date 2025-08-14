@@ -51,9 +51,18 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="clienteFecha" class="form-label">Fecha de Cumpleaños *</label>
-                        <input type="date" name="fechaCumpleanos" id="clienteFecha" class="form-control" required>
-                    </div>
+                <label for="clienteFecha" class="form-label">Fecha de Cumpleaños *</label>
+                <input
+                    type="date"
+                    name="fechaCumpleanos"
+                    id="clienteFecha"
+                    class="form-control"
+                    required
+                    min="1900-01-01"
+                    max="<?= date('Y-m-d') ?>"
+                >
+                </div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">

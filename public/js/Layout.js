@@ -19,6 +19,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (window.__navInterna) return;
     sendClose();
   });
+
+  // Asegura que los modales cuelguen de <body> para evitar problemas con transform/filter en vistas específicas
+  (function ensureModalsAtBody() {
+    ["modalTarjeta", "modalCumples"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && el.parentElement !== document.body) {
+        document.body.appendChild(el);
+      }
+    });
+  })();
 });
 
 // Función para confirmar cierre de sesión manual
@@ -35,7 +45,7 @@ window.addEventListener("load", function () {
   const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
 
   // ⚠️ El scroll real está en el <ul> dentro del sidebar
-  const sc = sidebar.querySelector("ul") || sidebar;
+  const sc = sidebar ? sidebar.querySelector("ul") || sidebar : null;
 
   if (!toggleBtn || !sidebar) {
     console.warn("⚠️ No se encontró el botón ☰ o el sidebar.");
@@ -43,13 +53,11 @@ window.addEventListener("load", function () {
   }
 
   // 🎯 MANTENER POSICIÓN DEL SCROLL EN SIDEBAR
-  // Restaurar posición del scroll al cargar la página
   const savedScrollPosition = localStorage.getItem("sidebarScrollPosition");
   if (savedScrollPosition && sc) {
     sc.scrollTop = parseInt(savedScrollPosition, 10);
   }
 
-  // Guardar posición del scroll cuando se hace scroll en el sidebar
   if (sc) {
     sc.addEventListener("scroll", function () {
       localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
@@ -61,7 +69,6 @@ window.addEventListener("load", function () {
     const elementoActivo = sidebar.querySelector(".active");
     if (!elementoActivo || !sc) return;
 
-    // Posición del elemento activo relativa al contenedor que scrollea (ul)
     const elRect = elementoActivo.getBoundingClientRect();
     const contRect = sc.getBoundingClientRect();
     const elTopWithin = elRect.top - contRect.top + sc.scrollTop;
@@ -77,23 +84,22 @@ window.addEventListener("load", function () {
     localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
   }
 
- setTimeout(() => {
-  const lastId = localStorage.getItem("lastSidebarFocusId");
-  const activo = sidebar.querySelector(".active");
-  const objetivo = (lastId && document.getElementById(lastId)) || activo;
-  if (!objetivo) return;
+  setTimeout(() => {
+    const lastId = localStorage.getItem("lastSidebarFocusId");
+    const activo = sidebar.querySelector(".active");
+    // ✅ Prioriza el .active de la vista actual
+    const objetivo = activo || (lastId && document.getElementById(lastId));
+    if (!objetivo) return;
 
-  // Guardar y restaurar el scroll del contenedor real (ul) para evitar el "salto"
-  const prev = sc.scrollTop;
-  try {
-    objetivo.focus({ preventScroll: true });
-  } catch (e) {
-    objetivo.focus();
-  }
-  sc.scrollTop = prev;       // <- asegura que NO se mueva
-  // (opcional) vuelve a centrar por si otro script movió el scroll
-  // centrarElementoActivo();
-}, 140);
+    const prev = sc ? sc.scrollTop : 0;
+    try {
+      objetivo.focus({ preventScroll: true });
+    } catch (e) {
+      objetivo.focus();
+    }
+    if (sc) sc.scrollTop = prev;
+    // centrarElementoActivo(); // opcional
+  }, 140);
 
   // Forzar sidebar cerrado en móvil al cargar
   if (window.innerWidth <= 992) {
@@ -143,73 +149,116 @@ window.addEventListener("load", function () {
     }
   });
 });
-//  COMENTADO: Logica del modal de tarjeta
-// function mostrarModal() {
-//   document.getElementById('modalTarjeta').style.display = 'flex';
-//   document.getElementById('modalInputTarjeta').value = '';
-//   document.getElementById('modalMensajeError').textContent = '';
-//   document.getElementById('modalInputTarjeta').focus();
-// }
 
-// function cerrarModal() {
-//   document.getElementById('modalTarjeta').style.display = 'none';
-//   // Limpiar el campo de texto y el mensaje de error
-//   document.getElementById('modalInputTarjeta').value = '';
-//   document.getElementById('modalMensajeError').textContent = '';
-// }
+// === Modal de TARJETA (buscar por número) ===
+function mostrarModal() {
+  const modal = document.getElementById("modalTarjeta");
+  if (!modal) return;
+  document.body.classList.add("modal-open"); // bloquea scroll
+  modal.style.display = "flex";
+  const input = document.getElementById("modalInputTarjeta");
+  if (input) {
+    input.value = "";
+    const err = document.getElementById("modalMensajeError");
+    if (err) err.textContent = "";
+    setTimeout(() => input.focus(), 100);
+  }
+}
 
-// function abrirModal() {
-//   const modal = document.getElementById('modalTarjeta');
-//   if (modal) {
-//     modal.style.display = 'flex';
-//     // Auto-focus en el campo de texto
-//     setTimeout(() => {
-//       const input = document.getElementById('modalInputTarjeta');
-//       if (input) {
-//         input.value = ''; // Limpiar campo
-//         input.focus(); // Hacer focus
-//       }
-//     }, 100);
-//   }
-// }
+function cerrarModal() {
+  const modal = document.getElementById("modalTarjeta");
+  if (!modal) return;
+  modal.style.display = "none";
+  const input = document.getElementById("modalInputTarjeta");
+  if (input) input.value = "";
+  const err = document.getElementById("modalMensajeError");
+  if (err) err.textContent = "";
 
-// async function redirigirCompra() {
-//   const tarjeta = document.getElementById('modalInputTarjeta').value.trim();
-//   const mensajeError = document.getElementById('modalMensajeError');
-//   mensajeError.textContent = '';
+  // Quita modal-open si no queda otro modal abierto
+  const cumplesAbierto = document.querySelector(
+    "#modalCumples[style*='display: flex']"
+  );
+  if (!cumplesAbierto) document.body.classList.remove("modal-open");
+}
 
-//   if (!tarjeta) {
-//     mensajeError.textContent = "Por favor ingrese un número de tarjeta.";
-//     return;
-//   }
+// Mantengo este nombre porque así lo llama el HTML original del modal
+function abrirModal() {
+  mostrarModal();
+}
 
-//   try {
-//     const response = await fetch('/CRM_INT/CRM/controller/ClienteController.php', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-//       body: `action=read&id=${encodeURIComponent(tarjeta)}`
-//     });
+async function redirigirCompra() {
+  const tarjeta = (document.getElementById("modalInputTarjeta")?.value || "")
+    .trim();
+  const mensajeError = document.getElementById("modalMensajeError");
+  if (mensajeError) mensajeError.textContent = "";
 
-//     const json = await response.json();
-//     if (!json.success || !json.data) {
-//       mensajeError.textContent = "El número de tarjeta no existe.";
-//       return;
-//     }
+  if (!tarjeta) {
+    if (mensajeError)
+      mensajeError.textContent = "Por favor ingrese un número de tarjeta.";
+    return;
+  }
 
-//     console.log('Modal: Redirigiendo a beneficios con tarjeta:', tarjeta);
-//     window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(tarjeta)}&buscar=auto`;
-//   } catch {
-//     mensajeError.textContent = "Error de conexión con el servidor.";
-//   }
-// }
+  try {
+    const response = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `action=read&id=${encodeURIComponent(tarjeta)}`,
+    });
+    const json = await response.json();
 
-// NUEVO: Lógica del modal de cumpleaños
-function abrirModalCumples() {
-  console.log("abrirModalCumples() llamada"); // Debug
-  const modal = document.getElementById("modalCumples");
-  console.log("Modal encontrado:", modal); // Debug
+    if (!json.success || !json.data) {
+      if (mensajeError) mensajeError.textContent = "El número de tarjeta no existe.";
+      return;
+    }
+
+    // Guarda foco correcto antes de redirigir
+    localStorage.setItem("lastSidebarFocusId", "link-compras");
+
+    // OK: redirigir a Beneficios con el id del cliente encontrado
+    window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(
+      tarjeta
+    )}&buscar=auto`;
+  } catch (e) {
+    if (mensajeError) mensajeError.textContent = "Error de conexión con el servidor.";
+  }
+}
+
+// Cierre por click fuera y por ESC + Enter para buscar
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("modalTarjeta");
+  const inputTarjeta = document.getElementById("modalInputTarjeta");
 
   if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) cerrarModal();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (modal.style.display === "flex") {
+        if (e.key === "Escape") cerrarModal();
+        if (e.key === "Enter") {
+          e.preventDefault();
+          redirigirCompra();
+        }
+      }
+    });
+  }
+
+  if (inputTarjeta) {
+    inputTarjeta.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        redirigirCompra();
+      }
+    });
+  }
+});
+
+// === Modal de CUMPLEAÑOS ===
+function abrirModalCumples() {
+  const modal = document.getElementById("modalCumples");
+  if (modal) {
+    document.body.classList.add("modal-open"); // bloquea scroll
     modal.style.display = "flex";
     cargarCumpleanosSemana();
   } else {
@@ -221,6 +270,11 @@ function cerrarModalCumples() {
   const modal = document.getElementById("modalCumples");
   if (modal) {
     modal.style.display = "none";
+    // Quita modal-open si no queda otro modal abierto
+    const tarjetaAbierto = document.querySelector(
+      "#modalTarjeta[style*='display: flex']"
+    );
+    if (!tarjetaAbierto) document.body.classList.remove("modal-open");
   }
 }
 
@@ -230,22 +284,16 @@ function irACumpleanos() {
 }
 
 async function cargarCumpleanosSemana() {
-  console.log("cargarCumpleanosSemana() llamada"); // Debug
   const contenedor = document.getElementById("listaCumpleanos");
   const rangoDiv = document.getElementById("rangoCumplesSemana");
-
-  console.log("Contenedor:", contenedor); // Debug
-  console.log("RangoDiv:", rangoDiv); // Debug
 
   if (!contenedor || !rangoDiv) {
     console.error("No se encontraron los elementos del modal");
     return;
   }
 
-  // Mostrar el rango de la semana
   mostrarRangoSemana(rangoDiv);
 
-  // Mostrar loading
   contenedor.innerHTML = `
     <div class="text-center p-3">
       <div class="spinner-border text-warning" role="status"></div>
@@ -254,14 +302,11 @@ async function cargarCumpleanosSemana() {
   `;
 
   try {
-    const response = await fetch(
-      "/CRM_INT/CRM/controller/CumpleController.php",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "action=readSemana",
-      }
-    );
+    const response = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "action=readSemana",
+    });
 
     const data = await response.json();
 
@@ -349,27 +394,7 @@ function formatearFechaCumple(fecha) {
   });
 }
 
-// COMENTADO: Funciones de acciones que ya no se usan en el modal simplificado
-// async function enviarCorreoCumple(id, nombre, correo) { ... }
-// async function llamarCliente(telefono, nombre) { ... }
-// async function marcarComoListo(id, nombre) { ... }
-// async function cambiarEstadoCumple(id, estado) { ... }
-
-// COMENTADO: Event listeners del modal de tarjeta
-// document.addEventListener("DOMContentLoaded", function () {
-//   const inputTarjeta = document.getElementById("modalInputTarjeta");
-//   if (inputTarjeta) {
-//     inputTarjeta.addEventListener("keydown", function (e) {
-//       if (e.key === "Enter") {
-//         e.preventDefault();
-//         redirigirCompra();
-//       }
-//     });
-//   }
-// });
-
 // Badge de cumpleaños pendientes (global)
-// (Eliminar las funciones window.mostrarCumpleBadge y window.actualizarCumpleBadgeSidebar)
 window.actualizarCumpleBadgeSidebar = function () {
   fetch("/CRM_INT/CRM/controller/CumpleController.php", {
     method: "POST",
@@ -396,26 +421,11 @@ window.actualizarCumpleBadgeSidebar = function () {
       }
     });
 };
+
 document.addEventListener("DOMContentLoaded", function () {
   window.actualizarCumpleBadgeSidebar();
 
-  // COMENTADO: Event listeners del modal de tarjeta
-  // const modal = document.getElementById('modalTarjeta');
-  // if (modal) {
-  //     modal.addEventListener('click', function(e) {
-  //         if (e.target === modal) {
-  //             cerrarModal();
-  //         }
-  //     });
-
-  //     document.addEventListener('keydown', function(e) {
-  //         if (e.key === 'Escape' && modal.style.display === 'flex') {
-  //             cerrarModal();
-  //         }
-  //     });
-  // }
-
-  // NUEVO: Event listeners para el modal de cumpleaños
+  // Cerrar modal de Cumples por click fuera y ESC
   const modalCumples = document.getElementById("modalCumples");
   if (modalCumples) {
     modalCumples.addEventListener("click", function (e) {

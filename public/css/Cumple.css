@@ -611,6 +611,8 @@ td.contacto {
   pointer-events: none;
 }
 
+
+
 /* Mejora para labels del formulario de correo */
 .card-body .form-label {
   position: relative;
@@ -757,6 +759,23 @@ td.contacto {
 }
 #historialCumples .table tbody tr:nth-child(even) td {
   background: #f8f9fa !important;
+
+  .btn-nav-week{
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  background: #F9C41F;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.btn-nav-week:disabled{
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+
+
 }
 /* === RESPONSIVE BREAKPOINTS - Modernizados === */
 @media (max-width: 992px) {

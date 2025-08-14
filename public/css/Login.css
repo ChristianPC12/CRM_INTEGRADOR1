@@ -216,18 +216,6 @@ body::after {
   }
 }
 
-.login-card::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: clamp(4px, 1vh, 8px);
-  background: var(--gradiente-dorado);
-  z-index: 1;
-  border-radius: clamp(1.5rem, 3vh, 2.2rem) clamp(1.5rem, 3vh, 2.2rem) 0 0;
-  box-shadow: var(--resplandor-dorado);
-}
 
 .login-card:hover {
   transform: translateY(-12px) scale(1.02);

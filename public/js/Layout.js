@@ -69,6 +69,7 @@ window.addEventListener("load", function () {
     const elementoActivo = sidebar.querySelector(".active");
     if (!elementoActivo || !sc) return;
 
+
     const elRect = elementoActivo.getBoundingClientRect();
     const contRect = sc.getBoundingClientRect();
     const elTopWithin = elRect.top - contRect.top + sc.scrollTop;
@@ -87,19 +88,18 @@ window.addEventListener("load", function () {
   setTimeout(() => {
     const lastId = localStorage.getItem("lastSidebarFocusId");
     const activo = sidebar.querySelector(".active");
-    // ✅ Prioriza el .active de la vista actual
-    const objetivo = activo || (lastId && document.getElementById(lastId));
+
+    const objetivo = (lastId && document.getElementById(lastId)) || activo;
     if (!objetivo) return;
 
-    const prev = sc ? sc.scrollTop : 0;
+    const prev = sc.scrollTop; // sc es el <ul> que scrollea
     try {
       objetivo.focus({ preventScroll: true });
-    } catch (e) {
+    } catch {
       objetivo.focus();
     }
-    if (sc) sc.scrollTop = prev;
-    // centrarElementoActivo(); // opcional
-  }, 140);
+    if (isGuia) sc.scrollTop = prev; // solo en “guia” forzamos la posición
+  }, 180);
 
   // Forzar sidebar cerrado en móvil al cargar
   if (window.innerWidth <= 992) {

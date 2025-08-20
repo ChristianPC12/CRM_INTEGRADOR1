@@ -240,35 +240,39 @@ $vista = $_GET['view'] ?? 'dashboard';
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // MODAL DE CUMPLEAÑOS SOLO PARA SALONERO
+                   // LOGO "BASTOS" → SIEMPRE ABRE BUSCADOR POR TARJETA
                     const logo = document.querySelector(".img-header");
                     if (logo) {
-                        logo.style.cursor = 'pointer';
-                        logo.addEventListener('click', function () {
-                            const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
-                            if (rol === 'salonero') {
-                                abrirModalCumples();
-                            }
-                        });
+                    logo.style.cursor = 'pointer';
+                    logo.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        if (typeof abrirModal === 'function') {
+                        abrirModal();      // alias que abre #modalTarjeta (definido en Layout.js)
+                        } else if (typeof mostrarModal === 'function') {
+                        mostrarModal();    // fallback
+                        }
+                    });
                     }
 
-                    // Mostrar modal automáticamente al cargar el dashboard SOLO para salonero
-                    const vistaActual = '<?= $vista ?>';
-                    if (vistaActual === 'dashboard') {
-                        // Esperar a que el rol esté disponible en localStorage
+
+                    // Mostrar modal automáticamente al cargar el dashboard SOLO para salonero         
+                        const vistaActual = '<?= $vista ?>';
+                        if (vistaActual === 'dashboard') {
                         let intentos = 0;
-                        const maxIntentos = 20; // 2 segundos máx
+                        const maxIntentos = 20;
                         const intervalo = setInterval(function () {
                             const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
                             if (rol === 'salonero') {
-                                abrirModalCumples();
-                                clearInterval(intervalo);
+                            abrirModalCumples();   // <— AQUÍ se abre Cumpleaños automáticamente en el dashboard
+                            clearInterval(intervalo);
                             }
                             intentos++;
                             if (intentos >= maxIntentos) {
-                                clearInterval(intervalo);
+                            clearInterval(intervalo);
                             }
                         }, 100);
-                    }
+                        }
+
 
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas
                     const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();

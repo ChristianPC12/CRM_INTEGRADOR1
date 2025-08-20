@@ -329,3 +329,19 @@ td:first-child {
     background: linear-gradient(90deg, var(--amarillo) 0%, #ffd700 100%);
   }
 }
+
+td:first-child {
+  text-align: left;
+  padding-left: 20px;
+  white-space: normal;       /* ✅ Permite saltos de línea */
+  word-wrap: break-word;     /* ✅ Parte palabras largas si es necesario */
+  overflow-wrap: break-word; /* ✅ Compatibilidad amplia */
+}
+@media screen and (max-width: 480px) {
+  td:first-child {
+    white-space: normal !important;
+    word-break: break-word;
+    text-align: left;
+    padding-left: 12px;
+  }
+}

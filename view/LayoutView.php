@@ -59,13 +59,13 @@ $vista = $_GET['view'] ?? 'dashboard';
         </div>
         <ul>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=dashboard" id="link-dashboard"
+                <a href="/CRM_INT/CRM/index.php?view=dashboard"
                     class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
                     <i class="bi bi-house"></i> Dashboard
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=clientes" id="link-clientes-vip"
+                <a href="/CRM_INT/CRM/index.php?view=clientes" 
                     class="<?= $vista === 'clientes' ? 'active' : '' ?>">
                     <i class="bi bi-award-fill"></i> Clientes VIP
                 </a>

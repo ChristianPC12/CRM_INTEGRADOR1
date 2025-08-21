@@ -183,6 +183,11 @@ body::after {
   width: 100%;
   overflow-x: auto;
   border-radius: 16px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+.table-responsive::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .table-responsive table {
@@ -303,26 +308,15 @@ body::after {
   flex: 1 1 auto;
   overflow-y: auto !important;
   padding: 1rem !important;
-  scrollbar-width: thin;
-  scrollbar-color: var(--amarillo) rgba(255, 255, 255, 0.1);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
   max-height: calc(100vh - 12rem);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
 }
-
-#codigoLista::-webkit-scrollbar { width: 8px; }
-#codigoLista::-webkit-scrollbar-track { 
-  background: rgba(255, 255, 255, 0.1); 
-  border-radius: 8px;
-}
-#codigoLista::-webkit-scrollbar-thumb { 
-  background: linear-gradient(135deg, var(--amarillo), var(--naranja)); 
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(249, 196, 31, 0.3);
-}
-#codigoLista::-webkit-scrollbar-thumb:hover { 
-  background: linear-gradient(135deg, #e6b619, var(--amarillo));
+#codigoLista::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 #codigoLista th, #codigoLista td {

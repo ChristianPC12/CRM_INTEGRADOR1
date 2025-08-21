@@ -57,16 +57,18 @@ $vista = $_GET['view'] ?? 'dashboard';
             <img src="/CRM_INT/CRM/public/img/Principal_Amarillo.png" alt="Logo" class="img-header">
             <h3>CRM Bastos</h3>
         </div>
+        <button type="button" class="btn-cumple-mini" id="btnCumpleMini" title="Cumpleaños de la semana"
+            aria-label="Abrir Cumpleaños">
+            <i class="bi bi-gift-fill"></i>
+        </button>
         <ul>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=dashboard"
-                    class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=dashboard" class="<?= $vista === 'dashboard' ? 'active' : '' ?>">
                     <i class="bi bi-house"></i> Dashboard
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=clientes" 
-                    class="<?= $vista === 'clientes' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=clientes" class="<?= $vista === 'clientes' ? 'active' : '' ?>">
                     <i class="bi bi-award-fill"></i> Clientes VIP
                 </a>
             </li>
@@ -161,7 +163,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                 include 'DashboardView.php';
             }
             ?>
-            
+
             <div id="modalTarjeta" class="modal-tarjeta">
                 <div class="modal-contenido">
                     <h3>Ingrese número de tarjeta</h3>
@@ -240,38 +242,38 @@ $vista = $_GET['view'] ?? 'dashboard';
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // MODAL DE CUMPLEAÑOS SOLO PARA SALONERO
-                   // LOGO "BASTOS" → SIEMPRE ABRE BUSCADOR POR TARJETA
+                    // LOGO "BASTOS" → SIEMPRE ABRE BUSCADOR POR TARJETA
                     const logo = document.querySelector(".img-header");
                     if (logo) {
-                    logo.style.cursor = 'pointer';
-                    logo.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        if (typeof abrirModal === 'function') {
-                        abrirModal();      // alias que abre #modalTarjeta (definido en Layout.js)
-                        } else if (typeof mostrarModal === 'function') {
-                        mostrarModal();    // fallback
-                        }
-                    });
+                        logo.style.cursor = 'pointer';
+                        logo.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            if (typeof abrirModal === 'function') {
+                                abrirModal();      // alias que abre #modalTarjeta (definido en Layout.js)
+                            } else if (typeof mostrarModal === 'function') {
+                                mostrarModal();    // fallback
+                            }
+                        });
                     }
 
 
                     // Mostrar modal automáticamente al cargar el dashboard SOLO para salonero         
-                        const vistaActual = '<?= $vista ?>';
-                        if (vistaActual === 'dashboard') {
+                    const vistaActual = '<?= $vista ?>';
+                    if (vistaActual === 'dashboard') {
                         let intentos = 0;
                         const maxIntentos = 20;
                         const intervalo = setInterval(function () {
                             const rol = (localStorage.getItem('rolUsuario') || '').toLowerCase();
                             if (rol === 'salonero') {
-                            abrirModalCumples();   // <— AQUÍ se abre Cumpleaños automáticamente en el dashboard
-                            clearInterval(intervalo);
+                                abrirModalCumples();   // <— AQUÍ se abre Cumpleaños automáticamente en el dashboard
+                                clearInterval(intervalo);
                             }
                             intentos++;
                             if (intentos >= maxIntentos) {
-                            clearInterval(intervalo);
+                                clearInterval(intervalo);
                             }
                         }, 100);
-                        }
+                    }
 
 
                     // Obtener el rol del usuario de localStorage y normalizar a minúsculas
@@ -568,6 +570,19 @@ $vista = $_GET['view'] ?? 'dashboard';
                         .catch(() => mostrarCumpleBadge(false));
                 });
             </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Botón mini de Cumpleaños en header
+                    const btnCumpleMini = document.getElementById('btnCumpleMini');
+                    if (btnCumpleMini && typeof abrirModalCumples === 'function') {
+                        btnCumpleMini.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            abrirModalCumples(); // usa tu modal con id="modalCumples"
+                        });
+                    }
+                });
+            </script>
+
 
 </body>
 

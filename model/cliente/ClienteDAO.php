@@ -1,70 +1,49 @@
 <?php
-// Archivo: model.cliente/ClienteDAO.php
+// Archivo: model/cliente/ClienteDAO.php
 
 require_once 'ClienteDTO.php';
 require_once 'ClienteMapper.php';
 
-/**
- * Clase ClienteDAO
- *
- * Objeto de Acceso a Datos (DAO) para la entidad Cliente.
- * Se encarga de realizar todas las operaciones de inserción, lectura,
- * actualización y eliminación en la base de datos relacionadas con clientes.
- * Utiliza procedimientos almacenados para la mayoría de las operaciones
- * y mappers para transformar los resultados en objetos DTO.
- */
 class ClienteDAO
 {
-    // Conexión a la base de datos
     private $conn;
 
-    /**
-     * Constructor
-     * Recibe una conexión PDO y la asigna a la clase.
-     */
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
-    /**
-     * Crear un nuevo cliente
-     * Inserta un cliente en la base de datos mediante el procedimiento almacenado ClienteCreate.
-     */
+    /** Crear */
     public function create($cliente)
     {
         try {
             $stmt = $this->conn->prepare("CALL ClienteCreate(?, ?, ?, ?, ?, ?, ?, ?)");
-            return $stmt->execute([
+            $ok = $stmt->execute([
                 $cliente->cedula,
-                $cliente->nombre,
-                $cliente->correo,
-                $cliente->telefono,
-                $cliente->lugarResidencia,
-                $cliente->fechaCumpleanos,
-                $cliente->alergias,
-                $cliente->gustosEspeciales
+                self::nullIfEmpty($cliente->nombre),
+                self::nullIfEmpty($cliente->correo),
+                self::nullIfEmpty($cliente->telefono),
+                self::nullIfEmpty($cliente->lugarResidencia),
+                self::nullIfEmpty($cliente->fechaCumpleanos),
+                self::nullIfEmpty($cliente->alergias),
+                self::nullIfEmpty($cliente->gustosEspeciales)
             ]);
+            $stmt->closeCursor(); // IMPORTANTE
+            return $ok;
         } catch (PDOException $e) {
-            // Se captura cualquier error PDO y se devuelve en formato JSON
-            echo json_encode([
-                'success' => false,
-                'message' => 'Error PDO: ' . $e->getMessage()
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Error PDO: ' . $e->getMessage()]);
             exit;
         }
     }
 
-    /**
-     * Leer un cliente por su ID
-     * Retorna un objeto ClienteDTO o null si no se encuentra.
-     */
+    /** Leer por Id */
     public function read($id)
     {
         try {
             $stmt = $this->conn->prepare("CALL ClienteRead(?)");
             $stmt->execute([$id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
             return $row ? ClienteMapper::mapRowToDTO($row) : null;
         } catch (PDOException $e) {
             error_log("Error al leer cliente: " . $e->getMessage());
@@ -72,22 +51,20 @@ class ClienteDAO
         }
     }
 
-    /**
-     * Leer todos los clientes
-     * Retorna una lista de ClienteDTO con los clientes obtenidos.
-     * Se calcula también el total histórico de compras de cada cliente.
-     */
+    /** Leer todos */
     public function readAll()
     {
         try {
             $stmt = $this->conn->prepare("CALL ClienteReadAll()");
             $stmt->execute();
             $clientes = [];
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                // Obtener total histórico manualmente por cliente
+                // Corregido: SUM(Total) según tu tabla compra
                 $row['TotalHistorico'] = $this->obtenerTotalHistoricoPorCliente($row['Id']);
                 $clientes[] = ClienteMapper::mapRowToDTO($row);
             }
+            $stmt->closeCursor();
             return $clientes;
         } catch (PDOException $e) {
             error_log("Error al leer todos los clientes: " . $e->getMessage());
@@ -95,91 +72,115 @@ class ClienteDAO
         }
     }
 
-    /**
-     * Obtener el total histórico de compras de un cliente
-     * Consulta la tabla de compra y suma los montos por cliente.
-     */
+    /** Total histórico por cliente (tabla compra: Total) */
     private function obtenerTotalHistoricoPorCliente($idCliente)
     {
         try {
-            $stmt = $this->conn->prepare("SELECT IFNULL(SUM(Monto), 0) AS Total FROM compra WHERE IdCliente = ?");
+            $stmt = $this->conn->prepare("SELECT IFNULL(SUM(Total), 0) AS Total FROM compra WHERE IdCliente = ?");
             $stmt->execute([$idCliente]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result ? $result['Total'] : 0;
+            return $result ? (int)$result['Total'] : 0;
         } catch (PDOException $e) {
             error_log("Error al obtener total histórico: " . $e->getMessage());
             return 0;
         }
     }
 
-    /**
-     * Verifica si ya existe un teléfono o correo registrado en otro cliente
-     * Se utiliza un procedimiento almacenado para detectar duplicados.
-     */
-    public function existeTelefonoOCorreo($telefono, $correo, $id = null) {
+    /** Duplicados tel/correo usando SP (excluye mismo Id en el SP) */
+    public function existeTelefonoOCorreo($telefono, $correo, $id = null)
+    {
         try {
+            $tel = self::nullIfEmpty($telefono);
+            $cor = self::nullIfEmpty($correo);
+
             $stmt = $this->conn->prepare("CALL ClienteVerificarDuplicados(?, ?, ?)");
-            $stmt->execute([$telefono, $correo, $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+            $stmt->execute([$tel, $cor, $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            // SP devuelve fila si hay duplicado
+            return $row ? true : false;
         } catch (PDOException $e) {
-             error_log("Error al verificar duplicados (SP): " . $e->getMessage());
-             return true;
+            error_log("Error al verificar duplicados (SP): " . $e->getMessage());
+            return true; // ser conservador
         }
     }
 
-    /**
-     * Verifica si ya existe una cédula registrada en otro cliente
-     * Se usa un procedimiento almacenado para la verificación.
-     */
-    public function existeCedula($cedula, $id = null) {
+    /** Duplicado cédula usando SP (excluye mismo Id en el SP) */
+    public function existeCedula($cedula, $id = null)
+    {
         try {
+            $ced = self::nullIfEmpty($cedula);
+            if ($ced === null) return false;
+
             $stmt = $this->conn->prepare("CALL ClienteExisteCedula(?, ?)");
-            $stmt->execute([$cedula, $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
+            $stmt->execute([$ced, $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return $row ? true : false;
         } catch (PDOException $e) {
             error_log("Error al verificar cédula duplicada: " . $e->getMessage());
-            return true; 
+            return true;
         }
     }
 
-    /**
-     * Actualizar un cliente existente
-     * Modifica los datos de un cliente en la base de datos con el procedimiento almacenado ClienteUpdate.
-     */
+    /** Update completo con SP */
     public function update($cliente)
     {
         try {
             $stmt = $this->conn->prepare("CALL ClienteUpdate(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            return $stmt->execute([
+            $ok = $stmt->execute([
                 $cliente->id,
-                $cliente->cedula,
-                $cliente->nombre,
-                $cliente->correo,
-                $cliente->telefono,
-                $cliente->lugarResidencia,
-                $cliente->fechaCumpleanos,
-                $cliente->acumulado,
-                $cliente->alergias,
-                $cliente->gustosEspeciales
+                self::nullIfEmpty($cliente->cedula),
+                self::nullIfEmpty($cliente->nombre),
+                self::nullIfEmpty($cliente->correo),
+                self::nullIfEmpty($cliente->telefono),
+                self::nullIfEmpty($cliente->lugarResidencia),
+                self::nullIfEmpty($cliente->fechaCumpleanos),
+                // Si viene null, que pase null (el SP decide default/conservación)
+                $cliente->acumulado === '' ? null : $cliente->acumulado,
+                self::nullIfEmpty($cliente->alergias),
+                self::nullIfEmpty($cliente->gustosEspeciales)
             ]);
+            $stmt->closeCursor();
+            return $ok;
         } catch (PDOException $e) {
             error_log("Error al actualizar cliente: " . $e->getMessage());
             return false;
         }
     }
 
-    /**
-     * Eliminar un cliente por su ID
-     * Utiliza el procedimiento almacenado ClienteDelete.
-     */
+    /** Update solo saldo (ligero, sin SP) */
+    public function updateSaldo(int $id, int $acumulado): bool
+    {
+        try {
+            $stmt = $this->conn->prepare("UPDATE cliente SET Acumulado = ? WHERE Id = ?");
+            return $stmt->execute([$acumulado, $id]);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar saldo: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /** Delete con SP */
     public function delete($id)
     {
         try {
             $stmt = $this->conn->prepare("CALL ClienteDelete(?)");
-            return $stmt->execute([$id]);
+            $ok = $stmt->execute([$id]);
+            $stmt->closeCursor();
+            return $ok;
         } catch (PDOException $e) {
             error_log("Error al eliminar cliente: " . $e->getMessage());
             return false;
         }
+    }
+
+    /** Utilidad: convertir "", null, "null" => null */
+    private static function nullIfEmpty($v)
+    {
+        if ($v === null) return null;
+        if (is_string($v) && strtolower(trim($v)) === 'null') return null;
+        $t = is_string($v) ? trim($v) : $v;
+        return ($t === '') ? null : $t;
     }
 }

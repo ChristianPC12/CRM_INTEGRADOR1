@@ -11,32 +11,27 @@ require_once 'CumpleDTO.php';
  */
 class CumpleMapper
 {
-    /**
-     * Convierte una fila asociativa de la base de datos en un objeto CumpleDTO.
-     *
-     * @param array $row Fila de datos devuelta por una consulta SQL.
-     * @return CumpleDTO Objeto DTO con los valores mapeados.
-     */
     public static function mapRowToDTO($row)
     {
-        // Crear nueva instancia del DTO
         $dto = new CumpleDTO();
 
-        // Asignación de valores básicos
-        $dto->id             = $row['Id'] ?? null;
-        $dto->cedula         = $row['Cedula'] ?? '';
-        $dto->nombre         = $row['Nombre'] ?? '';
-        $dto->correo         = $row['Correo'] ?? '';
-        $dto->telefono       = $row['Telefono'] ?? '';
-        $dto->fechaCumpleanos= $row['FechaCumpleanos'] ?? null;
+        $dto->id              = $row['Id'] ?? null;          // <- Tarjeta
+        $dto->cedula          = $row['Cedula'] ?? '';
+        $dto->nombre          = $row['Nombre'] ?? '';
+        $dto->correo          = $row['Correo'] ?? '';
+        $dto->telefono        = $row['Telefono'] ?? '';
+        $dto->fechaCumpleanos = $row['FechaCumpleanos'] ?? null;
 
-        // Asignación de campos de control del cumpleaños
-        $dto->estado         = $row['Estado'] ?? 'Activo';
-        $dto->fechaLlamada   = $row['FechaLlamada'] ?? null;
-        $dto->vence          = $row['Vence'] ?? null;
-        $dto->vencido        = $row['Vencido'] ?? null;
+        $dto->estado        = $row['Estado'] ?? 'Activo';
+        $dto->fechaLlamada  = $row['FechaLlamada'] ?? null;
+        $dto->vence         = $row['Vence'] ?? null;
+        $dto->vencido       = $row['Vencido'] ?? null;
 
-        // Devolver objeto DTO listo para uso en la aplicación
+        // 🔽 NUEVOS CAMPOS
+        $dto->visitas        = isset($row['Visitas']) ? (int)$row['Visitas'] : 0;
+        $dto->totalHistorico = isset($row['TotalHistorico']) ? (int)$row['TotalHistorico'] : 0;
+
         return $dto;
     }
 }
+

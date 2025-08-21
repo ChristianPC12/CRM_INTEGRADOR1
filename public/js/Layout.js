@@ -4,6 +4,11 @@
 // Flag para saber si es navegación interna (dentro del CRM)
 window.__navInterna = false;
 
+// 🔹 Definir variable isGuia basada en la página actual
+const isGuia = window.location.href.includes('view=guia') || 
+               document.body.classList.contains('guia-page') ||
+               document.querySelector('[data-view="guia"]') !== null;
+
 document.addEventListener("DOMContentLoaded", function () {
   // 🔹 Función para enviar cierre de sesión al servidor
   const sendClose = () =>
@@ -105,7 +110,7 @@ window.addEventListener("load", function () {
     } catch {
       objetivo.focus();
     }
-    if (isGuia) sc.scrollTop = prev; // solo en “guia” forzamos posición
+    if (isGuia) sc.scrollTop = prev; // solo en "guia" forzamos posición
   }, 180);
 
   // 🔹 Forzar sidebar cerrado en móvil

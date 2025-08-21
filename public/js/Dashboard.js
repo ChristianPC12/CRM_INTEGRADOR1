@@ -1,12 +1,16 @@
 $(document).ready(function () {
-  // Variables
-  const $inputDescripcion = $("#descripcion");
-  const $contador = $("#contador-caracteres");
+  // -------------------------------
+  // 🔹 Variables principales
+  // -------------------------------
+  const $inputDescripcion = $("#descripcion");      // Input de descripción de tarea
+  const $contador = $("#contador-caracteres");      // Contador de caracteres
 
-  const nombreUsuario = localStorage.getItem("nombreUsuario");
-  const rolUsuario = localStorage.getItem("rolUsuario");
+  const nombreUsuario = localStorage.getItem("nombreUsuario"); // Nombre guardado en localStorage
+  const rolUsuario = localStorage.getItem("rolUsuario");       // Rol guardado en localStorage
 
-  // Mostrar nombre y rol solo si existen en localStorage
+  // -------------------------------
+  // 🔹 Mostrar nombre y rol en bienvenida
+  // -------------------------------
   if (nombreUsuario) {
     $("#bienvenida-nombre").text(nombreUsuario);
   }
@@ -14,14 +18,18 @@ $(document).ready(function () {
     $("#bienvenida-rol").text(rolUsuario);
   }
 
-  // Contador de caracteres para el input
+  // -------------------------------
+  // 🔹 Contador de caracteres (máx 220)
+  // -------------------------------
   $inputDescripcion.on("input", function () {
     const max = 220;
-    const restante = max - $(this).val().length;
-    $contador.text(restante);
+    const restante = max - $(this).val().length; // Resta caracteres usados
+    $contador.text(restante);                    // Actualiza contador
   });
 
-  // Obtener clientes
+  // -------------------------------
+  // 🔹 Obtener clientes vía AJAX
+  // -------------------------------
   $.ajax({
     url: "/CRM_INT/CRM/controller/ClienteController.php?action=readAll",
     type: "GET",
@@ -30,10 +38,10 @@ $(document).ready(function () {
       if (res.success && res.data) {
         const clientes = res.data;
 
-        // Total Clientes
+        // 👉 Total de clientes
         $("#total-clientes").text(clientes.length.toLocaleString());
 
-        // Cliente del Mes
+        // 👉 Cliente del mes (el que más acumulado tiene)
         const clienteMes = clientes
           .filter(
             (c) =>
@@ -53,7 +61,7 @@ $(document).ready(function () {
           $("#cliente-mes-valor").text(formatearColones(0));
         }
 
-        // Clientes que cumplen años este mes
+        // 👉 Clientes que cumplen años en el mes actual
         const mesActual = new Date().getMonth() + 1;
         const cumpleaneros = clientes.filter((cliente) => {
           if (!cliente.fechaCumpleanos) return false;
@@ -83,7 +91,9 @@ $(document).ready(function () {
     },
   });
 
-  // Cargar datos de ventas
+  // -------------------------------
+  // 🔹 Obtener datos de ventas vía AJAX
+  // -------------------------------
   $.ajax({
     url: "/CRM_INT/CRM/controller/CompraController.php",
     method: "POST",
@@ -96,7 +106,7 @@ $(document).ready(function () {
         const mesActual = fechaActual.getMonth() + 1;
         const anioActual = fechaActual.getFullYear();
 
-        // Filtrar compras del mes actual
+        // 👉 Filtrar compras del mes actual
         const comprasMesActual = compras.filter((compra) => {
           if (!compra.fechaCompra) return false;
           const fechaCompra = new Date(compra.fechaCompra);
@@ -106,14 +116,14 @@ $(document).ready(function () {
           );
         });
 
-        // Filtrar compras del año actual
+        // 👉 Filtrar compras del año actual
         const comprasAnioActual = compras.filter((compra) => {
           if (!compra.fechaCompra) return false;
           const fechaCompra = new Date(compra.fechaCompra);
           return fechaCompra.getFullYear() === anioActual;
         });
 
-        // Calcular totales
+        // 👉 Totales
         const totalVentasMes = comprasMesActual.reduce(
           (total, compra) => total + parseFloat(compra.total || 0),
           0
@@ -124,7 +134,7 @@ $(document).ready(function () {
           0
         );
 
-        // Actualizar valores en el DOM
+        // 👉 Actualizar en el DOM
         $("#total-ventas").text(formatearColones(totalVentasMes));
         $("#total-ventas-anio").text(formatearColones(totalVentasAnio));
 
@@ -146,24 +156,28 @@ $(document).ready(function () {
     },
   });
 
-  // Función para resetear el contador de caracteres
+  // -------------------------------
+  // 🔹 Resetear contador de caracteres
+  // -------------------------------
   function resetearContador() {
     $contador.text(220);
   }
 
-  // Interceptar el envío del formulario de tareas para resetear el contador
+  // -------------------------------
+  // 🔹 Resetear contador al enviar tarea
+  // -------------------------------
   $(document).on("submit", "#formTarea", function () {
-    // Cuando el formulario se envía exitosamente, resetear el contador
     setTimeout(function () {
       if ($inputDescripcion.val() === "") {
-        // Solo resetear si el input se limpió (indicando éxito)
-        resetearContador();
+        resetearContador(); // Solo si el input se limpió
       }
     }, 100);
   });
 });
 
-//Función para formatear los numeros a colones y formato local
+// -------------------------------
+// 🔹 Función auxiliar: formatear a colones (₡)
+// -------------------------------
 function formatearColones(valor) {
   return new Intl.NumberFormat("es-CR", {
     style: "currency",

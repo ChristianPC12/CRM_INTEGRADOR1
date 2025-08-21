@@ -373,36 +373,46 @@ function renderizarCumpleanos(cumples, contenedor) {
   let html = "";
 
   pendientes.forEach((cumple) => {
-    const tieneCorreo = cumple.correo && cumple.correo.trim() !== "";
-    const cardClass = tieneCorreo ? "cumple-card" : "cumple-card sin-correo";
+  const tieneCorreo = cumple.correo && cumple.correo.trim() !== "";
+  const cardClass = tieneCorreo ? "cumple-card" : "cumple-card sin-correo";
 
-    html += `
-      <div class="${cardClass}">
-        <div class="cumple-header">
-          <h4 class="cumple-nombre">${cumple.nombre}</h4>
-          <span class="cumple-fecha">${formatearFechaCumple(
-            cumple.fechaCumpleanos
-          )}</span>
+  // valores seguros
+  const visitas = Number(cumple.visitas || 0);
+  const totalHist = Number(cumple.totalHistorico || 0);
+
+  html += `
+    <div class="${cardClass}">
+      <div class="cumple-header">
+        <h4 class="cumple-nombre">${cumple.nombre}</h4>
+        <span class="cumple-fecha">${formatearFechaCumple(cumple.fechaCumpleanos)}</span>
+      </div>
+
+      <div class="cumple-info">
+        <div class="cumple-detalle">
+          <span class="cumple-label">Tarjeta:</span> ${cumple.id ?? ""}
         </div>
-        
-        <div class="cumple-info">
-          <div class="cumple-detalle">
-            <span class="cumple-label">Cédula:</span> ${cumple.cedula}
-          </div>
-          <div class="cumple-detalle">
-            <span class="cumple-label">Teléfono:</span> ${cumple.telefono}
-          </div>
-          <div class="cumple-detalle">
-            <span class="cumple-label">Correo:</span> ${
-              tieneCorreo
-                ? cumple.correo
-                : '<span style="color: #ff6b6b;">Sin correo</span>'
-            }
-          </div>
+        <div class="cumple-detalle">
+          <span class="cumple-label">Cédula:</span> ${cumple.cedula ?? ""}
+        </div>
+        <div class="cumple-detalle">
+          <span class="cumple-label">Teléfono:</span> ${cumple.telefono ?? ""}
+        </div>
+        <div class="cumple-detalle">
+          <span class="cumple-label">Correo:</span> ${
+            tieneCorreo ? cumple.correo : '<span style="color:#ff6b6b;">Sin correo</span>'
+          }
+        </div>
+        <div class="cumple-detalle">
+          <span class="cumple-label">Visitas:</span> ${visitas}
+        </div>
+        <div class="cumple-detalle">
+          <span class="cumple-label">Total histórico:</span> ₡${totalHist.toLocaleString('es-CR')}
         </div>
       </div>
-    `;
-  });
+    </div>
+  `;
+});
+
 
   contenedor.innerHTML = html;
 }

@@ -1,5 +1,16 @@
 /* Codigo.css - versión moderna con fondo decorativo y sombras avanzadas */
 :root {
+/*
+  Codigo.css
+  ----------
+  - Propósito: estilos para la sección de códigos (lista de códigos, tarjetas, buscador, modal y tablas).
+  - Estructura: está organizada por secciones claras (variables, layout, cards, tablas, botones, formularios, lista, modal y media queries).
+  - Uso: mantener las clases/IDs tal como están en el HTML para que los estilos funcionen correctamente.
+*/
+
+/* ===== VARIABLES GLOBALES =====
+   Definir colores, sombras y constantes de diseño aquí para facilitar la personalización.
+*/
   --amarillo: #f9c41f;
   --negro: #121212;
   --blanco: #ffffff;
@@ -21,6 +32,8 @@
 /* === LAYOUT BASE - Modernizado === */
 body, html { 
   margin: 0; 
+  /* Contiene reglas base para body/html y fondo decorativo.
+     - 'display: flex' permite un sidebar fijo y área de contenido flexible. */
 }
 
 body {
@@ -61,6 +74,8 @@ body::after {
 /* === CONTENIDO PRINCIPAL - Modernizado === */
 .content {
   margin-left: 220px;
+  /* Área central donde se coloca la tarjeta principal o el listado de códigos.
+     - margin-left: 220px asume un sidebar; ajustar si cambia la estructura. */
   padding: 20px 32px;
   flex: 1;
   display: flex;
@@ -71,6 +86,11 @@ body::after {
 /* === CARDS - Modernizadas === */
 .card {
   border: 1px solid var(--gris-muy-claro);
+  /*
+    Sección: Cards
+    - Uso: tarjetas de contenido con borde, sombra y separación.
+    - Recomendación: reutilizar para paneles y formularios para mantener consistencia.
+  */
   border-radius: 20px;
   background: var(--fondo-blanco) !important;
   box-shadow: var(--sombra-elevada);
@@ -103,6 +123,7 @@ body::after {
 }
 
 .card-header {
+  /* Encabezado de la tarjeta: degradado oscuro y texto destacado */
   background: linear-gradient(135deg, var(--negro), #2a2a2a) !important;
   color: var(--amarillo) !important;
   font-weight: 700;
@@ -137,6 +158,11 @@ body::after {
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: var(--sombra-elevada);
   backdrop-filter: blur(10px);
+  /*
+    Sección: Tablas
+    - Encabezados con degradado de marca y filas con hover para enfatizar registros.
+    - position: sticky en th mantiene encabezado visible al hacer scroll.
+  */
 }
 
 .table th {
@@ -185,6 +211,7 @@ body::after {
   border-radius: 16px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE y Edge */
+  /* Contenedor responsivo para tablas: habilita scroll-x en pantallas pequeñas */
 }
 .table-responsive::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
@@ -210,6 +237,7 @@ body::after {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  /* Botón principal con efecto de brillo y estados hover */
 }
 
 .btn-primary::before {
@@ -243,6 +271,7 @@ body::after {
   font-weight: 600;
   position: relative;
   z-index: 1;
+  /* Botón secundario para actualizar listados; estilo outline que cambia en hover */
 }
 
 #btnActualizar:hover {
@@ -256,6 +285,7 @@ body::after {
 .container {
   max-width: 102%;
   transform: translateX(1%);
+  /* Contenedor general para limitar ancho y alinear contenido */
 }
 
 /* === FORMULARIOS - Modernizados === */
@@ -268,6 +298,8 @@ body::after {
   color: var(--blanco);
   transition: all 0.3s ease;
   font-weight: 500;
+  /* Inputs y controles de formulario
+     - Están diseñados para destacar sobre el fondo oscuro con borders claros. */
 }
 
 .form-control::placeholder {
@@ -314,6 +346,9 @@ body::after {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
+  /* Lista principal de códigos
+     - Con scroll interno y límites de altura para ocupar la pantalla sin desbordar.
+     - En mobile se transforma en cards mediante media queries. */
 }
 #codigoLista::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
@@ -330,6 +365,7 @@ body::after {
   hyphens: auto;
   max-width: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* Celdas de la lista: adaptables para mobile, con ruptura de palabra y etiquetado por data-label */
 }
 
 #codigoLista th {
@@ -388,6 +424,7 @@ body::after {
   border: 3px solid var(--amarillo) !important;
   border-radius: 15px !important;
   box-shadow: 0 10px 30px rgba(249, 196, 31, 0.3) !important;
+  /* Modal estilizado para celebraciones: borde y sombra de marca */
 }
 
 #modalCumpleanos .modal-header {
@@ -425,6 +462,7 @@ body::after {
   max-width: 98.5%;
   margin-left: 1.6%;
   margin-top: 0;
+  /* Utilidad para desplazar ligeramente contenido a la derecha (ajustes estéticos) */
 }
 
 /* === MEDIA QUERIES - Modernizadas === */
@@ -432,6 +470,7 @@ body::after {
   .table-responsive table { min-width: 600px; }
   .content { padding: 16px 24px; }
   .card { margin: 0.75rem 0; }
+  /* Ajustes de tablet: reducir paddings y tamaño mínimo de tablas */
 }
 
 @media (max-width: 768px) {

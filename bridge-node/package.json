@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "node-windows": "^1.0.0-beta.8",
     "qrcode": "^1.5.4",
-  "whatsapp-web.js": "^1.26.0",
-  "dotenv": "^16.4.5"
+    "whatsapp-web.js": "^1.26.0"
   }
 }

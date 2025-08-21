@@ -5,7 +5,7 @@ class Database
     private $host = "localhost";
     private $db_name = "bd_bastos_crm";
     private $username = "root";
-    private $password = "";
+    private $password = "1234";
     public $conn;
 
     public function getConnection()

@@ -42,6 +42,7 @@
           Saloneros pueden ver, pero no modificar nada.  
           Las tarjetas reasignadas cambian su código.
         </div>
+<<<<<<< Updated upstream
         <!-- Video con lazy loading -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="ozohxbb4A5A">
@@ -51,6 +52,13 @@
             </div>
           </div>
         </div>
+=======
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/DjKJVifdwe8?si=o88zWy0QIt8taato" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
+>>>>>>> Stashed changes
       </div>
     </div>
 
@@ -168,6 +176,7 @@
           El estado cambia a "lista" si ya fue atendido.  
           Todos los roles pueden acceder sin restricción.
         </div>
+<<<<<<< Updated upstream
         <!-- Video con lazy loading -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="Bcup9Lkpank">
@@ -177,6 +186,13 @@
             </div>
           </div>
         </div>
+=======
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/RdXPauEavEI?si=AISeq904B6eXFK-C" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
+>>>>>>> Stashed changes
       </div>
     </div>
 
@@ -193,6 +209,7 @@
           Puedes descargar en Word o en PDF si deseas.  
           Los datos se eliminan automáticamente al mes.
         </div>
+<<<<<<< Updated upstream
         <!-- Video con lazy loading -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="pkPX4K3yCd8">
@@ -202,6 +219,13 @@
             </div>
           </div>
         </div>
+=======
+               <!-- Video explicativo -->
+      <div class="guia-video mt-2">
+        <iframe width="100%" height="200" src="https://www.youtube.com/embed/zqhE6sXgofM?si=oIbr8m_06YQaiXsI" 
+          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
+      </div>
+>>>>>>> Stashed changes
       </div>
     </div>
 
@@ -214,9 +238,8 @@
     </div>
     <div class="guia-body">
       Al hacer clic en el logo se abre una ventana.  
-      Puedes ingresar el número de una tarjeta.  
-      El sistema busca al cliente automáticamente.  
-      Te lleva directo a la sección de beneficios.
+      Puede ver quien cumpleaños.    
+      El sistema te lleva directo a la sección de cumpleaños.
     </div>
   </div>
 </div>

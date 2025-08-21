@@ -4,6 +4,7 @@
 bridge-node/session/
 bridge-node/.wwebjs_cache/
 bridge-node/.wwebjs_auth/
+bridge-node/daemon/
 
 # === NODE.JS ===
 bridge-node/node_modules/

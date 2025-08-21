@@ -93,6 +93,7 @@
 
             <!-- Video 1: XAMPP -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo descargar e instalar XAMPP">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -107,10 +108,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/O3msEOcHP2E?si=ituUDK3jzRZRbdRG"
+                title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 2: Apache/MySQL -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo activar servicios Apache/MySQL">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -125,10 +132,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/p1uZlYBueX0?si=385Qw_SHDxGXNhnq"
+                title="Cómo activar servicios Apache/MySQL —" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 3: Credenciales BD -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo poner credenciales a la base de datos">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -143,10 +156,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed//jHxqhRftB1U?si=h0nm5qv5L6Huz728"
+                title="Cómo Poner credenciales a la base de datos" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 4: Importar BD -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo importar la base de datos">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -161,10 +180,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/M9FpsTmXZkw?si=vMVkfJQ6JygbZVAR"
+                title="Cómo importar la base de datos" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 5: Ruta del proyecto -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo entrar a la ruta del proyecto">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -179,10 +204,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/jHxqhRftB1U?si=tGzvPcHCr18Vi5mb"
+                title="Cómo Entrar a la ruta del proyecto" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 6: Respaldos -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo hacer respaldos de la base de datos">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -197,10 +228,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/LcgjCTqtwnE?si=gSXaHrfMfCiTIo34"
+                title="Cómo hacer respaldos de la base de datos" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 7: Acceso con teléfono (config) -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo configurar el acceso para entrar con teléfono al sistema">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -215,10 +252,16 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/eCUP5z4fyM4?si=Z_qNy9y9Fq8sfrLm"
+                title="Cómo configurar el acceso para entrar con teléfono al sistema" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 8: Acceso con teléfono -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <div class="video-placeholder-generic" data-titulo="Cómo entrar al sistema con el teléfono">
                 <div class="video-preview">
                   <div class="video-icon">
@@ -233,6 +276,11 @@
                   </div>
                 </div>
               </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/kmNUa1KKs88?si=7KqX5-3Ra_Kd0HU5"
+                title="Cómo entrar al sistema con el telefono" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
             </div>
 
           </div>

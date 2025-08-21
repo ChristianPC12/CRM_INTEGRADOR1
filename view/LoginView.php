@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Acceso - Sistema de Gestión</title>
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Estilos del login -->
     <link rel="stylesheet" href="public/css/Login.css">
 </head>
@@ -18,7 +21,7 @@
             <div class="logo-container">
                 <img src="public/img/Principal_Amarillo.png" alt="Logo Bastos" class="logo-bastos">
             </div>
-            
+
             <!-- Encabezado: título y subtítulo -->
             <div class="header">
                 <h2>CRM BASTOS</h2>
@@ -36,12 +39,17 @@
                 </div>
 
                 <!-- Contraseña -->
-                <div class="form-group">
+                <div class="form-group password-group">
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" name="contrasena" placeholder="Contraseña" required>
+                    <button type="button" id="togglePass" class="toggle-pass" aria-label="Mostrar contraseña">
+                        <i class="bi bi-eye-fill"></i>
+                    </button>
                     <!-- Mensaje de error para la contraseña -->
                     <span class="error-message" id="passwordError"></span>
                 </div>
+
+
 
                 <!-- Botón de enviar con spinner de carga -->
                 <button type="submit" class="btn-primary" id="loginBtn">

@@ -1,5 +1,13 @@
-/* Analisis.css - versión moderna con fondo decorativo y sombras avanzadas */
+/*
+Analisis.css
+----------------
+- Propósito: estilos para la vista de análisis (tarjetas, encabezado, botones, tablas y contenedores de gráfico/tabla).
+- Uso: aplicar las clases descritas en los selectores para obtener el diseño moderno y responsive.
+*/
+
+/* VARIABLES GLOBALES (usar estas variables para mantener consistencia de colores y sombras) */
 :root {
+    /* Colores y sombras principales usados en el diseño */
     --amarillo: #f9c41f;
     --negro: #121212;
     --blanco: #ffffff;
@@ -19,6 +27,9 @@
 }
 
 .card {
+    /* .card: contenedor base para paneles/ tarjetas de análisis
+       - Uso: envuelve encabezado y contenido; aporta sombra, borde y fondo semi-transparente.
+       - Recomendación: reutilizar para nuevos paneles para mantener consistencia visual. */
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--sombra-elevada);
@@ -31,6 +42,7 @@
 }
 
 .card::before {
+    /* Línea decorativa superior: degradado horizontal */
     content: "";
     position: absolute;
     top: 0;
@@ -47,6 +59,9 @@
 }
 
 .card-header {
+    /* Encabezado de la tarjeta
+       - Degradado oscuro con texto amarillo.
+       - Contiene títulos y controles del header. */
     background: linear-gradient(135deg, var(--negro), #2a2a2a) !important;
     color: var(--amarillo) !important;
     font-weight: 700;
@@ -58,6 +73,7 @@
 }
 
 .card-header::before {
+    /* Superposición sutil para dar textura al header sin afectar legibilidad */
     content: '';
     position: absolute;
     top: 0;
@@ -73,6 +89,9 @@
 
 /* Título principal - Modernizado */
 .header-title {
+    /* Título principal del panel
+       - Incluye icono opcional en <i>
+       - Color destacado y sombra para visibilidad */
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
@@ -93,6 +112,7 @@
 
 /* Contenedor principal de controles - Modernizado */
 .header-controls {
+    /* Contenedor flex que organiza botones, buscador y acciones del header */
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -104,6 +124,7 @@
 
 /* Grupo de botones de análisis - Modernizado */
 .botones-analisis {
+    /* Agrupa botones de filtros/acciones del análisis. Soporta wrap en pantallas pequeñas. */
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -113,6 +134,7 @@
 
 /* Acciones del header - Modernizado */
 .acciones-header {
+    /* Pequeño contenedor para acciones secundarias (ej: actualizar, exportar) */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -121,6 +143,7 @@
 
 /* Contenedor del buscador - Modernizado */
 .buscador-container {
+    /* Contenedor del buscador (input y botón) */
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -130,6 +153,9 @@
 
 /* Estilos de los botones de análisis - Modernizados */
 .btn-analisis {
+    /* Botones principales de filtro/acción en el header
+       - Uso: aplicar clase al elemento <button> o <a>
+       - Efecto: brillo animado con pseudo-elemento y estados :hover/:active */
     border-radius: 12px;
     border: 2px solid var(--amarillo);
     color: var(--amarillo);
@@ -149,6 +175,7 @@
 }
 
 .btn-analisis::before {
+    /* Pseudo-elemento para efecto de brillo al pasar el ratón */
     content: "";
     position: absolute;
     top: 0;
@@ -182,6 +209,7 @@
 .btn-analisis.active,
 .btn-analisis:hover,
 .btn-analisis:focus-visible {
+    /* Estado activo/hover: degradado de marca y elevación */
     background: linear-gradient(135deg, var(--amarillo), var(--naranja));
     color: var(--negro);
     border-color: var(--amarillo);
@@ -191,6 +219,7 @@
 
 /* Botón de actualizar - Modernizado */
 .btn-actualizar {
+    /* Botón alternativo con estilo claro (blanco) */
     border-radius: 12px;
     border: 2px solid var(--blanco);
     color: var(--blanco);
@@ -210,6 +239,7 @@
 }
 
 .btn-actualizar::before {
+    /* Efecto de brillo para botón actualizar */
     content: "";
     position: absolute;
     top: 0;
@@ -235,6 +265,7 @@
 
 /* Buscador - Modernizado */
 .buscador-analisis {
+    /* Componente buscador: input con icono y estilo de tarjeta */
     min-width: 320px;
     max-width: 380px;
     border-radius: 12px;
@@ -250,6 +281,7 @@
 }
 
 .input-group-text {
+    /* Estilo del icono/label dentro del input-group */
     background: linear-gradient(135deg, var(--amarillo), var(--naranja)) !important;
     color: var(--negro) !important;
     border: none;
@@ -259,6 +291,7 @@
 }
 
 .buscador-analisis .form-control {
+    /* Input principal del buscador: fondo blanco y foco con sutil escala */
     background: var(--blanco);
     color: var(--negro);
     font-weight: 500;
@@ -282,6 +315,7 @@
 
 /* Estilos de tabla - Modernizados */
 .btn-outline-warning {
+    /* Botón estilo outline para acciones dentro de tablas */
     border-radius: 12px;
     border-width: 2px;
     font-weight: 600;
@@ -303,6 +337,7 @@
 }
 
 .table {
+    /* Tablas con bordes redondeados y encabezado sticky */
     border-radius: 16px;
     overflow: hidden;
     margin-bottom: 0;
@@ -311,6 +346,7 @@
 }
 
 .table thead th {
+    /* Encabezados con degradado de marca y posición sticky para scroll */
     background: linear-gradient(135deg, var(--amarillo), var(--naranja)) !important;
     color: var(--negro) !important;
     font-weight: 700;
@@ -344,6 +380,7 @@
 }
 
 #analisisGraficoCont {
+    /* Contenedor del gráfico: fondo claro, padding amplio y borde decorativo superior */
     background: linear-gradient(135deg, #fffbeb, #fefce8);
     border-radius: 16px;
     margin-top: 2rem;
@@ -355,6 +392,7 @@
 }
 
 #analisisGraficoCont::before {
+    /* Línea decorativa superior del contenedor del gráfico */
     content: "";
     position: absolute;
     top: 0;
@@ -366,6 +404,7 @@
 }
 
 #analisisTablaCont {
+    /* Contenedor de la tabla con scroll vertical y scrollbar personalizado */
     max-height: 400px;
     overflow-y: auto;
     background: var(--blanco);
@@ -412,6 +451,7 @@
 }
 
 .divider-header {
+    /* Línea/divisor principal del header con degradado */
     height: 4px;
     background: linear-gradient(90deg, var(--amarillo) 0%, var(--naranja) 70%, transparent 100%);
     border-radius: 2px;
@@ -426,6 +466,7 @@
 
 /* Tablets y móviles grandes */
 @media (max-width: 991.98px) {
+    /* Ajustes para tablets y móviles grandes: reducir márgenes y tamaños */
     .card {
         margin: 1rem;
         border-radius: 16px;
@@ -460,6 +501,7 @@
 
 /* Móviles medianos */
 @media (max-width: 768px) {
+    /* Ajustes para móviles medianos: botones y buscador más compactos */
     .card {
         margin: 0.75rem;
         border-radius: 12px;
@@ -544,6 +586,7 @@
 
 /* Móviles pequeños */
 @media (max-width: 576px) {
+    /* Ajustes para móviles pequeños: ocultar columnas menos relevantes y compactar todo */
     .card {
         margin: 0.5rem;
         border-radius: 10px;

@@ -1,162 +1,177 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Efecto de escala optimizado con requestAnimationFrame
-  document.querySelectorAll(".guia-card").forEach((card) => {
-    let isHovered = false;
-
-    card.addEventListener("mouseenter", () => {
-      if (!isHovered) {
-        isHovered = true;
-        requestAnimationFrame(() => {
-          card.style.transform = "scale(1.01)";
-        });
-      }
-    });
-
-    card.addEventListener("mouseleave", () => {
-      if (isHovered) {
-        isHovered = false;
-        requestAnimationFrame(() => {
-          card.style.transform = "scale(1)";
-        });
-      }
-    });
-  });
-
-  // Redirección optimizada desde los títulos
-  document.querySelectorAll(".guia-link-seccion").forEach((enlace) => {
-    enlace.style.cursor = "pointer";
-    enlace.addEventListener("click", function (e) {
-      // Solo prevenimos si hay data-ir-a; si no, dejamos que corra el onclick del span
-      const destino = this.getAttribute("data-ir-a");
-      if (!destino) return;
-
-      e.preventDefault();
-      if (destino.startsWith("#")) {
-        const target = document.querySelector(destino);
-        if (target) target.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.location.href = destino;
-      }
-    });
-  });
-
-  // Intersection Observer para lazy loading de imágenes (thumbnails)
-  const imageObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const thumb = entry.target;
-        const imgUrl = thumb.getAttribute("data-thumb");
-
-        if (imgUrl) {
-          const img = new Image();
-          img.onload = () => {
-            thumb.style.backgroundImage = `url(${imgUrl})`;
-            thumb.style.backgroundSize = "cover";
-            thumb.style.backgroundPosition = "center";
-            thumb.style.height = "200px";
-            thumb.classList.add("loaded");
-          };
-          img.src = imgUrl;
-        }
-        observer.unobserve(thumb);
-      }
-    });
-  });
-
-  // Observar todos los thumbnails
+  // Cargar miniaturas con el botón de play
   document.querySelectorAll(".video-thumb").forEach((thumb) => {
-    imageObserver.observe(thumb);
+    const imgUrl = thumb.getAttribute("data-thumb");
+    if (imgUrl) {
+      thumb.style.backgroundImage = `url(${imgUrl})`;
+      thumb.style.backgroundSize = "cover";
+      thumb.style.backgroundPosition = "center";
+      thumb.style.height = "200px";
+      thumb.style.position = "relative";
+      thumb.style.cursor = "pointer";
+      thumb.style.borderRadius = "8px";
+      
+      // Asegurar que el botón play esté visible
+      const playButton = thumb.querySelector('.play-button');
+      if (playButton) {
+        playButton.style.position = "absolute";
+        playButton.style.top = "50%";
+        playButton.style.left = "50%";
+        playButton.style.transform = "translate(-50%, -50%)";
+        playButton.style.fontSize = "3rem";
+        playButton.style.color = "rgba(255, 255, 255, 0.9)";
+        playButton.style.textShadow = "0 0 10px rgba(0,0,0,0.7)";
+        playButton.style.transition = "all 0.3s ease";
+        playButton.style.zIndex = "5";
+      }
+    }
   });
 
-  // Reproductor con opción de cerrar (sin cambiar HTML)
+  // Manejar clics en los video placeholders
   document.querySelectorAll(".video-placeholder").forEach((placeholder) => {
     const videoId = placeholder.getAttribute("data-video-id");
     const thumb = placeholder.querySelector(".video-thumb");
+    
+    if (!videoId || !thumb) return;
 
-    // Asegura posición relativa para el botón cerrar
     placeholder.style.position = "relative";
+    let videoActivo = false;
 
-    // Al hacer click: mostrar iframe y botón cerrar (si no existe ya)
     placeholder.addEventListener("click", function (e) {
-      // Evitar que el click sobre el botón cerrar vuelva a abrir
-      if (e.target.closest(".video-close")) return;
+      e.preventDefault();
+      
+      if (videoActivo) return; // Prevenir múltiples clics
+      videoActivo = true;
 
-      // Si ya hay un iframe, no duplicar
-      if (placeholder.querySelector("iframe")) return;
+      // Crear contenedor del video
+      const videoContainer = document.createElement("div");
+      videoContainer.className = "video-container-activo";
+      videoContainer.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+      `;
 
-      if (!videoId) return;
-
-      // Crear iframe
+      // Crear iframe del video
       const iframe = document.createElement("iframe");
-      iframe.setAttribute("width", "100%");
-      iframe.setAttribute("height", "200");
-      iframe.setAttribute(
-        "src",
-        `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`
-      );
-      iframe.setAttribute("frameborder", "0");
-      iframe.setAttribute("allowfullscreen", "");
-      iframe.setAttribute("allow", "autoplay; encrypted-media");
-      iframe.setAttribute("loading", "lazy");
-      iframe.style.borderRadius = "8px";
-      iframe.style.display = "block";
+      iframe.style.cssText = `
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+      `;
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+      iframe.allow = "autoplay; encrypted-media; fullscreen";
+      iframe.allowFullscreen = true;
 
-      // Botón cerrar
+      // Crear botón de cerrar
       const closeBtn = document.createElement("button");
-      closeBtn.className = "video-close";
-      closeBtn.setAttribute("type", "button");
-      closeBtn.setAttribute("aria-label", "Cerrar video");
-      // Usa Bootstrap Icons si están cargados; si no, usa "×"
-      closeBtn.innerHTML =
-        '<i class="bi bi-x-lg" aria-hidden="true"></i>' || "×";
+      closeBtn.innerHTML = "×";
+      closeBtn.title = "Cerrar video";
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      `;
 
-      // Estilos inline para no tocar CSS
-      Object.assign(closeBtn.style, {
-        position: "absolute",
-        top: "6px",
-        left: "6px", // esquina superior izquierda
-        zIndex: "5",
-        border: "none",
-        borderRadius: "9999px",
-        width: "22px", // tamaño pequeño
-        height: "22px", // tamaño pequeño
-        display: "grid",
-        placeItems: "center",
-        background: "rgba(0,0,0,.55)",
-        color: "#fff",
-        cursor: "pointer",
-        lineHeight: "1",
-        fontSize: "12px", // ícono pequeño
-        padding: "0",
+      // Efectos del botón
+      closeBtn.addEventListener("mouseenter", () => {
+        closeBtn.style.background = "rgba(220, 53, 69, 0.9)";
+        closeBtn.style.transform = "scale(1.1)";
       });
 
-      // Ocultar thumbnail y montar iframe + botón
-      if (thumb) thumb.style.display = "none";
-      placeholder.appendChild(iframe);
-      placeholder.appendChild(closeBtn);
-
-      // Cerrar video y restaurar thumbnail
-      closeBtn.addEventListener("click", function (ev) {
-        ev.stopPropagation(); // no dispare el open
-        // Detener reproducción y limpiar
-        try {
-          iframe.src = "";
-        } catch {}
-        iframe.remove();
-        closeBtn.remove();
-        if (thumb) thumb.style.display = "";
+      closeBtn.addEventListener("mouseleave", () => {
+        closeBtn.style.background = "rgba(0, 0, 0, 0.8)";
+        closeBtn.style.transform = "scale(1)";
       });
+
+      // Función para cerrar el video
+      const cerrarVideo = () => {
+        videoContainer.style.transition = "opacity 0.3s ease";
+        videoContainer.style.opacity = "0";
+        
+        setTimeout(() => {
+          if (videoContainer.parentNode) {
+            videoContainer.remove();
+          }
+          videoActivo = false;
+        }, 300);
+      };
+
+      // Event listener para cerrar
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        cerrarVideo();
+      });
+
+      // Cerrar con Escape
+      const handleEscape = (e) => {
+        if (e.key === "Escape" && videoActivo) {
+          cerrarVideo();
+          document.removeEventListener("keydown", handleEscape);
+        }
+      };
+      document.addEventListener("keydown", handleEscape);
+
+      // Ensamblar y mostrar
+      videoContainer.appendChild(iframe);
+      videoContainer.appendChild(closeBtn);
+      placeholder.appendChild(videoContainer);
+
+      // Animación de entrada
+      videoContainer.style.opacity = "0";
+      setTimeout(() => {
+        videoContainer.style.transition = "opacity 0.3s ease";
+        videoContainer.style.opacity = "1";
+      }, 50);
+    });
+
+    // Efecto hover en el thumbnail
+    thumb.addEventListener("mouseenter", () => {
+      const playButton = thumb.querySelector('.play-button');
+      if (playButton) {
+        playButton.style.transform = "translate(-50%, -50%) scale(1.1)";
+        playButton.style.color = "#fff";
+      }
+    });
+
+    thumb.addEventListener("mouseleave", () => {
+      const playButton = thumb.querySelector('.play-button');
+      if (playButton) {
+        playButton.style.transform = "translate(-50%, -50%) scale(1)";
+        playButton.style.color = "rgba(255, 255, 255, 0.9)";
+      }
     });
   });
 
-  // Preconectar a dominios de YouTube para mejorar rendimiento
-  const preconnectLink1 = document.createElement("link");
-  preconnectLink1.rel = "preconnect";
-  preconnectLink1.href = "https://www.youtube-nocookie.com";
-  document.head.appendChild(preconnectLink1);
+  // Función global para cerrar todos los videos
+  window.cerrarTodosLosVideos = function() {
+    document.querySelectorAll(".video-container-activo").forEach(container => {
+      const closeBtn = container.querySelector("button");
+      if (closeBtn) closeBtn.click();
+    });
+  };
 
-  const preconnectLink2 = document.createElement("link");
-  preconnectLink2.rel = "preconnect";
-  preconnectLink2.href = "https://img.youtube.com";
-  document.head.appendChild(preconnectLink2);
+  console.log("Sistema de videos cargado correctamente ✅");
 });

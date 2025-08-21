@@ -9,33 +9,20 @@
  */
 class CumpleDTO
 {
-    // Identificador único del registro de cumpleaños
     public $id;
-
-    // Cédula del cliente
     public $cedula;
-
-    // Nombre completo del cliente
     public $nombre;
-
-    // Correo electrónico del cliente
     public $correo;
-
-    // Número de teléfono del cliente
     public $telefono;
-
-    // Fecha de cumpleaños del cliente
     public $fechaCumpleanos;
 
-    // Estado actual del cumpleaños (por defecto "PENDIENTE")
-    public $estado = 'PENDIENTE'; // Por defecto
-
-    // Fecha en la que se realizó una llamada de seguimiento
+    public $estado = 'PENDIENTE';
     public $fechaLlamada;
-
-    // Fecha límite o de vencimiento de la gestión
     public $vence;
-
-    // Indica si el registro ya está vencido (true/false)
     public $vencido;
+
+    // 🔽 NUEVOS CAMPOS
+    public $visitas = 0;
+    public $totalHistorico = 0;
 }
+

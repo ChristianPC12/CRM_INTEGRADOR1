@@ -17,12 +17,13 @@
           También puedes gestionar tareas pendientes.  
           Saloneros solo acceden a sus tareas del día.
         </div>
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="CIjYfjxSJbI">
-            <img src="https://img.youtube.com/vi/CIjYfjxSJbI/mqdefault.jpg" alt="Video Dashboard" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/CIjYfjxSJbI/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -42,23 +43,16 @@
           Saloneros pueden ver, pero no modificar nada.  
           Las tarjetas reasignadas cambian su código.
         </div>
-<<<<<<< Updated upstream
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="ozohxbb4A5A">
-            <img src="https://img.youtube.com/vi/ozohxbb4A5A/mqdefault.jpg" alt="Video Clientes VIP" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/ozohxbb4A5A/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
-=======
-               <!-- Video explicativo -->
-      <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/DjKJVifdwe8?si=o88zWy0QIt8taato" 
-          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
-      </div>
->>>>>>> Stashed changes
       </div>
     </div>
 
@@ -76,12 +70,13 @@
           Los usuarios con el rol salonero o administrador, 
           no tendrán acceso.
         </div>
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="p7yA0D90Qj0">
-            <img src="https://img.youtube.com/vi/p7yA0D90Qj0/mqdefault.jpg" alt="Video Usuarios" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/p7yA0D90Qj0/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -101,12 +96,13 @@
           El historial se guarda debajo automáticamente.  
           Solo el propietario puede eliminar registros.
         </div>
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="5cDW7KrH2iI">
-            <img src="https://img.youtube.com/vi/5cDW7KrH2iI/mqdefault.jpg" alt="Video Beneficios" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/5cDW7KrH2iI/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -126,12 +122,13 @@
           El sistema detecta la tarjeta automáticamente.  
           Ahorra tiempo y evita errores en la búsqueda.
         </div>
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="7QINQ76tyZA">
-            <img src="https://img.youtube.com/vi/7QINQ76tyZA/mqdefault.jpg" alt="Video Código de barras" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/7QINQ76tyZA/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -151,12 +148,13 @@
           Puedes buscar por nombre o zona de origen.  
           Incluye ventas por mes, año y más métricas.
         </div>
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="OmVzLpIc1Gc">
-            <img src="https://img.youtube.com/vi/OmVzLpIc1Gc/mqdefault.jpg" alt="Video Análisis" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/OmVzLpIc1Gc/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -176,23 +174,16 @@
           El estado cambia a "lista" si ya fue atendido.  
           Todos los roles pueden acceder sin restricción.
         </div>
-<<<<<<< Updated upstream
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="Bcup9Lkpank">
-            <img src="https://img.youtube.com/vi/Bcup9Lkpank/mqdefault.jpg" alt="Video Cumpleaños" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/Bcup9Lkpank/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
-=======
-               <!-- Video explicativo -->
-      <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/RdXPauEavEI?si=AISeq904B6eXFK-C" 
-          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
-      </div>
->>>>>>> Stashed changes
       </div>
     </div>
 
@@ -209,23 +200,16 @@
           Puedes descargar en Word o en PDF si deseas.  
           Los datos se eliminan automáticamente al mes.
         </div>
-<<<<<<< Updated upstream
-        <!-- Video con lazy loading -->
+        <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
           <div class="video-placeholder" data-video-id="pkPX4K3yCd8">
-            <img src="https://img.youtube.com/vi/pkPX4K3yCd8/mqdefault.jpg" alt="Video Bitácora" class="img-fluid rounded">
-            <div class="play-button">
-              <i class="bi bi-play-circle-fill"></i>
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/pkPX4K3yCd8/mqdefault.jpg">
+              <div class="play-button">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
             </div>
           </div>
         </div>
-=======
-               <!-- Video explicativo -->
-      <div class="guia-video mt-2">
-        <iframe width="100%" height="200" src="https://www.youtube.com/embed/zqhE6sXgofM?si=oIbr8m_06YQaiXsI" 
-          title="Video Dashboard" frameborder="0" allowfullscreen></iframe>
-      </div>
->>>>>>> Stashed changes
       </div>
     </div>
 
@@ -237,9 +221,10 @@
       <span class="guia-link-seccion" onclick="abrirModal()">Logo de Bastos</span>
     </div>
     <div class="guia-body">
-      Al hacer clic en el logo se abre una ventana.  
-      Puede ver quien cumpleaños.    
-      El sistema te lleva directo a la sección de cumpleaños.
+      Al hacer clic en el logo de bastos se abrirá una ventana.  
+      Allí tendrás una alternativa para ir directamente a la sección    
+      de beneficios tras ingresar el número de tarjeta se realizará la búsqueda
+      a beneficios.
     </div>
   </div>
 </div>
@@ -261,35 +246,5 @@
     </div>
   </div>
 </div>
-
-<style>
-.video-placeholder {
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.video-placeholder:hover {
-  transform: scale(1.02);
-}
-
-.play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ff0000;
-  font-size: 3rem;
-  text-shadow: 0 0 10px rgba(0,0,0,0.7);
-  transition: all 0.3s ease;
-}
-
-.video-placeholder:hover .play-button {
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.guia-video iframe {
-  border-radius: 8px;
-}
-</style>
-
+</div>
+</div>

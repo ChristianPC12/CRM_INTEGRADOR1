@@ -1,18 +1,35 @@
 <?php
-// model/codigo/CodigoDAO.php
+// Archivo: model/codigo/CodigoDAO.php
 
 require_once 'CodigoDTO.php';
 require_once 'CodigoMapper.php';
 
+/**
+ * Clase CodigoDAO
+ *
+ * Objeto de Acceso a Datos (DAO) para la entidad Código.
+ * Se encarga de ejecutar operaciones en la base de datos utilizando
+ * procedimientos almacenados para crear, leer, actualizar, eliminar
+ * y reasignar códigos de barras asociados a clientes.
+ */
 class CodigoDAO
 {
+    // Conexión a la base de datos
     private $conn;
 
+    /**
+     * Constructor
+     * Recibe una conexión PDO y la asigna a la clase.
+     */
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
+    /**
+     * Crear un nuevo código de barras
+     * Inserta un registro usando el procedimiento almacenado CodigoCreate.
+     */
     public function create($codigo)
     {
         try {
@@ -38,6 +55,10 @@ class CodigoDAO
         }
     }
 
+    /**
+     * Leer un código por su ID
+     * Devuelve un DTO con los datos o un mensaje de error si no se encuentra.
+     */
     public function read($id)
     {
         try {
@@ -62,6 +83,10 @@ class CodigoDAO
         }
     }
 
+    /**
+     * Leer todos los códigos
+     * Ejecuta el procedimiento almacenado CodigoReadAll y devuelve la lista completa.
+     */
     public function readAll()
     {
         try {
@@ -83,6 +108,10 @@ class CodigoDAO
         }
     }
 
+    /**
+     * Actualizar un código existente
+     * Modifica los datos mediante el procedimiento almacenado CodigoUpdate.
+     */
     public function update($codigo)
     {
         try {
@@ -108,6 +137,10 @@ class CodigoDAO
         }
     }
 
+    /**
+     * Eliminar un código por su ID
+     * Ejecuta el procedimiento almacenado CodigoDelete.
+     */
     public function delete($id)
     {
         try {
@@ -129,6 +162,10 @@ class CodigoDAO
         }
     }
 
+    /**
+     * Leer un código asociado a un cliente
+     * Busca mediante el procedimiento almacenado CodigoSelectByCliente.
+     */
     public function readByCliente($idCliente)
     {
         try {
@@ -154,18 +191,19 @@ class CodigoDAO
     }
 
     /**
-     * Reasigna un código de barras usando el procedimiento almacenado
+     * Reasignar un código de barras
+     * Llama al procedimiento almacenado CodigoReassign,
+     * el cual genera internamente un nuevo código para el cliente.
      */
     public function reassignCode($idCliente, $motivo)
     {
         try {
-            // El nuevo procedimiento solo necesita idCliente y motivo
-            // Se encarga internamente de encontrar el código activo
+            // El procedimiento se encarga de localizar el código activo y reasignarlo
             $stmt = $this->conn->prepare("CALL CodigoReassign(?, ?)");
             $result = $stmt->execute([$idCliente, $motivo]);
             
             if ($result) {
-                // Obtener el nuevo código generado
+                // Obtener el nuevo código generado desde la respuesta
                 $nuevoCodigoResult = $stmt->fetch(PDO::FETCH_ASSOC);
                 $nuevoCodigo = $nuevoCodigoResult['NuevoCodigoGenerado'] ?? '';
                 
@@ -188,5 +226,4 @@ class CodigoDAO
             ];
         }
     }
-
 }

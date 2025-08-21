@@ -563,6 +563,7 @@ inputBuscar.addEventListener('input', validarBotonBuscarTarjeta);
 // Validar al cargar
 validarBotonBuscarTarjeta();
 
+
 }
 
 

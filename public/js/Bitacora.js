@@ -1,3 +1,19 @@
+/**
+ * ============================
+ * Gestión de Bitácora de Usuarios
+ * ============================
+ *
+ * Funciones principales:
+ * - Cargar la bitácora de usuarios desde el backend.
+ * - Mostrar los registros en tabla HTML.
+ * - Calcular duración de sesiones.
+ * - Exportar la tabla a PDF y Excel.
+ */
+
+/**
+ * Espera a que el contenedor de la tabla esté disponible en el DOM
+ * antes de cargar los datos de la bitácora.
+ */
 function esperarContenedorYcargar() {
   const contenedor = document.getElementById("contenedorTabla");
 
@@ -10,11 +26,18 @@ function esperarContenedorYcargar() {
   cargarBitacora();
 }
 
+// Ejecutar cuando se cargue el DOM
 document.addEventListener("DOMContentLoaded", esperarContenedorYcargar);
 
+/**
+ * Carga los registros de bitácora desde el backend,
+ * construye la tabla y la inserta en el contenedor.
+ */
 async function cargarBitacora() {
   try {
-    const res = await fetch(`http://${location.hostname}/CRM_INT/CRM/controller/BitacoraController.php?action=readAll`);
+    const res = await fetch(
+      `http://${location.hostname}/CRM_INT/CRM/controller/BitacoraController.php?action=readAll`
+    );
 
     const text = await res.text();
     console.log("📦 Respuesta cruda:", text);
@@ -28,6 +51,12 @@ async function cargarBitacora() {
       return;
     }
 
+    /**
+     * Calcula la duración de la sesión a partir de la hora de entrada y salida.
+     * @param {string} horaEntrada - Hora de entrada en formato HH:mm:ss
+     * @param {string} horaSalida - Hora de salida en formato HH:mm:ss
+     * @returns {string} Duración en formato `Xh Xm Xs` o `EN CURSO`
+     */
     function calcularDuracion(horaEntrada, horaSalida) {
       if (!horaSalida || horaSalida === "00:00:00") return "EN CURSO";
 
@@ -47,6 +76,7 @@ async function cargarBitacora() {
       return `${horas}h ${minutos}m ${segundos}s`;
     }
 
+    // Construcción dinámica de la tabla
     let tablaHTML = `
       <table id="tablaBitacora" border="1" cellpadding="5" cellspacing="0">
         <thead>
@@ -59,9 +89,10 @@ async function cargarBitacora() {
           </tr>
         </thead>
         <tbody>
-          ${json.data.map(b => {
-            const duracion = calcularDuracion(b.horaEntrada, b.horaSalida);
-            return `
+          ${json.data
+            .map((b) => {
+              const duracion = calcularDuracion(b.horaEntrada, b.horaSalida);
+              return `
             <tr>
               <td>${b.nombreUsuario}</td>
               <td>${b.horaEntrada}</td>
@@ -70,10 +101,11 @@ async function cargarBitacora() {
               <td>${duracion}</td>
             </tr>
             `;
-          }).join("")}
+            })
+            .join("")}
         </tbody>
       </table>
-`;
+    `;
 
     contenedor.innerHTML = tablaHTML;
   } catch (e) {
@@ -83,6 +115,9 @@ async function cargarBitacora() {
   }
 }
 
+/**
+ * Exporta la tabla de bitácora a PDF usando jsPDF y autoTable.
+ */
 function exportToPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -101,14 +136,17 @@ function exportToPDF() {
   }
 
   doc.autoTable({
-    head: [[...Array.from(table.rows[0].cells).map(th => th.innerText)]],
+    head: [[...Array.from(table.rows[0].cells).map((th) => th.innerText)]],
     body: rows,
-    startY: 20
+    startY: 20,
   });
 
   doc.save("bitacora.pdf");
 }
 
+/**
+ * Exporta la tabla de bitácora a Excel (formato .xls).
+ */
 function exportToExcel() {
   const table = document.getElementById("tablaBitacora");
   if (!table) return;
@@ -119,4 +157,3 @@ function exportToExcel() {
   a.download = "bitacora.xls";
   a.click();
 }
-

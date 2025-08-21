@@ -1,4 +1,8 @@
-/* 🚀 LOGIN ULTRA PREMIUM - VERSIÓN ENAMORANTE 💖 */
+/* Login.css — documentación in-situ
+   Propósito: estilos del formulario de inicio de sesión. Diseño moderno,
+   centrado y responsive con énfasis en estado, accesibilidad y consistencia
+   visual. 
+*/
 :root {
   --amarillo: #f4b400;
   --dorado: #ffd700;
@@ -20,6 +24,11 @@
   --resplandor-dorado: 0 0 40px rgba(244, 180, 0, 0.4);
 }
 
+/* -----------------------------
+  Reset y configuración base
+  Reglas globales que normalizan box-sizing y márgenes.
+  Mantener al inicio para evitar surprises en layouts.
+*/
 /* 🎭 Reset y configuración base */
 * {
   margin: 0;
@@ -27,6 +36,12 @@
   box-sizing: border-box;
 }
 
+/* -----------------------------
+  Fondo y layout del body
+  Aquí se define el fondo principal (gradiente) y el centrado absoluto
+  del contenedor de login. En móviles se fuerza fondo blanco y se ocultan
+  las partículas para mejorar rendimiento.
+*/
 /* 🌌 FONDO UNIVERSAL - CENTRADO ABSOLUTO */
 body {
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
@@ -110,6 +125,11 @@ body::after {
   }
 }
 
+/* -----------------------------
+  Contenedor principal `.login-container`
+  Contenedor centrado y con ancho máximo. Aquí puedes controlar el tamaño
+  máximo del formulario sin tocar la tarjeta interna.
+*/
 /* 🏆 CONTENEDOR MÁS ESTRECHO - ELEGANTE Y CENTRADO */
 .login-container {
   width: 100%;
@@ -141,6 +161,11 @@ body::after {
   }
 }
 
+/* -----------------------------
+  Tarjeta `.login-card`
+  Estilos principales de la tarjeta: borde, sombra y máscara dorada.
+  Evitar usar `overflow:hidden` que pueda ocultar botones o errores.
+*/
 /* 💎 TARJETA MÁS ESTRECHA - PROPORCIÓN PERFECTA */
 .login-card {
   background: var(--blanco);
@@ -226,6 +251,11 @@ body::after {
   border-color: rgba(244, 180, 0, 0.3);
 }
 
+/* -----------------------------
+  Logo y elementos visuales
+  `.logo-container`, `.logo` y `.logo-bastos` definen tamaños y animación.
+  Mantener proporciones por responsive para evitar distorsión.
+*/
 /* 🏮 LOGO ELEGANTE */
 .logo-container {
   text-align: center;
@@ -293,6 +323,11 @@ body::after {
   filter: drop-shadow(0 16px 40px rgba(244, 180, 0, 0.6));
 }
 
+/* -----------------------------
+  Header de la tarjeta
+  Título principal y línea decorativa con animación. Usar h2 para SEO
+  y accesibilidad, y mantener contraste suficiente con el fondo.
+*/
 /* 🎯 HEADER ELEGANTE */
 .header {
   text-align: center;
@@ -353,6 +388,11 @@ body::after {
   line-height: 1.3;
 }
 
+/* -----------------------------
+  Formulario `.login-form` y grupos de control
+  `.form-group` y `.input-group` organizan inputs/labels. Validaciones
+  y estados visuales se controlan con clases (.success, .error).
+*/
 /* 📝 FORMULARIO */
 .login-form {
   width: 100%;
@@ -377,6 +417,11 @@ body::after {
   text-shadow: 0 0 10px rgba(244, 180, 0, 0.3);
 }
 
+/* -----------------------------
+  Inputs y placeholders
+  `.input-field` y reglas de focus proporcionan feedback visual. Si añades
+  nuevos inputs, reutiliza estas clases para mantener consistencia.
+*/
 /* 💛 INPUT FIELDS ELEGANTES */
 .input-group {
   position: relative;
@@ -446,6 +491,11 @@ body::after {
   letter-spacing: clamp(0.3px, 0.08vw, 0.5px);
 }
 
+/* -----------------------------
+  Botón principal `.btn-primary`
+  Estilos del CTA. Mantener interacción hover/active y evitar cambios de
+  anchura dinámicos que rompan el layout.
+*/
 /* 🚀 BOTÓN MÁS ESTRECHO - PROPORCIÓN PERFECTA */
 .btn-primary {
   width: 100%;
@@ -495,6 +545,11 @@ body::after {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* -----------------------------
+  Responsive y media queries
+  Reglas por breakpoints para móviles y tablets. Se desactivan animaciones
+  y partículas en pantallas pequeñas para mejorar rendimiento.
+*/
 /* 🎯 DISEÑO UNIVERSAL - FUNCIONA EN CUALQUIER ZOOM Y PANTALLA */
 /* Sin media queries complejas - Solo solución universal */
 
@@ -765,6 +820,12 @@ body::after {
   }
 }
 
+/* 🎯 VALIDACIONES Y ESTADOS */
+/* -----------------------------
+  Validaciones visuales
+  Estados CSS para inputs válidos/invalidos y mensajes de error. JS solo
+  alterna clases o atributos (no manipular estilos directamente si se puede).
+*/
 /* 🎯 VALIDACIONES Y ESTADOS */
 .input-field:valid:not(:placeholder-shown),
 .form-group input:valid:not(:placeholder-shown) {

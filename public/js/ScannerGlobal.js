@@ -89,4 +89,5 @@
 
   // Limpia si se pierde el foco de la pestaña
   window.addEventListener('blur', reset);
+  
 })();

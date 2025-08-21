@@ -5,42 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CompraView</title>
+    <!-- Estilos propios de esta vista -->
     <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Compra.css">
+    <!-- Íconos de Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 
 <body>
     <div class="compra-layout">
+        <!-- Barra decorativa amarilla superior -->
         <div class="compra-barra-amarilla"></div>
         <div class="template-container">
 
+            <!-- Bloque principal donde se selecciona la acción -->
             <div class="compra-bloque-inicio">
                 <div class="compra-header-linea">
+                    <!-- Mensaje de error dinámico -->
                     <div id="compraMensaje" class="mensaje-error"></div>
+
+                    <!-- Título y botones de acción -->
                     <div class="compra-titulo">Elije una opción</div>
                     <button class="compra-btn-opcion" id="compraOpcionCompra">Compra</button>
                     <button class="compra-btn-opcion" id="compraOpcionDescuento">Descuento</button>
                     <button class="compra-btn-opcion" id="compraOpcionExpress" style="display:none;">Express</button>
 
+                    <!-- Input para buscar cliente por número de tarjeta -->
                     <div class="compra-input-container">
                         <input type="number" class="compra-input-id" id="compraInputId" placeholder="# de Tarjeta">
-                        <!-- Ícono de búsqueda que aparece solo cuando se está en modo "Acumular" -->
+                        <!-- Botón de búsqueda rápido (solo se muestra en modo “Acumular”) -->
                         <button class="compra-btn-buscar-icon" id="compraBtnBuscarIcon" style="display: none;"
                             title="Buscar otra tarjeta">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
+                    <!-- Botón para buscar la tarjeta -->
                     <button class="compra-btn-buscar" id="compraBtnBuscar">Buscar</button>
                 </div>
+
+                <!-- Texto de ayuda para el usuario -->
                 <div class="compra-indicacion" id="compraIndicacion">
                     <i class="bi bi-info-circle"></i>
                     Selecciona una opción para aplicar una compra o descuento al cliente.
                 </div>
-                <!-- CARD/FORMULARIO SOLO SE MUESTRA SI HAY DATOS -->
+
+                <!-- Formulario con los datos del cliente (se muestra solo cuando hay datos) -->
                 <div class="card shadow mb-4" id="compraCardForm" style="display:none;">
                     <div class="card-body">
                         <form id="compraForm">
                             <div class="row">
+                                <!-- Datos básicos del cliente -->
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">ID</label>
                                     <input type="text" id="id" class="form-control" readonly>
@@ -75,10 +88,12 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <!-- Campo para acumular una compra -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Acumular Compra</label>
                                     <input type="text" id="cantidadAcumulada" class="form-control">
                                 </div>
+                                <!-- Total acumulado actual del cliente -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Total Actual</label>
                                     <input type="number" id="totalActual" class="form-control" readonly>
@@ -87,7 +102,8 @@
                         </form>
                     </div>
                 </div>
-                <!-- HISTORIAL DE COMPRAS DEL CLIENTE -->
+
+                <!-- Sección para mostrar el historial de compras del cliente -->
                 <div id="historialCompras" style="margin-top: -1.5em; width:100% ; 
                     height: 100px; min-height: 100px; 
                     overflow-y: auto; overflow-x: auto; 
@@ -97,10 +113,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- Barra decorativa lateral derecha -->
         <div class="compra-barra-derecha"></div>
     </div>
 
-    <!-- Modal de Cumpleaños -->
+    <!-- Modal que aparece cuando un cliente está de cumpleaños -->
     <div class="modal fade" id="modalCumpleanos" tabindex="-1" aria-labelledby="modalCumpleanosLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -115,6 +133,7 @@
                     <div class="mb-3">
                         <i class="fas fa-birthday-cake" style="font-size: 3rem; color: #f9c41f;"></i>
                     </div>
+                    <!-- Nombre del cumpleañero -->
                     <h4 class="fw-bold mb-3" id="nombreCumpleanero" style="color: #000;"></h4>
                     <p class="lead mb-4" style="color: #555;">
                         ¡Está celebrando su cumpleaños esta semana! 🎊
@@ -128,6 +147,7 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Cerrar
                     </button>
+                    <!-- Botón para ir a la sección de cumpleaños -->
                     <button type="button" class="btn btn-primary" id="btnIrCumpleanos"
                         style="background: #f9c41f; border-color: #f9c41f; color: #000; font-weight: bold;">
                         <i class="fas fa-birthday-cake"></i> Ir a Cumpleaños
@@ -137,7 +157,7 @@
         </div>
     </div>
 
-    <!-- ⬇️ Modal Express – colócalo después del modal de cumpleaños -->
+    <!-- Modal Express para mandar correo rápido a un cliente -->
     <div class="modal fade" id="modalExpress" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered">
             <div class="modal-content" style="border:3px solid var(--amarillo);border-radius:15px;">
@@ -153,6 +173,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center" style="border-top:2px solid var(--amarillo);">
+                    <!-- Botón que dispara el envío de correo -->
                     <button type="button" class="btn btn-primary" id="btnEnviarCorreoExpress"
                         style="background:var(--amarillo);border-color:var(--amarillo);color:#000;font-weight:bold;">
                         <i class="bi bi-envelope-fill"></i> Enviar correo
@@ -162,9 +183,12 @@
         </div>
     </div>
 
-
+    <!-- Scripts usados en esta vista -->
+    <!-- Confeti para efectos visuales -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lógica propia de compras -->
     <script src="/CRM_INT/CRM/public/js/Compra.js"></script>
+    <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </body>
 

@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // -------------------------------
   // 🔹 Referencias a elementos del DOM
   // -------------------------------
-  const loginForm = document.getElementById("loginForm");     // Formulario de login
-  const emailInput = document.getElementById("email");        // Campo usuario/email
-  const passwordInput = document.getElementById("password");  // Campo contraseña
-  const loginBtn = document.getElementById("loginBtn");       // Botón de login
-  const emailError = document.getElementById("emailError");   // Mensaje error usuario
+  const loginForm = document.getElementById("loginForm"); // Formulario de login
+  const emailInput = document.getElementById("email"); // Campo usuario/email
+  const passwordInput = document.getElementById("password"); // Campo contraseña
+  const loginBtn = document.getElementById("loginBtn"); // Botón de login
+  const emailError = document.getElementById("emailError"); // Mensaje error usuario
   const passwordError = document.getElementById("passwordError"); // Mensaje error contraseña
 
   // -------------------------------
@@ -101,8 +101,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const usuario = emailInput.value.trim();
     const contrasena = passwordInput.value;
 
-    setLoadingState(true);      // Poner botón en estado cargando
-    removeExistingErrors();     // Limpiar errores previos
+    setLoadingState(true); // Poner botón en estado cargando
+    removeExistingErrors(); // Limpiar errores previos
 
     // Construir datos para enviar
     const formData = new FormData();
@@ -312,4 +312,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   `;
   document.head.appendChild(style);
+
+  const togglePassBtn = document.getElementById("togglePass");
+  if (togglePassBtn) {
+    togglePassBtn.addEventListener("click", () => {
+      const isHidden = passwordInput.type === "password";
+      passwordInput.type = isHidden ? "text" : "password";
+
+      // Cambiar ícono
+      const icon = togglePassBtn.querySelector("i");
+      icon.className = isHidden ? "bi bi-eye-slash-fill" : "bi bi-eye-fill";
+
+      togglePassBtn.setAttribute(
+        "aria-label",
+        isHidden ? "Ocultar contraseña" : "Mostrar contraseña"
+      );
+    });
+  }
 });

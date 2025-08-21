@@ -1,3 +1,23 @@
+/* Historial de Reasignaciones: alto fijo y scroll vertical */
+#historialReasignaciones {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+#historialReasignaciones::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Scroll invisible pero funcional en todas las tablas con scroll */
+.table-responsive {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+.table-responsive::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 /* Cliente.css - versión moderna con fondo decorativo y sombras avanzadas */
 :root {
   --amarillo: #f9c41f;

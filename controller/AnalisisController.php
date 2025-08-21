@@ -124,8 +124,8 @@ try {
             break;
         case 'clientesInactivos':
             // Define el período de inactividad (en días). Para pruebas, se usa un valor muy bajo (30 segundos)
-            //$diasInactivo = 30; // <--- CAMBIA AQUÍ EL PERÍODO
-            $diasInactivo = 0.0003; // 30 segundos PARA PRUEBA
+            $diasInactivo = 30; // <--- CAMBIA AQUÍ EL PERÍODO
+            //$diasInactivo = 0.0003; // 30 segundos PARA PRUEBA
 
             $clienteDAO = new ClienteDAO($db);
             $compraDAO = new CompraDAO($db);

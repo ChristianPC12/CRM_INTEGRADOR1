@@ -4,15 +4,33 @@
 require_once 'ClienteDTO.php';
 require_once 'ClienteMapper.php';
 
+/**
+ * Clase ClienteDAO
+ *
+ * Objeto de Acceso a Datos (DAO) para la entidad Cliente.
+ * Se encarga de realizar todas las operaciones de inserción, lectura,
+ * actualización y eliminación en la base de datos relacionadas con clientes.
+ * Utiliza procedimientos almacenados para la mayoría de las operaciones
+ * y mappers para transformar los resultados en objetos DTO.
+ */
 class ClienteDAO
 {
+    // Conexión a la base de datos
     private $conn;
 
+    /**
+     * Constructor
+     * Recibe una conexión PDO y la asigna a la clase.
+     */
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
+    /**
+     * Crear un nuevo cliente
+     * Inserta un cliente en la base de datos mediante el procedimiento almacenado ClienteCreate.
+     */
     public function create($cliente)
     {
         try {
@@ -28,6 +46,7 @@ class ClienteDAO
                 $cliente->gustosEspeciales
             ]);
         } catch (PDOException $e) {
+            // Se captura cualquier error PDO y se devuelve en formato JSON
             echo json_encode([
                 'success' => false,
                 'message' => 'Error PDO: ' . $e->getMessage()
@@ -36,6 +55,10 @@ class ClienteDAO
         }
     }
 
+    /**
+     * Leer un cliente por su ID
+     * Retorna un objeto ClienteDTO o null si no se encuentra.
+     */
     public function read($id)
     {
         try {
@@ -49,38 +72,50 @@ class ClienteDAO
         }
     }
 
+    /**
+     * Leer todos los clientes
+     * Retorna una lista de ClienteDTO con los clientes obtenidos.
+     * Se calcula también el total histórico de compras de cada cliente.
+     */
     public function readAll()
-{
-    try {
-        $stmt = $this->conn->prepare("CALL ClienteReadAll()");
-        $stmt->execute();
-        $clientes = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // Obtener total histórico manualmente por cliente
-            $row['TotalHistorico'] = $this->obtenerTotalHistoricoPorCliente($row['Id']);
-            $clientes[] = ClienteMapper::mapRowToDTO($row);
+    {
+        try {
+            $stmt = $this->conn->prepare("CALL ClienteReadAll()");
+            $stmt->execute();
+            $clientes = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                // Obtener total histórico manualmente por cliente
+                $row['TotalHistorico'] = $this->obtenerTotalHistoricoPorCliente($row['Id']);
+                $clientes[] = ClienteMapper::mapRowToDTO($row);
+            }
+            return $clientes;
+        } catch (PDOException $e) {
+            error_log("Error al leer todos los clientes: " . $e->getMessage());
+            return [];
         }
-        return $clientes;
-    } catch (PDOException $e) {
-        error_log("Error al leer todos los clientes: " . $e->getMessage());
-        return [];
     }
-}
 
-private function obtenerTotalHistoricoPorCliente($idCliente)
-{
-    try {
-        $stmt = $this->conn->prepare("SELECT IFNULL(SUM(Monto), 0) AS Total FROM compra WHERE IdCliente = ?");
-        $stmt->execute([$idCliente]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['Total'] : 0;
-    } catch (PDOException $e) {
-        error_log("Error al obtener total histórico: " . $e->getMessage());
-        return 0;
+    /**
+     * Obtener el total histórico de compras de un cliente
+     * Consulta la tabla de compra y suma los montos por cliente.
+     */
+    private function obtenerTotalHistoricoPorCliente($idCliente)
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT IFNULL(SUM(Monto), 0) AS Total FROM compra WHERE IdCliente = ?");
+            $stmt->execute([$idCliente]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['Total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error al obtener total histórico: " . $e->getMessage());
+            return 0;
+        }
     }
-}
 
-    
+    /**
+     * Verifica si ya existe un teléfono o correo registrado en otro cliente
+     * Se utiliza un procedimiento almacenado para detectar duplicados.
+     */
     public function existeTelefonoOCorreo($telefono, $correo, $id = null) {
         try {
             $stmt = $this->conn->prepare("CALL ClienteVerificarDuplicados(?, ?, ?)");
@@ -91,7 +126,11 @@ private function obtenerTotalHistoricoPorCliente($idCliente)
              return true;
         }
     }
-    
+
+    /**
+     * Verifica si ya existe una cédula registrada en otro cliente
+     * Se usa un procedimiento almacenado para la verificación.
+     */
     public function existeCedula($cedula, $id = null) {
         try {
             $stmt = $this->conn->prepare("CALL ClienteExisteCedula(?, ?)");
@@ -103,6 +142,10 @@ private function obtenerTotalHistoricoPorCliente($idCliente)
         }
     }
 
+    /**
+     * Actualizar un cliente existente
+     * Modifica los datos de un cliente en la base de datos con el procedimiento almacenado ClienteUpdate.
+     */
     public function update($cliente)
     {
         try {
@@ -125,6 +168,10 @@ private function obtenerTotalHistoricoPorCliente($idCliente)
         }
     }
 
+    /**
+     * Eliminar un cliente por su ID
+     * Utiliza el procedimiento almacenado ClienteDelete.
+     */
     public function delete($id)
     {
         try {

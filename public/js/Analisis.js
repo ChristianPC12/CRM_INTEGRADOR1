@@ -1,5 +1,16 @@
 // public/js/Analisis.js
 
+/**
+ * Script de análisis de clientes y ventas.
+ *
+ * Funcionalidades principales:
+ * - Ranking de clientes frecuentes, inactivos, antiguos y con mayor historial.
+ * - Ranking de residencias frecuentes.
+ * - Estadísticas de ventas por mes y año.
+ * - Gráficos dinámicos con Chart.js.
+ * - Buscador en vivo adaptado a cada tipo de análisis.
+ */
+
 // Guarda el ranking actual para filtrar en vivo
 let datosAnalisisActual = [];
 // Si estamos en modo residencias frecuentes (busca por residencia)
@@ -8,7 +19,9 @@ let modoResidencia = false;
 let lastAnalisisFuncion = mostrarClientesFrecuentes;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Asigna funciones a los botones de análisis
+  /**
+   * === Asignación de eventos a los botones de análisis ===
+   */
   document
     .getElementById("btnClientesFrecuentes")
     .addEventListener("click", () => {
@@ -61,6 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (lastAnalisisFuncion) lastAnalisisFuncion();
     });
 
+  /**
+   * === Buscador general dinámico ===
+   * Filtra la tabla dependiendo del análisis en curso
+   */
   document
   .getElementById("analisisBuscadorGeneral")
   .addEventListener("input", function () {
@@ -107,7 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Detectar parámetro URL para auto-seleccionar sección
+  /**
+   * === Detectar parámetro URL para auto-seleccionar sección ===
+   */
   const urlParams = new URLSearchParams(window.location.search);
   const seccion = urlParams.get('seccion');
   
@@ -157,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /**
  * === ANÁLISIS 1: CLIENTES MÁS FRECUENTES ===
+ * Llama al backend y muestra clientes con más visitas
  */
 async function mostrarClientesFrecuentes() {
   setBotonActivo("btnClientesFrecuentes");
@@ -207,7 +227,7 @@ async function mostrarClientesFrecuentes() {
 }
 
 /**
- * === ANÁLISIS 2: CLIENTES MAYOR HISTORIAL ===
+ * === ANÁLISIS 2: CLIENTES CON MAYOR HISTORIAL DE COMPRAS ===
  */
 async function mostrarClientesMayorHistorial() {
   setBotonActivo("btnClientesMayorHistorial");
@@ -247,6 +267,7 @@ async function mostrarClientesMayorHistorial() {
         `Total histórico: ₡${parseFloat(top[i].totalHistorico).toLocaleString(
           "es-CR"
         )}`,
+
         `Tarjeta: ${top[i].id}`,
       ],
     });
@@ -258,6 +279,7 @@ async function mostrarClientesMayorHistorial() {
 
 /**
  * === ANÁLISIS 3: CLIENTES INACTIVOS ===
+ * Muestra clientes que no han comprado en X días
  */
 async function mostrarClientesInactivos() {
   setBotonActivo("btnClientesInactivos");
@@ -673,7 +695,6 @@ function renderResidenciasFrecuentesTabla(arr) {
 
 /**
  * Gráfico de barras usando Chart.js
- * Parámetros: cont (div contenedor), idCanvas (id del canvas), labels, data, label (del dataset), color, tooltipTitle, tooltipLabel, indexAxis (opcional)
  */
 function renderGraficoBarras({
   cont,
@@ -719,7 +740,6 @@ function renderGraficoBarras({
   });
 }
 
-
 /**
  * Redibuja la tabla de ventas por mes
  */
@@ -759,6 +779,9 @@ function renderTablaVentasPorMes(arr) {
   `;
 }
 
+/**
+ * Muestra análisis de ventas por mes
+ */
 async function mostrarVentasPorMes() {
   setBotonActivo("btnVentasPorMes");
   modoResidencia = false;
@@ -782,7 +805,7 @@ async function mostrarVentasPorMes() {
 
     renderTablaVentasPorMes(ventas);
 
-    // Gráfico (igual que tienes)
+    // Gráfico
     if (ventas.length) {
       const labels = ventas.map(v => `${v.mes} ${v.año}`).reverse();
       const data = ventas.map(v => v.total).reverse();
@@ -821,8 +844,9 @@ async function mostrarVentasPorMes() {
   }
 }
 
-
-
+/**
+ * Muestra análisis de ventas por año
+ */
 async function mostrarVentasPorAnio() {
   setBotonActivo("btnVentasPorAnio");
   modoResidencia = false;
@@ -885,7 +909,9 @@ async function mostrarVentasPorAnio() {
   }
 }
 
-
+/**
+ * Redibuja la tabla de ventas por año
+ */
 function renderTablaVentasPorAnio(arr) {
   const tablaCont = document.getElementById("analisisTablaCont");
   let filas = arr.map((v, i) => {

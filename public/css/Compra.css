@@ -1,4 +1,12 @@
+/*
+  Compra.css
+  ----------
+  - Propósito: estilos específicos para la pantalla de compras (layout, botones, inputs y bloques de interfaz).
+  - Uso: mantener las clases/IDs tal como están en el HTML para que los estilos y las adaptaciones responsive funcionen.
+*/
+
 :root {
+  /* Variables globales de color usadas en esta hoja */
   --amarillo: #f9c41f;
   --negro: #000000;
   --blanco: #ffffff;
@@ -18,6 +26,7 @@ body {
 
 /* Layout principal */
 .compra-layout {
+  /* Contenedor principal que ocupa toda la pantalla y alinea la barra lateral y el contenido */
   display: flex;
   height: 100vh;
   background: var(--blanco);
@@ -25,6 +34,7 @@ body {
 
 /* Barra amarilla izquierda */
 .compra-barra-amarilla {
+  /* Barra decorativa lateral izquierda: color de marca */
   width: 38px;
   background: var(--amarillo);
   box-shadow: 2px 0 12px 0 rgba(0, 0, 0, 0.04);
@@ -33,6 +43,7 @@ body {
 
 /* Contenedor principal con fondo animado */
 .template-container {
+  /* Contenedor flexible que tiene un fondo oscuro animado y contiene el bloque principal */
   flex: 1;
   position: relative;
   overflow: hidden;
@@ -71,6 +82,9 @@ body {
 
 /* Bloque principal */
 .compra-bloque-inicio {
+  /* Bloque principal centrado dentro del template-container
+    - Contiene el formulario/tabla principal de compras.
+    - max-height y max-width limitan el tamaño para mantener la UI contenida. */
   width: 96%;
   max-width: 2500px;
   height: 90%;
@@ -90,6 +104,7 @@ body {
 
 /* Header en una línea */
 .compra-header-linea {
+  /* Header compacto que agrupa título, opciones y buscador en una línea */
   display: flex;
   align-items: center;
   gap: 1.2em;
@@ -101,6 +116,7 @@ body {
 
 /* Título */
 .compra-titulo {
+  /* Título del bloque de compras, estilo uppercase y destacado */
   font-size: 1.3em;
   font-weight: bold;
   letter-spacing: 1px;
@@ -112,6 +128,7 @@ body {
 
 /* Botones de opción */
 .compra-btn-opcion {
+  /* Botones de filtro/selección con estilo pill y estado :hover / .selected */
   background: #f9fafb;
   color: var(--negro);
   border: 1.5px solid var(--amarillo);
@@ -134,6 +151,8 @@ body {
 
 /* Input y botón de búsqueda */
 .compra-input-id {
+  /* Input para ingresar ID o número de orden
+     - Estilo compacto y sin flechas de número para mejor experiencia móvil. */
   border: 1.5px solid #bcbcbc;
   border-radius: 1em;
   padding: 0.5em 1.1em;
@@ -188,6 +207,7 @@ body {
 /* Indicación debajo */
 /* Elimina una de las dos reglas duplicadas y deja solo esta: */
 .compra-indicacion {
+  /* Mensaje informativo que aparece centrado si no hay resultados o para instrucciones */
   text-align: center;
   font-size: 1em;
   color: #666;
@@ -204,6 +224,7 @@ body {
 
 /* Barra derecha */
 .compra-barra-derecha {
+  /* Barra lateral derecha fija (decorativa o para accesos rápidos) */
   position: fixed;
   top: 0;
   right: 0;
@@ -220,6 +241,7 @@ body {
 }
 
 .card.shadow.mb-4 {
+  /* Tarjeta con sombra y borde izquierdo amarillo para resaltar secciones importantes */
   background: var(--blanco);
   box-shadow: 0 0 10px rgba(249, 196, 31, 0.12);
   border-left: 5px solid var(--amarillo);
@@ -231,6 +253,7 @@ body {
 }
 
 .card-body {
+  /* Card body compacto para forms y listados */
   padding: 0.5em 1.2em; /* Más compacto en todos los lados */
   line-height: 1.3; /* Reduce altura de líneas de texto */
 }
@@ -250,6 +273,7 @@ body {
 
 /* ---- Estilo especial para el botón "Acumular" (cuando está activo) ---- */
 .btn-acumular {
+  /* Botón con estilo de éxito para acciones de acumulación */
   background: #28a745 !important; /* Verde Bootstrap */
   color: #fff !important;
   border: none;
@@ -259,6 +283,7 @@ body {
 }
 
 .mensaje-error {
+  /* Mensaje de error oculto por defecto; mostrar añadiendo la clase .show */
   display: none;
   color: #d43b3b;
   font-weight: bold;
@@ -273,6 +298,7 @@ body {
 
 /* Estilos para el botón con ícono de búsqueda */
 .compra-btn-buscar-icon {
+  /* Botón circular superpuesto al input para acciones rápidas */
   position: absolute;
   right: 8px;
   top: 50%;
@@ -309,6 +335,7 @@ body {
 
 /* Para pantallas menores o iguales a 768px (móvil) */
 @media (max-width: 768px) {
+  /* Ajustes para móviles: convertir layout a columna y adaptar tamaños */
   html,
   body {
     overflow-y: auto;

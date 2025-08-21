@@ -1,17 +1,36 @@
 <?php
+// Archivo: model.usuario/UsuarioDAO.php
 require_once 'UsuarioDTO.php';
 require_once 'UsuarioMapper.php';
 
+/**
+ * Clase UsuarioDAO
+ *
+ * Objeto de Acceso a Datos (DAO) para la entidad Usuario.
+ * Gestiona las operaciones CRUD sobre la base de datos utilizando
+ * procedimientos almacenados (SP).
+ */
 class UsuarioDAO
 {
+    // Conexión a la base de datos
     private $conn;
 
+    /**
+     * Constructor
+     * @param PDO $db Conexión PDO activa
+     */
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
-    // $omitPassword: true (default) para ocultar hash, false para traerlo (solo login)
+    /**
+     * Obtener todos los usuarios
+     *
+     * @param bool $omitPassword True (por defecto) para ocultar el hash de contraseña,
+     *                           False para incluirlo (ej. login).
+     * @return UsuarioDTO[] Lista de usuarios
+     */
     public function readAll($omitPassword = true)
     {
         try {
@@ -28,6 +47,12 @@ class UsuarioDAO
         }
     }
 
+    /**
+     * Crear un nuevo usuario
+     *
+     * @param UsuarioDTO $usuario Objeto con los datos del usuario
+     * @return bool|string True si se creó, mensaje de error si falla
+     */
     public function create($usuario)
     {
         try {
@@ -42,6 +67,9 @@ class UsuarioDAO
         }
     }
 
+    /**
+     * Eliminar un usuario por su ID
+     */
     public function delete($id)
     {
         try {
@@ -53,7 +81,14 @@ class UsuarioDAO
         }
     }
 
-    // $omitPassword también lo puedes usar aquí si quieres
+    /**
+     * Obtener un usuario por su ID
+     *
+     * @param int $id Identificador del usuario
+     * @param bool $omitPassword True para no incluir contraseña (default),
+     *                           False para incluirla.
+     * @return UsuarioDTO|null Usuario encontrado o null si no existe
+     */
     public function read($id, $omitPassword = true)
     {
         try {
@@ -67,6 +102,12 @@ class UsuarioDAO
         }
     }
 
+    /**
+     * Actualizar un usuario existente
+     *
+     * @param UsuarioDTO $usuario Objeto con los datos actualizados
+     * @return bool True si se actualizó correctamente
+     */
     public function update($usuario)
     {
         try {

@@ -1,29 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("loginForm");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const loginBtn = document.getElementById("loginBtn");
-  const emailError = document.getElementById("emailError");
-  const passwordError = document.getElementById("passwordError");
+  // -------------------------------
+  // 🔹 Referencias a elementos del DOM
+  // -------------------------------
+  const loginForm = document.getElementById("loginForm");     // Formulario de login
+  const emailInput = document.getElementById("email");        // Campo usuario/email
+  const passwordInput = document.getElementById("password");  // Campo contraseña
+  const loginBtn = document.getElementById("loginBtn");       // Botón de login
+  const emailError = document.getElementById("emailError");   // Mensaje error usuario
+  const passwordError = document.getElementById("passwordError"); // Mensaje error contraseña
 
+  // -------------------------------
+  // 🔹 Validaciones en inputs (usuario y contraseña)
+  // -------------------------------
   emailInput.addEventListener("input", validateEmail);
   emailInput.addEventListener("blur", validateEmail);
   passwordInput.addEventListener("input", validatePassword);
   passwordInput.addEventListener("blur", validatePassword);
 
+  // -------------------------------
+  // 🔹 Evento submit del formulario
+  // -------------------------------
   loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir recarga
 
-    if (loginBtn.disabled) return;
+    if (loginBtn.disabled) return; // Evitar si el botón está deshabilitado
 
     const isEmailValid = validateEmail();
     const isPasswordValid = validatePassword();
 
     if (isEmailValid && isPasswordValid) {
-      handleLogin();
+      handleLogin(); // Ejecuta login
     }
   });
 
+  // -------------------------------
+  // 🔹 Validación usuario
+  // -------------------------------
   function validateEmail() {
     const email = emailInput.value.trim();
     const formGroup = emailInput.closest(".form-group");
@@ -39,6 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // -------------------------------
+  // 🔹 Validación contraseña
+  // -------------------------------
   function validatePassword() {
     const password = passwordInput.value;
     const formGroup = passwordInput.closest(".form-group");
@@ -54,6 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // -------------------------------
+  // 🔹 Mostrar/Ocultar errores
+  // -------------------------------
   function showError(errorElement, message) {
     errorElement.textContent = message;
     errorElement.classList.add("show");
@@ -64,6 +82,9 @@ document.addEventListener("DOMContentLoaded", function () {
     errorElement.classList.remove("show");
   }
 
+  // -------------------------------
+  // 🔹 Cambiar estado visual de form-group
+  // -------------------------------
   function setFormGroupState(formGroup, state) {
     formGroup.classList.remove("success", "error");
     if (state) {
@@ -71,20 +92,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // -------------------------------
+  // 🔹 Lógica de login con fetch
+  // -------------------------------
   function handleLogin() {
-    // Limpiar el rol antes de intentar login
+    // Limpiar rol antes de intentar login
     localStorage.removeItem("rolUsuario");
     const usuario = emailInput.value.trim();
     const contrasena = passwordInput.value;
 
-    setLoadingState(true);
-    removeExistingErrors();
+    setLoadingState(true);      // Poner botón en estado cargando
+    removeExistingErrors();     // Limpiar errores previos
 
+    // Construir datos para enviar
     const formData = new FormData();
     formData.append("action", "login");
     formData.append("usuario", usuario);
     formData.append("contrasena", contrasena);
 
+    // Petición al backend
     fetch("controller/UsuarioController.php", {
       method: "POST",
       body: formData,
@@ -95,26 +121,29 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🧾 Texto recibido:", text);
 
         try {
-          const jsonText = text.trim().match(/^{.*}$/s)?.[0];
+          const jsonText = text.trim().match(/^{.*}$/s)?.[0]; // Buscar JSON
           if (!jsonText) throw new Error("No se encontró JSON válido");
 
           const data = JSON.parse(jsonText);
 
           if (data.success) {
+            // Guardar rol si existe
             if (data.rol) {
               localStorage.setItem("rolUsuario", data.rol);
             } else {
               localStorage.removeItem("rolUsuario");
             }
 
+            // Guardar nombre si existe
             if (data.usuario) {
               localStorage.setItem("nombreUsuario", data.usuario);
             } else {
               localStorage.removeItem("nombreUsuario");
             }
 
-            showSuccessMessage();
+            showSuccessMessage(); // Mostrar mensaje de éxito
 
+            // Redirigir después de 1.5s
             setTimeout(() => {
               window.location.href =
                 data.redirect || "/CRM_INT/CRM/index.php?view=dashboard";
@@ -132,10 +161,13 @@ document.addEventListener("DOMContentLoaded", function () {
         showLoginError("Error de conexión. Por favor, intenta nuevamente.");
       })
       .finally(() => {
-        setLoadingState(false);
+        setLoadingState(false); // Volver a estado normal
       });
   }
 
+  // -------------------------------
+  // 🔹 Estado de carga en botón login
+  // -------------------------------
   function setLoadingState(isLoading) {
     loginBtn.disabled = isLoading;
     loginBtn.classList.toggle("loading", isLoading);
@@ -146,6 +178,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // -------------------------------
+  // 🔹 Mensaje éxito al loguear
+  // -------------------------------
   function showSuccessMessage() {
     const btnText = loginBtn.querySelector(".btn-text");
     if (btnText) {
@@ -162,6 +197,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // -------------------------------
+  // 🔹 Mostrar error de login
+  // -------------------------------
   function showLoginError(message) {
     removeExistingErrors();
 
@@ -182,6 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loginForm.insertBefore(errorDiv, loginForm.firstChild);
 
+    // Quitar mensaje después de 5s
     setTimeout(() => {
       if (errorDiv.parentNode) {
         errorDiv.style.animation = "fadeOut 0.3s ease-out";
@@ -194,11 +233,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 5000);
   }
 
+  // -------------------------------
+  // 🔹 Eliminar errores previos
+  // -------------------------------
   function removeExistingErrors() {
     const existingErrors = document.querySelectorAll(".login-error");
     existingErrors.forEach((error) => error.remove());
   }
 
+  // -------------------------------
+  // 🔹 Limpiar formulario (reset)
+  // -------------------------------
   function clearForm() {
     emailInput.value = "";
     passwordInput.value = "";
@@ -209,9 +254,14 @@ document.addEventListener("DOMContentLoaded", function () {
     removeExistingErrors();
   }
 
+  // Exponer función para usar globalmente
   window.clearLoginForm = clearForm;
 
+  // -------------------------------
+  // 🔹 Atajos de teclado
+  // -------------------------------
   document.addEventListener("keydown", function (e) {
+    // Enter en email o password → enviar formulario
     if (
       e.key === "Enter" &&
       (e.target === emailInput || e.target === passwordInput)
@@ -220,11 +270,15 @@ document.addEventListener("DOMContentLoaded", function () {
       loginForm.dispatchEvent(new Event("submit"));
     }
 
+    // Escape → limpiar formulario
     if (e.key === "Escape") {
       clearForm();
     }
   });
 
+  // -------------------------------
+  // 🔹 Animaciones y estilos dinámicos
+  // -------------------------------
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fadeOut {

@@ -1,4 +1,14 @@
-/* Cumple.css - Modernizado con diseño avanzado y efectos elegantes */
+/*
+  Cumple.css
+  ---------
+  - Propósito: estilos para la sección de "Cumpleaños" (listados, tarjetas, formularios y envíos de correo).
+  - Estructura: organizado por bloques: variables, layout, fondos, cards, botones, alerts, tablas, formularios, badges, elementos especiales, animaciones y responsive.
+  - Uso: conservar las clases e IDs en el HTML para que los estilos y comportamientos responsive funcionen correctamente.
+*/
+
+/* ===== VARIABLES GLOBALES =====
+   Definir colores, variantes y sombras aquí para facilitar cambios de tema.
+*/
 :root {
   /* === Colores principales === */
   --amarillo: #f9c41f;
@@ -35,6 +45,9 @@
 
 /* === LAYOUT BASE - Modernizado === */
 body {
+  /* Layout principal: se usa display:flex para permitir sidebar fijo y contenido flexible.
+     - background y overflow-x están ajustados para evitar scroll horizontal inesperado.
+     - Usar con cuidado los !important si se necesita sobrescribir en otras hojas. */
   margin: 0 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
   display: flex !important;
@@ -51,6 +64,9 @@ body::-webkit-scrollbar {
 /* Fondos decorativos modernos */
 body::before,
 body::after {
+  /* Pseudo-elementos que añaden fondos decorativos en la página.
+     - Se usan para dar profundidad y color sin añadir elementos HTML.
+     - pointer-events: none para no interferir con la interacción. */
   content: "";
   position: fixed;
   z-index: -1 !important;
@@ -79,6 +95,8 @@ body::after {
   filter: blur(1px);
 }
 .content {
+  /* Área principal donde se renderizan tarjetas y listas.
+     - margin-left: 220px asume un sidebar; ajustar si la estructura del layout cambia. */
   margin-left: 220px !important;
   padding: 32px !important;
   flex: 1 !important;
@@ -93,6 +111,8 @@ body::after {
 
 /* === CARDS - Modernizadas === */
 .card {
+  /* Tarjetas: fondo semitransparente, bordes redondeados y sombra elevada.
+     - Reutilizar .card para paneles y formularios para consistencia visual. */
   border: none !important;
   border-radius: 20px !important;
   background: var(--fondo-blanco) !important;
@@ -133,6 +153,8 @@ body::after {
 }
 
 .card-header {
+  /* Encabezado de tarjeta: degradado oscuro y texto destacado en amarillo.
+     - Incluye iconos con efecto de sombra para dar énfasis. */
   background: linear-gradient(135deg, var(--negro) 0%, #2c2c2c 100%) !important;
   color: var(--blanco) !important;
   font-weight: 700 !important;
@@ -185,6 +207,7 @@ body::after {
 
 /* === BOTONES - Modernizados === */
 .btn {
+  /* Botones globales: estilo moderno con animación de brillo en pseudo-elemento */
   border: none !important;
   border-radius: 12px !important;
   font-weight: 700 !important;
@@ -257,6 +280,7 @@ body::after {
 }
 /* === ALERTS - Modernizadas === */
 .alert {
+  /* Alertas con fondo y borde suave; pseudo-elemento superior para acento */
   border: none !important;
   border-radius: 16px !important;
   box-shadow: var(--sombra-suave) !important;
@@ -311,6 +335,7 @@ body::after {
 .table,
 .table-bordered,
 .table-hover {
+  /* Tablas estilizadas: fondo claro, bordes suaves y headers sticky para scroll */
   background: var(--fondo-blanco) !important;
   border-radius: 16px !important;
   overflow: hidden !important;
@@ -373,6 +398,7 @@ body::after {
 
 /* Contenedor de tabla con scroll horizontal modernizado */
 .table-responsive {
+  /* Contenedor responsivo para tablas: permite scroll-x en dispositivos pequeños y custom scrollbars */
   border-radius: 16px !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
@@ -401,6 +427,7 @@ body::after {
 
 /* === FORMULARIOS - Modernizados === */
 .form-control {
+  /* Inputs del formulario: bordes visibles y foco destacado para accesibilidad */
   border-radius: 12px !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
   padding: 14px 16px !important;
@@ -440,6 +467,7 @@ textarea:not(:focus)[value=""] {
   border-color: rgba(249, 196, 31, 0.3) !important;
   box-shadow: inset 0 2px 4px rgba(249, 196, 31, 0.1) !important;
 }
+  /* Estilos para campos vacíos: resaltan visualmente para indicar que se deben completar */
 
 .form-control:not(:focus):placeholder-shown:hover,
 .form-control:not(:focus):invalid:hover,
@@ -552,6 +580,7 @@ textarea:not(:focus)[value=""]:hover {
 /* === MEJORAS ESPECÍFICAS PARA ENVÍO DE CORREO === */
 /* Contenedor del formulario de correo con mejor contraste */
 .card-body {
+  /* Card-body: usado como contenedor para formularios de felicitación, con overlay sutil en hover */
   position: relative;
 }
 td.correo {
@@ -671,6 +700,7 @@ td.contacto {
 
 /* === ELEMENTOS ESPECIALES - Modernizados === */
 #rangoSemana {
+  /* Elemento destacado para seleccionar rango de semana con efecto de brillo al hover */
   background: linear-gradient(135deg, var(--amarillo), var(--naranja)) !important;
   color: var(--negro) !important;
   font-weight: 700 !important;
@@ -714,6 +744,7 @@ td.contacto {
 
 /* === ANIMACIONES - Mejoradas === */
 #recordatorioLlamadas {
+  /* Animación fadeInUp para aparecer contenido con suavidad */
   animation: fadeInUp 0.6s ease-out !important;
 }
 
@@ -779,6 +810,7 @@ td.contacto {
 }
 /* === RESPONSIVE BREAKPOINTS - Modernizados === */
 @media (max-width: 992px) {
+  /* Breakpoints: ajustes para tablet y móvil grande */
   .content {
     margin-left: 0 !important;
     padding: 24px 20px !important;

@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   
+    
     // Redirección desde los títulos
     document.querySelectorAll(".guia-link-seccion").forEach((enlace) => {
       enlace.style.cursor = "pointer";

@@ -1,3 +1,10 @@
+/*
+  Bitacora.css
+  ----------
+  - Propósito: estilos específicos para la página de bitácora (fondo, contenedor principal, tablas y botones).
+  - Uso: mantener las clases tal cual en el HTML para que los estilos y comportamientos responsivos se apliquen correctamente.
+*/
+
 body {
   background: #838886 !important;
   font-family: "Segoe UI", sans-serif;

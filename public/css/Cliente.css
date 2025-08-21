@@ -1,5 +1,34 @@
+/*
+Cliente.css
+---------
+- Propósito: estilos para la sección de clientes (lista, tarjetas, tablas, botones y buscador).
+- Uso: mantener las clases descritas en el HTML para que el diseño y el comportamiento responsive se apliquen.
+- Variables: se usan variables CSS en :root (colores y sombras) para mantener coherencia visual.
+*/
+
+
+#historialReasignaciones {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+#historialReasignaciones::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Scroll invisible pero funcional en todas las tablas con scroll */
+.table-responsive {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE y Edge */
+}
+.table-responsive::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 /* Cliente.css - versión moderna con fondo decorativo y sombras avanzadas */
 :root {
+  /* Variables globales de color y sombra: cambiar aquí para ajustar la paleta */
   --amarillo: #f9c41f;
   --negro: #121212;
   --blanco: #ffffff;
@@ -22,6 +51,10 @@
 
 /* ==== Layout base modernizado ==== */
 body {
+  /* Contenedor base del layout:
+    - 'display: flex' usado para permitir sidebar fijo a la izquierda.
+    - 'background' usa variable global; si se requiere tema claro, cambiar en :root.
+  */
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
@@ -61,6 +94,7 @@ body::after {
 
 /* ==== Contenido principal modernizado ==== */
 .content {
+  /* Área principal donde se renderiza la tabla y las tarjetas de cliente. */
   margin-left: 220px;
   padding: 24px;
   flex: 1;
@@ -73,6 +107,9 @@ body::after {
 
 /* ==== Botones modernos ==== */
 .btn-primary {
+  /* Botón primario (ej: crear/añadir cliente)
+     - Usar clase .btn-primary en botones principales.
+     - Tiene estados :hover y :focus definidos para accesibilidad visual. */
   background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
   color: var(--negro);
   font-weight: 600;
@@ -97,6 +134,7 @@ body::after {
 }
 
 .btn-danger {
+  /* Botón de peligro/ eliminación */
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: var(--blanco);
   font-weight: 600;
@@ -117,6 +155,8 @@ body::after {
 
 /* ==== Cards modernas ==== */
 .card {
+  /* Tarjetas reutilizables para secciones de contenido
+     - Reutilizar .card para paneles de detalle o formularios. */
   border: none;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.95);
@@ -158,6 +198,7 @@ body::after {
 
 /* Lista de clientes con scroll */
 #clienteLista {
+  /* Contenedor reciclable para listas con desplazamiento interno */
   max-height: 300px;
   overflow-y: auto;
   padding-right: 10px;
@@ -170,6 +211,9 @@ body::after {
 
 /* Tabla con scroll horizontal - Modernizada */
 .table-container {
+  /* Contenedor de tabla responsiva
+     - Mantiene fondo, bordes y sombra.
+     - Utilizar para tablas grandes con scroll-x. */
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -183,6 +227,7 @@ body::after {
 }
 
 .table-container::before {
+  /* Línea decorativa superior para dar consistencia visual con otras tarjetas */
   content: '';
   position: absolute;
   top: 0;
@@ -194,12 +239,14 @@ body::after {
 }
 
 .celda-correo {
+  /* Asegura que direcciones de correo se rompan correctamente en varias líneas */
   white-space: normal;
   word-break: break-word;
   overflow-wrap: break-word;
 }
 
 .table-container table {
+  /* Tabla interna: usar min-width para permitir scroll horizontal en pantallas pequeñas */
   width: 100%;
   table-layout: fixed;
   min-width: 700px;
@@ -211,6 +258,7 @@ body::after {
 
 .table-container th,
 .table-container td {
+  /* Celdas: truncamiento con ellipsis y padding consistente */
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 250px;
@@ -241,6 +289,7 @@ body::after {
 }
 
 .table-container tr:hover td {
+  /* Hover en fila: resalta con degradado y ligero desplazamiento */
   background: linear-gradient(135deg, #fff9e6, #fffbf0);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(249, 196, 31, 0.1);
@@ -266,6 +315,7 @@ body::after {
 }
 
 .codigo-barra {
+  /* Estilo para mostrar códigos o identificadores monoespaciados */
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   background: linear-gradient(135deg, var(--gris-muy-claro), #f1f3f4);
   padding: 6px 12px;
@@ -314,6 +364,7 @@ body::after {
 }
 
 .detalle-reasignacion {
+  /* Panel lateral/mini tarjeta que muestra detalle de reasignación */
   background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
   border-left: 4px solid var(--amarillo);
   border-radius: 0 8px 8px 0;
@@ -327,6 +378,7 @@ body::after {
 }
 
 .alert-sm {
+  /* Alertas pequeñas para mensajes de estado o información contextual */
   padding: 12px 16px;
   font-size: 0.875rem;
   border-radius: 8px;
@@ -355,6 +407,7 @@ body::after {
 }
 
 .badge {
+  /* Badges para estados cortos (ej: 'activo', 'nuevo') */
   font-size: 0.75em;
   padding: 6px 12px;
   border-radius: 12px;
@@ -367,6 +420,7 @@ body::after {
 
 /* Responsive para móviles - Modernizado */
 @media (max-width: 992px) {
+  /* Ajustes en tablet: eliminar margen izquierdo para mostrar contenido a pantalla completa */
   .content {
     margin-left: 0;
     padding: 1rem;
@@ -470,6 +524,7 @@ body::after {
 }
 
 @media (max-width: 480px) {
+  /* Ajustes para móviles pequeños: compactar paddings y tamaños */
     .content {
         padding: 0.5rem;
     }
@@ -497,6 +552,9 @@ body::after {
 
 /* Header de clientes - Modernizado */
 .clientes-header {
+  /* Cabecera específica de la vista de clientes:
+     - Degradado oscuro, borde inferior de marca y padding.
+     - Usar para contener título, buscador y acciones principales. */
     background: linear-gradient(135deg, var(--negro), #1a1a1a) !important;
     border-bottom: 4px solid var(--amarillo);
     padding: 1.5rem 2rem !important;
@@ -520,6 +578,7 @@ body::after {
 }
 
 .titulo-clientes {
+  /* Título destacado en el header de clientes */
     color: var(--amarillo);
     font-weight: 700;
     margin-bottom: 0;
@@ -529,6 +588,8 @@ body::after {
 }
 
 .buscador-clientes {
+  /* Campo buscador principal de la vista de clientes
+     - Tiene placeholder y estados :focus visuales. */
     max-width: 350px;
     min-width: 250px;
     font-weight: 500;

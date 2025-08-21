@@ -73,47 +73,46 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=usuarios"
-                    class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=compras"
-                    class="<?= $vista === 'compras' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=compras" class="<?= $vista === 'compras' ? 'active' : '' ?>">
                     <i class="bi bi-tag"></i> Beneficios
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=codigo"
-                    class="<?= $vista === 'codigo' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=codigo" class="<?= $vista === 'codigo' ? 'active' : '' ?>">
                     <i class="bi bi-upc-scan"></i> Código de barras
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=analisis"
-                    class="<?= $vista === 'analisis' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=analisis" class="<?= $vista === 'analisis' ? 'active' : '' ?>">
                     <i class="bi bi-graph-up-arrow"></i> Análisis
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=cumple"
-                    class="<?= $vista === 'cumple' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=cumple" class="<?= $vista === 'cumple' ? 'active' : '' ?>">
                     <i class="bi bi-gift"></i> Cumpleaños
                     <span id="cumple-badge" style="display:none; margin-left:8px; vertical-align:middle;"></span>
                 </a>
             </li>
 
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=Bitacora"
-                    class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=Bitacora" class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
                     <i class="bi bi-journal-text"></i> Bitácora
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=guia"
-                    class="<?= $vista === 'guia' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=guia" class="<?= $vista === 'guia' ? 'active' : '' ?>">
                     <i class="bi bi-info-circle"></i> Manual de uso
+                </a>
+            </li>
+            <li>
+                <a href="/CRM_INT/CRM/index.php?view=guia2" id="link-guia2"
+                    class="<?= $vista === 'guia2' ? 'active' : '' ?>">
+                    <i class="bi bi-person-badge"></i> Manual de usuario
                 </a>
             </li>
 

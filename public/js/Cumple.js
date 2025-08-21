@@ -878,3 +878,4 @@ seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
     scrollYFocusFormulario();
   }, 300); // Pequeña pausa para que se complete la selección
 };
+

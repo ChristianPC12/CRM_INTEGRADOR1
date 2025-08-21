@@ -256,7 +256,7 @@ const cargarCumples = async () => {
     const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body
+      body,
     });
 
     const data = await res.json();
@@ -265,16 +265,17 @@ const cargarCumples = async () => {
       renderizarTabla(data.data);
       // repinta el rango y actualiza flechas/badge
       mostrarSemanaActual();
-      if (typeof actualizarNavSemanaUI === 'function') actualizarNavSemanaUI();
+      if (typeof actualizarNavSemanaUI === "function") actualizarNavSemanaUI();
     } else {
-      contenedor.innerHTML = `<div class="alert alert-danger text-center">${data.message || 'No se pudo cargar.'}</div>`;
+      contenedor.innerHTML = `<div class="alert alert-danger text-center">${
+        data.message || "No se pudo cargar."
+      }</div>`;
     }
   } catch (error) {
     console.error("Error cargando cumpleaños:", error);
     contenedor.innerHTML = `<div class="alert alert-danger text-center">Error al cargar los cumpleaños.</div>`;
   }
 };
-
 
 const renderizarTabla = (cumples) => {
   const contenedor = document.getElementById("cumpleLista");
@@ -339,20 +340,12 @@ const renderizarTabla = (cumples) => {
     if (!c.correo || c.correo.trim() === "") {
       tieneSinCorreo = true;
       recordatorios += `
-        <li>
-            <i class="fa-solid fa-phone text-warning me-1"></i>
-            <strong>${c.cedula}</strong> - ${c.nombre} → 
-            <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
-            <button 
-                 class="btn btn-sm btn-warning text-black ms-2 btnRegistrarLlamada"
-                 data-id="${c.id}" 
-                 data-nombre="${c.nombre}"
-                 data-telefono="${c.telefono}">
-                 Registrar llamada
-            </button>
-
-        </li>
-        `;
+    <li>
+        <i class="fa-solid fa-phone text-warning me-1"></i>
+        <strong>${c.cedula}</strong> - ${c.nombre} → 
+        <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
+    </li>
+  `;
     }
   });
 

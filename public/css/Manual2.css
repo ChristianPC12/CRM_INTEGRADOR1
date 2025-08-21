@@ -230,3 +230,42 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
   height: 0;
   display: none;                  /* Chrome/Edge/Safari */
 }
+
+/* Posiciona relativo el contenedor para anclar el botón */
+.guia-container { position: relative; }
+
+/* Botón descargar PDF (esquina superior derecha) */
+.manual-download-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .6rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 999px;
+  background: #F9C41F;          /* Amarillo institucional */
+  color: #000;                   /* Texto negro */
+  font-weight: 600;
+  font-size: .9rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.manual-download-btn:hover {
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+}
+
+/* En pantallas pequeñas, que no estorbe: lo bajamos y hacemos el texto más corto */
+@media (max-width: 576px) {
+  .manual-download-btn {
+    top: 10px;
+    right: 10px;
+    padding: .35rem .5rem;
+  }
+  .manual-download-text { display: none; } /* deja solo el ícono en móvil */
+}
+

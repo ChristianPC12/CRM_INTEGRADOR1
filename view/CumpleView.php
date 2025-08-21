@@ -11,7 +11,7 @@
             <!-- Botón semana siguiente -->
             <button id="btnNextSemana" class="btn-nav-week" title="Semana siguiente">&rsaquo;</button>
         </div>
-        
+
     </div>
 
     <div class="card-body p-0">
@@ -22,22 +22,11 @@
             <!-- Aquí JS inyectará la tabla de clientes con cumpleaños -->
             <div id="cumpleLista" class="p-4"></div>
 
-<<<<<<< Updated upstream
             <!-- RECORDATORIO DE LLAMADAS -->
             <div id="recordatorioLlamadas" class="mt-2 mx-4 mb-4 d-none" hidden>
-                   
-                    <ul id="listaRecordatorios" class="mb-0 ps-3 small" hidden></ul>
-=======
-            <!-- Recordatorio de clientes sin correo para llamar -->
-            <div id="recordatorioLlamadas" class="mt-2 mx-4 mb-4 d-none">
-                <div class="alert alert-warning shadow-sm" role="alert">
-                    <h6 class="mb-2 fw-bold">
-                        <i class="fa-solid fa-bell text-danger"></i> Clientes sin correo (llamar por teléfono):
-                    </h6>
-                    <!-- Lista de recordatorios generada con JS -->
-                    <ul id="listaRecordatorios" class="mb-0 ps-3 small"></ul>
-                </div>
->>>>>>> Stashed changes
+
+                <ul id="listaRecordatorios" class="mb-0 ps-3 small" hidden></ul>
+
             </div>
         </div>
     </div>

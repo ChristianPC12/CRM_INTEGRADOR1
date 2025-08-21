@@ -535,7 +535,7 @@ function cargarHistorial() {
                             <th>Nombre</th>
                             <th>CORREO / TELÉFONO</th>
                             <th>Fecha de Cumpleaños</th>
-                            <th>Fecha de Llamada</th>
+                            <th>Fecha de Llamada/Correo</th>
                             <th>Vence</th>
                             <th>Vencido</th>
                         </tr>

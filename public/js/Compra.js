@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
           b.classList.remove("selected");
         }
       });
-      
+
       // Asegurar que Express se mantenga seleccionado
       elements.btnExpress.classList.add("selected");
     } else {
@@ -240,7 +240,9 @@ document.addEventListener("DOMContentLoaded", function () {
         elements.btnBuscar.textContent = "Aplicar";
         elements.btnBuscar.style.background = "#28a745"; // Verde más brillante
         elements.btnBuscar.style.color = "white";
-        elements.btnBuscarIcon.style.display = config.showIcon ? "block" : "none";
+        elements.btnBuscarIcon.style.display = config.showIcon
+          ? "block"
+          : "none";
       } else {
         elements.btnBuscar.textContent = config.buscarText;
         elements.btnBuscar.style.background = config.background;
@@ -254,13 +256,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getSelectedOption() {
     const opciones = [];
-    if (elements.btnCompra.classList.contains("selected")) opciones.push("compra");
-    if (elements.btnDescuento.classList.contains("selected")) opciones.push("descuento");
-    if (elements.btnExpress.classList.contains("selected")) opciones.push("express");
-    
+    if (elements.btnCompra.classList.contains("selected"))
+      opciones.push("compra");
+    if (elements.btnDescuento.classList.contains("selected"))
+      opciones.push("descuento");
+    if (elements.btnExpress.classList.contains("selected"))
+      opciones.push("express");
+
     // Para compatibilidad con código existente, devolver la primera opción no-express
     // o express si es la única seleccionada
-    const nonExpress = opciones.find(op => op !== "express");
+    const nonExpress = opciones.find((op) => op !== "express");
     return nonExpress || (opciones.includes("express") ? "express" : null);
   }
 
@@ -303,17 +308,27 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function handleDescuento() {
-    const isExpressMode = state.expressValidado && elements.btnExpress.classList.contains("selected");
+    const isExpressMode =
+      state.expressValidado &&
+      elements.btnExpress.classList.contains("selected");
     const descuentoAplicar = isExpressMode ? 20000 : 50000;
     const nombreDescuento = isExpressMode ? "Express" : "VIP";
-    
-    if (elements.btnBuscar.textContent !== "Aplicar" && elements.btnBuscar.textContent !== "Aplicar Express") return;
+
+    if (
+      elements.btnBuscar.textContent !== "Aplicar" &&
+      elements.btnBuscar.textContent !== "Aplicar Express"
+    )
+      return;
 
     let saldo = parseFloat(document.getElementById("totalActual").value) || 0;
-    
+
     if (saldo < descuentoAplicar) {
       return alert(
-        `El saldo actual (₡${saldo.toLocaleString("es-CR")}) es insuficiente para aplicar el descuento ${nombreDescuento} de ₡${descuentoAplicar.toLocaleString("es-CR")}.`
+        `El saldo actual (₡${saldo.toLocaleString(
+          "es-CR"
+        )}) es insuficiente para aplicar el descuento ${nombreDescuento} de ₡${descuentoAplicar.toLocaleString(
+          "es-CR"
+        )}.`
       );
     }
 
@@ -325,16 +340,18 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: buildUpdateClienteBody(saldoFinal),
+          body: `action=updateSaldo&id=${encodeURIComponent(
+            state.idClienteActual
+          )}&acumulado=${encodeURIComponent(saldoFinal)}`,
         }
       );
-
       const json = await response.json();
-      if (!json.success) {
+      if (!json.success)
         return alert(
-          "Ocurrió un error al actualizar el saldo en la base de datos."
+          json.message ||
+            "Ocurrió un error al actualizar el saldo en la base de datos."
         );
-      }
+      
 
       document.getElementById("totalActual").value = saldoFinal;
       state.datosClienteActual.acumulado = saldoFinal;
@@ -342,16 +359,22 @@ document.addEventListener("DOMContentLoaded", function () {
       // Mensaje personalizado según el tipo de descuento
       let mensaje = "";
       if (isExpressMode) {
-        mensaje = `¡Descuento Express aplicado exitosamente!\n\n` +
-                 `✅ Se descontaron ₡${descuentoAplicar.toLocaleString("es-CR")} de tu saldo\n` +
-                 `💰 Saldo anterior: ₡${saldo.toLocaleString("es-CR")}\n` +
-                 `💰 Saldo actual: ₡${saldoFinal.toLocaleString("es-CR")}\n\n` +
-                 `🎉 ¡El Express ahora es GRATIS para ${state.nombreClienteActual}!`;
+        mensaje =
+          `¡Descuento Express aplicado exitosamente!\n\n` +
+          `✅ Se descontaron ₡${descuentoAplicar.toLocaleString(
+            "es-CR"
+          )} de tu saldo\n` +
+          `💰 Saldo anterior: ₡${saldo.toLocaleString("es-CR")}\n` +
+          `💰 Saldo actual: ₡${saldoFinal.toLocaleString("es-CR")}\n\n` +
+          `🎉 ¡El Express ahora es GRATIS para ${state.nombreClienteActual}!`;
       } else {
-        mensaje = `Descuento VIP exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
-                 `El saldo actual cambió de ₡${saldo.toLocaleString("es-CR")} a ₡${saldoFinal.toLocaleString("es-CR")}.`;
+        mensaje =
+          `Descuento VIP exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
+          `El saldo actual cambió de ₡${saldo.toLocaleString(
+            "es-CR"
+          )} a ₡${saldoFinal.toLocaleString("es-CR")}.`;
       }
-      
+
       alert(mensaje);
     } catch {
       alert("Error de servidor.");
@@ -399,7 +422,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function buscarCliente() {
     const inputId = elements.inputId.value.trim();
- console.log("Valor que se envía al servidor:", inputId);
+    console.log("Valor que se envía al servidor:", inputId);
 
     try {
       const response = await fetch(
@@ -535,7 +558,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Restaurar contenido inicial del modal
-    const modalBody = document.querySelector('#modalExpress .modal-body');
+    const modalBody = document.querySelector("#modalExpress .modal-body");
     if (modalBody) {
       modalBody.innerHTML = `
         <p class="mb-3">Se enviará un código de verificación al correo: <strong id="expressCorreo"></strong></p>
@@ -554,7 +577,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function enviarCorreoExpress() {
     console.log("Enviando correo Express...");
-    
+
     if (!state.idClienteActual || !state.datosClienteActual) {
       alert("Error: No hay cliente seleccionado");
       return;
@@ -567,22 +590,29 @@ document.addEventListener("DOMContentLoaded", function () {
       btnEnviar.textContent = "Enviando...";
 
       // 1) Generar y enviar código
-      const body = `action=generarCodigoExpress&idCliente=${state.idClienteActual}` +
-                   `&correo=${encodeURIComponent(state.datosClienteActual.correo)}` +
-                   `&nombre=${encodeURIComponent(state.datosClienteActual.nombre)}`;
+      const body =
+        `action=generarCodigoExpress&idCliente=${state.idClienteActual}` +
+        `&correo=${encodeURIComponent(state.datosClienteActual.correo)}` +
+        `&nombre=${encodeURIComponent(state.datosClienteActual.nombre)}`;
 
-      const response = await fetch('/CRM_INT/CRM/controller/ExpressController.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: body
-      });
+      const response = await fetch(
+        "/CRM_INT/CRM/controller/ExpressController.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body,
+        }
+      );
 
       const json = await response.json();
-      
+
       if (!json.success) {
         btnEnviar.disabled = false;
         btnEnviar.textContent = "Enviar Correo";
-        alert('Error al enviar correo Express: ' + (json.message || 'Error desconocido'));
+        alert(
+          "Error al enviar correo Express: " +
+            (json.message || "Error desconocido")
+        );
         return;
       }
 
@@ -590,18 +620,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 2) Cambiar modal a modo validación
       cambiarModalAValidacion();
-
     } catch (error) {
       console.error("Error al enviar correo:", error);
       const btnEnviar = document.getElementById("btnEnviarCorreoExpress");
       btnEnviar.disabled = false;
       btnEnviar.textContent = "Enviar Correo";
-      alert('Error de conexión al enviar el correo');
+      alert("Error de conexión al enviar el correo");
     }
   }
 
   function cambiarModalAValidacion() {
-    const modalBody = document.querySelector('#modalExpress .modal-body');
+    const modalBody = document.querySelector("#modalExpress .modal-body");
     if (!modalBody) return;
 
     modalBody.innerHTML = `
@@ -630,16 +659,16 @@ document.addEventListener("DOMContentLoaded", function () {
     iniciarTemporizador();
 
     // 4) Configurar validación
-    document.getElementById('btnValidarExpress').onclick = validarCodigoExpress;
-    
+    document.getElementById("btnValidarExpress").onclick = validarCodigoExpress;
+
     // Auto-focus en el input
-    document.getElementById('inputCodigoExpress').focus();
+    document.getElementById("inputCodigoExpress").focus();
   }
 
   function iniciarTemporizador() {
     let restantes = 300; // 5 minutos en segundos
-    const reloj = document.getElementById('relojExpress');
-    
+    const reloj = document.getElementById("relojExpress");
+
     if (!reloj) return;
 
     // Limpiar temporizador anterior si existe
@@ -649,23 +678,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     state.expressTimer = setInterval(() => {
       restantes--;
-      const min = String(Math.floor(restantes / 60)).padStart(2, '0');
-      const seg = String(restantes % 60).padStart(2, '0');
+      const min = String(Math.floor(restantes / 60)).padStart(2, "0");
+      const seg = String(restantes % 60).padStart(2, "0");
       reloj.textContent = `${min}:${seg}`;
 
       if (restantes <= 0) {
         clearInterval(state.expressTimer);
         state.expressTimer = null;
-        reloj.textContent = '00:00';
-        reloj.className = 'h4 mb-3 text-danger';
-        
-        const msgExpress = document.getElementById('msgExpress');
+        reloj.textContent = "00:00";
+        reloj.className = "h4 mb-3 text-danger";
+
+        const msgExpress = document.getElementById("msgExpress");
         if (msgExpress) {
-          msgExpress.textContent = 'Código expirado. Solicita un nuevo código.';
+          msgExpress.textContent = "Código expirado. Solicita un nuevo código.";
         }
-        
+
         // Deshabilitar botón de validar
-        const btnValidar = document.getElementById('btnValidarExpress');
+        const btnValidar = document.getElementById("btnValidarExpress");
         if (btnValidar) {
           btnValidar.disabled = true;
         }
@@ -674,86 +703,92 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function validarCodigoExpress() {
-    const inputCodigo = document.getElementById('inputCodigoExpress');
+    const inputCodigo = document.getElementById("inputCodigoExpress");
     const codigo = inputCodigo.value.trim();
-    const msgExpress = document.getElementById('msgExpress');
-    
+    const msgExpress = document.getElementById("msgExpress");
+
     if (!codigo) {
-      msgExpress.textContent = 'Por favor, digite el código';
+      msgExpress.textContent = "Por favor, digite el código";
       inputCodigo.focus();
       return;
     }
 
     if (codigo.length !== 6) {
-      msgExpress.textContent = 'El código debe tener 6 dígitos';
+      msgExpress.textContent = "El código debe tener 6 dígitos";
       inputCodigo.focus();
       return;
     }
 
     try {
-      const btnValidar = document.getElementById('btnValidarExpress');
+      const btnValidar = document.getElementById("btnValidarExpress");
       btnValidar.disabled = true;
-      btnValidar.textContent = 'Validando...';
+      btnValidar.textContent = "Validando...";
 
-      const response = await fetch('/CRM_INT/CRM/controller/ExpressController.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: `action=validarCodigoExpress&idCliente=${state.idClienteActual}&codigo=${codigo}`
-      });
+      const response = await fetch(
+        "/CRM_INT/CRM/controller/ExpressController.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `action=validarCodigoExpress&idCliente=${state.idClienteActual}&codigo=${codigo}`,
+        }
+      );
 
       const json = await response.json();
-      
+
       if (json.success) {
         // Código validado correctamente
         clearInterval(state.expressTimer);
         state.expressTimer = null;
-        
+
         // MARCAR EXPRESS COMO VALIDADO
         state.expressValidado = true;
-        
+
         // Cerrar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalExpress'));
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("modalExpress")
+        );
         if (modal) {
           modal.hide();
         }
-        
+
         // Mostrar confirmación
-        alert('¡Código validado correctamente! Express activado.');
-        
+        alert("¡Código validado correctamente! Express activado.");
+
         // MANTENER EXPRESS SELECCIONADO y actualizar estado visual
         elements.btnExpress.classList.add("selected");
-        
+
         // Agregar indicador visual de Express validado
-        if (!elements.btnExpress.querySelector('.express-validado')) {
-          const indicator = document.createElement('span');
-          indicator.className = 'express-validado';
-          indicator.innerHTML = ' ✓';
-          indicator.style.color = '#28a745';
-          indicator.style.fontWeight = 'bold';
+        if (!elements.btnExpress.querySelector(".express-validado")) {
+          const indicator = document.createElement("span");
+          indicator.className = "express-validado";
+          indicator.innerHTML = " ✓";
+          indicator.style.color = "#28a745";
+          indicator.style.fontWeight = "bold";
           elements.btnExpress.appendChild(indicator);
         }
-        
+
         // Si hay otra opción seleccionada, actualizar su estado
         const otherSelected = getSelectedOption();
         if (otherSelected && otherSelected !== "express") {
           updateButtonState(otherSelected);
         }
-        
-        console.log("Express validado y persistente para combinar con otras opciones");
-        
+
+        console.log(
+          "Express validado y persistente para combinar con otras opciones"
+        );
       } else {
-        msgExpress.textContent = json.message || 'Código incorrecto';
+        msgExpress.textContent = json.message || "Código incorrecto";
         btnValidar.disabled = false;
-        btnValidar.textContent = 'Validar';
+        btnValidar.textContent = "Validar";
         inputCodigo.focus();
         inputCodigo.select();
       }
     } catch (error) {
       console.error("Error al validar código:", error);
-      msgExpress.textContent = 'Error de conexión al validar el código';
-      const btnValidar = document.getElementById('btnValidarExpress');
+      msgExpress.textContent = "Error de conexión al validar el código";
+      const btnValidar = document.getElementById("btnValidarExpress");
       btnValidar.disabled = false;
-      btnValidar.textContent = 'Validar';
+      btnValidar.textContent = "Validar";
     }
   }
 
@@ -875,12 +910,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Limpiar temporizador cuando se cierra el modal Express
   const modalExpress = document.getElementById("modalExpress");
   if (modalExpress) {
-    modalExpress.addEventListener('hidden.bs.modal', function () {
+    modalExpress.addEventListener("hidden.bs.modal", function () {
       if (state.expressTimer) {
         clearInterval(state.expressTimer);
         state.expressTimer = null;
       }
     });
   }
-  
 });

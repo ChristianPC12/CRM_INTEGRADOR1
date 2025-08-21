@@ -508,5 +508,6 @@ function hacerFocusEnUsuario(valor, tipo = 'id') {
         }, 3000);
       }
     }
+    
   }, 500); // Pequeño delay para asegurar que la tabla se haya renderizado
 }

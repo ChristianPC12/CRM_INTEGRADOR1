@@ -101,8 +101,31 @@
 
             <!-- Video 1: XAMPP -->
             <div class="guia-video mt-2">
+<<<<<<< Updated upstream
               <iframe width="100%" height="200" src="https://www.youtube.com/embed/O3msEOcHP2E?si=ituUDK3jzRZRbdRG"
                 title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen loading="lazy"></iframe>
+=======
+<<<<<<< Updated upstream
+              <div class="video-placeholder-generic" data-titulo="Cómo descargar e instalar XAMPP">
+                <div class="video-preview">
+                  <div class="video-icon">
+                    <i class="bi bi-download"></i>
+                  </div>
+                  <div class="video-info">
+                    <h6>Cómo descargar e instalar XAMPP</h6>
+                    <p>Guía paso a paso para la instalación</p>
+                  </div>
+                  <div class="play-button-generic">
+                    <i class="bi bi-play-circle-fill"></i>
+                  </div>
+                </div>
+              </div>
+=======
+              <iframe width="100%" height="200"
+                src="https://youtu.be/M9FpsTmXZkw?si=l4WuAXV7p7NAfXtq"
+                title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             </div>
 
             <!-- Video 2: HeidiSQL -->

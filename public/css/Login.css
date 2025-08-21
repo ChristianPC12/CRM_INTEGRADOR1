@@ -1108,3 +1108,47 @@ body::after {
     margin-bottom: clamp(0.15rem, 0.4vh, 0.3rem) !important;
   }
 }
+.password-group { position: relative; }
+.toggle-pass {
+  position: absolute;
+  right: 12px;
+  top: 46px; /* ajusta según tu input */
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  color: var(--gris-oscuro);
+}
+.toggle-pass:hover { color: var(--amarillo); }
+
+
+/* 🛠️ Ocultar el botón nativo de mostrar/limpiar contraseña en Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* 🛠️ Ocultar botón autofill/credenciales que puede dibujar Chromium Edge */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none;
+  pointer-events: none;
+}
+
+/* (Opcional) asegurar que nuestro ojo quede por encima */
+.password-group {
+  position: relative;
+}
+.password-group .toggle-pass {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.password-group input {
+  padding-right: 44px; /* espacio para nuestro ojo */
+}
+
+

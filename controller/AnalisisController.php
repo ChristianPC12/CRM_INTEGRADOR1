@@ -1,29 +1,33 @@
 <?php
 // controller/AnalisisController.php
 
+// Establece el tipo de contenido de la respuesta como JSON
 header('Content-Type: application/json');
+// Incluye la configuración de la base de datos y los DAOs necesarios
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/cliente/ClienteDAO.php';
 require_once __DIR__ . '/../model/compra/CompraDAO.php'; // Asegúrate de tener este DAO y Mapper igual que los otros
 
 try {
+    // Obtiene la conexión a la base de datos
     $db = (new Database())->getConnection();
     if (!$db)
         throw new Exception("No se pudo conectar a la base de datos");
 
+    // Determina la acción a ejecutar a partir de POST o GET
     $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
     switch ($action) {
         case 'clientesFrecuentes':
-            // Obtener todos los clientes
+            // Obtiene todos los clientes
             $clienteDAO = new ClienteDAO($db);
             $clientes = $clienteDAO->readAll(); // array de objetos ClienteDTO
 
-            // Obtener todas las compras
+            // Obtiene todas las compras
             $compraDAO = new CompraDAO($db);
             $compras = $compraDAO->readAll(); // array de objetos CompraDTO
 
-            // Inicializa estructura de visitas y última visita
+            // Inicializa la estructura para contar visitas y registrar la última visita por cliente
             $visitasPorCliente = [];
             foreach ($clientes as $cliente) {
                 $visitasPorCliente[$cliente->id] = [
@@ -36,11 +40,12 @@ try {
                 ];
             }
 
-            // Recorre compras y actualiza visitas y última visita
+            // Recorre todas las compras y actualiza el contador de visitas y la fecha de última visita
             foreach ($compras as $compra) {
                 $cid = $compra->idCliente;
                 if (isset($visitasPorCliente[$cid])) {
                     $visitasPorCliente[$cid]['visitas']++;
+                    // Actualiza la última visita si es más reciente
                     if (
                         !$visitasPorCliente[$cid]['ultimaVisita'] ||
                         $compra->fechaCompra > $visitasPorCliente[$cid]['ultimaVisita']
@@ -50,18 +55,19 @@ try {
                 }
             }
 
-            // Filtra solo clientes con al menos 1 visita
+            // Filtra solo los clientes que han realizado al menos una compra
             $ranking = array_filter($visitasPorCliente, fn($c) => $c['visitas'] > 0);
-            // Ordena por visitas descendente
+            // Ordena el ranking por cantidad de visitas descendente
             usort($ranking, fn($a, $b) => $b['visitas'] <=> $a['visitas']);
-            // Asigna posición
+            // Asigna la posición en el ranking
             $i = 1;
             foreach ($ranking as &$c)
                 $c['posicion'] = $i++;
 
-            // Top 5 para el gráfico
+            // Obtiene el top 5 de clientes para el gráfico
             $top = array_slice($ranking, 0, 5);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -72,11 +78,12 @@ try {
             break;
 
         case 'clientesMayorHistorial':
+            // Obtiene clientes y compras
             $clienteDAO = new ClienteDAO($db);
             $compraDAO = new CompraDAO($db);
 
             $clientes = $clienteDAO->readAll();
-            // Filtra solo clientes con totalHistorico > 0 (opcional)
+            // Filtra solo clientes con totalHistorico > 0
             $ranking = array_filter($clientes, fn($c) => $c->totalHistorico > 0);
             // Ordena por totalHistorico descendente
             usort($ranking, fn($a, $b) => $b->totalHistorico <=> $a->totalHistorico);
@@ -84,28 +91,29 @@ try {
             // Obtiene todas las compras
             $compras = $compraDAO->readAll();
 
-            // Indexa compras por cliente
+            // Indexa las compras por cliente (idCliente => array de fechas)
             $comprasPorCliente = [];
             foreach ($compras as $compra) {
                 $comprasPorCliente[$compra->idCliente][] = $compra->fechaCompra;
             }
 
-            // Asigna posición y última compra a cada cliente
+            // Asigna posición y última compra a cada cliente en el ranking
             $i = 1;
             foreach ($ranking as &$c) {
                 $c->posicion = $i++;
-                // Busca última compra (la fecha más reciente)
+                // Busca la fecha de la última compra
                 if (!empty($comprasPorCliente[$c->id])) {
                     $c->ultimaCompra = max($comprasPorCliente[$c->id]);
                 } else {
                     $c->ultimaCompra = null;
                 }
             }
-            unset($c); // Por si acaso
+            unset($c); // Limpia la referencia
 
-            // Top 5 para el gráfico
+            // Obtiene el top 7 para el gráfico
             $top = array_slice($ranking, 0, 7);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -115,6 +123,7 @@ try {
             ]);
             break;
         case 'clientesInactivos':
+            // Define el período de inactividad (en días). Para pruebas, se usa un valor muy bajo (30 segundos)
             //$diasInactivo = 30; // <--- CAMBIA AQUÍ EL PERÍODO
             $diasInactivo = 0.0003; // 30 segundos PARA PRUEBA
 
@@ -123,7 +132,7 @@ try {
             $clientes = $clienteDAO->readAll();
             $compras = $compraDAO->readAll();
 
-            // Indexa compras por cliente
+            // Indexa las compras por cliente
             $comprasPorCliente = [];
             foreach ($compras as $compra) {
                 $comprasPorCliente[$compra->idCliente][] = $compra->fechaCompra;
@@ -132,17 +141,19 @@ try {
             $inactivos = [];
             $hoy = new DateTime();
 
+            // Recorre todos los clientes y determina si están inactivos
             foreach ($clientes as $c) {
-                // Última compra (la más reciente)
+                // Busca la última compra (la más reciente)
                 $ultimaCompra = null;
                 if (!empty($comprasPorCliente[$c->id])) {
                     $ultimaCompra = max($comprasPorCliente[$c->id]);
                     $diasSinComprar = (new DateTime($ultimaCompra))->diff($hoy)->days;
                 } else {
-                    // Nunca ha comprado, puedes excluir o incluir con lógica especial
+                    // Si nunca ha comprado, se puede excluir o incluir según la lógica deseada
                     $diasSinComprar = null;
                 }
 
+                // Si el cliente supera el período de inactividad, se agrega al listado
                 if ($diasSinComprar !== null && $diasSinComprar > $diasInactivo) {
                     $inactivos[] = [
                         'id' => $c->id,
@@ -156,12 +167,13 @@ try {
                 }
             }
 
-            // Ordenar por más tiempo sin comprar
+            // Ordena los clientes inactivos por mayor tiempo sin comprar
             usort($inactivos, fn($a, $b) => $b['diasSinComprar'] <=> $a['diasSinComprar']);
 
-            // Top 7
+            // Obtiene el top 7 de inactivos
             $top = array_slice($inactivos, 0, 7);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'diasInactivo' => $diasInactivo,
@@ -174,10 +186,11 @@ try {
 
 
         case 'residenciasFrecuentes':
+            // Obtiene todos los clientes
             $clienteDAO = new ClienteDAO($db);
             $clientes = $clienteDAO->readAll();
 
-            // Agrupar clientes por residencia
+            // Agrupa los clientes por residencia
             $porResidencia = [];
             foreach ($clientes as $c) {
                 $res = trim($c->lugarResidencia) ?: '(SIN RESIDENCIA)';
@@ -190,7 +203,7 @@ try {
                 ];
             }
 
-            // Armar ranking (residencia, cantidad, clientes)
+            // Construye el ranking de residencias más frecuentes
             $ranking = [];
             foreach ($porResidencia as $res => $clientesRes) {
                 $ranking[] = [
@@ -200,10 +213,13 @@ try {
                 ];
             }
 
+            // Ordena por cantidad de clientes descendente
             usort($ranking, fn($a, $b) => $b['cantidad'] <=> $a['cantidad']);
 
+            // Obtiene el top 7 de residencias
             $top = array_slice($ranking, 0, 7);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -214,15 +230,17 @@ try {
             break;
 
         case 'clientesAntiguos':
+            // Obtiene todos los clientes
             $clienteDAO = new ClienteDAO($db);
             $clientes = $clienteDAO->readAll();
 
+            // Obtiene todas las compras
             $compraDAO = new CompraDAO($db);
             $compras = $compraDAO->readAll();
 
             $hoy = new DateTime();
 
-            // Armar array de compras por cliente
+            // Indexa las compras por cliente
             $comprasPorCliente = [];
             foreach ($compras as $c) {
                 $cid = $c->idCliente;
@@ -233,11 +251,11 @@ try {
 
             $ranking = [];
             foreach ($clientes as $cli) {
-                // Antigüedad en días
+                // Calcula la antigüedad del cliente en días desde su registro
                 $fechaRegistro = new DateTime($cli->fechaRegistro);
                 $antiguedadDias = $fechaRegistro->diff($hoy)->days;
 
-                // Buscar última compra
+                // Busca la última compra del cliente
                 $ultCompra = null;
                 if (isset($comprasPorCliente[$cli->id]) && count($comprasPorCliente[$cli->id])) {
                     $ultCompraObj = array_reduce(
@@ -253,6 +271,7 @@ try {
                     $diasSinComprar = $antiguedadDias;
                 }
 
+                // Agrega el cliente al ranking con los datos calculados
                 $ranking[] = [
                     'id' => $cli->id,
                     'nombre' => $cli->nombre,
@@ -264,15 +283,16 @@ try {
                 ];
             }
 
-            // Ordenar de mayor a menor antigüedad
+            // Ordena el ranking por mayor antigüedad
             usort($ranking, fn($a, $b) => $b['antiguedadDias'] <=> $a['antiguedadDias']);
 
-            // Posiciones y top
+            // Asigna posición y obtiene el top 7
             $i = 1;
             foreach ($ranking as &$c)
                 $c['posicion'] = $i++;
             $top = array_slice($ranking, 0, 7);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -283,10 +303,11 @@ try {
             break;
 
         case 'ventasPorMes':
+            // Obtiene todas las compras
             $compraDAO = new CompraDAO($db);
             $compras = $compraDAO->readAll();
 
-            // Arreglo de meses en español
+            // Arreglo de nombres de meses en español
             $meses_es = [
                 1 => 'Enero',
                 2 => 'Febrero',
@@ -302,7 +323,7 @@ try {
                 12 => 'Diciembre'
             ];
 
-            // Agrupar por mes/año
+            // Agrupa las compras por mes y año
             $ventasPorMes = [];
             foreach ($compras as $compra) {
                 $fecha = new DateTime($compra->fechaCompra);
@@ -319,12 +340,12 @@ try {
                 $ventasPorMes[$key]['total'] += $compra->total;
             }
 
-            // Ordenar por año, mes descendente
+            // Ordena los resultados por año y mes descendente
             usort($ventasPorMes, function ($a, $b) {
                 return ($b['año'] * 100 + $b['mes']) - ($a['año'] * 100 + $a['mes']);
             });
 
-            // Calcular variación mensual
+            // Calcula la variación porcentual respecto al mes anterior
             $ventasConVar = [];
             for ($i = 0; $i < count($ventasPorMes); $i++) {
                 $actual = $ventasPorMes[$i];
@@ -342,9 +363,10 @@ try {
                 ];
             }
 
-            // Solo los 12 últimos meses
+            // Limita a los últimos 12 meses
             $ventasConVar = array_slice($ventasConVar, 0, 12);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -354,6 +376,7 @@ try {
             break;
 
         case 'ventasPorAnio':
+            // Obtiene todas las compras
             $compraDAO = new CompraDAO($db);
             $compras = $compraDAO->readAll();
 
@@ -371,10 +394,10 @@ try {
                 $ventasPorAnio[$anio]['total'] += $compra->total;
             }
 
-            // Ordena de mayor a menor año
+            // Ordena los años de mayor a menor
             krsort($ventasPorAnio);
 
-            // Calcula la variación anual
+            // Calcula la variación porcentual anual respecto al año anterior
             $ventasArray = array_values($ventasPorAnio);
             $ventasConVar = [];
             for ($i = 0; $i < count($ventasArray); $i++) {
@@ -392,9 +415,10 @@ try {
                 ];
             }
 
-            // Limita a los últimos 10 años (si hay más)
+            // Limita a los últimos 10 años
             $ventasConVar = array_slice($ventasConVar, 0, 10);
 
+            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -406,9 +430,11 @@ try {
 
 
         default:
+            // Acción no válida
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
     }
 } catch (Exception $e) {
+    // Manejo de errores generales
     echo json_encode([
         'success' => false,
         'message' => 'Error del servidor: ' . $e->getMessage()

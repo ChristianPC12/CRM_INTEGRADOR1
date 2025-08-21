@@ -20,6 +20,13 @@ body {
     display: flex;
     min-height: 100vh;
     overflow-x: hidden;
+    /* Ocultar scrollbars en todos los navegadores */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge */
+}
+
+body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
 }
 
 /* Fondo decorativo moderno */
@@ -68,6 +75,28 @@ body {
     box-shadow: var(--sombra-elevada);
     z-index: 1000;
     transition: all 0.3s ease;
+}
+
+/* Sidebar: solo el enlace activo es amarillo */
+.sidebar ul li a.active {
+    background: var(--amarillo) !important;
+    color: var(--negro) !important;
+    box-shadow: 0 4px 16px rgba(249, 196, 31, 0.15);
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.sidebar ul li a {
+    background: transparent;
+    color: var(--blanco);
+    border-radius: 12px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar ul li a:not(.active):hover {
+    background: rgba(249, 196, 31, 0.08);
+    color: var(--amarillo);
 }
 
 /* Hacer scroll invisible en el sidebar */

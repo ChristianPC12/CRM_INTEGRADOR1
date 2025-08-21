@@ -1,4 +1,16 @@
-/* Usuario.css - Modernizado con diseño avanzado y efectos premium */
+/* Usuario.css — documentación in-situ
+  Propósito: estilos para la sección de usuarios (tablas, formularios,
+  botones y tarjetas). Comentarios añadidos en español para facilitar
+  mantenimiento. NO se cambian reglas, sólo se documentan las secciones.
+
+  Secciones clave:
+  - :root -> variables de color y sombras
+  - Layout base (fondos decorativos)
+  - #usuario-container -> contenedor principal
+  - Formularios (#usuarioForm)
+  - Botones y componentes (.btn, .card, .table)
+  - Responsive -> media queries
+*/
 :root {
   /* === Colores principales === */
   --amarillo: #f9c41f;
@@ -25,6 +37,11 @@
 }
 
 /* === LAYOUT BASE - Modernizado === */
+/* -----------------------------
+  Layout base y fondos decorativos
+  `body::before` y `body::after` añaden decoraciones visuales. Reducir o
+  eliminar estas capas en móviles si quieres mejorar rendimiento.
+*/
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -74,6 +91,11 @@ body::after {
 }
 
 /* === CONTENEDOR PRINCIPAL - Modernizado === */
+/* -----------------------------
+  Contenedor principal `#usuario-container`
+  Ajustar `max-width`, `padding` y `min-height` aquí para cambiar la
+  densidad visual de la sección de usuarios.
+*/
 #usuario-container {
   max-width: 1200px;
   margin: auto;
@@ -105,6 +127,11 @@ body::after {
 }
 
 /* === FORMULARIOS - Modernizados === */
+/* -----------------------------
+  Formularios (`#usuarioForm`)
+  Estilos reutilizables para labels, inputs, selects y textarea. Las
+  reglas incluyen estados visuales para campos vacíos y focus.
+*/
 #usuarioForm .form-label {
   font-weight: 700;
   color: var(--negro);
@@ -221,6 +248,11 @@ body::after {
 }
 
 /* === BOTONES - Modernizados === */
+/* -----------------------------
+  Botones (.btn, .btn-primary, .btn-secondary, etc.)
+  Estilos del CTA y variantes. Mantén consistencia usando estas clases
+  para acciones globales dentro de la UI de Usuarios.
+*/
 .btn {
   min-width: 140px;
   padding: 14px 28px;
@@ -300,6 +332,12 @@ body::after {
 }
 
 /* === TABLAS - Modernizadas === */
+/* -----------------------------
+  Tablas y scroll personalizado
+  `.table-responsive` define un contenedor con scroll y estilo de thumb
+  personalizado para navegadores WebKit. En otros navegadores la barra
+  puede comportarse diferente.
+*/
 .table-responsive {
   max-height: 500px;
   overflow-y: auto;
@@ -401,6 +439,11 @@ html::-webkit-scrollbar,
 }
 
 /* === COMPONENTES - Modernizados === */
+/* -----------------------------
+  Componentes `.card` y `.card-header`
+  Tarjetas reutilizables para agrupar contenido. La pseudo-regla ::before
+  añade la franja superior dorada; cambiarla afectará todas las cards.
+*/
 .card {
   border: none;
   border-radius: 20px;

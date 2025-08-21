@@ -101,66 +101,44 @@
 
             <!-- Video 1: XAMPP -->
             <div class="guia-video mt-2">
-<<<<<<< Updated upstream
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/O3msEOcHP2E?si=ituUDK3jzRZRbdRG"
-                title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen loading="lazy"></iframe>
-=======
-<<<<<<< Updated upstream
-              <div class="video-placeholder-generic" data-titulo="Cómo descargar e instalar XAMPP">
-                <div class="video-preview">
-                  <div class="video-icon">
-                    <i class="bi bi-download"></i>
-                  </div>
-                  <div class="video-info">
-                    <h6>Cómo descargar e instalar XAMPP</h6>
-                    <p>Guía paso a paso para la instalación</p>
-                  </div>
-                  <div class="play-button-generic">
-                    <i class="bi bi-play-circle-fill"></i>
-                  </div>
-                </div>
-              </div>
-=======
-              <iframe width="100%" height="200"
-                src="https://youtu.be/M9FpsTmXZkw?si=l4WuAXV7p7NAfXtq"
+               <iframe width="100%" height="200"
+                src="https://www.youtube.com/embed/M9FpsTmXZkw?si=vw5qkb7OiLeT-eb"
                 title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen></iframe>
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-            </div>
+               </div>
 
             <!-- Video 2: HeidiSQL -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/p1uZlYBueX0?si=385Qw_SHDxGXNhnq"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/kmNUa1KKs88?si=sTxatI_NB4sYiQc4"
                 title="Cómo descargar e instalar HEIDISQL" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 
             <!-- Video 3: Credenciales BD MySQL -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/jHxqhRftB1U?si=h0nm5qv5L6Huz728"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/O3msEOcHP2E?si=LllUSLtkQkMtT1-9"
                 title="Cómo poner credenciales a la base de datos MySQL" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 
             <!-- Video 4: Importar BD SQL -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/M9FpsTmXZkw?si=vMVkfJQ6JygbZVAR"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/p1uZlYBueX0?si=mmCWc_Ee2C-JMJWs"
                 title="Cómo importar la base de datos sql" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 
             <!-- Video 5: Respaldos -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/LcgjCTqtwnE?si=gSXaHrfMfCiTIo34"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/jHxqhRftB1U?si=2egVp5ywi8iJb_V8"
                 title="Cómo hacer respaldos de la base de datos" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 
             <!-- Video 6: Ruta del proyecto en navegador -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/jHxqhRftB1U?si=tGzvPcHCr18Vi5mb"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/v64q8mzD0cA?si=tUNVfxZnkeOO-bU2"
                 title="Cómo entrar a la ruta del proyecto en el navegador" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 
             <!-- Video 7: Acceso desde teléfono misma red -->
             <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/eCUP5z4fyM4?si=Z_qNy9y9Fq8sfrLm"
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/eCUP5z4fyM4?si=nl8yzhK2GUOtBn3C"
                 title="Cómo configurar el acceso desde el teléfono misma red" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
 

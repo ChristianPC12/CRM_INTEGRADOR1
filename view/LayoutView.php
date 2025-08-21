@@ -118,28 +118,6 @@ $vista = $_GET['view'] ?? 'dashboard';
             </li>
 
             <li>
-<<<<<<< Updated upstream
-                <a href="/CRM_INT/CRM/index.php?view=guia2" id="link-guia2"
-<<<<<<< Updated upstream
-                        class="<?= $vista === 'guia2' ? 'active' : '' ?>">
-                        <i class="bi bi-person-badge"></i> Manual de usuario
-=======
-=======
-<<<<<<< HEAD
-                <a href="/CRM_INT/CRM/index.php?view=guia2"
->>>>>>> Stashed changes
-                    class="<?= $vista === 'guia2' ? 'active' : '' ?>">
-                    <i class="bi bi-info-circle"></i> Manual de usuario
-=======
-                <a href="/CRM_INT/CRM/index.php?view=guia2" id="link-guia2"
-                        class="<?= $vista === 'guia2' ? 'active' : '' ?>">
-                        <i class="bi bi-person-badge"></i> Manual de usuario
->>>>>>> origin/main
->>>>>>> Stashed changes
-                </a>
-            </li>
-
-            <li>
                 <a href="/CRM_INT/CRM/controller/UsuarioController.php?action=logout" style="color: #dc3545;">
                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </a>

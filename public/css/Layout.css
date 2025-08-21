@@ -1,3 +1,6 @@
+/* Layout.css — documentación in-situ
+*/
+
 html {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE y Edge */
@@ -14,6 +17,10 @@ html::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
 /* Layout.css - versión moderna con sidebar elegante y navegación fluida */
+/* === Variables globales ===
+    Colores y valores reutilizables para mantener consistencia visual.
+    Cambiar aquí para modificar temas (amarillo institucional, sombras, anchos).
+*/
 :root {
     --amarillo: #f9c41f;
     --gris: #838886;
@@ -76,6 +83,12 @@ html, body {
 }
 
 /* SIDEBAR MODERNO */
+/* === SIDEBAR (menú lateral) ===
+    Estilos para la barra lateral fija: fondo oscuro, ancho controlado por
+    la variable --sidebar-width y comportamiento responsive. La clase
+    `.activa` se usa en móvil para mostrar el sidebar. Mantener cuidado con
+    overflow y scroll invisible para que la experiencia sea limpia.
+*/
 .sidebar {
     width: var(--sidebar-width);
     background: linear-gradient(135deg, var(--negro) 0%, #1a1a1a 100%);
@@ -278,6 +291,11 @@ html, body {
 }
 
 /* CONTENIDO PRINCIPAL MODERNIZADO */
+/* === CONTENIDO PRINCIPAL y TOPBAR ===
+    .content contiene la vista principal desplazada por el ancho del sidebar.
+    .topbar es un encabezado con sombra que sirve para botones rápidos y título.
+    Evitar usar !important a menos que sea estrictamente necesario.
+*/
 .content {
     margin-left: var(--sidebar-width);
     flex-grow: 1;
@@ -324,6 +342,10 @@ html, body {
 /* ======================= */
 
 /* Links deshabilitados */
+/* === Estados y utilidades accesibilidad ===
+    Clases de estado (deshabilitado / solo lectura / acceso restringido) que
+    se reutilizan en diferentes vistas para indicar elementos inactivos.
+*/
 .disabled-link {
     color: rgba(255, 255, 255, 0.4) !important;
     cursor: not-allowed !important;
@@ -365,6 +387,10 @@ html, body {
 /* ======================= */
 /* MENÚ HAMBURGUESA MODERNO */
 /* ======================= */
+/* === Botón hamburguesa (móvil) ===
+    .btn-menu-toggle aparece en tamaños pequeños. Se recomienda controlar
+    su visibilidad desde JS y alternar la clase .activa en .sidebar.
+*/
 .btn-menu-toggle {
     display: none;
     position: fixed;
@@ -392,6 +418,10 @@ html, body {
 }
 
 /* RESPONSIVIDAD MODERNA */
+/* === Breakpoints importantes ===
+    Ajustes principales para tabletas y móviles. Revisar estos media queries
+    cuando se cambie el layout general o el ancho del sidebar.
+*/
 @media (max-width: 992px) {
     .content {
         margin-left: 0;
@@ -513,8 +543,7 @@ html, body {
 }
 
 /* ======================= */
-/* COMENTADO: Estilos del modal de tarjeta eliminados */
-/* Ya no se usan porque se cambió por el modal de cumpleaños */
+/* NOTA: estilos obsoletos comentados más abajo por compatibilidad. */
 /* ======================= */
 
 /* === Sidebar sticky header === */
@@ -569,7 +598,11 @@ html, body {
 }
 
 /* ======================= */
-/* MODAL CUMPLEAÑOS */
+/* MODAL CUMPLEAÑOS
+    Modal específico para mostrar la lista de cumpleaños. Se controla su
+    visibilidad desde JS (cambiar display a 'flex' cuando se abra). Incluye
+    animación modalSlideIn y estilos para el cuerpo con scroll interno.
+*/
 /* ======================= */
 
 /* Animación para el modal */
@@ -821,7 +854,10 @@ html, body {
 }
 
 /* ======================= */
-/* MODAL TARJETA (buscar por número) */
+/* MODAL TARJETA (buscar por número)
+    Modal reutilizable para buscar tarjetas por número. Se centra en pantalla
+    y usa el mismo keyframe `modalSlideIn` para entrada. Mostrar desde JS.
+*/
 /* ======================= */
 
 .modal-tarjeta {

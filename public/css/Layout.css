@@ -94,6 +94,38 @@ body {
     overflow: hidden;
 }
 
+.btn-cumple-mini {
+  position: absolute;
+  top: 6px;           /* ajusta fino según tu header */
+  right: 8px;         /* posición donde marcaste en rojo */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  background: #F9C41F;       /* amarillo institucional */
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  transition: transform .1s ease, box-shadow .15s ease, background-color .2s;
+}
+
+.btn-cumple-mini i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.btn-cumple-mini:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+
+.btn-cumple-mini:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+
 .sidebar-header::before {
     content: "";
     position: absolute;

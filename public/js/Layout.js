@@ -5,22 +5,27 @@
 window.__navInterna = false;
 
 document.addEventListener("DOMContentLoaded", function () {
+  // 🔹 Función para enviar cierre de sesión al servidor
   const sendClose = () =>
     navigator.sendBeacon(
       "/CRM_INT/CRM/controller/SessionController.php",
       JSON.stringify({ action: "close_session" })
     );
+
+  // 🔹 Evento al intentar salir/cerrar pestaña
   window.addEventListener("beforeunload", function () {
     if (window.__navInterna) return;
     sendClose();
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   });
+
+  // 🔹 Evento al descargar página (unload)
   window.addEventListener("unload", function () {
     if (window.__navInterna) return;
     sendClose();
   });
 
-  // Asegura que los modales cuelguen de <body> para evitar problemas con transform/filter en vistas específicas
+  // 🔹 Mover modales al body para evitar problemas visuales
   (function ensureModalsAtBody() {
     ["modalTarjeta", "modalCumples"].forEach((id) => {
       const el = document.getElementById(id);
@@ -31,7 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
 });
 
-// Función para confirmar cierre de sesión manual
+// -------------------------------
+// 🔹 Confirmar cierre manual de sesión
+// -------------------------------
 function confirmarCerrarSesion() {
   if (confirm("¿Cerrar sesión?")) {
     window.location.href = "/CRM_INT/CRM/index.php?logout=1";
@@ -39,12 +46,12 @@ function confirmarCerrarSesion() {
 }
 
 window.addEventListener("load", function () {
-  const toggleBtn = document.getElementById("menuToggle");
-  const sidebar = document.querySelector(".sidebar");
-  const overlay = document.getElementById("sidebarOverlay");
+  const toggleBtn = document.getElementById("menuToggle"); // Botón ☰
+  const sidebar = document.querySelector(".sidebar");      // Sidebar
+  const overlay = document.getElementById("sidebarOverlay"); // Fondo oscuro
   const sidebarLinks = document.querySelectorAll(".sidebar ul li a");
 
-  // ⚠️ El scroll real está en el <ul> dentro del sidebar
+  // ⚠️ El scroll real está en el <ul> del sidebar
   const sc = sidebar ? sidebar.querySelector("ul") || sidebar : null;
 
   if (!toggleBtn || !sidebar) {
@@ -52,7 +59,7 @@ window.addEventListener("load", function () {
     return;
   }
 
-  // 🎯 MANTENER POSICIÓN DEL SCROLL EN SIDEBAR
+  // 🔹 Restaurar posición de scroll guardada
   const savedScrollPosition = localStorage.getItem("sidebarScrollPosition");
   if (savedScrollPosition && sc) {
     sc.scrollTop = parseInt(savedScrollPosition, 10);
@@ -64,11 +71,10 @@ window.addEventListener("load", function () {
     });
   }
 
-  // 💫 CENTRAR ELEMENTO ACTIVO EN VISTA
+  // 🔹 Centrar en vista el elemento activo del sidebar
   function centrarElementoActivo() {
     const elementoActivo = sidebar.querySelector(".active");
     if (!elementoActivo || !sc) return;
-
 
     const elRect = elementoActivo.getBoundingClientRect();
     const contRect = sc.getBoundingClientRect();
@@ -85,6 +91,7 @@ window.addEventListener("load", function () {
     localStorage.setItem("sidebarScrollPosition", sc.scrollTop);
   }
 
+  // 🔹 Restaurar último foco del sidebar al cargar
   setTimeout(() => {
     const lastId = localStorage.getItem("lastSidebarFocusId");
     const activo = sidebar.querySelector(".active");
@@ -92,23 +99,23 @@ window.addEventListener("load", function () {
     const objetivo = (lastId && document.getElementById(lastId)) || activo;
     if (!objetivo) return;
 
-    const prev = sc.scrollTop; // sc es el <ul> que scrollea
+    const prev = sc.scrollTop;
     try {
       objetivo.focus({ preventScroll: true });
     } catch {
       objetivo.focus();
     }
-    if (isGuia) sc.scrollTop = prev; // solo en “guia” forzamos la posición
+    if (isGuia) sc.scrollTop = prev; // solo en “guia” forzamos posición
   }, 180);
 
-  // Forzar sidebar cerrado en móvil al cargar
+  // 🔹 Forzar sidebar cerrado en móvil
   if (window.innerWidth <= 992) {
     sidebar.classList.remove("show");
     sidebar.classList.remove("activa");
     if (overlay) overlay.classList.remove("show");
   }
 
-  // Toggle del menú
+  // 🔹 Toggle del menú lateral
   toggleBtn.addEventListener("click", function () {
     sidebar.classList.toggle("show");
     sidebar.classList.toggle("activa");
@@ -117,7 +124,7 @@ window.addEventListener("load", function () {
     }
   });
 
-  // Cerrar al hacer click en overlay
+  // 🔹 Cerrar al hacer click en overlay
   if (overlay) {
     overlay.addEventListener("click", function () {
       sidebar.classList.remove("show");
@@ -126,6 +133,7 @@ window.addEventListener("load", function () {
     });
   }
 
+  // 🔹 Cerrar sidebar al hacer click en un link
   sidebarLinks.forEach((link) => {
     link.addEventListener("click", function () {
       window.__navInterna = true;
@@ -140,7 +148,7 @@ window.addEventListener("load", function () {
     });
   });
 
-  // Cerrar al redimensionar ventana
+  // 🔹 Cerrar al redimensionar ventana
   window.addEventListener("resize", function () {
     if (window.innerWidth > 992) {
       sidebar.classList.remove("show");
@@ -150,7 +158,9 @@ window.addEventListener("load", function () {
   });
 });
 
-// === Modal de TARJETA (buscar por número) ===
+// -------------------------------
+// 🔹 Modal TARJETA (buscar por número)
+// -------------------------------
 function mostrarModal() {
   const modal = document.getElementById("modalTarjeta");
   if (!modal) return;
@@ -181,11 +191,12 @@ function cerrarModal() {
   if (!cumplesAbierto) document.body.classList.remove("modal-open");
 }
 
-// Mantengo este nombre porque así lo llama el HTML original del modal
+// 🔹 Alias por compatibilidad con HTML
 function abrirModal() {
   mostrarModal();
 }
 
+// 🔹 Buscar tarjeta y redirigir a compras
 async function redirigirCompra() {
   const tarjeta = (document.getElementById("modalInputTarjeta")?.value || "")
     .trim();
@@ -211,10 +222,10 @@ async function redirigirCompra() {
       return;
     }
 
-    // Guarda foco correcto antes de redirigir
+    // Guarda foco antes de redirigir
     localStorage.setItem("lastSidebarFocusId", "link-compras");
 
-    // OK: redirigir a Beneficios con el id del cliente encontrado
+    // Redirigir a vista de compras
     window.location.href = `/CRM_INT/CRM/index.php?view=compras&idCliente=${encodeURIComponent(
       tarjeta
     )}&buscar=auto`;
@@ -223,7 +234,7 @@ async function redirigirCompra() {
   }
 }
 
-// Cierre por click fuera y por ESC + Enter para buscar
+// 🔹 Eventos de cierre por click fuera y teclado
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modalTarjeta");
   const inputTarjeta = document.getElementById("modalInputTarjeta");
@@ -254,13 +265,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// === Modal de CUMPLEAÑOS ===
+// -------------------------------
+// 🔹 Modal CUMPLEAÑOS
+// -------------------------------
 function abrirModalCumples() {
   const modal = document.getElementById("modalCumples");
   if (modal) {
-    document.body.classList.add("modal-open"); // bloquea scroll
+    document.body.classList.add("modal-open");
     modal.style.display = "flex";
-    cargarCumpleanosSemana();
+    cargarCumpleanosSemana(); // Cargar datos al abrir
   } else {
     console.error("Modal modalCumples no encontrado en el DOM");
   }
@@ -270,7 +283,6 @@ function cerrarModalCumples() {
   const modal = document.getElementById("modalCumples");
   if (modal) {
     modal.style.display = "none";
-    // Quita modal-open si no queda otro modal abierto
     const tarjetaAbierto = document.querySelector(
       "#modalTarjeta[style*='display: flex']"
     );
@@ -283,6 +295,7 @@ function irACumpleanos() {
   window.location.href = "/CRM_INT/CRM/index.php?view=cumple";
 }
 
+// 🔹 Cargar cumpleaños de la semana
 async function cargarCumpleanosSemana() {
   const contenedor = document.getElementById("listaCumpleanos");
   const rangoDiv = document.getElementById("rangoCumplesSemana");
@@ -321,6 +334,7 @@ async function cargarCumpleanosSemana() {
   }
 }
 
+// 🔹 Mostrar rango de la semana actual
 function mostrarRangoSemana(div) {
   const hoy = new Date();
   const diaActual = hoy.getDay();
@@ -336,6 +350,7 @@ function mostrarRangoSemana(div) {
   div.innerHTML = `📆 Semana actual: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
 }
 
+// 🔹 Renderizar lista de cumpleañeros
 function renderizarCumpleanos(cumples, contenedor) {
   const pendientes = cumples.filter((c) => c.estado === "Activo");
 
@@ -387,6 +402,7 @@ function renderizarCumpleanos(cumples, contenedor) {
   contenedor.innerHTML = html;
 }
 
+// 🔹 Formatear fecha de cumpleaños
 function formatearFechaCumple(fecha) {
   return new Date(fecha).toLocaleDateString("es-CR", {
     day: "2-digit",
@@ -394,7 +410,9 @@ function formatearFechaCumple(fecha) {
   });
 }
 
-// Badge de cumpleaños pendientes (global)
+// -------------------------------
+// 🔹 Badge de cumpleaños pendientes en sidebar
+// -------------------------------
 window.actualizarCumpleBadgeSidebar = function () {
   fetch("/CRM_INT/CRM/controller/CumpleController.php", {
     method: "POST",
@@ -422,10 +440,12 @@ window.actualizarCumpleBadgeSidebar = function () {
     });
 };
 
+// -------------------------------
+// 🔹 Inicializar badge y eventos de modal cumples
+// -------------------------------
 document.addEventListener("DOMContentLoaded", function () {
   window.actualizarCumpleBadgeSidebar();
 
-  // Cerrar modal de Cumples por click fuera y ESC
   const modalCumples = document.getElementById("modalCumples");
   if (modalCumples) {
     modalCumples.addEventListener("click", function (e) {

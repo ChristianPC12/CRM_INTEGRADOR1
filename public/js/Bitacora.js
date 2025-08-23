@@ -58,23 +58,29 @@ async function cargarBitacora() {
      * @returns {string} Duración en formato `Xh Xm Xs` o `EN CURSO`
      */
     function calcularDuracion(horaEntrada, horaSalida) {
-      if (!horaSalida || horaSalida === "00:00:00") return "EN CURSO";
+  if (!horaSalida || horaSalida === "00:00:00") return "EN CURSO";
 
-      const [hEntH, hEntM, hEntS] = horaEntrada.split(":").map(Number);
-      const [hSalH, hSalM, hSalS] = horaSalida.split(":").map(Number);
+  const [hEntH, hEntM, hEntS] = horaEntrada.split(":").map(Number);
+  const [hSalH, hSalM, hSalS] = horaSalida.split(":").map(Number);
 
-      const entrada = new Date(0, 0, 0, hEntH, hEntM, hEntS);
-      const salida = new Date(0, 0, 0, hSalH, hSalM, hSalS);
+  // Usamos una fecha base fija
+  const entrada = new Date(2000, 0, 1, hEntH, hEntM, hEntS);
+  let salida = new Date(2000, 0, 1, hSalH, hSalM, hSalS);
 
-      let diff = salida - entrada;
-      if (diff < 0) return "Error";
+  // Si salida < entrada, asumimos que cruzó medianoche (+1 día)
+  if (salida < entrada) {
+    salida.setDate(salida.getDate() + 1);
+  }
 
-      const horas = Math.floor(diff / 3600000);
-      const minutos = Math.floor((diff % 3600000) / 60000);
-      const segundos = Math.floor((diff % 60000) / 1000);
+  const diffMs = salida - entrada;
+  if (diffMs < 0 || !Number.isFinite(diffMs)) return "Error";
 
-      return `${horas}h ${minutos}m ${segundos}s`;
-    }
+  const horas   = Math.floor(diffMs / 3600000);
+  const minutos = Math.floor((diffMs % 3600000) / 60000);
+  const segundos = Math.floor((diffMs % 60000) / 1000);
+
+  return `${horas}h ${minutos}m ${segundos}s`;
+}
 
     // Construcción dinámica de la tabla
     let tablaHTML = `

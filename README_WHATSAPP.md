@@ -1,10 +1,10 @@
-# 📱 CRM con Integración WhatsApp
+# CRM con Integración WhatsApp
 
-## 🚀 Setup Inicial
+## Setup Inicial
 ### Rutas para que funcionen los comandos 
-- **Windows:** `C:\xampp\htdocs\CRM_INT\CRM\bridge-node`
+- **Windows: (CMD normal)** `C:\xampp\htdocs\CRM_INT\CRM\bridge-node`
 
-### 1. Instalar Dependencias Node.js
+### 1. Instalar Dependencias Node.js (CMD normal)
 ```bash
 # Desde la raíz del proyecto CRM
 cd bridge-node
@@ -13,25 +13,27 @@ npm install
 # Desde la raíz del proyecto CRM aca es donde les va a mandar el link para escanear el qr 
 ```
 
-## 🔧 Instalación como Servicio de Windows (Método Definitivo)
+## Instalación como Servicio de Windows (Método Definitivo)
 
 ### Paso 1: Instalar node-windows
 **Requiere PowerShell/CMD como Administrador**
 ```bash
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
 npm install -g node-windows
 ```
 
-### Paso 2: Navegar al directorio del bridge
+### Paso 2: Navegar al directorio del bridge (PowerShell admin)
 ```bash
 cd C:\xampp\htdocs\CRM_INT\CRM\bridge-node
 ```
 
-### Paso 3: Instalar node-windows localmente
+### Paso 3: Instalar node-windows localmente (PowerShell admin)
 ```bash
 npm install node-windows
 ```
 
-### Paso 4: Ejecutar el instalador del servicio
+### Paso 4: Ejecutar el instalador del servicio (PowerShell admin)
 ```bash
 node install-service.cjs
 ```
@@ -42,14 +44,18 @@ node install-service.cjs
 - Lo configura para arrancar con Windows
 - ¡Ya no necesitas mantener CMD abierto!
 
-### Paso 5: Verificar que funciona
+### Paso 5: Pegar en el navegador la siguiente url -> http://localhost:3001 
+
+## Paso 6: Escanear el código qr en WhatsApp
+
+### Paso 7: Después de escanear, verifica la respuesta
 ```bash
 curl http://localhost:3001/status-json
 ```
 
-**Respuesta esperada:** `{"ready":false,"qr":null}` (luego hacer login de WhatsApp)
+**Respuesta esperada: content:** `{"ready":false,"qr":null}` (luego hacer login de WhatsApp)
 
-## 🎯 Ventajas del Servicio de Windows
+## Ventajas del Servicio de Windows
 
 ✅ **Funciona independientemente de CMD/PowerShell**  
 ✅ **Inicia automáticamente con Windows**  

@@ -182,7 +182,12 @@ try {
                 }
 
                 // Usa mensaje por defecto si no viene desde el frontend
-                $mensajeFinal = $mensaje ?: ("¡Hola $nombre! En Bastos sabemos que estás de cumpleaños. Visítanos para celebrarlo juntos y reclamar tu regalía 🎉🎁");
+                $mensajeFinal = $mensaje ?: (
+                    "🥳 ¡Hola $nombre!\n" .
+                    "En Bastos nos encanta ser parte de tu cumpleaños.\n" .
+                    "Ven a celebrarlo con nosotros y reclama tu regalía especial 🎉\n" .
+                    "Más info en 👉 www.bastoscr.com"
+                );
                 $res = $svc->send($telefonoLimpio, $mensajeFinal);
 
                 // Registra en historial igual que el flujo de correo

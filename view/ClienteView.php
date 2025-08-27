@@ -39,7 +39,7 @@
                 <div class="row">
                        <!-- Campo de correo electrónico -->
                     <div class="col-md-6 mb-3">
-                        <label for="clienteCorreo" class="form-label">Correo Electrónico *</label>
+                        <label for="clienteCorreo" class="form-label">Correo Electrónico </label>
                         <input type="email" name="correo" id="clienteCorreo" class="form-control"
                             placeholder="ejemplo@correo.com" maxlength="30">
                     </div>

@@ -58,8 +58,8 @@
                     <div class="col-md-6 mb-3">
                         <label for="clienteLugar" class="form-label">Lugar de Residencia *</label>
                         <input list="listaCantones" name="lugarResidencia" id="clienteLugar" class="form-control"
-                            required placeholder="Ej: San José, Costa Rica">
-                        <datalist id="listaCantones"></datalist>
+                            required placeholder="Ej: San José, Costa Rica" maxlength="22">
+                        <datalist id="listaCantones"></datalist> 
                     </div>
 
                         <!-- Campo de cumpleaños con validación de fechas -->

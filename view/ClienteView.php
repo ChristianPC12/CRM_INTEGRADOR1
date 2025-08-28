@@ -220,6 +220,5 @@
 
 
     <!-- Script exclusivo de esta vista -->
-    <script src="/CRM_INT/CRM/public/js/Cliente.js?v=<?= time() ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

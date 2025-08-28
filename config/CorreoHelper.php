@@ -6,7 +6,8 @@ require_once __DIR__ . '/../LIB/phpmailer/PHPMailer.php';
 require_once __DIR__ . '/../LIB/phpmailer/SMTP.php';
 require_once __DIR__ . '/../LIB/phpmailer/Exception.php';
 
-function enviarCorreoCumple($destinatario, $nombre, $mensaje) {
+function enviarCorreoCumple($destinatario, $nombre, $mensaje)
+{
     $mail = new PHPMailer(true);
 
     try {
@@ -18,12 +19,12 @@ function enviarCorreoCumple($destinatario, $nombre, $mensaje) {
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->SMTPOptions = [
-    'ssl' => [
-        'verify_peer' => false,
-        'verify_peer_name' => false,
-        'allow_self_signed' => true
-    ]
-];
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ];
 
 
         // IMPORTANTE: el remitente debe ser el mismo correo del SMTP o uno verificado en Brevo
@@ -35,15 +36,24 @@ function enviarCorreoCumple($destinatario, $nombre, $mensaje) {
         $mail->Subject = '🎉 ¡Feliz Cumpleaños!';
 
         $mail->Body = "
-            <div style='font-family: Arial, sans-serif; font-size: 16px;'>
-                <p>¡Hola $nombre! 🎂</p>
-                <p>Todo el equipo del <strong>Restaurante Bastos</strong> te desea un <strong>feliz cumpleaños</strong>.</p>
-                <p>Hoy celebramos tu día especial y queremos consentirte como te merecés. 🎉</p>
-                <p><strong>¡Presentá este mensaje en el restaurante y elegí entre una comida, una bebida o un postre gratis!</strong> 🍔🍹🍰</p>
-                <br>
-                <p style='font-size: 12px; color: gray;'>Promoción válida únicamente hoy para nuestros clientes VIP. ¡Te esperamos con gusto!</p>
-            </div>
-        ";
+    <div style='font-family: Arial, sans-serif; font-size: 16px; color: #333;'>
+        <p>🥳 ¡Hola <strong>$nombre</strong>!</p>
+        <p>En <strong>Restaurante Bastos</strong> nos encanta ser parte de tu cumpleaños 🎂.</p>
+        <p>Queremos invitarte como <strong>Cliente VIP</strong> a celebrarlo con nosotros y disfrutar de tu <strong>regalía especial</strong> 🎉.</p>
+        <p>
+            <a href='http://www.bastoscr.com/' 
+               style='display:inline-block; margin-top:15px; padding:10px 20px; background-color:#f9c41f; color:#000; text-decoration:none; font-weight:bold; border-radius:5px;'>
+               Más info en www.bastoscr.com
+            </a>
+        </p>
+        <br>
+        <p style='font-size: 12px; color: gray;'>
+            Promoción exclusiva para nuestros <strong>clientes VIP</strong>. Vigente durante la semana de tu cumpleaños.
+        </p>
+    </div>
+";
+
+
 
         $mail->send();
         return true;

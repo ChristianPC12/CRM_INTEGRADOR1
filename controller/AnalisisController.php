@@ -141,67 +141,163 @@ try {
             break;
 
         case 'clientesInactivos':
-            // Define el período de inactividad (en días). Para pruebas, se usa un valor muy bajo (30 segundos)
-            $diasInactivo = 30; // <--- CAMBIA AQUÍ EL PERÍODO
-            //$diasInactivo = 0.0003; // 30 segundos PARA PRUEBA
+            // Zona horaria consistente (Costa Rica)
+            $tz = new DateTimeZone('America/Costa_Rica');
+            $ahora = new DateTime('now', $tz);
+
+            // Modo y umbrales - CAMBIO: 5 minutos para pruebas
+            $usarSegundos = false;   // pruebas: 5 minutos
+            //$limiteSegundos = 300;    // 5 min (cambiado de 120)
+            $limiteDias = 30;     // producción si cambias a días
 
             $clienteDAO = new ClienteDAO($db);
             $compraDAO = new CompraDAO($db);
             $clientes = $clienteDAO->readAll();
             $compras = $compraDAO->readAll();
 
-            // Indexa las compras por cliente
+            // Indexa compras por cliente
             $comprasPorCliente = [];
             foreach ($compras as $compra) {
+                // Asumimos $compra->idCliente y $compra->fechaCompra
                 $comprasPorCliente[$compra->idCliente][] = $compra->fechaCompra;
             }
 
             $inactivos = [];
-            $hoy = new DateTime();
 
-            // Recorre todos los clientes y determina si están inactivos
             foreach ($clientes as $c) {
-                // Busca la última compra (la más reciente)
+                $tieneCompras = !empty($comprasPorCliente[$c->id]);
+
                 $ultimaCompra = null;
-                if (!empty($comprasPorCliente[$c->id])) {
-                    $ultimaCompra = max($comprasPorCliente[$c->id]);
-                    $diasSinComprar = (new DateTime($ultimaCompra))->diff($hoy)->days;
+                $diasSinComprar = null;
+                $segundosSinComprar = null;
+                $nuncaCompro = !$tieneCompras;
+
+                if ($tieneCompras) {
+                    // Normaliza fechas - Si es solo DATE, mantenemos sin hora para detectarlo
+                    $fechas = array_map(static function ($f) use ($tz) {
+                        $f = trim((string) $f);
+                        if ($f === '')
+                            return null;
+
+                        $esSoloFecha = (strlen($f) === 10); // Y-m-d
+                        if ($esSoloFecha) {
+                            // No agregamos hora para poder detectar que es solo fecha
+                            try {
+                                $dt = new DateTime($f . ' 00:00:00', $tz);
+                                $dt->esSoloFecha = true; // Marcamos que es solo fecha
+                                return $dt;
+                            } catch (Exception $e) {
+                                return null;
+                            }
+                        } else {
+                            // Tiene hora específica
+                            try {
+                                $dt = new DateTime($f, $tz);
+                                $dt->esSoloFecha = false;
+                                return $dt;
+                            } catch (Exception $e) {
+                                return null;
+                            }
+                        }
+                    }, $comprasPorCliente[$c->id]);
+
+                    // Filtra inválidas y toma la más reciente
+                    $fechas = array_values(array_filter($fechas));
+                    if (!empty($fechas)) {
+                        usort($fechas, fn($a, $b) => $b <=> $a);
+                        $ultimaDT = $fechas[0];
+
+                        // CAMBIO: Solo guardamos la fecha para mostrar, no datetime
+                        $ultimaCompra = $ultimaDT->format('Y-m-d');
+
+                        // LÓGICA CORREGIDA: Detectar si es solo fecha (tipo DATE) vs datetime completo
+                        $esHoy = ($ultimaDT->format('Y-m-d') === $ahora->format('Y-m-d'));
+                        $esSoloFecha = isset($ultimaDT->esSoloFecha) && $ultimaDT->esSoloFecha;
+
+                        if ($esHoy && $esSoloFecha) {
+                            // Es compra de hoy pero solo tenemos la fecha (tipo DATE en BD)
+                            // La consideramos como reciente - no debe aparecer como inactiva
+                            $segundosSinComprar = 0;
+                            $diasSinComprar = 0;
+                        } else {
+                            // Cálculo normal para fechas con hora específica o días anteriores
+                            $segundosSinComprar = $ahora->getTimestamp() - $ultimaDT->getTimestamp();
+                            $diasSinComprar = $ultimaDT->diff($ahora)->days;
+
+                            if ($segundosSinComprar < 0) {
+                                $segundosSinComprar = 0;
+                                $diasSinComprar = 0;
+                            }
+                        }
+                    } else {
+                        // Todas las fechas resultaron inválidas
+                        $ultimaCompra = null;
+                        $segundosSinComprar = PHP_INT_MAX;
+                        $diasSinComprar = PHP_INT_MAX;
+                        $nuncaCompro = true;
+                    }
                 } else {
-                    // Si nunca ha comprado, se puede excluir o incluir según la lógica deseada
-                    $diasSinComprar = null;
+                    // Cliente sin compras
+                    $ultimaCompra = null;
+                    $segundosSinComprar = PHP_INT_MAX;
+                    $diasSinComprar = PHP_INT_MAX;
                 }
 
-                // Si el cliente supera el período de inactividad, se agrega al listado
-                if ($diasSinComprar !== null && $diasSinComprar > $diasInactivo) {
+                // Regla de inactividad:
+                // - Mostrar si NUNCA compró
+                // - O si lleva >= 5 minutos sin comprar (modo segundos)
+                // - (Si cambias a días, aplicará el límite de días)
+                $esInactivo = false;
+                if ($nuncaCompro) {
+                    $esInactivo = true;
+                } elseif ($usarSegundos && $segundosSinComprar !== null) {
+                    $esInactivo = ($segundosSinComprar >= $limiteSegundos);
+                } elseif (!$usarSegundos && $diasSinComprar !== null) {
+                    $esInactivo = ($diasSinComprar >= $limiteDias);
+                }
+
+                if ($esInactivo) {
                     $inactivos[] = [
                         'id' => $c->id,
                         'nombre' => $c->nombre,
                         'cedula' => $c->cedula,
                         'telefono' => $c->telefono,
-                        'ultimaCompra' => $ultimaCompra,
-                        'diasSinComprar' => $diasSinComprar,
+                        'ultimaCompra' => $ultimaCompra,        // null si nunca, solo fecha Y-m-d
+                        'diasSinComprar' => $diasSinComprar,      // PHP_INT_MAX si nunca
+                        'segundosSinComprar' => $segundosSinComprar,  // PHP_INT_MAX si nunca
+                        'nuncaCompro' => $nuncaCompro,
                         'totalHistorico' => $c->totalHistorico,
                     ];
                 }
             }
 
-            // Ordena los clientes inactivos por mayor tiempo sin comprar
-            usort($inactivos, fn($a, $b) => $b['diasSinComprar'] <=> $a['diasSinComprar']);
+            // Ordenar: "Nunca" arriba (tratado como infinito) y luego por tiempo descendente
+            usort(
+                $inactivos,
+                function ($a, $b) use ($usarSegundos) {
+                    if ($usarSegundos) {
+                        $va = $a['nuncaCompro'] ? PHP_INT_MAX : (int) $a['segundosSinComprar'];
+                        $vb = $b['nuncaCompro'] ? PHP_INT_MAX : (int) $b['segundosSinComprar'];
+                    } else {
+                        $va = $a['nuncaCompro'] ? PHP_INT_MAX : (int) $a['diasSinComprar'];
+                        $vb = $b['nuncaCompro'] ? PHP_INT_MAX : (int) $b['diasSinComprar'];
+                    }
+                    return $vb <=> $va; // descendente
+                }
+            );
 
-            // Obtiene el top 7 de inactivos
             $top = array_slice($inactivos, 0, 7);
 
-            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
-                'diasInactivo' => $diasInactivo,
+                'usarSegundos' => $usarSegundos,
+                'limite' => $usarSegundos ? $limiteSegundos : $limiteDias,
                 'data' => [
                     'ranking' => array_values($inactivos),
-                    'top' => array_values($top)
+                    'top' => array_values($top),
                 ]
             ]);
             break;
-
 
         case 'residenciasFrecuentes':
             // Obtiene todos los clientes

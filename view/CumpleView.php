@@ -69,16 +69,16 @@
 
             <!-- Botones para enviar WhatsApp o Correo -->
             <div class="col-12 d-flex justify-content-end gap-2 mt-2">
-  <button id="btnEnviarWhats" type="button" class="btn btn-sm btn-success">
-    <i class="bi bi-whatsapp"></i> Enviar WhatsApp
-  </button>
-  <button id="btnEnviarCorreo" type="submit" class="btn btn-sm btn-warning text-black">
-    <i class="fas fa-paper-plane"></i> Enviar correo
-  </button>
-  <button id="btnEnviarAmbos" type="button" class="btn btn-sm btn-primary" disabled>
-    <i class="fas fa-gift"></i> Enviar ambos
-  </button>
-</div>
+                <button id="btnEnviarWhats" type="button" class="btn btn-sm btn-success">
+                    <i class="bi bi-whatsapp"></i> Enviar WhatsApp
+                </button>
+                <button id="btnEnviarCorreo" type="submit" class="btn btn-sm btn-warning text-black">
+                    <i class="fas fa-paper-plane"></i> Enviar correo
+                </button>
+                <button id="btnEnviarAmbos" type="button" class="btn btn-sm btn-primary" disabled>
+                    <i class="fas fa-gift"></i> Enviar ambos
+                </button>
+            </div>
 
         </form>
     </div>

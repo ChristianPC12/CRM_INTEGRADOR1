@@ -1,6 +1,6 @@
 <div class="container guia-container mt-4">
   <h2 class="guia-titulo text-center mb-4">
-    <i class="bi bi-info-circle"></i> Manual de usuario para el sistema
+    <i class="bi bi-info-circle"></i> Manual técnico para el sistema
   </h2>
 
   <!-- Botón fijo arriba-izquierda: Reparar MySQL -->

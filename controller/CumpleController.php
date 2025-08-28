@@ -137,92 +137,94 @@ try {
             break;
 
         case 'enviarWhatsCumple':
-    // Envía un WhatsApp de cumpleaños y registra el evento
-    $telefono = $_POST['telefono'] ?? '';
-    $nombre = $_POST['nombre'] ?? '';
-    $mensaje ='';
-    $idCliente = $_POST['idCliente'] ?? null;
+            // Envía un WhatsApp de cumpleaños y registra el evento
+            $telefono = $_POST['telefono'] ?? '';
+            $nombre = $_POST['nombre'] ?? '';
+            $mensaje = '';
+            $idCliente = $_POST['idCliente'] ?? null;
 
-    if (empty($telefono) || empty($nombre) || empty($idCliente)) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Datos incompletos para enviar WhatsApp'
-        ]);
-        break;
-    }
+            if (empty($telefono) || empty($nombre) || empty($idCliente)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Datos incompletos para enviar WhatsApp'
+                ]);
+                break;
+            }
 
-    // Normaliza el teléfono y agrega código país si falta
-    $telefonoLimpio = preg_replace('/\D+/', '', $telefono);
-    if (strlen($telefonoLimpio) < 8) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Teléfono inválido para WhatsApp'
-        ]);
-        break;
-    }
+            // Normaliza el teléfono y agrega código país si falta
+            $telefonoLimpio = preg_replace('/\D+/', '', $telefono);
+            if (strlen($telefonoLimpio) < 8) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Teléfono inválido para WhatsApp'
+                ]);
+                break;
+            }
 
-    $cc = getenv('DEFAULT_CC') ?: '506'; // Costa Rica por defecto
-    if (strpos($telefonoLimpio, $cc) !== 0) {
-        if (strlen($telefonoLimpio) === 8) {
-            $telefonoLimpio = $cc . $telefonoLimpio;
-        }
-    }
+            $cc = getenv('DEFAULT_CC') ?: '506'; // Costa Rica por defecto
+            if (strpos($telefonoLimpio, $cc) !== 0) {
+                if (strlen($telefonoLimpio) === 8) {
+                    $telefonoLimpio = $cc . $telefonoLimpio;
+                }
+            }
 
-    try {
-        $base = getenv('WHATS_BASE') ?: 'http://localhost:3001';
-        $svc = new WhatsApiService($base);
+            try {
+                $base = getenv('WHATS_BASE') ?: 'http://localhost:3001';
+                $svc = new WhatsApiService($base);
 
-        // Verifica que el servicio de WhatsApp esté listo
-        $status = $svc->status();
-        if (!($status['ready'] ?? false)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'WhatsApp no está listo. Verifique que el servicio esté corriendo'
-            ]);
-            break;
-        }
+                // Verifica que el servicio de WhatsApp esté listo
+                $status = $svc->status();
+                if (!($status['ready'] ?? false)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'WhatsApp no está listo. Verifique que el servicio esté corriendo'
+                    ]);
+                    break;
+                }
 
-        // Mensaje final (usa el nuevo default si $mensaje está vacío)
-        if (empty($mensaje)) {
-            $mensajeFinal =
-                "🥳 ¡Hola $nombre!\n" .
-                "En Bastos nos encanta ser parte de tu cumpleaños.\n" .
-                "Ven a celebrarlo con nosotros y reclama tu regalía especial 🎉\n" .
-                "Más info en 👉 www.bastoscr.com";
-        } else {
-            $mensajeFinal = $mensaje;
-        }
+                // Mensaje final (usa el nuevo default si $mensaje está vacío)
+                if (empty($mensaje)) {
+                    $mensajeFinal =
+                        "🥳 ¡Hola $nombre!\n" .
+                        "En Bastos nos encanta ser parte de tu cumpleaños 🎂.\n" .
+                        "Queremos invitarte como *Cliente VIP* a celebrarlo con nosotros y disfrutar de tu regalía especial 🎉.\n\n" .
+                        "👉 Más info en www.bastoscr.com\n\n" .
+                        "📌 Promoción exclusiva para nuestros *clientes VIP*. Vigente durante la semana de tu cumpleaños.";
 
-        // Enviar WhatsApp
-        $res = $svc->send($telefonoLimpio, $mensajeFinal);
+                } else {
+                    $mensajeFinal = $mensaje;
+                }
 
-        // Registrar en historial
-        $hoy = new DateTime();
-        $diaSemana = $hoy->format('w');
-        $diasHastaDomingo = 7 - $diaSemana;
-        $vence = clone $hoy;
-        $vence->modify("+{$diasHastaDomingo} days");
-        $venceStr = $vence->format('Y-m-d');
+                // Enviar WhatsApp
+                $res = $svc->send($telefonoLimpio, $mensajeFinal);
 
-        $sql = "INSERT INTO cumple (IdCliente, FechaLlamada, Vence, Vencido)
+                // Registrar en historial
+                $hoy = new DateTime();
+                $diaSemana = $hoy->format('w');
+                $diasHastaDomingo = 7 - $diaSemana;
+                $vence = clone $hoy;
+                $vence->modify("+{$diasHastaDomingo} days");
+                $venceStr = $vence->format('Y-m-d');
+
+                $sql = "INSERT INTO cumple (IdCliente, FechaLlamada, Vence, Vencido)
                 VALUES (:idCliente, CURDATE(), :vence, 'NO')";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':idCliente', $idCliente);
-        $stmt->bindParam(':vence', $venceStr);
-        $stmt->execute();
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':idCliente', $idCliente);
+                $stmt->bindParam(':vence', $venceStr);
+                $stmt->execute();
 
-        echo json_encode([
-            'success' => true,
-            'message' => 'WhatsApp enviado correctamente',
-            'result' => $res
-        ]);
-    } catch (Exception $e) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Error enviando WhatsApp: ' . $e->getMessage()
-        ]);
-    }
-    break;
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'WhatsApp enviado correctamente',
+                    'result' => $res
+                ]);
+            } catch (Exception $e) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error enviando WhatsApp: ' . $e->getMessage()
+                ]);
+            }
+            break;
 
 
         case 'registrarLlamadaCumple':

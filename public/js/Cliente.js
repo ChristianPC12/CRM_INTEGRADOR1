@@ -206,20 +206,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const buscador = document.getElementById("buscadorClientes");
   if (!buscador) return;
 
-  buscador.placeholder = "Buscar por Tarjeta (ID) o Cédula";
+  buscador.placeholder = "Buscar por Tarjeta (ID), Cédula o Nombre";
 
   buscador.addEventListener("input", function () {
-    const valor = this.value.trim();
+    const valor = this.value.trim().toLowerCase();
     if (!valor) { mostrarClientes(clientesOriginales); return; }
 
-    const digitos = valor.replace(/\D/g, ""); // usar solo números
-
     const filtrados = clientesOriginales.filter((c) => {
-      const idMatch = c.id && String(c.id).includes(digitos);
-      const cedulaMatch =
-        c.cedula &&
-        c.cedula.toString().replace(/\D/g, "").includes(digitos);
-      return idMatch || cedulaMatch;
+      const idMatch = c.id && String(c.id).toLowerCase().includes(valor);
+      const cedulaMatch = c.cedula && c.cedula.toString().toLowerCase().includes(valor);
+      const nombreMatch = c.nombre && c.nombre.toLowerCase().includes(valor);
+      return idMatch || cedulaMatch || nombreMatch;
     });
 
     mostrarClientes(filtrados);

@@ -78,42 +78,59 @@ try {
             break;
 
         case 'clientesMayorHistorial':
-            // Obtiene clientes y compras
             $clienteDAO = new ClienteDAO($db);
             $compraDAO = new CompraDAO($db);
 
-            $clientes = $clienteDAO->readAll();
-            // Filtra solo clientes con totalHistorico > 0
-            $ranking = array_filter($clientes, fn($c) => $c->totalHistorico > 0);
-            // Ordena por totalHistorico descendente
-            usort($ranking, fn($a, $b) => $b->totalHistorico <=> $a->totalHistorico);
+            $clientes = $clienteDAO->readAll();   // ClienteDTO: id, nombre, cedula, telefono, ...
+            $compras = $compraDAO->readAll();    // CompraDTO: idCliente, total, fechaCompra
 
-            // Obtiene todas las compras
-            $compras = $compraDAO->readAll();
-
-            // Indexa las compras por cliente (idCliente => array de fechas)
-            $comprasPorCliente = [];
-            foreach ($compras as $compra) {
-                $comprasPorCliente[$compra->idCliente][] = $compra->fechaCompra;
-            }
-
-            // Asigna posición y última compra a cada cliente en el ranking
-            $i = 1;
-            foreach ($ranking as &$c) {
-                $c->posicion = $i++;
-                // Busca la fecha de la última compra
-                if (!empty($comprasPorCliente[$c->id])) {
-                    $c->ultimaCompra = max($comprasPorCliente[$c->id]);
-                } else {
-                    $c->ultimaCompra = null;
+            // Agregar compras por cliente (SUM y MAX)
+            $agg = []; // idCliente => ['total' => n, 'ultima' => 'YYYY-MM-DD']
+            foreach ($compras as $co) {
+                $cid = (int) $co->idCliente;
+                if (!isset($agg[$cid])) {
+                    $agg[$cid] = ['total' => 0, 'ultima' => null];
+                }
+                $agg[$cid]['total'] += (float) $co->total;
+                if ($agg[$cid]['ultima'] === null || $co->fechaCompra > $agg[$cid]['ultima']) {
+                    $agg[$cid]['ultima'] = $co->fechaCompra;
                 }
             }
-            unset($c); // Limpia la referencia
 
-            // Obtiene el top 7 para el gráfico
+            // Construir ranking solo con quienes tienen compras (>0)
+            $ranking = [];
+            foreach ($clientes as $c) {
+                $cid = (int) $c->id;
+                $total = isset($agg[$cid]) ? (float) $agg[$cid]['total'] : 0;
+                if ($total <= 0)
+                    continue;
+
+                $ranking[] = [
+                    'id' => $c->id,
+                    'nombre' => $c->nombre,
+                    'cedula' => $c->cedula,
+                    'telefono' => $c->telefono,
+                    'totalHistorico' => $total,
+                    'ultimaCompra' => $agg[$cid]['ultima'] ?? null,
+                ];
+            }
+
+            // Ordenar por total desc y luego por última compra desc
+            usort($ranking, function ($a, $b) {
+                if ($b['totalHistorico'] == $a['totalHistorico']) {
+                    return strcmp($b['ultimaCompra'] ?? '', $a['ultimaCompra'] ?? '');
+                }
+                return $b['totalHistorico'] <=> $a['totalHistorico'];
+            });
+
+            // Posiciones y top
+            $i = 1;
+            foreach ($ranking as &$r) {
+                $r['posicion'] = $i++;
+            }
+            unset($r);
             $top = array_slice($ranking, 0, 7);
 
-            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -122,6 +139,7 @@ try {
                 ]
             ]);
             break;
+
         case 'clientesInactivos':
             // Define el período de inactividad (en días). Para pruebas, se usa un valor muy bajo (30 segundos)
             $diasInactivo = 30; // <--- CAMBIA AQUÍ EL PERÍODO
@@ -230,69 +248,72 @@ try {
             break;
 
         case 'clientesAntiguos':
-            // Obtiene todos los clientes
             $clienteDAO = new ClienteDAO($db);
-            $clientes = $clienteDAO->readAll();
-
-            // Obtiene todas las compras
             $compraDAO = new CompraDAO($db);
-            $compras = $compraDAO->readAll();
+
+            $clientes = $clienteDAO->readAll();   // ClienteDTO con fechaRegistro
+            $compras = $compraDAO->readAll();    // CompraDTO: idCliente, fechaCompra, total
 
             $hoy = new DateTime();
 
-            // Indexa las compras por cliente
+            // Agrupar compras por cliente
             $comprasPorCliente = [];
-            foreach ($compras as $c) {
-                $cid = $c->idCliente;
-                if (!isset($comprasPorCliente[$cid]))
+            foreach ($compras as $co) {
+                $cid = (int) $co->idCliente;
+                if (!isset($comprasPorCliente[$cid])) {
                     $comprasPorCliente[$cid] = [];
-                $comprasPorCliente[$cid][] = $c;
+                }
+                $comprasPorCliente[$cid][] = $co;
             }
 
             $ranking = [];
             foreach ($clientes as $cli) {
-                // Calcula la antigüedad del cliente en días desde su registro
+                $cid = (int) $cli->id;
+
+                // Antigüedad = días desde el registro
                 $fechaRegistro = new DateTime($cli->fechaRegistro);
                 $antiguedadDias = $fechaRegistro->diff($hoy)->days;
 
-                // Busca la última compra del cliente
-                $ultCompra = null;
-                if (isset($comprasPorCliente[$cli->id]) && count($comprasPorCliente[$cli->id])) {
-                    $ultCompraObj = array_reduce(
-                        $comprasPorCliente[$cli->id],
-                        function ($carry, $item) {
-                            return (!$carry || $item->fechaCompra > $carry->fechaCompra) ? $item : $carry;
+                // Total histórico desde compras
+                $totalHistorico = 0;
+                $ultimaCompra = null;
+                $diasSinComprar = $antiguedadDias; // por defecto igual a toda la antigüedad
+
+                if (isset($comprasPorCliente[$cid])) {
+                    foreach ($comprasPorCliente[$cid] as $co) {
+                        $totalHistorico += (float) $co->total;
+                        if ($ultimaCompra === null || $co->fechaCompra > $ultimaCompra) {
+                            $ultimaCompra = $co->fechaCompra;
                         }
-                    );
-                    $ultCompra = $ultCompraObj->fechaCompra;
-                    $diasSinComprar = (new DateTime($ultCompra))->diff($hoy)->days;
-                } else {
-                    $ultCompra = null;
-                    $diasSinComprar = $antiguedadDias;
+                    }
+                    if ($ultimaCompra) {
+                        $diasSinComprar = (new DateTime($ultimaCompra))->diff($hoy)->days;
+                    }
                 }
 
-                // Agrega el cliente al ranking con los datos calculados
                 $ranking[] = [
                     'id' => $cli->id,
                     'nombre' => $cli->nombre,
                     'cedula' => $cli->cedula,
                     'antiguedadDias' => $antiguedadDias,
                     'diasSinComprar' => $diasSinComprar,
-                    'totalHistorico' => $cli->totalHistorico,
-                    'ultimaCompra' => $ultCompra,
+                    'totalHistorico' => $totalHistorico,
+                    'ultimaCompra' => $ultimaCompra,
                 ];
             }
 
-            // Ordena el ranking por mayor antigüedad
+            // Ordenar por mayor antigüedad
             usort($ranking, fn($a, $b) => $b['antiguedadDias'] <=> $a['antiguedadDias']);
 
-            // Asigna posición y obtiene el top 7
+            // Asignar posiciones
             $i = 1;
-            foreach ($ranking as &$c)
-                $c['posicion'] = $i++;
+            foreach ($ranking as &$r) {
+                $r['posicion'] = $i++;
+            }
+            unset($r);
+
             $top = array_slice($ranking, 0, 7);
 
-            // Devuelve el resultado en formato JSON
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -301,6 +322,7 @@ try {
                 ]
             ]);
             break;
+
 
         case 'ventasPorMes':
             // Obtiene todas las compras

@@ -499,12 +499,36 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
   const btnWhats2 = $("btnEnviarWhats");
 
   if (!correo) {
+    // Cuando NO tiene correo - mostrar alerta y después usar EXACTAMENTE la misma lógica que con correo
     Swal.fire({
       icon: "warning",
       title: "¡Este cliente no tiene correo!",
       text: "Recordá llamarlo o escribirle un mensaje.",
       confirmButtonText: "Entendido",
+    }).then(() => {
+      // Usar EXACTAMENTE la misma lógica que cuando tiene correo, pero para WhatsApp
+      const btnWhats = $("btnEnviarWhats");
+      if (btnWhats && !btnWhats.disabled) {
+        setTimeout(() => {
+          btnWhats.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+          });
+          setTimeout(() => {
+            btnWhats.focus();
+            btnWhats.style.transition = "all 0.3s ease";
+            btnWhats.style.transform = "scale(1.02)";
+            btnWhats.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.7)";
+            setTimeout(() => {
+              btnWhats.style.transform = "scale(1)";
+              btnWhats.style.boxShadow = "";
+            }, 1500);
+          }, 600);
+        }, 200);
+      }
     });
+    
     if (btn) btn.disabled = true;
     if (btnWhats2) btnWhats2.disabled = !telefono;
   } else {
@@ -803,17 +827,38 @@ function scrollYFocusFormulario() {
       inline: "nearest",
     });
     setTimeout(() => {
-      const btnEnviarCorreo = $("btnEnviarCorreo");
-      if (btnEnviarCorreo) {
-        btnEnviarCorreo.style.transition = "all 0.3s ease";
-        btnEnviarCorreo.style.transform = "scale(1.05)";
-        btnEnviarCorreo.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.6)";
-        btnEnviarCorreo.focus();
-        setTimeout(() => {
-          btnEnviarCorreo.style.transform = "scale(1)";
-          btnEnviarCorreo.style.boxShadow =
-            "0 4px 16px rgba(249, 196, 31, 0.3)";
-        }, 2000);
+      // Verificar si el cliente tiene correo para determinar a qué botón hacer focus
+      const correoInput = $("correoCorreo");
+      const tieneCorreo = correoInput && correoInput.value && correoInput.value.trim() !== "";
+      
+      if (tieneCorreo) {
+        // Si tiene correo, hacer focus al botón de correo
+        const btnEnviarCorreo = $("btnEnviarCorreo");
+        if (btnEnviarCorreo && !btnEnviarCorreo.disabled) {
+          btnEnviarCorreo.style.transition = "all 0.3s ease";
+          btnEnviarCorreo.style.transform = "scale(1.05)";
+          btnEnviarCorreo.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.6)";
+          btnEnviarCorreo.focus();
+          setTimeout(() => {
+            btnEnviarCorreo.style.transform = "scale(1)";
+            btnEnviarCorreo.style.boxShadow =
+              "0 4px 16px rgba(249, 196, 31, 0.3)";
+          }, 2000);
+        }
+      } else {
+        // Si NO tiene correo, hacer focus al área de botones (WhatsApp, correo, ambos)
+        const btnEnviarWhats = $("btnEnviarWhats");
+        if (btnEnviarWhats) {
+          btnEnviarWhats.style.transition = "all 0.3s ease";
+          btnEnviarWhats.style.transform = "scale(1.05)";
+          btnEnviarWhats.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.6)";
+          btnEnviarWhats.focus();
+          setTimeout(() => {
+            btnEnviarWhats.style.transform = "scale(1)";
+            btnEnviarWhats.style.boxShadow =
+              "0 4px 16px rgba(40, 167, 69, 0.3)";
+          }, 2000);
+        }
       }
     }, 800);
   }
@@ -830,9 +875,73 @@ cargarHistorial = function () {
 
 const seleccionarCumpleOriginal = seleccionarCumple;
 window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
-  seleccionarCumpleOriginal(id, nombre, cedula, correo, telefono, fecha);
-  setTimeout(() => {
-    scrollYFocusFormulario();
-    syncEnviarAmbos();
-  }, 300);
+  // Llenar los campos del formulario primero
+  $("idCumple").value = id;
+  $("nombreCorreo").value = nombre;
+  $("cedulaCorreo").value = cedula;
+  $("correoCorreo").value = correo;
+  $("telefonoCorreo").value = telefono;
+  $("fechaCumple").value = fecha;
+
+  const btn = $("btnEnviarCorreo");
+  const btnWhats2 = $("btnEnviarWhats");
+
+  if (!correo) {
+    // Cuando NO tiene correo - mostrar alerta y después hacer scroll igual que con correo
+    Swal.fire({
+      icon: "warning",
+      title: "¡Este cliente no tiene correo!",
+      text: "Recordá llamarlo o escribirle un mensaje.",
+      confirmButtonText: "Entendido",
+    }).then(() => {
+      // Usar la MISMA lógica de scroll y focus que cuando tiene correo, pero para WhatsApp
+      const btnWhats = $("btnEnviarWhats");
+      if (btnWhats && !btnWhats.disabled) {
+        setTimeout(() => {
+          btnWhats.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+          });
+          setTimeout(() => {
+            btnWhats.focus();
+            btnWhats.style.transition = "all 0.3s ease";
+            btnWhats.style.transform = "scale(1.02)";
+            btnWhats.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.7)";
+            setTimeout(() => {
+              btnWhats.style.transform = "scale(1)";
+              btnWhats.style.boxShadow = "";
+            }, 1500);
+          }, 600);
+        }, 200);
+      }
+    });
+    
+    if (btn) btn.disabled = true;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
+  } else {
+    // Cuando SÍ tiene correo - usar comportamiento original
+    if (btn) btn.disabled = false;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
+
+    setTimeout(() => {
+      btn.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+      setTimeout(() => {
+        btn.focus();
+        btn.style.transition = "all 0.3s ease";
+        btn.style.transform = "scale(1.02)";
+        btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
+        setTimeout(() => {
+          btn.style.transform = "scale(1)";
+          btn.style.boxShadow = "";
+        }, 1500);
+      }, 600);
+    }, 200);
+  }
+
+  syncEnviarAmbos();
 };

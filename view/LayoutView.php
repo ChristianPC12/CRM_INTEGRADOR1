@@ -80,7 +80,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=usuarios" id="link-usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
                 </a>
             </li>
@@ -95,7 +95,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=analisis" id="link-analisis" class="<?= $vista === 'analisis' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=analisis"  class="<?= $vista === 'analisis' ? 'active' : '' ?>">
                     <i class="bi bi-graph-up-arrow"></i> Análisis
                 </a>
             </li>

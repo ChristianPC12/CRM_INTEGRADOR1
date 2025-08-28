@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 14, 2025 at 05:09 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 28-08-2025 a las 07:22:53
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bd_bastos_crm`
+-- Base de datos: `bd_bastos_crm`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procedimientos
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `BitacoraCreate` (IN `p_IdUsuario` INT, IN `p_HoraEntrada` TIME, IN `p_HoraSalida` TIME, IN `p_Fecha` DATE)   BEGIN
     INSERT INTO bitacora (IdUsuario, HoraEntrada, HoraSalida, Fecha)
@@ -51,13 +51,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `BitacoraUpdate` (IN `p_Id` INT, IN 
     WHERE Id = p_Id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ClienteCreate` (IN `pCedula` VARCHAR(20), IN `pNombre` VARCHAR(120), IN `pCorreo` VARCHAR(120), IN `pTelefono` VARCHAR(30), IN `pLugarResidencia` VARCHAR(200), IN `pFechaCumpleanos` DATE, IN `pAlergias` TEXT, IN `pGustosEspeciales` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ClienteCreate` (IN `pCedula` VARCHAR(20), IN `pNombre` VARCHAR(100), IN `pCorreo` VARCHAR(100), IN `pTelefono` VARCHAR(20), IN `pLugarResidencia` VARCHAR(100), IN `pFechaCumpleanos` DATE, IN `pAlergias` VARCHAR(255), IN `pGustosEspeciales` VARCHAR(255))   BEGIN
     INSERT INTO cliente (
         Cedula, Nombre, Correo, Telefono, LugarResidencia, FechaCumpleanos,
-        Alergias, gustos_especiales
-    ) VALUES (
+        Alergias, Gustos_Especiales, FechaRegistro
+    )
+    VALUES (
         pCedula, pNombre, pCorreo, pTelefono, pLugarResidencia, pFechaCumpleanos,
-        pAlergias, pGustosEspeciales
+        pAlergias, pGustosEspeciales, NOW()
     );
 END$$
 
@@ -100,13 +101,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ClienteCumpleSemanaOffset` (IN `p_o
     SET domingo = DATE_ADD(lunes, INTERVAL 6 DAY);
 
     SELECT 
-        c.Id,
+        c.Id,               
         c.Cedula,
         c.Nombre,
         c.Correo,
         c.Telefono,
-        c.FechaCumpleanos
+        c.FechaCumpleanos,
+        IFNULL(agg.Visitas, 0)        AS Visitas,
+        IFNULL(agg.TotalHistorico, 0) AS TotalHistorico
     FROM cliente c
+ 
+    LEFT JOIN (
+        SELECT
+            IdCliente,
+            COUNT(*)          AS Visitas,
+            IFNULL(SUM(Total),0) AS TotalHistorico
+        FROM compra
+        GROUP BY IdCliente
+    ) agg ON agg.IdCliente = c.Id
     WHERE DATE_FORMAT(c.FechaCumpleanos, '%m-%d') IN (
         DATE_FORMAT(lunes, '%m-%d'),
         DATE_FORMAT(DATE_ADD(lunes, INTERVAL 1 DAY), '%m-%d'),
@@ -366,7 +378,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bitacora`
+-- Estructura de tabla para la tabla `bitacora`
 --
 
 CREATE TABLE `bitacora` (
@@ -377,7 +389,7 @@ CREATE TABLE `bitacora` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `bitacora`
+-- Volcado de datos para la tabla `bitacora`
 --
 
 INSERT INTO `bitacora` (`IdUsuario`, `HoraEntrada`, `HoraSalida`, `Fecha`) VALUES
@@ -410,7 +422,7 @@ INSERT INTO `bitacora` (`IdUsuario`, `HoraEntrada`, `HoraSalida`, `Fecha`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -429,7 +441,7 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `cliente`
+-- Volcado de datos para la tabla `cliente`
 --
 
 INSERT INTO `cliente` (`Id`, `Cedula`, `Nombre`, `Correo`, `Telefono`, `LugarResidencia`, `FechaCumpleanos`, `Acumulado`, `FechaRegistro`, `TotalHistorico`, `alergias`, `gustos_especiales`) VALUES
@@ -499,10 +511,11 @@ INSERT INTO `cliente` (`Id`, `Cedula`, `Nombre`, `Correo`, `Telefono`, `LugarRes
 (64, '', 'Ivannia Campos Araya', NULL, '84854528', '', '2024-08-12', NULL, '2025-08-13', NULL, NULL, NULL),
 (65, '', 'Senia Barrios', NULL, '89290404', '', '2024-10-24', NULL, '2025-08-13', NULL, NULL, NULL),
 (66, '124300985', 'Geiner Jose Murillo Castro', NULL, '89787612', '', '0000-00-00', NULL, '2025-08-13', NULL, NULL, NULL),
-(67, '', 'Eduardo Espinal', NULL, '86579608', '', '2024-05-05', NULL, '2025-08-13', NULL, NULL, NULL);
+(67, '', 'Eduardo Espinal', NULL, '86579608', '', '2024-05-05', NULL, '2025-08-13', NULL, NULL, NULL),
+(71, '987654328', 'CHRISTIAN EDUARDO PANIAGUA CASTRO', 'CRISP314528@GMAIL.COM', '86569285', 'LA CRUZ, GUANACASTE', '2005-05-12', NULL, '2025-08-27', NULL, NULL, NULL);
 
 --
--- Triggers `cliente`
+-- Disparadores `cliente`
 --
 DELIMITER $$
 CREATE TRIGGER `InsertCodigoAfterCliente` AFTER INSERT ON `cliente` FOR EACH ROW BEGIN
@@ -515,7 +528,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `codigo`
+-- Estructura de tabla para la tabla `codigo`
 --
 
 CREATE TABLE `codigo` (
@@ -529,7 +542,7 @@ CREATE TABLE `codigo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `codigo`
+-- Volcado de datos para la tabla `codigo`
 --
 
 INSERT INTO `codigo` (`Id`, `IdCliente`, `CodigoBarra`, `CantImpresiones`, `Estado`, `MotivoCambio`, `FechaCambio`) VALUES
@@ -599,12 +612,13 @@ INSERT INTO `codigo` (`Id`, `IdCliente`, `CodigoBarra`, `CantImpresiones`, `Esta
 (2562, 64, 'CODE-64', 0, 'Activo', NULL, NULL),
 (2563, 65, 'CODE-65', 0, 'Activo', NULL, NULL),
 (2564, 66, 'CODE-66', 0, 'Activo', NULL, NULL),
-(2565, 67, 'CODE-67', 0, 'Activo', NULL, NULL);
+(2565, 67, 'CODE-67', 0, 'Activo', NULL, NULL),
+(2572, 71, 'CODE-71', 0, 'Activo', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `compra`
+-- Estructura de tabla para la tabla `compra`
 --
 
 CREATE TABLE `compra` (
@@ -617,7 +631,7 @@ CREATE TABLE `compra` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cumple`
+-- Estructura de tabla para la tabla `cumple`
 --
 
 CREATE TABLE `cumple` (
@@ -631,7 +645,7 @@ CREATE TABLE `cumple` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tarea`
+-- Estructura de tabla para la tabla `tarea`
 --
 
 CREATE TABLE `tarea` (
@@ -642,7 +656,7 @@ CREATE TABLE `tarea` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `tarea`
+-- Volcado de datos para la tabla `tarea`
 --
 
 INSERT INTO `tarea` (`id`, `descripcion`, `estado`, `fecha_creacion`) VALUES
@@ -658,7 +672,7 @@ INSERT INTO `tarea` (`id`, `descripcion`, `estado`, `fecha_creacion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -669,7 +683,7 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Dumping data for table `usuario`
+-- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`Id`, `Usuario`, `Contrasena`, `Rol`) VALUES
@@ -688,124 +702,124 @@ INSERT INTO `usuario` (`Id`, `Usuario`, `Contrasena`, `Rol`) VALUES
 (1018, 'PRUEBADEFINITIVA', '$2y$10$q5itKCf/xV3BnSHWmaqcdepoai8jc6vcXEtrDtXu1qQMv1eZzJxHO', 'Administrador');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `bitacora`
+-- Indices de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
   ADD KEY `IdUsuario` (`IdUsuario`);
 
 --
--- Indexes for table `cliente`
+-- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`Id`) USING BTREE;
 
 --
--- Indexes for table `codigo`
+-- Indices de la tabla `codigo`
 --
 ALTER TABLE `codigo`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `IdCliente` (`IdCliente`);
 
 --
--- Indexes for table `compra`
+-- Indices de la tabla `compra`
 --
 ALTER TABLE `compra`
   ADD PRIMARY KEY (`IdCompra`) USING BTREE,
   ADD KEY `idCliente` (`IdCliente`) USING BTREE;
 
 --
--- Indexes for table `cumple`
+-- Indices de la tabla `cumple`
 --
 ALTER TABLE `cumple`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `IdCliente` (`IdCliente`);
 
 --
--- Indexes for table `tarea`
+-- Indices de la tabla `tarea`
 --
 ALTER TABLE `tarea`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `usuario`
+-- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`Id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `bitacora`
+-- AUTO_INCREMENT de la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
   MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1019;
 
 --
--- AUTO_INCREMENT for table `cliente`
+-- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `Id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `Id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
--- AUTO_INCREMENT for table `codigo`
+-- AUTO_INCREMENT de la tabla `codigo`
 --
 ALTER TABLE `codigo`
-  MODIFY `Id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2566;
+  MODIFY `Id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2574;
 
 --
--- AUTO_INCREMENT for table `compra`
+-- AUTO_INCREMENT de la tabla `compra`
 --
 ALTER TABLE `compra`
-  MODIFY `IdCompra` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28540;
+  MODIFY `IdCompra` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28541;
 
 --
--- AUTO_INCREMENT for table `cumple`
+-- AUTO_INCREMENT de la tabla `cumple`
 --
 ALTER TABLE `cumple`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `tarea`
+-- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
--- AUTO_INCREMENT for table `usuario`
+-- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `Id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1019;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `bitacora`
+-- Filtros para la tabla `bitacora`
 --
 ALTER TABLE `bitacora`
   ADD CONSTRAINT `bitacora_ibfk_1` FOREIGN KEY (`IdUsuario`) REFERENCES `usuario` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `codigo`
+-- Filtros para la tabla `codigo`
 --
 ALTER TABLE `codigo`
   ADD CONSTRAINT `codigo_ibfk_1` FOREIGN KEY (`IdCliente`) REFERENCES `cliente` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `compra`
+-- Filtros para la tabla `compra`
 --
 ALTER TABLE `compra`
   ADD CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`IdCliente`) REFERENCES `cliente` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `cumple`
+-- Filtros para la tabla `cumple`
 --
 ALTER TABLE `cumple`
   ADD CONSTRAINT `cumple_ibfk_1` FOREIGN KEY (`IdCliente`) REFERENCES `cliente` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;

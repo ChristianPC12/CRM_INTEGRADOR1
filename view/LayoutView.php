@@ -34,9 +34,11 @@ $vista = $_GET['view'] ?? 'dashboard';
     <?php elseif ($vista === 'cumple'): ?>
         <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Cumple.css?v=<?= time() ?>">
     <?php elseif ($vista === 'guia'): ?>
-        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual.css?v=<?= time() ?>">
+        <link rel="preload" href="/CRM_INT/CRM/public/css/Manual.css?v=<?= time() ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual.css?v=<?= time() ?>"></noscript>
     <?php elseif ($vista === 'guia2'): ?>
-        <link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual2.css?v=<?= time() ?>">
+        <link rel="preload" href="/CRM_INT/CRM/public/css/Manual2.css?v=<?= time() ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="/CRM_INT/CRM/public/css/Manual2.css?v=<?= time() ?>"></noscript>
     <?php endif; ?>
 
     <!-- CSS general del layout (siempre) -->

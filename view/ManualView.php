@@ -19,8 +19,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="CIjYfjxSJbI">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/CIjYfjxSJbI/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="RcVyf11U0gc">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/RcVyf11U0gc/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>
@@ -45,8 +45,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="ozohxbb4A5A">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/ozohxbb4A5A/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="DjKJVifdwe8">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/DjKJVifdwe8/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>
@@ -72,8 +72,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="p7yA0D90Qj0">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/p7yA0D90Qj0/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="NgPArIpq6k8">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/NgPArIpq6k8/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>
@@ -98,8 +98,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="5cDW7KrH2iI">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/5cDW7KrH2iI/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="QFOB1h_8ru8">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/QFOB1h_8ru8/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>
@@ -176,8 +176,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="Bcup9Lkpank">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/Bcup9Lkpank/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="j2jnB1TqmDM">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/j2jnB1TqmDM/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>
@@ -202,8 +202,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="pkPX4K3yCd8">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/pkPX4K3yCd8/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="tMYD3tGrUro">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/tMYD3tGrUro/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>

@@ -829,16 +829,8 @@ cargarHistorial = function () {
 };
 
 const seleccionarCumpleOriginal = seleccionarCumple;
-seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
-  seleccionarCumpleOriginal.call(
-    this,
-    id,
-    nombre,
-    cedula,
-    correo,
-    telefono,
-    fecha
-  );
+window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
+  seleccionarCumpleOriginal(id, nombre, cedula, correo, telefono, fecha);
   setTimeout(() => {
     scrollYFocusFormulario();
     syncEnviarAmbos();

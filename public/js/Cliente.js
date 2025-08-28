@@ -1,20 +1,20 @@
 // Estado de edición
-let editandoId = null;
+var editandoId = null;
 
-let clientesOriginales = []; // Nueva variable para guardar TODOS los clientes
-let clientesActuales = []; // Guardará los clientes filtrados para la tabla
+var clientesOriginales = []; // Nueva variable para guardar TODOS los clientes
+var clientesActuales = []; // Guardará los clientes filtrados para la tabla
 
 // Referencias a elementos del formulario y botones
-const form = document.getElementById("clienteForm");
-const lista = document.getElementById("clienteLista");
-const submitBtn = document.getElementById("submitBtn");
-const cancelBtn = document.getElementById("cancelBtn");
-const campoId = document.getElementById("id");
+var form = document.getElementById("clienteForm");
+var lista = document.getElementById("clienteLista");
+var submitBtn = document.getElementById("submitBtn");
+var cancelBtn = document.getElementById("cancelBtn");
+var campoId = document.getElementById("id");
 
 /**
  * Validaciones del formulario
  */
-const validaciones = {
+var validaciones = {
   esCedulaValida: (cedula) => {
     // Validar formato de cédula costarricense (9 dígitos)
     return /^\d{9}$/.test(cedula);
@@ -81,7 +81,7 @@ const validaciones = {
 /**
  * Carga todos los clientes desde el servidor y los muestra en la tabla.
  */
-const cargarClientes = async () => {
+var cargarClientes = async () => {
   try {
     lista.innerHTML = `<div class="text-center p-3">
       <div class="spinner-border text-primary" role="status"></div>
@@ -105,7 +105,7 @@ const cargarClientes = async () => {
   }
 };
 
-const mostrarClientes = (clientes) => {
+var mostrarClientes = (clientes) => {
   clientesActuales = clientes; // Guardar para eventos de la tabla
 
   // Si es la primera vez o estamos cargando todos los clientes, actualizar originales
@@ -200,7 +200,7 @@ const mostrarClientes = (clientes) => {
 };
 
 // Función para inicializar o actualizar la lista completa de clientes
-const cargarClientesCompletos = (clientes) => {
+var cargarClientesCompletos = (clientes) => {
   clientesOriginales = [...clientes]; // Guardar copia completa
   mostrarClientes(clientes);
 };
@@ -216,14 +216,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const valor = this.value.trim();
     if (!valor) { mostrarClientes(clientesOriginales); return; }
 
-    const digitos = valor.replace(/\D/g, ""); // usar solo números
+    const valorLower = valor.toLowerCase();
+    const digitos = valor.replace(/\D/g, "");
 
     const filtrados = clientesOriginales.filter((c) => {
-      const idMatch = c.id && String(c.id).includes(digitos);
-      const cedulaMatch =
-        c.cedula &&
-        c.cedula.toString().replace(/\D/g, "").includes(digitos);
-      return idMatch || cedulaMatch;
+      // Si el usuario escribe solo números, busca por ID o cédula
+      if (digitos && digitos.length === valor.length) {
+        const idMatch = c.id && String(c.id).includes(digitos);
+        const cedulaMatch = c.cedula && c.cedula.toString().replace(/\D/g, "").includes(digitos);
+        return idMatch || cedulaMatch;
+      }
+      // Si el usuario escribe letras o mezcla, busca por nombre (y también por cédula/ID)
+      const nombreMatch = c.nombre && c.nombre.toLowerCase().includes(valorLower);
+      const idMatch = c.id && String(c.id).includes(valor);
+      const cedulaMatch = c.cedula && c.cedula.toString().includes(valor);
+      return nombreMatch || idMatch || cedulaMatch;
     });
 
     mostrarClientes(filtrados);
@@ -233,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /**
  * Carga los datos del cliente seleccionado para edición.
  */
-const editarCliente = async (id) => {
+var editarCliente = async (id) => {
   try {
     const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
       method: "POST",
@@ -267,7 +274,7 @@ const editarCliente = async (id) => {
 /**
  * Elimina un cliente mediante confirmación.
  */
-const eliminarCliente = async (id) => {
+var eliminarCliente = async (id) => {
   if (!confirm("¿Estás seguro de que quieres eliminar este cliente?")) return;
   try {
     const res = await fetch("/CRM_INT/CRM/controller/ClienteController.php", {
@@ -293,7 +300,7 @@ const eliminarCliente = async (id) => {
 /**
  * Restaura el formulario a su estado inicial.
  */
-const cancelarEdicion = () => {
+var cancelarEdicion = () => {
   editandoId = null;
   form.reset();
   campoId.disabled = true;
@@ -548,12 +555,12 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 
 // Variables globales para el modal de reasignación
-let clienteParaReasignar = null;
+var clienteParaReasignar = null;
 
 /**
  * Abre el modal de reasignación de código
  */
-const abrirModalReasignar = (idCliente, nombreCliente, cedulaCliente) => {
+var abrirModalReasignar = (idCliente, nombreCliente, cedulaCliente) => {
   console.log("Abriendo modal para cliente:", idCliente);
 
   clienteParaReasignar = {
@@ -612,7 +619,7 @@ const abrirModalReasignar = (idCliente, nombreCliente, cedulaCliente) => {
 /**
  * Maneja la selección del motivo de reasignación
  */
-const manejarSeleccionMotivo = () => {
+var manejarSeleccionMotivo = () => {
   const motivoSelect = document.getElementById("motivoSelect");
   const motivoTextarea = document.getElementById("motivoReasignacion");
 
@@ -638,7 +645,7 @@ const manejarSeleccionMotivo = () => {
 /**
  * Procesa la reasignación del código
  */
-const procesarReasignacion = async () => {
+var procesarReasignacion = async () => {
   try {
     if (!clienteParaReasignar || !clienteParaReasignar.id) {
       alert("Error: No se ha seleccionado un cliente válido");
@@ -749,7 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /**
  * Actualiza el estado visual de la actualización automática
  */
-const actualizarEstadoVisualizacion = (estado) => {
+var actualizarEstadoVisualizacion = (estado) => {
   const estadoElement = document.getElementById("estadoActualizacion");
   if (estadoElement) {
     switch (estado) {
@@ -773,7 +780,7 @@ const actualizarEstadoVisualizacion = (estado) => {
 /**
  * Carga el historial de reasignaciones desde el servidor
  */
-const cargarHistorialReasignaciones = async (esManual = false) => {
+var cargarHistorialReasignaciones = async (esManual = false) => {
   const contenedor = document.getElementById("historialReasignaciones");
 
   // Solo mostrar spinner en carga manual, no en automática
@@ -829,7 +836,7 @@ const cargarHistorialReasignaciones = async (esManual = false) => {
 /**
  * Procesa los datos de códigos para extraer el historial de reasignaciones
  */
-const procesarHistorialReasignaciones = (codigos, clientes) => {
+var procesarHistorialReasignaciones = (codigos, clientes) => {
   const ahora = new Date().toLocaleTimeString();
   console.log(`[${ahora}] Procesando historial de reasignaciones...`);
   console.log("Total códigos recibidos:", codigos.length);
@@ -927,7 +934,7 @@ const procesarHistorialReasignaciones = (codigos, clientes) => {
 /**
  * Muestra el historial de reasignaciones en una tabla
  */
-const mostrarHistorialReasignaciones = (historialPorCliente) => {
+var mostrarHistorialReasignaciones = (historialPorCliente) => {
   const contenedor = document.getElementById("historialReasignaciones");
 
   if (!historialPorCliente || historialPorCliente.length === 0) {
@@ -1034,9 +1041,9 @@ window.toggleDetalleReasignaciones = function (clienteIndex) {
 /**
  * Actualización automática del historial cada 30 segundos
  */
-let intervaloActualizacion = null;
+var intervaloActualizacion = null;
 
-const iniciarActualizacionAutomatica = () => {
+var iniciarActualizacionAutomatica = () => {
   // Limpiar cualquier intervalo existente
   if (intervaloActualizacion) {
     clearInterval(intervaloActualizacion);
@@ -1052,7 +1059,7 @@ const iniciarActualizacionAutomatica = () => {
   console.log("Auto-refresh iniciado: cada 30 segundos");
 };
 
-const detenerActualizacionAutomatica = () => {
+var detenerActualizacionAutomatica = () => {
   if (intervaloActualizacion) {
     clearInterval(intervaloActualizacion);
     intervaloActualizacion = null;

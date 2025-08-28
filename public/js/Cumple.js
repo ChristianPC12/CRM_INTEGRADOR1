@@ -1,34 +1,104 @@
+// ================== HELPERS (para reducir código repetido) ==================
+const $ = (id) => document.getElementById(id);
+const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
+
+// Sincroniza el estado del botón "Enviar ambos": se activa solo si ambos están activos
+// Versión mejorada de syncEnviarAmbos
+function syncEnviarAmbos() {
+  const btnCorreo = $("btnEnviarCorreo");
+  const btnWhats = $("btnEnviarWhats");
+  const btnAmbos = $("btnEnviarAmbos");
+  
+  if (!btnAmbos || !btnCorreo || !btnWhats) return;
+
+  // Se activa "Enviar ambos" solo cuando AMBOS botones están habilitados
+  const correoHabilitado = !btnCorreo.disabled;
+  const whatsHabilitado = !btnWhats.disabled;
+  
+  btnAmbos.disabled = !(correoHabilitado && whatsHabilitado);
+  
+  // Debug opcional (puedes comentar estas líneas)
+  console.log('Sincronizando botones:', {
+    correoHabilitado,
+    whatsHabilitado, 
+    ambosHabilitado: !btnAmbos.disabled
+  });
+}
+
+// Hace submit seguro del formulario (para no duplicar lógica)
+function submitFormCorreo() {
+  const form = $("formCorreo");
+  if (!form) return;
+  if (typeof form.requestSubmit === "function") form.requestSubmit();
+  else
+    form.dispatchEvent(
+      new Event("submit", { cancelable: true, bubbles: true })
+    );
+}
+
+// ================== TU LÓGICA ORIGINAL (con mínimos ajustes) ==================
 document.addEventListener("DOMContentLoaded", () => {
-  mostrarSemanaActual(); // ⬅️ NUEVO: Mostrar el rango apenas cargue
+  mostrarSemanaActual();
   cargarCumples();
   cargarHistorial();
+
   // --- Navegación de semana (flechas del header)
-  const btnPrev = document.getElementById("btnPrevSemana");
-  const btnNext = document.getElementById("btnNextSemana");
-  const lblSemana = document.getElementById("lblSemana");
+  const btnPrev = $("btnPrevSemana");
+  const btnNext = $("btnNextSemana");
 
   if (btnPrev && btnNext) {
-    btnPrev.addEventListener("click", () => {
+    on(btnPrev, "click", () => {
       semanaOffset = 0;
-      mostrarSemanaActual(); // repinta rango
-      cargarCumples(); // recarga datos
+      mostrarSemanaActual();
+      cargarCumples();
       actualizarNavSemanaUI();
     });
-    btnNext.addEventListener("click", () => {
+    on(btnNext, "click", () => {
       semanaOffset = 1;
       mostrarSemanaActual();
       cargarCumples();
       actualizarNavSemanaUI();
     });
-    actualizarNavSemanaUI(); // estado inicial (‹ deshabilitado)
+    actualizarNavSemanaUI();
   }
 
-  document.getElementById("btnEnviarCorreo").disabled = true;
-  // Botón WhatsApp inicialmente deshabilitado
-  const btnWhats = document.getElementById("btnEnviarWhats");
-  if (btnWhats) btnWhats.disabled = true;
+  // Estado inicial de botones
+  const btnCorreo = $("btnEnviarCorreo");
+  const btnWhats = $("btnEnviarWhats");
+  const btnAmbos = $("btnEnviarAmbos");
 
-  // Función para actualizar el badge de cumpleaños pendientes en el sidebar
+  if (btnCorreo) btnCorreo.disabled = true;
+  if (btnWhats) btnWhats.disabled = true;
+  if (btnAmbos) btnAmbos.disabled = true;
+
+  // Habilitar/deshabilitar "Enviar ambos" si cambia el teléfono manualmente
+  on($("telefonoCorreo"), "input", () => {
+    const telefono = $("telefonoCorreo").value?.trim();
+    if (btnWhats) btnWhats.disabled = !telefono;
+    syncEnviarAmbos();
+  });
+
+  // ====== Enviar Ambos: hace click al WhatsApp y luego envía el formulario de correo ======
+  if (btnAmbos) {
+    on(btnAmbos, "click", async () => {
+      const btnCorreo = $("btnEnviarCorreo");
+      const btnWhats = $("btnEnviarWhats");
+
+      if (!btnCorreo || !btnWhats) return;
+      if (btnAmbos.disabled) return;
+
+      // 1) Disparar WhatsApp (usa tu handler existente)
+      btnWhats.click();
+
+      // 2) Pequeño delay para no pelear con el "estado LISTA" (evita condiciones de carrera)
+      setTimeout(() => {
+        // Solo si sigue habilitado (tiene correo)
+        if (!btnCorreo.disabled) submitFormCorreo();
+      }, 250);
+    });
+  }
+
+  // ========== Sidebar badge (sin cambios funcionales) ==========
   function actualizarCumpleBadgeSidebar() {
     fetch("/CRM_INT/CRM/controller/CumpleController.php", {
       method: "POST",
@@ -43,74 +113,71 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  document
-    .getElementById("formCorreo")
-    .addEventListener("submit", async (e) => {
-      e.preventDefault();
+  // ====== Submit de correo (igual que el tuyo, con llamada a syncEnviarAmbos()) ======
+  on($("formCorreo"), "submit", async (e) => {
+    e.preventDefault();
 
-      const id = document.getElementById("idCumple").value;
-      const nombre = document.getElementById("nombreCorreo").value;
-      const correo = document.getElementById("correoCorreo").value;
+    const id = $("idCumple").value;
+    const nombre = $("nombreCorreo").value;
+    const correo = $("correoCorreo").value;
 
-      if (!correo || correo.trim() === "") {
-        Swal.fire({
-          icon: "info",
-          title: "¡No tiene correo!",
-          text: `${nombre} no tiene correo registrado. Contactalo por teléfono para felicitarlo.`,
-        });
-        return;
+    if (!correo || correo.trim() === "") {
+      Swal.fire({
+        icon: "info",
+        title: "¡No tiene correo!",
+        text: `${nombre} no tiene correo registrado. Contactalo por teléfono para felicitarlo.`,
+      });
+      return;
+    }
+
+    if (!id || !nombre || !correo) return;
+
+    const mensaje = `¡Feliz cumpleaños ${nombre}! 🎉 En nuestro restaurante queremos celebrarte con una comida, bebida o postre totalmente gratis para vos. Te esperamos hoy mismo para consentirte como te merecés.`;
+
+    const formData = new URLSearchParams();
+    formData.append("action", "enviarCorreoCumple");
+    formData.append("nombre", nombre);
+    formData.append("correo", correo);
+    formData.append("mensaje", mensaje);
+    formData.append("idCliente", id);
+
+    try {
+      const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString(),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        await cambiarEstado(id, "LISTA");
+        Swal.fire("¡Éxito!", data.message, "success");
+        $("formCorreo").reset();
+        if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+        if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true; // después de atenderlo, deshabilitamos ambos
+        if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+
+        cargarCumples();
+        cargarHistorial();
+        if (window.actualizarCumpleBadgeSidebar)
+          window.actualizarCumpleBadgeSidebar();
+      } else {
+        Swal.fire("Error", data.message, "error");
       }
+    } catch (err) {
+      console.error("Error al enviar correo:", err);
+      Swal.fire("Error", "No se pudo conectar con el servidor", "error");
+    } finally {
+      syncEnviarAmbos();
+    }
+  });
 
-      if (!id || !nombre || !correo) return;
-
-      const mensaje = `¡Feliz cumpleaños ${nombre}! 🎉 En nuestro restaurante queremos celebrarte con una comida, bebida o postre totalmente gratis para vos. Te esperamos hoy mismo para consentirte como te merecés.`;
-
-      const formData = new URLSearchParams();
-      formData.append("action", "enviarCorreoCumple");
-      formData.append("nombre", nombre);
-      formData.append("correo", correo);
-      formData.append("mensaje", mensaje);
-      // NUEVO: enviar cedula, telefono y cumpleaños
-      // NUEVO: enviar solo el ID del cliente
-      const idCliente = document.getElementById("idCumple").value;
-      formData.append("idCliente", idCliente);
-
-      try {
-        const res = await fetch(
-          "/CRM_INT/CRM/controller/CumpleController.php",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData.toString(),
-          }
-        );
-
-        const data = await res.json();
-
-        if (data.success) {
-          await cambiarEstado(id, "LISTA");
-          Swal.fire("¡Éxito!", data.message, "success");
-          document.getElementById("formCorreo").reset();
-          document.getElementById("btnEnviarCorreo").disabled = true;
-          cargarCumples();
-          cargarHistorial();
-          if (window.actualizarCumpleBadgeSidebar)
-            window.actualizarCumpleBadgeSidebar();
-        } else {
-          Swal.fire("Error", data.message, "error");
-        }
-      } catch (err) {
-        console.error("Error al enviar correo:", err);
-        Swal.fire("Error", "No se pudo conectar con el servidor", "error");
-      }
-    });
-
-  // Handler Enviar WhatsApp
+  // ====== Handler Enviar WhatsApp (igual que el tuyo, con syncEnviarAmbos()) ======
   if (btnWhats) {
-    btnWhats.addEventListener("click", async () => {
-      const id = document.getElementById("idCumple").value;
-      const nombre = document.getElementById("nombreCorreo").value;
-      let telefono = document.getElementById("telefonoCorreo").value;
+    on(btnWhats, "click", async () => {
+      const id = $("idCumple").value;
+      const nombre = $("nombreCorreo").value;
+      let telefono = $("telefonoCorreo").value;
 
       if (!telefono || telefono.trim() === "") {
         Swal.fire({
@@ -122,14 +189,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (!id || !nombre || !telefono) return;
 
-      // Normalizar: quitar no dígitos y prefijar 506 si parece local (8 dígitos)
       const soloDigitos = (telefono || "").replace(/\D+/g, "");
       if (soloDigitos.length === 8) {
         telefono = "506" + soloDigitos;
       } else if (soloDigitos.length > 8) {
-        telefono = soloDigitos; // ya tiene prefijo
+        telefono = soloDigitos;
       } else {
-        telefono = soloDigitos; // dejar lo que haya para que backend valide
+        telefono = soloDigitos;
       }
 
       const mensaje = `¡Hola ${nombre}! En Bastos sabemos que estás de cumpleaños. Visítanos para celebrarlo juntos y reclamar tu regalía 🎉🎁`;
@@ -152,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: formData.toString(),
           }
         );
+
         const text = await res.text();
         let data;
         try {
@@ -164,9 +231,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           await cambiarEstado(id, "LISTA");
           Swal.fire("¡Éxito!", data.message, "success");
-          document.getElementById("formCorreo").reset();
-          document.getElementById("btnEnviarCorreo").disabled = true;
-          if (btnWhats) btnWhats.disabled = true;
+          $("formCorreo").reset();
+          if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+          if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
+          if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+
           cargarCumples();
           cargarHistorial();
           if (window.actualizarCumpleBadgeSidebar)
@@ -186,19 +255,20 @@ document.addEventListener("DOMContentLoaded", () => {
       } finally {
         btnWhats.innerHTML = '<i class="bi bi-whatsapp"></i> Enviar WhatsApp';
         btnWhats.disabled = false;
+        syncEnviarAmbos();
       }
     });
   }
+
+  // Sincroniza al cargar la vista
+  syncEnviarAmbos();
 });
 
 let semanaOffset = 0; // 0 = actual, 1 = siguiente
 
 const mostrarSemanaActual = () => {
-  // Hoy
   const hoy = new Date();
   const diaActual = hoy.getDay(); // 0 (Dom) a 6 (Sáb)
-
-  // Mover a lunes de la semana actual
   const diffInicio = diaActual === 0 ? -6 : 1 - diaActual;
   const lunes = new Date(
     hoy.getFullYear(),
@@ -215,23 +285,21 @@ const mostrarSemanaActual = () => {
   const formatoLunes = lunes.toLocaleDateString("es-CR", opciones);
   const formatoDomingo = domingo.toLocaleDateString("es-CR", opciones);
 
-  // Rango en la franja azul
-  const div = document.getElementById("rangoSemana");
+  const div = $("rangoSemana");
   if (div) {
     const etiqueta = semanaOffset === 0 ? "Semana actual" : "Semana siguiente";
     div.innerHTML = `📆 ${etiqueta}: <strong>${formatoLunes}</strong> al <strong>${formatoDomingo}</strong>`;
   }
 
-  // Badge del header (por si no querés usar actualizarNavSemanaUI aquí)
-  const lbl = document.getElementById("lblSemana");
+  const lbl = $("lblSemana");
   if (lbl)
     lbl.textContent = semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
 };
 
 function actualizarNavSemanaUI() {
-  const btnPrev = document.getElementById("btnPrevSemana");
-  const btnNext = document.getElementById("btnNextSemana");
-  const lblSemana = document.getElementById("lblSemana");
+  const btnPrev = $("btnPrevSemana");
+  const btnNext = $("btnNextSemana");
+  const lblSemana = $("lblSemana");
 
   if (btnPrev) btnPrev.disabled = semanaOffset === 0;
   if (btnNext) btnNext.disabled = semanaOffset === 1;
@@ -241,18 +309,16 @@ function actualizarNavSemanaUI() {
 }
 
 const cargarCumples = async () => {
-  const contenedor = document.getElementById("cumpleLista");
+  const contenedor = $("cumpleLista");
   contenedor.innerHTML = `
-        <div class="text-center p-3">
-            <div class="spinner-border text-warning" role="status"></div>
-            <p class="mt-2">Cargando cumpleaños...</p>
-        </div>
+    <div class="text-center p-3">
+      <div class="spinner-border text-warning" role="status"></div>
+      <p class="mt-2">Cargando cumpleaños...</p>
+    </div>
   `;
 
   try {
-    // ⬅️ ENVÍA EL OFFSET (0 = actual, 1 = siguiente)
     const body = `action=readSemana&offset=${encodeURIComponent(semanaOffset)}`;
-
     const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -263,7 +329,6 @@ const cargarCumples = async () => {
 
     if (data.success) {
       renderizarTabla(data.data);
-      // repinta el rango y actualiza flechas/badge
       mostrarSemanaActual();
       if (typeof actualizarNavSemanaUI === "function") actualizarNavSemanaUI();
     } else {
@@ -278,14 +343,11 @@ const cargarCumples = async () => {
 };
 
 const renderizarTabla = (cumples) => {
-  const contenedor = document.getElementById("cumpleLista");
-
+  const contenedor = $("cumpleLista");
   const pendientes = cumples.filter((c) => c.estado === "Activo");
-  pendientes.sort((a, b) => {
-    const fechaA = new Date(a.fechaCumpleanos);
-    const fechaB = new Date(b.fechaCumpleanos);
-    return fechaB - fechaA;
-  });
+  pendientes.sort(
+    (a, b) => new Date(b.fechaCumpleanos) - new Date(a.fechaCumpleanos)
+  );
 
   if (pendientes.length === 0) {
     contenedor.innerHTML = `<div class="alert alert-info text-center">No hay cumpleaños pendientes esta semana.</div>`;
@@ -293,72 +355,71 @@ const renderizarTabla = (cumples) => {
   }
 
   let html = `
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover tabla-ajustada">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cédula</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Fecha de Cumpleaños</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover tabla-ajustada">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Fecha de Cumpleaños</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
 
   let recordatorios = "";
   let tieneSinCorreo = false;
 
   pendientes.forEach((c) => {
     let badge = `<span class="badge bg-success">Activo</span>`;
-    if (c.estado === "LISTA") {
+    if (c.estado === "LISTA")
       badge = `<span class="badge bg-success">LISTO</span>`;
-    }
 
     const botonCorreo = `
-            <button class="btn btn-sm btn-primary"
-            onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}', '${c.fechaCumpleanos}')"
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        `;
+      <button class="btn btn-sm btn-primary"
+        onclick="seleccionarCumple('${c.id}', '${c.nombre}', '${c.cedula}', '${c.correo}', '${c.telefono}', '${c.fechaCumpleanos}')">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    `;
 
     html += `
-            <tr id="fila-${c.id}">
-                <td>${c.nombre}</td>
-                <td>${c.cedula}</td>
-                <td class="correo">${c.correo}</td>
-                <td>${c.telefono}</td>
-                <td>${formatearFecha(c.fechaCumpleanos)}</td>
-                <td>${badge}</td>
-                <td class="text-center">${botonCorreo}</td>
-            </tr>
-        `;
+      <tr id="fila-${c.id}">
+        <td>${c.nombre}</td>
+        <td>${c.cedula}</td>
+        <td class="correo">${c.correo}</td>
+        <td>${c.telefono}</td>
+        <td>${formatearFecha(c.fechaCumpleanos)}</td>
+        <td>${badge}</td>
+        <td class="text-center">${botonCorreo}</td>
+      </tr>
+    `;
 
     if (!c.correo || c.correo.trim() === "") {
       tieneSinCorreo = true;
       recordatorios += `
-    <li>
-        <i class="fa-solid fa-phone text-warning me-1"></i>
-        <strong>${c.cedula}</strong> - ${c.nombre} → 
-        <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
-    </li>
-  `;
+        <li>
+          <i class="fa-solid fa-phone text-warning me-1"></i>
+          <strong>${c.cedula}</strong> - ${c.nombre} → 
+          <span class="text-primary fw-bold">Llamar al ${c.telefono}</span>
+        </li>
+      `;
     }
   });
 
   html += `
-                </tbody>
-            </table>
-        </div>
-    `;
+        </tbody>
+      </table>
+    </div>
+  `;
 
   contenedor.innerHTML = html;
 
-  const divRecordatorio = document.getElementById("recordatorioLlamadas");
-  const ulRecordatorio = document.getElementById("listaRecordatorios");
+  const divRecordatorio = $("recordatorioLlamadas");
+  const ulRecordatorio = $("listaRecordatorios");
 
   if (tieneSinCorreo) {
     ulRecordatorio.innerHTML = recordatorios;
@@ -403,11 +464,8 @@ const renderizarTabla = (cumples) => {
                 cargarHistorial();
                 if (window.actualizarCumpleBadgeSidebar)
                   window.actualizarCumpleBadgeSidebar();
-                // Limpia el recordatorio por si acaso
-                document.getElementById("listaRecordatorios").innerHTML = "";
-                document
-                  .getElementById("recordatorioLlamadas")
-                  .classList.add("d-none");
+                $("listaRecordatorios").innerHTML = "";
+                $("recordatorioLlamadas").classList.add("d-none");
               } else {
                 Swal.fire("Error", data.message, "error");
               }
@@ -422,7 +480,7 @@ const renderizarTabla = (cumples) => {
           }
         });
       });
-    }, 300); // Espera un poco para asegurar que los botones ya existen en el DOM
+    }, 300);
   } else {
     divRecordatorio.classList.add("d-none");
     ulRecordatorio.innerHTML = "";
@@ -430,15 +488,16 @@ const renderizarTabla = (cumples) => {
 };
 
 const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
-  document.getElementById("idCumple").value = id;
-  document.getElementById("nombreCorreo").value = nombre;
-  document.getElementById("cedulaCorreo").value = cedula;
-  document.getElementById("correoCorreo").value = correo;
-  document.getElementById("telefonoCorreo").value = telefono;
-  document.getElementById("fechaCumple").value = fecha;
+  $("idCumple").value = id;
+  $("nombreCorreo").value = nombre;
+  $("cedulaCorreo").value = cedula;
+  $("correoCorreo").value = correo;
+  $("telefonoCorreo").value = telefono;
+  $("fechaCumple").value = fecha;
 
-  const btn = document.getElementById("btnEnviarCorreo");
-  const btnWhats2 = document.getElementById("btnEnviarWhats");
+  const btn = $("btnEnviarCorreo");
+  const btnWhats2 = $("btnEnviarWhats");
+
   if (!correo) {
     Swal.fire({
       icon: "warning",
@@ -446,29 +505,23 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
       text: "Recordá llamarlo o escribirle un mensaje.",
       confirmButtonText: "Entendido",
     });
-    btn.disabled = true;
+    if (btn) btn.disabled = true;
     if (btnWhats2) btnWhats2.disabled = !telefono;
   } else {
-    btn.disabled = false;
+    if (btn) btn.disabled = false;
     if (btnWhats2) btnWhats2.disabled = !telefono;
 
-    // NUEVO: Focus inmediato al botón
     setTimeout(() => {
-      // Scroll suave al botón
       btn.scrollIntoView({
         behavior: "smooth",
         block: "center",
         inline: "nearest",
       });
-
-      // Focus y efecto visual
       setTimeout(() => {
         btn.focus();
         btn.style.transition = "all 0.3s ease";
         btn.style.transform = "scale(1.02)";
         btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
-
-        // Restaurar estilo después de 1.5 segundos
         setTimeout(() => {
           btn.style.transform = "scale(1)";
           btn.style.boxShadow = "";
@@ -476,6 +529,9 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
       }, 600);
     }, 200);
   }
+
+  // ➜ Sincroniza el botón "Enviar ambos" cada vez que seleccionás un cumple
+  syncEnviarAmbos();
 };
 
 const cambiarEstado = async (id, nuevoEstado) => {
@@ -501,15 +557,11 @@ const cambiarEstado = async (id, nuevoEstado) => {
 
 const formatearFecha = (fechaStr) => {
   if (!fechaStr) return "Fecha no disponible";
-
   const partes = fechaStr.split("-");
   if (partes.length !== 3) return "Fecha inválida";
-
   const [anio, mes, dia] = partes;
   const fecha = new Date(anio, mes - 1, dia);
-
   if (isNaN(fecha)) return "Fecha inválida";
-
   return fecha
     .toLocaleDateString("es-CR", {
       day: "2-digit",
@@ -518,6 +570,7 @@ const formatearFecha = (fechaStr) => {
     })
     .toUpperCase();
 };
+
 function cargarHistorial() {
   fetch("/CRM_INT/CRM/controller/CumpleController.php", {
     method: "POST",
@@ -527,27 +580,27 @@ function cargarHistorial() {
     .then((res) => res.json())
     .then((data) => {
       let html = `
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="tablaHistorial">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Cédula</th>
-                            <th>Nombre</th>
-                            <th>CORREO / TELÉFONO</th>
-                            <th>Fecha de Cumpleaños</th>
-                            <th>Fecha de Llamada/Correo</th>
-                            <th>Vence</th>
-                            <th>Vencido</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered" id="tablaHistorial">
+            <thead class="table-dark">
+              <tr>
+                <th>Cédula</th>
+                <th>Nombre</th>
+                <th>CORREO / TELÉFONO</th>
+                <th>Fecha de Cumpleaños</th>
+                <th>Fecha de Llamada/Correo</th>
+                <th>Vence</th>
+                <th>Vencido</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
 
       data.forEach((c) => {
-        let datoContacto =
+        const datoContacto =
           c.correo && c.correo.trim() !== "" ? c.correo : c.telefono;
         html += `
-        <tr>
+          <tr>
             <td>${c.cedula}</td>
             <td>${c.nombre}</td>
             <td class="contacto">${datoContacto}</td>
@@ -555,23 +608,22 @@ function cargarHistorial() {
             <td>${c.fechaLlamada}</td>
             <td>${c.vence}</td>
             <td class="vencido-cell">${c.vencido === "SI" ? "SÍ" : "NO"}</td>
-            </tr>
-    `;
+          </tr>
+        `;
       });
 
       html += `
-                    </tbody>
-                </table>
-            </div>
-        `;
+            </tbody>
+          </table>
+        </div>
+      `;
 
-      document.getElementById("historialCumples").innerHTML = html;
+      $("historialCumples").innerHTML = html;
     });
 }
 
-document.getElementById("btnImprimir").addEventListener("click", () => {
-  const tabla = document.getElementById("tablaHistorial");
-
+on($("btnImprimir"), "click", () => {
+  const tabla = $("tablaHistorial");
   if (!tabla || tabla.rows.length <= 1) {
     Swal.fire(
       "Tabla vacía",
@@ -581,30 +633,16 @@ document.getElementById("btnImprimir").addEventListener("click", () => {
     return;
   }
 
-  const contenido = document.getElementById("historialCumples").innerHTML;
+  const contenido = $("historialCumples").innerHTML;
   const ventana = window.open("", "", "height=800,width=1000");
 
   ventana.document.write("<html><head><title>Historial de Cumpleaños</title>");
   ventana.document.write(`
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-      }
-      th, td {
-        border: 1px solid black;
-        padding: 6px;
-        text-align: center;
-      }
-      th {
-        background-color: #f9c41f;
-        color: black;
-      }
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      th, td { border: 1px solid black; padding: 6px; text-align: center; }
+      th { background-color: #f9c41f; color: black; }
     </style>
   `);
   ventana.document.write("</head><body>");
@@ -620,9 +658,8 @@ document.getElementById("btnImprimir").addEventListener("click", () => {
   ventana.close();
 });
 
-document.getElementById("btnExportPDF").addEventListener("click", function () {
-  const tabla = document.getElementById("tablaHistorial");
-
+on($("btnExportPDF"), "click", function () {
+  const tabla = $("tablaHistorial");
   if (!tabla || tabla.rows.length <= 1) {
     Swal.fire(
       "Tabla vacía",
@@ -633,43 +670,28 @@ document.getElementById("btnExportPDF").addEventListener("click", function () {
   }
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({
-    orientation: "landscape",
-    unit: "pt",
-    format: "a4",
-  });
+  const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
 
-  // Título
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   doc.text(
     "Historial de Cumpleaños Atendidos",
     doc.internal.pageSize.getWidth() / 2,
     40,
-    {
-      align: "center",
-    }
+    { align: "center" }
   );
 
-  // Extraer la tabla directamente
   doc.autoTable({
     html: "#tablaHistorial",
     startY: 60,
-    styles: {
-      font: "helvetica",
-      fontSize: 10,
-      cellPadding: 4,
-    },
+    styles: { font: "helvetica", fontSize: 10, cellPadding: 4 },
     headStyles: {
-      fillColor: [249, 196, 31], // amarillo institucional
+      fillColor: [249, 196, 31],
       textColor: [0, 0, 0],
       halign: "center",
     },
-    bodyStyles: {
-      halign: "center",
-    },
+    bodyStyles: { halign: "center" },
     didDrawPage: function (data) {
-      // Footer con fecha
       const fecha = new Date().toLocaleString("es-CR");
       doc.setFontSize(8);
       doc.text(
@@ -683,55 +705,32 @@ document.getElementById("btnExportPDF").addEventListener("click", function () {
   doc.save("historial_cumpleanos.pdf");
 });
 
-// === MEJORAS PARA EL SISTEMA DE CUMPLEAÑOS ===
-
-// 1. BUSCADOR POR CÉDULA PARA EL HISTORIAL
+// === MEJORAS PARA EL SISTEMA DE CUMPLEAÑOS (se mantienen) ===
 function agregarBuscadorHistorial() {
-  // Buscar el contenedor donde vamos a agregar el input
-  const historialContainer = document.getElementById("historialCumples");
+  const historialContainer = $("historialCumples");
   if (!historialContainer) return;
+  if ($("buscadorCedula")) return;
 
-  // Verificar si ya existe el buscador para evitar duplicados
-  if (document.getElementById("buscadorCedula")) return;
-
-  // Crear el input de búsqueda
   const buscadorHTML = `
     <div class="mb-3">
       <div class="input-group input-group-sm">
-        <input 
-          type="text" 
-          id="buscadorCedula" 
-          class="form-control" 
-          placeholder="Buscar por cédula (ej: 504590528)..."
-          autocomplete="off"
-        >
-        <button 
-          type="button" 
-          class="btn btn-outline-secondary" 
-          id="limpiarBusqueda"
-          title="Limpiar búsqueda">
+        <input type="text" id="buscadorCedula" class="form-control" placeholder="Buscar por cédula (ej: 504590528)..." autocomplete="off">
+        <button type="button" class="btn btn-outline-secondary" id="limpiarBusqueda" title="Limpiar búsqueda">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <small class="text-muted">
-        <i class="fas fa-info-circle"></i> 
-        Escribí la cédula para filtrar los resultados
-      </small>
+      <small class="text-muted"><i class="fas fa-info-circle"></i> Escribí la cédula para filtrar los resultados</small>
     </div>
   `;
 
-  // Insertar el buscador antes del contenido de la tabla
   historialContainer.insertAdjacentHTML("afterbegin", buscadorHTML);
 
-  // Event listeners para el buscador
-  const inputBuscador = document.getElementById("buscadorCedula");
-  const btnLimpiar = document.getElementById("limpiarBusqueda");
+  const inputBuscador = $("buscadorCedula");
+  const btnLimpiar = $("limpiarBusqueda");
 
-  // Función de filtrado
   function filtrarTabla() {
     const termino = inputBuscador.value.toLowerCase().trim();
-    const tabla = document.getElementById("tablaHistorial");
-
+    const tabla = $("tablaHistorial");
     if (!tabla) return;
 
     const filas = tabla
@@ -740,11 +739,9 @@ function agregarBuscadorHistorial() {
     let filasVisibles = 0;
 
     for (let i = 0; i < filas.length; i++) {
-      const celdaCedula = filas[i].getElementsByTagName("td")[0]; // Primera columna (Cédula)
-
+      const celdaCedula = filas[i].getElementsByTagName("td")[0];
       if (celdaCedula) {
         const textoCedula = celdaCedula.textContent.toLowerCase();
-
         if (termino === "" || textoCedula.includes(termino)) {
           filas[i].style.display = "";
           filasVisibles++;
@@ -753,20 +750,13 @@ function agregarBuscadorHistorial() {
         }
       }
     }
-
-    // Mostrar mensaje si no hay resultados
     mostrarMensajeResultados(filasVisibles, termino);
   }
 
-  // Función para mostrar mensaje de resultados
   function mostrarMensajeResultados(cantidad, termino) {
-    // Remover mensaje anterior si existe
-    const mensajeAnterior = document.getElementById("mensajeResultados");
-    if (mensajeAnterior) {
-      mensajeAnterior.remove();
-    }
+    const anterior = $("mensajeResultados");
+    if (anterior) anterior.remove();
 
-    // Si hay término de búsqueda, mostrar contador
     if (termino !== "") {
       const mensaje = document.createElement("div");
       mensaje.id = "mensajeResultados";
@@ -786,9 +776,8 @@ function agregarBuscadorHistorial() {
     }
   }
 
-  // Event listeners
-  inputBuscador.addEventListener("input", filtrarTabla);
-  inputBuscador.addEventListener("keyup", function (e) {
+  on(inputBuscador, "input", filtrarTabla);
+  on(inputBuscador, "keyup", function (e) {
     if (e.key === "Escape") {
       this.value = "";
       filtrarTabla();
@@ -796,79 +785,54 @@ function agregarBuscadorHistorial() {
     }
   });
 
-  btnLimpiar.addEventListener("click", function () {
+  on(btnLimpiar, "click", function () {
     inputBuscador.value = "";
     filtrarTabla();
     inputBuscador.focus();
   });
 }
 
-// 2. FUNCIÓN PARA HACER SCROLL Y FOCUS AL FORMULARIO
 function scrollYFocusFormulario() {
-  // Primero hacer scroll al formulario
   const formularioCard = document.querySelector(
     '.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]'
   );
-
   if (formularioCard) {
-    // Scroll suave al formulario
     formularioCard.scrollIntoView({
       behavior: "smooth",
       block: "center",
       inline: "nearest",
     });
-
-    // Después del scroll, hacer focus al botón
     setTimeout(() => {
-      const btnEnviarCorreo = document.getElementById("btnEnviarCorreo");
+      const btnEnviarCorreo = $("btnEnviarCorreo");
       if (btnEnviarCorreo) {
-        // Añadir efecto visual
         btnEnviarCorreo.style.transition = "all 0.3s ease";
         btnEnviarCorreo.style.transform = "scale(1.05)";
         btnEnviarCorreo.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.6)";
-
-        // Focus al botón
         btnEnviarCorreo.focus();
-
-        // Remover efecto después de 2 segundos
         setTimeout(() => {
           btnEnviarCorreo.style.transform = "scale(1)";
           btnEnviarCorreo.style.boxShadow =
             "0 4px 16px rgba(249, 196, 31, 0.3)";
         }, 2000);
       }
-    }, 800); // Esperar a que termine el scroll
+    }, 800);
   }
 }
 
-// Modificar la función cargarHistorial para agregar el buscador
+// Hook: agregar buscador tras cargar historial
 const cargarHistorialOriginal = cargarHistorial;
 cargarHistorial = function () {
   cargarHistorialOriginal.call(this);
-
-  // Agregar el buscador después de que se cargue la tabla
   setTimeout(() => {
     agregarBuscadorHistorial();
   }, 100);
 };
 
-// Modificar la función seleccionarCumple para agregar el scroll/focus
 const seleccionarCumpleOriginal = seleccionarCumple;
-seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
-  // Ejecutar la función original
-  seleccionarCumpleOriginal.call(
-    this,
-    id,
-    nombre,
-    cedula,
-    correo,
-    telefono,
-    fecha
-  );
-
-  // Agregar el scroll y focus al formulario
+window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
+  seleccionarCumpleOriginal(id, nombre, cedula, correo, telefono, fecha);
   setTimeout(() => {
     scrollYFocusFormulario();
-  }, 300); // Pequeña pausa para que se complete la selección
+    syncEnviarAmbos();
+  }, 300);
 };
-

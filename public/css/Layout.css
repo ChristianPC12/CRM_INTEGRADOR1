@@ -843,15 +843,13 @@ html, body {
         justify-content: center;
     }
 }
-.sidebar ul li a:focus-visible,
-.sidebar ul li a[aria-current="page"] {
-  background: linear-gradient(135deg, var(--amarillo) 0%, #ffd700 100%);
-  color: var(--negro);
-  font-weight: 600;
-  box-shadow: 0 6px 20px rgba(249, 196, 31, 0.4);
-  transform: translateX(2px);
-  outline: none;
+/* Quita cualquier borde/outline nativo de foco en los enlaces del sidebar */
+.sidebar ul li a:focus,
+.sidebar ul li a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
+
 
 /* ======================= */
 /* MODAL TARJETA (buscar por número)
@@ -899,10 +897,7 @@ html, body {
   transition: border .2s ease, box-shadow .2s ease;
 }
 
-.modal-tarjeta input:focus {
-  border-color: var(--amarillo);
-  box-shadow: 0 0 0 4px rgba(249,196,31,.2);
-}
+
 
 .modal-mensaje-error {
   color: #dc3545;

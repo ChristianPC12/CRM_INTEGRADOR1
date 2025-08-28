@@ -246,15 +246,16 @@ body::after {
 }
 
 .table-container table {
-  /* Tabla interna: usar min-width para permitir scroll horizontal en pantallas pequeñas */
   width: 100%;
-  table-layout: fixed;
+  table-layout: fixed;      /* Las columnas respetan su ancho y no crecen sin control */
   min-width: 700px;
-  white-space: nowrap;
+  white-space: normal;      /* ← Permitimos saltos de línea en celdas */
   border-collapse: separate;
   border-spacing: 0;
   background: transparent;
 }
+
+
 
 .table-container th,
 .table-container td {
@@ -265,7 +266,32 @@ body::after {
   padding: 16px 20px;
   border-bottom: 1px solid var(--gris-muy-claro);
   transition: all 0.3s ease;
+  
+  /* ← NUEVO: evita que cadenas largas empujen el ancho */
+  overflow-wrap: anywhere;   /* rompe en cualquier punto si es necesario */
+  word-break: break-word;    /* compatibilidad adicional */
 }
+.celda-cedula { 
+  width: 120px; 
+  max-width: 120px; 
+  white-space: normal; 
+  word-break: break-word; 
+}
+
+.celda-nombre { 
+  width: 220px; 
+  max-width: 220px; 
+  white-space: normal; 
+  word-break: break-word; 
+}
+
+.celda-correo { 
+  width: 180px; 
+  max-width: 180px; 
+  white-space: normal; 
+  word-break: break-word; 
+}
+
 
 .table-container th {
   background: linear-gradient(135deg, var(--gris-muy-claro), #f8f9fa);
@@ -294,17 +320,15 @@ body::after {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(249, 196, 31, 0.1);
 }
-
 .table-container td:hover {
-  overflow: visible;
-  white-space: normal;
-  word-break: break-all;
   z-index: 15;
   position: relative;
   background: var(--fondo-blanco);
   box-shadow: var(--sombra-elevada);
   border-radius: 8px;
 }
+
+
 
 /* Estilos para historial de reasignaciones - Modernizado */
 .fila-cliente:hover {
@@ -486,9 +510,7 @@ body::after {
     box-shadow: var(--sombra-elevada);
   }
 
-  .table-container table {
-    min-width: 600px;
-  }
+  
 }
 
 @media (max-width: 576px) {

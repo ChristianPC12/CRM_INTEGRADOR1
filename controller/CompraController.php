@@ -25,7 +25,7 @@ try {
         case 'create':
             // Crea una nueva compra con los datos recibidos
             $compra = new CompraDTO();
-            $compra->fechaCompra = $_POST['fechaCompra'] ?? date('Y-m-d');
+            $compra->fechaCompra = $_POST['fechaCompra'] ?? date('Y-m-d H:i:s');
             $compra->total = $_POST['total'] ?? 0;
             $compra->idCliente = $_POST['idCliente'] ?? null;
             $result = $dao->create($compra);

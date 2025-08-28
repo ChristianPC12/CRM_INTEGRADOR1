@@ -3,6 +3,12 @@
     <i class="bi bi-info-circle"></i> Manual de usuario para el sistema
   </h2>
 
+  <!-- Botón fijo arriba-izquierda: Reparar MySQL -->
+  <button type="button" id="btnRepararMySQL" class="repair-download-btn" title="Descargar RepararMySqlV2.bat">
+    <i class="bi bi-tools"></i>
+    <span class="repair-download-text">Reparar MySQL</span>
+  </button>
+
   <!-- Botón fijo dentro del contenedor -->
   <button type="button" id="btnDescargarManual" class="manual-download-btn" title="Descargar Manual (PDF)">
     <i class="bi bi-file-earmark-arrow-down"></i>
@@ -24,7 +30,8 @@
           <li>Tener <strong>XAMPP</strong> instalado con los servicios <strong>Apache</strong> y <strong>MySQL</strong>
             activos.</li>
           <li>Contar con un cliente/administrador de base de datos: <em>HeidiSQL</em>, <em>phpMyAdmin</em>,
-            <em>SQLyog</em> o <em>MySQL Workbench</em>.</li>
+            <em>SQLyog</em> o <em>MySQL Workbench</em>.
+          </li>
           <li>Tener la base de datos del sistema debidamente importada en el motor de MySQL.</li>
           <li>Una computadora con navegador web actualizado (Windows/macOS/Linux) para acceder al sistema.</li>
         </ul>
@@ -40,17 +47,13 @@
 
       <div class="acc-content">
         <ul class="mb-3">
-          <li>
-            <strong>Lector de código de barras:</strong>
-            Recomendaciones: <em>Eyoyo EY-007</em> (aprox. ₡25,000) o <em>Inateck BCST-70</em> (aprox. ₡35,000).
+          <li><strong>Lector de código de barras:</strong> Recomendaciones: <em>Eyoyo EY-007</em> (aprox. ₡25,000) o
+            <em>Inateck BCST-70</em> (aprox. ₡35,000).
           </li>
-          <li>
-            <strong>Impresora de código de barras:</strong>
-            Se recomienda <em>Xprinter XP-350B</em> por su relación calidad/precio (aprox. ₡65,000 – ₡80,000).<br>
-            <strong>Consumible:</strong> Rollo de etiquetas <em>40 × 30 mm</em> (aprox. ₡6,000 – ₡8,000).
-          </li>
-          <li>
-            <strong>Laptop (requerimientos mínimos):</strong>
+          <li><strong>Impresora de código de barras:</strong> Se recomienda <em>Xprinter XP-350B</em> por su relación
+            calidad/precio (aprox. ₡65,000 – ₡80,000).<br><strong>Consumible:</strong> Rollo de etiquetas <em>40 × 30
+              mm</em> (aprox. ₡6,000 – ₡8,000).</li>
+          <li><strong>Laptop (requerimientos mínimos):</strong>
             <ul>
               <li><strong>Procesador:</strong> Intel® Core™ i5-1145G7</li>
               <li><strong>Frecuencia base / turbo:</strong> 2.60 GHz / hasta ~4.40 GHz</li>
@@ -92,6 +95,7 @@
         </ol>
 
         <!-- Videos (ocultos por defecto) -->
+        <!-- Dentro de tus detalles de Videos -->
         <details class="acc-item nested">
           <summary class="acc-summary">
             <span><i class="bi bi-play-circle"></i> Videos (instalación y primeros pasos)</span>
@@ -99,59 +103,92 @@
           </summary>
           <div class="acc-content">
 
-            <!-- Video 1: XAMPP -->
-            <div class="guia-video mt-2">
-               <iframe width="100%" height="200"
-                src="https://www.youtube.com/embed/M9FpsTmXZkw?si=vw5qkb7OiLeT-eb"
-                title="Cómo descargar e instalar XAMPP" frameborder="0" allowfullscreen></iframe>
-               </div>
-
-            <!-- Video 2: HeidiSQL -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/kmNUa1KKs88?si=sTxatI_NB4sYiQc4"
-                title="Cómo descargar e instalar HEIDISQL" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-
-            <!-- Video 3: Credenciales BD MySQL -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/O3msEOcHP2E?si=LllUSLtkQkMtT1-9"
-                title="Cómo poner credenciales a la base de datos MySQL" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-
-            <!-- Video 4: Importar BD SQL -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/p1uZlYBueX0?si=mmCWc_Ee2C-JMJWs"
-                title="Cómo importar la base de datos sql" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-
-            <!-- Video 5: Respaldos -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/jHxqhRftB1U?si=2egVp5ywi8iJb_V8"
-                title="Cómo hacer respaldos de la base de datos" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-
-            <!-- Video 6: Ruta del proyecto en navegador -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/v64q8mzD0cA?si=tUNVfxZnkeOO-bU2"
-                title="Cómo entrar a la ruta del proyecto en el navegador" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-
-            <!-- Video 7: Acceso desde teléfono misma red -->
-            <div class="guia-video mt-2">
-              <iframe width="100%" height="200" src="https://www.youtube.com/embed/eCUP5z4fyM4?si=nl8yzhK2GUOtBn3C"
-                title="Cómo configurar el acceso desde el teléfono misma red" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
+            <!-- Marcadores de videos (sin iframes todavía) -->
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/M9FpsTmXZkw?si=vw5qkb7OiLeT-eb"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/kmNUa1KKs88?si=sTxatI_NB4sYiQc4"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/O3msEOcHP2E?si=LllUSLtkQkMtT1-9"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/p1uZlYBueX0?si=mmCWc_Ee2C-JMJWs"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/jHxqhRftB1U?si=2egVp5ywi8iJb_V8"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/v64q8mzD0cA?si=tUNVfxZnkeOO-bU2"></div>
+            <div class="guia-video mt-2 video-lazy"
+              data-src="https://www.youtube.com/embed/eCUP5z4fyM4?si=nl8yzhK2GUOtBn3C"></div>
 
           </div>
         </details>
+
       </div>
     </details>
-
   </div>
 </div>
 
 <style>
-  /* Estilos para videos placeholders genéricos */
+  .guia-container {
+    position: relative;
+  }
+
+  /* Botón Reparar MySQL */
+  .repair-download-btn {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .45rem .7rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: #212529;
+    color: #fff;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+  }
+
+  .repair-download-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .repair-download-btn i {
+    font-size: 1.1rem;
+  }
+
+  /* Botón Manual PDF */
+  .manual-download-btn {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .45rem .7rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    background: #ffc107;
+    color: #000;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+  }
+
+  .manual-download-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .manual-download-btn i {
+    font-size: 1.1rem;
+  }
+
+  /* Resto de estilos que ya tenías (videos, etc.) */
   .video-placeholder-generic {
     cursor: pointer;
     transition: all 0.3s ease;
@@ -220,7 +257,6 @@
     border-radius: 8px;
   }
 
-  /* Mensaje cuando no hay video real */
   .video-message {
     background: #fff3cd;
     border: 1px solid #ffeaa7;
@@ -238,12 +274,13 @@
 </style>
 
 <script>
-  // Ruta del PDF dentro del proyecto (como acordamos)
   const PDF_URL = "/CRM_INT/CRM/public/docs/MANUAL_USUARIO_BASTOS_CRM.pdf";
   const PDF_NOMBRE = "Manual_Usuario_CRM_Bastos.pdf";
 
-  document.addEventListener("DOMContentLoaded", function() {
-    // Inicializar botón de descarga
+  const BAT_URL = "/CRM_INT/CRM/RepararMySqlV2.bat";
+  const BAT_NAME = "RepararMySqlV2.bat";
+
+  document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("btnDescargarManual")?.addEventListener("click", () => {
       const a = document.createElement("a");
       a.href = PDF_URL;
@@ -252,5 +289,58 @@
       a.click();
       a.remove();
     });
+
+    document.getElementById("btnRepararMySQL")?.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = BAT_URL;
+      a.download = BAT_NAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Botón manual
+    document.getElementById("btnDescargarManual")?.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = PDF_URL;
+      a.download = PDF_NOMBRE;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Botón reparar MySQL
+    document.getElementById("btnRepararMySQL")?.addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.href = BAT_URL;
+      a.download = BAT_NAME;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Lazy load de videos
+    const videosSection = document.querySelector('details.acc-item.nested');
+    if (videosSection) {
+      videosSection.addEventListener("toggle", () => {
+        if (videosSection.open) {
+          document.querySelectorAll(".video-lazy").forEach(div => {
+            if (!div.querySelector("iframe")) {
+              const iframe = document.createElement("iframe");
+              iframe.width = "100%";
+              iframe.height = "200";
+              iframe.src = div.dataset.src;
+              iframe.title = "Video tutorial";
+              iframe.frameBorder = "0";
+              iframe.allowFullscreen = true;
+              div.appendChild(iframe);
+            }
+          });
+        }
+      }, { once: true }); // se ejecuta solo la primera vez que lo abre
+    }
+  });
+
 </script>

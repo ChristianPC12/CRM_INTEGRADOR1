@@ -227,7 +227,7 @@ $vista = $_GET['view'] ?? 'dashboard';
             <?php endif; ?>
 
             <?php if ($vista === 'guia2'): ?>
-                <script src="/CRM_INT/CRM/public/js/Manual2.js"></script>
+            <!-- <script src="/CRM_INT/CRM/public/js/Manual2.js"></script> -->
             <?php endif; ?>
 
             <!-- Logout automático al cerrar la pestaña/navegador -->

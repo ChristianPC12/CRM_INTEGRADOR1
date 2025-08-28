@@ -36,16 +36,16 @@ const validaciones = {
     // Solo letras, espacios y acentos, mínimo 2 caracteres
     return /^[a-zA-ZÀ-ÿ\s]{2,}$/.test(nombre);
   },
-   // Se usa UTC para validar que la fecha exista y local para comparar con “hoy”, evitando desfases de zona horaria
- 
+  // Se usa UTC para validar que la fecha exista y local para comparar con “hoy”, evitando desfases de zona horaria
+
   esFechaValida: (fecha) => {
     if (!fecha) return false;
-  
+
     // Formato exacto AAAA-MM-DD
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return false;
-  
+
     const [y, m, d] = fecha.split("-").map(Number);
-  
+
     // Fecha real (evita 2024-02-31, etc.)
     const dtUTC = new Date(Date.UTC(y, m - 1, d));
     const esReal =
@@ -53,22 +53,25 @@ const validaciones = {
       dtUTC.getUTCMonth() + 1 === m &&
       dtUTC.getUTCDate() === d;
     if (!esReal) return false;
-  
+
     const hoy = new Date();
     const min = new Date("1900-01-01T00:00:00Z");
     const dtLocal = new Date(y, m - 1, d); // para comparar con hoy en local
-  
+
     // Rango permitido: [1900-01-01, hoy]
     if (dtUTC < min || dtLocal > hoy) return false;
-  
+
     // Edad 0–120
     const edad =
-      hoy.getFullYear() - y -
-      ((hoy.getMonth() + 1 < m || ((hoy.getMonth() + 1) === m && hoy.getDate() < d)) ? 1 : 0);
-  
+      hoy.getFullYear() -
+      y -
+      (hoy.getMonth() + 1 < m || (hoy.getMonth() + 1 === m && hoy.getDate() < d)
+        ? 1
+        : 0);
+
     return edad >= 0 && edad <= 120;
   },
-  
+
   esTextoLibreValido: (texto) => {
     const regex = /^[a-zA-ZÁÉÍÓÚáéíóúñÑ0-9\s.,\-]{0,100}$/;
     return regex.test(texto);
@@ -129,11 +132,12 @@ const mostrarClientes = (clientes) => {
                 (cliente) => `
                 <tr class="fila-cliente" data-id="${cliente.id}">
                     <td>${cliente.id}</td>
-                    <td>${cliente.cedula}</td>
-                    <td>${cliente.nombre.toUpperCase()}</td>
+                    <td class="celda-cedula">${cliente.cedula}</td>
+                    <td class="celda-nombre">${cliente.nombre.toUpperCase()}</td>
                     <td class="celda-correo">${
-                      cliente.correo ? cliente.correo.toUpperCase() : ""
-                    }</td>
+                  cliente.correo ? cliente.correo.toUpperCase() : ""
+                }</td>
+
 
                     <td>${cliente.telefono}</td>
                     <td>${
@@ -209,14 +213,17 @@ document.addEventListener("DOMContentLoaded", () => {
   buscador.placeholder = "Buscar por Tarjeta (ID), Cédula o Nombre";
 
   buscador.addEventListener("input", function () {
-    const valor = this.value.trim().toLowerCase();
+    const valor = this.value.trim();
     if (!valor) { mostrarClientes(clientesOriginales); return; }
 
+    const digitos = valor.replace(/\D/g, ""); // usar solo números
+
     const filtrados = clientesOriginales.filter((c) => {
-      const idMatch = c.id && String(c.id).toLowerCase().includes(valor);
-      const cedulaMatch = c.cedula && c.cedula.toString().toLowerCase().includes(valor);
-      const nombreMatch = c.nombre && c.nombre.toLowerCase().includes(valor);
-      return idMatch || cedulaMatch || nombreMatch;
+      const idMatch = c.id && String(c.id).includes(digitos);
+      const cedulaMatch =
+        c.cedula &&
+        c.cedula.toString().replace(/\D/g, "").includes(digitos);
+      return idMatch || cedulaMatch;
     });
 
     mostrarClientes(filtrados);
@@ -1228,6 +1235,4 @@ document.addEventListener("DOMContentLoaded", () => {
       f.setAttribute("max", hoy);
     }
   });
-  
-  
 });

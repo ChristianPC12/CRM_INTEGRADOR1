@@ -1,6 +1,6 @@
 <div class="container guia-container mt-4">
   <h2 class="guia-titulo text-center mb-4">
-    <i class="bi bi-info-circle"></i> Manual de uso del sistema
+    <i class="bi bi-info-circle"></i> Manual de usuario del sistema
   </h2>
 
   <div class="row row-cols-1 row-cols-md-2 g-4">

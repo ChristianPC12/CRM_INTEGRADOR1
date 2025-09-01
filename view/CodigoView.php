@@ -1,9 +1,9 @@
-<!-- Tarjeta que contiene la lista de tarjetas -->
+<!-- Tarjeta que contiene la LISTA DE TARJETAS -->
 <div class="card shadow mb-4">
     
     <!-- Encabezado con título y acciones -->
     <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
-        <h5 class="mb-0">Lista de Tarjetas</h5>
+        <h5 class="mb-0">LISTA DE TARJETAS</h5>
         <div class="d-flex gap-2">
                <!-- Campo de texto para buscar por número de tarjeta o nombre -->
             <input type="text" id="buscarCodigo" class="form-control form-control-sm w-auto"

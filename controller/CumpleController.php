@@ -169,7 +169,7 @@ try {
             }
 
             try {
-                $base = getenv('WHATS_BASE') ?: 'http://localhost:3001';
+                $base = getenv('WHATS_BASE') ?: 'http://localhost:3002';
                 $svc = new WhatsApiService($base);
 
                 // Verifica que el servicio de WhatsApp esté listo

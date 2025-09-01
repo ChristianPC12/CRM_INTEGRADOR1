@@ -14,8 +14,8 @@ function enviarCorreoCumple($destinatario, $nombre, $mensaje)
         $mail->isSMTP();
         $mail->Host = 'smtp-relay.brevo.com';
         $mail->SMTPAuth = true;
-        $mail->Username = '91e0a3001@smtp-brevo.com'; // Este es tu correo Brevo
-        $mail->Password = 'Apxa06dYz4NP1X9f'; // Tu clave SMTP de Brevo
+        $mail->Username = '95fff3001@smtp-brevo.com'; // Este es tu correo Brevo
+        $mail->Password = 'HWVv2D8wZyb6x5MQ'; // Tu clave SMTP de Brevo
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->SMTPOptions = [
@@ -28,7 +28,7 @@ function enviarCorreoCumple($destinatario, $nombre, $mensaje)
 
 
         // IMPORTANTE: el remitente debe ser el mismo correo del SMTP o uno verificado en Brevo
-        $mail->setFrom('anuelmorera@gmail.com', 'Restaurante Bastos');
+        $mail->setFrom('bastoscrm@gmail.com', 'Restaurante Bastos');
 
         $mail->addAddress($destinatario, $nombre);
         $mail->isHTML(true);

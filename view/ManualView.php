@@ -176,8 +176,8 @@
         </div>
         <!-- Video con lazy loading optimizado -->
         <div class="guia-video mt-2">
-          <div class="video-placeholder" data-video-id="j2jnB1TqmDM">
-            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/j2jnB1TqmDM/mqdefault.jpg">
+          <div class="video-placeholder" data-video-id="HUD31Cn6giU">
+            <div class="video-thumb" data-thumb="https://img.youtube.com/vi/HUD31Cn6giU/mqdefault.jpg">
               <div class="play-button">
                 <i class="bi bi-play-circle-fill"></i>
               </div>

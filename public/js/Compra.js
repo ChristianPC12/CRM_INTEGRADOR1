@@ -369,10 +369,11 @@ document.addEventListener("DOMContentLoaded", function () {
           `🎉 ¡El Express ahora es GRATIS para ${state.nombreClienteActual}!`;
       } else {
         mensaje =
-          `Descuento VIP exitoso, puedes aplicar el 15% a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
-          `El saldo actual cambió de ₡${saldo.toLocaleString(
+          `🌟 Descuento VIP exitoso, puedes aplicar la regalía que gustes a nombre del cliente VIP: ${state.nombreClienteActual}.\n` +
+          `💰 El saldo actual cambió de ₡${saldo.toLocaleString(
             "es-CR"
-          )} a ₡${saldoFinal.toLocaleString("es-CR")}.`;
+          )} a ₡${saldoFinal.toLocaleString("es-CR")}.\n` +
+          `💸 Cantidad descuentada: ₡50,000`;
       }
 
       alert(mensaje);

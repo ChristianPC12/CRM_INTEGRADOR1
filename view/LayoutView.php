@@ -228,7 +228,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                                 <li>
                                     <span class="equipo-nombre">Christian Paniagua Castro</span>
                                     <span class="equipo-carnet">504590528</span>
-                                    <a class="btn-gh" href="https://github.com/ChristianPaniagua12" target="_blank"
+                                    <a class="btn-gh" href="https://github.com/ChristianPC12" target="_blank"
                                         rel="noopener noreferrer">
                                         <i class="bi bi-github"></i> GitHub
                                     </a>

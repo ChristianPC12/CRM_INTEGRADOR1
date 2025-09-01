@@ -91,6 +91,13 @@
     </div>
     <div class="card-body p-3">
         <div class="table-responsive">
+
+            <!-- Mensaje recordatorio -->
+            <div class="alert alert-info small text-center mb-3">
+              Los registros se eliminan automáticamente al cumplir <strong>30 días</strong>.  
+              Puede exportar un respaldo en <strong>PDF</strong> o <strong>imprimir</strong> antes de esa fecha.
+            </div>
+
             <!-- Botones para exportar PDF o imprimir historial -->
             <div class="d-flex justify-content-end align-items-center gap-2 mb-2 me-2">
                 <button id="btnExportPDF" class="btn border border-danger text-danger">
@@ -106,6 +113,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- SCRIPTS NECESARIOS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

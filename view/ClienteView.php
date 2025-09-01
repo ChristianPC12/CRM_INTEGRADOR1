@@ -7,7 +7,7 @@
      <!-- Tarjeta con el formulario para registrar o editar un cliente -->
     <div class="card shadow mb-4">
         <div class="card-header clientes-header d-flex align-items-center">
-            <h5 class="mb-0 flex-grow-1 titulo-clientes">Registro de Cliente</h5>
+            <h5 class="mb-0 flex-grow-1 titulo-clientes">REGISTRO DE CLIENTE</h5>
         </div>
         <div class="card-body">
             <form id="clienteForm"> 
@@ -110,7 +110,7 @@
       <!-- Tarjeta con la lista de clientes ya registrados -->
     <div class="card shadow mb-4">
         <div class="card-header clientes-header d-flex align-items-center gap-3 flex-wrap">
-            <h5 class="mb-0 flex-grow-1 titulo-clientes">Lista de Clientes</h5>
+            <h5 class="mb-0 flex-grow-1 titulo-clientes">LISTA DE CLIENTES</h5>
             <!-- Buscador en tiempo real -->
             <input type="text" id="buscadorClientes" class="form-control buscador-clientes"
                 placeholder="Buscar por n° de tarjeta o nombre..." autocomplete="off">
@@ -127,11 +127,11 @@
         </div>
     </div>
 
-      <!-- Tarjeta con el historial de reasignaciones de tarjetas VIP -->
+      <!-- Tarjeta con el HISTORIAL DE REASIGNACIONES de tarjetas VIP -->
     <div class="card shadow mb-4">
         <div class="card-header clientes-header d-flex align-items-center gap-3 flex-wrap">
             <h5 class="mb-0 flex-grow-1 titulo-clientes">
-                <i class="fas fa-history me-2"></i>Historial de Reasignaciones
+                <i class="fas fa-history me-2"></i>HISTORIAL DE REASIGNACIONES
             </h5>
             <small class="text-light me-2">
                 <i class="fas fa-sync-alt me-1"></i>

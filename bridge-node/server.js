@@ -140,7 +140,7 @@ app.post('/send', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => console.log(`API WhatsApp local: http://localhost:${PORT} (session dir: ${SESSION_PATH})`));
 
 // Manejo global de errores no capturados

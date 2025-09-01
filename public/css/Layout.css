@@ -260,6 +260,20 @@ html, body {
     text-align: center;
     transition: all 0.3s ease;
 }
+/* 🎁 Cumpleaños (arriba derecha) */
+#btnCumpleMini {
+  top: 6px;
+  right: 8px;
+  left: auto;
+}
+
+/* ℹ️ Acerca de (abajo derecha, simétrico al cumpleaños) */
+#btnAcercaMini {
+  bottom: 6px;   /* lo anclamos abajo */
+  right: 8px;    /* misma separación lateral */
+  top: auto;     /* anulamos el top heredado */
+}
+
 
 .sidebar ul li a:hover {
     background: rgba(249, 196, 31, 0.15);
@@ -960,4 +974,82 @@ body.modal-open {
   justify-content: center;
   position: fixed;
   inset: 0;
+}
+
+/* Estilos del bloque de integrantes del modal "Acerca de" */
+.equipo-box {
+  border: 1px solid var(--gris-borde);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.equipo-titulo {
+  margin: 0 0 .75rem 0;
+  font-weight: 700;
+  display: flex; 
+  align-items: center; 
+  gap: .5rem;
+}
+
+.equipo-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .5rem;
+}
+
+.equipo-lista li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .5rem .75rem;
+  border-radius: 10px;
+  background: rgba(249,196,31,.06);
+  border: 1px solid var(--gris-borde);
+}
+
+.equipo-nombre {
+  font-weight: 600;
+  color: var(--negro);
+}
+
+.equipo-carnet {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background: var(--amarillo);
+  color: var(--negro);
+  padding: .2rem .5rem;
+  border-radius: .5rem;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
+/* Botón GitHub en lista de integrantes */
+.btn-gh {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .7rem;
+  border-radius: .6rem;
+  text-decoration: none;
+  background: var(--amarillo);
+  color: var(--negro);
+  font-weight: 700;
+  font-size: .85rem;
+  border: 1px solid rgba(0,0,0,.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: transform .15s ease, box-shadow .15s ease, background-color .2s ease;
+}
+
+.btn-gh:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(249,196,31,.35);
+  background: #e6b01f;
+}
+
+.btn-gh i {
+  font-size: 1rem;
+  line-height: 1;
 }

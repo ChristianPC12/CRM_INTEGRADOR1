@@ -32,15 +32,18 @@ $vista = $_GET['view'] ?? 'dashboard';
         'guia2' => 'Manual2.css',
         'usuarios' => 'Usuario.css'
     ];
-    
+
     if (isset($css_mapping[$vista])):
         $css_file = $css_mapping[$vista];
         $cache_buster = in_array($vista, ['cumple', 'guia', 'guia2', 'usuarios']) ? '?v=' . time() : '';
         $preload = in_array($vista, ['guia', 'guia2']);
-    ?>
+        ?>
         <?php if ($preload): ?>
-            <link rel="preload" href="/CRM_INT/CRM/public/css/<?= $css_file . $cache_buster ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
-            <noscript><link rel="stylesheet" href="/CRM_INT/CRM/public/css/<?= $css_file . $cache_buster ?>"></noscript>
+            <link rel="preload" href="/CRM_INT/CRM/public/css/<?= $css_file . $cache_buster ?>" as="style"
+                onload="this.onload=null;this.rel='stylesheet'">
+            <noscript>
+                <link rel="stylesheet" href="/CRM_INT/CRM/public/css/<?= $css_file . $cache_buster ?>">
+            </noscript>
         <?php else: ?>
             <link rel="stylesheet" href="/CRM_INT/CRM/public/css/<?= $css_file . $cache_buster ?>">
         <?php endif; ?>
@@ -65,9 +68,17 @@ $vista = $_GET['view'] ?? 'dashboard';
         </div>
 
         <!-- Acceso rápido a "Cumpleaños de la semana" -->
-        <button type="button" class="btn-cumple-mini" id="btnCumpleMini" title="Cumpleaños de la semana" aria-label="Abrir Cumpleaños">
+        <button type="button" class="btn-cumple-mini" id="btnCumpleMini" title="Cumpleaños de la semana"
+            aria-label="Abrir Cumpleaños">
             <i class="bi bi-gift-fill"></i>
         </button>
+
+        <!-- Botón de Acerca de -->
+        <button type="button" class="btn-cumple-mini" id="btnAcercaMini" title="Acerca de CRM Bastos"
+            aria-label="Abrir Acerca de">
+            <i class="bi bi-info-circle-fill"></i>
+        </button>
+
 
         <!-- Links de navegación; marcan 'active' según $vista -->
         <ul>
@@ -82,7 +93,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=usuarios" id="link-usuarios" class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=usuarios" id="link-usuarios"
+                    class="<?= $vista === 'usuarios' ? 'active' : '' ?>">
                     <i class="bi bi-person"></i> Usuarios
                 </a>
             </li>
@@ -97,7 +109,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=analisis" id="link-analisis" class="<?= $vista === 'analisis' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=analisis" id="link-analisis"
+                    class="<?= $vista === 'analisis' ? 'active' : '' ?>">
                     <i class="bi bi-graph-up-arrow"></i> Análisis
                 </a>
             </li>
@@ -109,7 +122,8 @@ $vista = $_GET['view'] ?? 'dashboard';
                 </a>
             </li>
             <li>
-                <a href="/CRM_INT/CRM/index.php?view=Bitacora" id="link-Bitacora" class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
+                <a href="/CRM_INT/CRM/index.php?view=Bitacora" id="link-Bitacora"
+                    class="<?= $vista === 'Bitacora' ? 'active' : '' ?>">
                     <i class="bi bi-journal-text"></i> Bitácora
                 </a>
             </li>
@@ -151,7 +165,7 @@ $vista = $_GET['view'] ?? 'dashboard';
                 'guia' => 'ManualView.php',
                 'guia2' => 'Manual2View.php'
             ];
-            
+
             $view_file = $view_mapping[$vista] ?? 'DashboardView.php';
             include $view_file;
             ?>
@@ -193,6 +207,78 @@ $vista = $_GET['view'] ?? 'dashboard';
                     </div>
                 </div>
             </div>
+
+            <!-- Modal "Acerca de" -->
+            <div id="modalAcerca" class="modal-cumples" style="display:none;">
+                <div class="modal-contenido-cumples">
+                    <div class="modal-header-cumples">
+                        <h3><i class="bi bi-info-circle"></i> Acerca de</h3>
+                        <button class="btn-cerrar-cumples" onclick="cerrarModalAcerca()">&times;</button>
+                    </div>
+
+                    <div class="modal-body-cumples">
+                        <div class="text-center mb-3">
+                            <strong>CRM Bastos</strong><br>
+                            <small>Proyecto académico — <?= date('Y') ?></small>
+                        </div>
+
+                        <div class="equipo-box">
+                            <h5 class="equipo-titulo"><i class="bi bi-people-fill"></i> Integrantes</h5>
+                            <ul class="equipo-lista">
+                                <li>
+                                    <span class="equipo-nombre">Christian Paniagua Castro</span>
+                                    <span class="equipo-carnet">504590528</span>
+                                    <a class="btn-gh" href="https://github.com/ChristianPaniagua12" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="bi bi-github"></i> GitHub
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="equipo-nombre">Steven Baltodano Ugarte</span>
+                                    <span class="equipo-carnet">504640801</span>
+                                    <a class="btn-gh" href="https://github.com/stevenBalto" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="bi bi-github"></i> GitHub
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="equipo-nombre">Reyman Barquero Ramirez</span>
+                                    <span class="equipo-carnet">504640986</span>
+                                    <a class="btn-gh" href="https://github.com/ReymanBarra" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="bi bi-github"></i> GitHub
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="equipo-nombre">Bryan Vega Ordoñez</span>
+                                    <span class="equipo-carnet">504480650</span>
+                                    <a class="btn-gh" href="https://github.com/ChitoBryan" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="bi bi-github"></i> GitHub
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="equipo-nombre">Felipe Sandoval Chaverri</span>
+                                    <span class="equipo-carnet">504260417</span>
+                                    <a class="btn-gh" href="https://github.com/Felipe0619" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="bi bi-github"></i> GitHub
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer-cumples">
+                        <button class="btn-ir-cumples" onclick="cerrarModalAcerca()">
+                            <i class="bi bi-check-circle"></i> Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
 
             <!-- Scripts Bootstrap (JS de componentes) -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
@@ -262,6 +348,37 @@ $vista = $_GET['view'] ?? 'dashboard';
                     }
                 });
             </script>
+
+            <script>
+                // Botón mini de "Acerca de": abre el modal
+                const btnAcercaMini = document.getElementById('btnAcercaMini');
+                if (btnAcercaMini) {
+                    btnAcercaMini.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const m = document.getElementById('modalAcerca');
+                        if (m) m.style.display = 'flex';
+                        document.body.classList.add('modal-open');
+                    });
+                }
+
+                // Cerrar modal "Acerca de"
+                function cerrarModalAcerca() {
+                    const m = document.getElementById('modalAcerca');
+                    if (m) m.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                }
+
+                // Cerrar si se hace click fuera del contenido
+                document.addEventListener('click', function (ev) {
+                    const m = document.getElementById('modalAcerca');
+                    if (!m) return;
+                    const contenido = m.querySelector('.modal-contenido-cumples');
+                    if (m.style.display !== 'none' && m.style.display !== '' && !contenido.contains(ev.target) && m === ev.target) {
+                        cerrarModalAcerca();
+                    }
+                });
+            </script>
+
         </main>
     </div>
 </body>

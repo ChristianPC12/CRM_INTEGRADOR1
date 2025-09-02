@@ -69,6 +69,11 @@
 
             <!-- Botones para enviar WhatsApp o Correo -->
             <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+
+                <button id="btnEnvioManual" type="button" class="btn btn-sm btn-secondary">
+                    <i class="bi bi-clipboard-check"></i> Envío manual
+                </button>
+
                 <button id="btnEnviarWhats" type="button" class="btn btn-sm btn-success">
                     <i class="bi bi-whatsapp"></i> Enviar WhatsApp
                 </button>
@@ -76,7 +81,7 @@
                     <i class="fas fa-paper-plane"></i> Enviar correo
                 </button>
                 <button id="btnEnviarAmbos" type="button" class="btn btn-sm btn-primary" disabled>
-                    <i class="fas fa-gift"></i> Enviar ambos
+                    <i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)
                 </button>
             </div>
 
@@ -94,8 +99,8 @@
 
             <!-- Mensaje recordatorio -->
             <div class="alert alert-info small text-center mb-3">
-              Los registros se eliminan automáticamente al cumplir <strong>30 días</strong>.  
-              Puede exportar un respaldo en <strong>PDF</strong> o <strong>imprimir</strong> antes de esa fecha.
+                Los registros se eliminan automáticamente al cumplir <strong>30 días</strong>.
+                Puede exportar un respaldo en <strong>PDF</strong> o <strong>imprimir</strong> antes de esa fecha.
             </div>
 
             <!-- Botones para exportar PDF o imprimir historial -->

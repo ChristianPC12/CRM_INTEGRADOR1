@@ -3,25 +3,23 @@ const $ = (id) => document.getElementById(id);
 const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
 
 // Sincroniza el estado del botón "Enviar ambos": se activa solo si ambos están activos
-// Versión mejorada de syncEnviarAmbos
 function syncEnviarAmbos() {
   const btnCorreo = $("btnEnviarCorreo");
   const btnWhats = $("btnEnviarWhats");
   const btnAmbos = $("btnEnviarAmbos");
-  
+
   if (!btnAmbos || !btnCorreo || !btnWhats) return;
 
-  // Se activa "Enviar ambos" solo cuando AMBOS botones están habilitados
   const correoHabilitado = !btnCorreo.disabled;
   const whatsHabilitado = !btnWhats.disabled;
-  
+
   btnAmbos.disabled = !(correoHabilitado && whatsHabilitado);
-  
-  // Debug opcional (puedes comentar estas líneas)
-  console.log('Sincronizando botones:', {
+
+  // Debug opcional
+  console.log("Sincronizando botones:", {
     correoHabilitado,
-    whatsHabilitado, 
-    ambosHabilitado: !btnAmbos.disabled
+    whatsHabilitado,
+    ambosHabilitado: !btnAmbos.disabled,
   });
 }
 
@@ -30,13 +28,10 @@ function submitFormCorreo() {
   const form = $("formCorreo");
   if (!form) return;
   if (typeof form.requestSubmit === "function") form.requestSubmit();
-  else
-    form.dispatchEvent(
-      new Event("submit", { cancelable: true, bubbles: true })
-    );
+  else form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
 }
 
-// ================== TU LÓGICA ORIGINAL (con mínimos ajustes) ==================
+// ================== LÓGICA PRINCIPAL ==================
 document.addEventListener("DOMContentLoaded", () => {
   mostrarSemanaActual();
   cargarCumples();
@@ -66,10 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnCorreo = $("btnEnviarCorreo");
   const btnWhats = $("btnEnviarWhats");
   const btnAmbos = $("btnEnviarAmbos");
+  const btnManual = $("btnEnvioManual"); // NUEVO
 
   if (btnCorreo) btnCorreo.disabled = true;
   if (btnWhats) btnWhats.disabled = true;
   if (btnAmbos) btnAmbos.disabled = true;
+  if (btnManual) btnManual.disabled = true; // NUEVO: queda deshabilitado hasta seleccionar
 
   // Habilitar/deshabilitar "Enviar ambos" si cambia el teléfono manualmente
   on($("telefonoCorreo"), "input", () => {
@@ -87,18 +84,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!btnCorreo || !btnWhats) return;
       if (btnAmbos.disabled) return;
 
-      // 1) Disparar WhatsApp (usa tu handler existente)
+      // 1) Disparar WhatsApp
       btnWhats.click();
 
-      // 2) Pequeño delay para no pelear con el "estado LISTA" (evita condiciones de carrera)
+      // 2) Pequeño delay para no pelear con el "estado LISTA"
       setTimeout(() => {
-        // Solo si sigue habilitado (tiene correo)
         if (!btnCorreo.disabled) submitFormCorreo();
       }, 250);
     });
   }
 
-  // ========== Sidebar badge (sin cambios funcionales) ==========
+  // ========== Sidebar badge ==========
   function actualizarCumpleBadgeSidebar() {
     fetch("/CRM_INT/CRM/controller/CumpleController.php", {
       method: "POST",
@@ -113,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // ====== Submit de correo (igual que el tuyo, con llamada a syncEnviarAmbos()) ======
+  // ====== Submit de correo ======
   on($("formCorreo"), "submit", async (e) => {
     e.preventDefault();
 
@@ -154,13 +150,13 @@ document.addEventListener("DOMContentLoaded", () => {
         Swal.fire("¡Éxito!", data.message, "success");
         $("formCorreo").reset();
         if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
-        if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true; // después de atenderlo, deshabilitamos ambos
+        if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
         if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+        if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
 
         cargarCumples();
         cargarHistorial();
-        if (window.actualizarCumpleBadgeSidebar)
-          window.actualizarCumpleBadgeSidebar();
+        if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
       } else {
         Swal.fire("Error", data.message, "error");
       }
@@ -172,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ====== Handler Enviar WhatsApp (igual que el tuyo, con syncEnviarAmbos()) ======
+  // ====== Handler Enviar WhatsApp ======
   if (btnWhats) {
     on(btnWhats, "click", async () => {
       const id = $("idCumple").value;
@@ -210,14 +206,11 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         btnWhats.disabled = true;
         btnWhats.innerText = "Enviando...";
-        const res = await fetch(
-          "/CRM_INT/CRM/controller/CumpleController.php",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData.toString(),
-          }
-        );
+        const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString(),
+        });
 
         const text = await res.text();
         let data;
@@ -235,11 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
           if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
           if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
           if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+          if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
 
           cargarCumples();
           cargarHistorial();
-          if (window.actualizarCumpleBadgeSidebar)
-            window.actualizarCumpleBadgeSidebar();
+          if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
         } else {
           Swal.fire("Error", data.message, "error");
         }
@@ -247,14 +240,84 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error al enviar WhatsApp:", err);
         Swal.fire(
           "Error",
-          err && err.message
-            ? err.message
-            : "No se pudo conectar con el servidor",
+          err && err.message ? err.message : "No se pudo conectar con el servidor",
           "error"
         );
       } finally {
         btnWhats.innerHTML = '<i class="bi bi-whatsapp"></i> Enviar WhatsApp';
         btnWhats.disabled = false;
+        syncEnviarAmbos();
+      }
+    });
+  }
+
+  // ====== Envío manual (insertar en historial sin enviar nada) ======
+  if (btnManual) {
+    on(btnManual, "click", async () => {
+      const id = $("idCumple")?.value;
+      const nombre = $("nombreCorreo")?.value;
+
+      if (!id) {
+        Swal.fire("Seleccioná un registro", "Elegí primero un cumpleañero.", "info");
+        return;
+      }
+
+      const confirm = await Swal.fire({
+        icon: "question",
+        title: "¿Registrar manualmente?",
+        html: `Se registrará que <strong>${nombre || "el cliente"}</strong> fue atendido <u>sin WhatsApp ni correo</u>.`,
+        showCancelButton: true,
+        confirmButtonText: "Sí, registrar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (!confirm.isConfirmed) return;
+
+      const formData = new URLSearchParams();
+      formData.append("action", "registrarManualCumple"); // NUEVA acción en el controlador
+      formData.append("idCliente", id);
+
+      try {
+        btnManual.disabled = true;
+        btnManual.innerText = "Registrando...";
+
+        const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString(),
+        });
+
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("Respuesta no JSON:", text);
+          throw new Error("Respuesta no válida del servidor");
+        }
+
+        if (data.success) {
+          await cambiarEstado(id, "LISTA");
+          Swal.fire("¡Registrado!", "Se registró el envío manual correctamente.", "success");
+
+          $("formCorreo").reset();
+          if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+          if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
+          if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+          if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
+
+          cargarCumples();
+          cargarHistorial();
+          if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+        } else {
+          Swal.fire("Error", data.message || "No se pudo registrar manualmente.", "error");
+        }
+      } catch (err) {
+        console.error("Error en envío manual:", err);
+        Swal.fire("Error", err?.message || "No se pudo conectar con el servidor", "error");
+      } finally {
+        btnManual.innerHTML = '<i class="bi bi-clipboard-check"></i> Envío manual';
+        // Se re-habilita al seleccionar otro registro
         syncEnviarAmbos();
       }
     });
@@ -270,16 +333,8 @@ const mostrarSemanaActual = () => {
   const hoy = new Date();
   const diaActual = hoy.getDay(); // 0 (Dom) a 6 (Sáb)
   const diffInicio = diaActual === 0 ? -6 : 1 - diaActual;
-  const lunes = new Date(
-    hoy.getFullYear(),
-    hoy.getMonth(),
-    hoy.getDate() + diffInicio + semanaOffset * 7
-  );
-  const domingo = new Date(
-    lunes.getFullYear(),
-    lunes.getMonth(),
-    lunes.getDate() + 6
-  );
+  const lunes = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + diffInicio + semanaOffset * 7);
+  const domingo = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() + 6);
 
   const opciones = { day: "2-digit", month: "long" };
   const formatoLunes = lunes.toLocaleDateString("es-CR", opciones);
@@ -292,8 +347,7 @@ const mostrarSemanaActual = () => {
   }
 
   const lbl = $("lblSemana");
-  if (lbl)
-    lbl.textContent = semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
+  if (lbl) lbl.textContent = semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
 };
 
 function actualizarNavSemanaUI() {
@@ -303,9 +357,7 @@ function actualizarNavSemanaUI() {
 
   if (btnPrev) btnPrev.disabled = semanaOffset === 0;
   if (btnNext) btnNext.disabled = semanaOffset === 1;
-  if (lblSemana)
-    lblSemana.textContent =
-      semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
+  if (lblSemana) lblSemana.textContent = semanaOffset === 0 ? "SEMANA ACTUAL" : "SEMANA SIGUIENTE";
 }
 
 const cargarCumples = async () => {
@@ -332,9 +384,7 @@ const cargarCumples = async () => {
       mostrarSemanaActual();
       if (typeof actualizarNavSemanaUI === "function") actualizarNavSemanaUI();
     } else {
-      contenedor.innerHTML = `<div class="alert alert-danger text-center">${
-        data.message || "No se pudo cargar."
-      }</div>`;
+      contenedor.innerHTML = `<div class="alert alert-danger text-center">${data.message || "No se pudo cargar."}</div>`;
     }
   } catch (error) {
     console.error("Error cargando cumpleaños:", error);
@@ -345,9 +395,7 @@ const cargarCumples = async () => {
 const renderizarTabla = (cumples) => {
   const contenedor = $("cumpleLista");
   const pendientes = cumples.filter((c) => c.estado === "Activo");
-  pendientes.sort(
-    (a, b) => new Date(b.fechaCumpleanos) - new Date(a.fechaCumpleanos)
-  );
+  pendientes.sort((a, b) => new Date(b.fechaCumpleanos) - new Date(a.fechaCumpleanos));
 
   if (pendientes.length === 0) {
     contenedor.innerHTML = `<div class="alert alert-info text-center">No hay cumpleaños pendientes esta semana.</div>`;
@@ -376,8 +424,7 @@ const renderizarTabla = (cumples) => {
 
   pendientes.forEach((c) => {
     let badge = `<span class="badge bg-success">Activo</span>`;
-    if (c.estado === "LISTA")
-      badge = `<span class="badge bg-success">LISTO</span>`;
+    if (c.estado === "LISTA") badge = `<span class="badge bg-success">LISTO</span>`;
 
     const botonCorreo = `
       <button class="btn btn-sm btn-primary"
@@ -446,24 +493,18 @@ const renderizarTabla = (cumples) => {
             formData.append("idCliente", idCliente);
 
             try {
-              const res = await fetch(
-                "/CRM_INT/CRM/controller/CumpleController.php",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  body: formData.toString(),
-                }
-              );
+              const res = await fetch("/CRM_INT/CRM/controller/CumpleController.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData.toString(),
+              });
               const data = await res.json();
 
               if (data.success) {
                 Swal.fire("¡Llamada registrada!", data.message, "success");
                 cargarCumples();
                 cargarHistorial();
-                if (window.actualizarCumpleBadgeSidebar)
-                  window.actualizarCumpleBadgeSidebar();
+                if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
                 $("listaRecordatorios").innerHTML = "";
                 $("recordatorioLlamadas").classList.add("d-none");
               } else {
@@ -471,11 +512,7 @@ const renderizarTabla = (cumples) => {
               }
             } catch (err) {
               console.error("Error al registrar llamada:", err);
-              Swal.fire(
-                "Error",
-                "No se pudo conectar con el servidor",
-                "error"
-              );
+              Swal.fire("Error", "No se pudo conectar con el servidor", "error");
             }
           }
         });
@@ -487,6 +524,7 @@ const renderizarTabla = (cumples) => {
   }
 };
 
+// --- Versión base de selección (queda para compatibilidad con el onclick)
 const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
   $("idCumple").value = id;
   $("nombreCorreo").value = nombre;
@@ -497,24 +535,22 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
 
   const btn = $("btnEnviarCorreo");
   const btnWhats2 = $("btnEnviarWhats");
+  const btnManualLocal = $("btnEnvioManual"); // NUEVO
+
+  // Habilitar Envío manual si hay selección
+  if (btnManualLocal) btnManualLocal.disabled = !id;
 
   if (!correo) {
-    // Cuando NO tiene correo - mostrar alerta y después usar EXACTAMENTE la misma lógica que con correo
     Swal.fire({
       icon: "warning",
       title: "¡Este cliente no tiene correo!",
       text: "Recordá llamarlo o escribirle un mensaje.",
       confirmButtonText: "Entendido",
     }).then(() => {
-      // Usar EXACTAMENTE la misma lógica que cuando tiene correo, pero para WhatsApp
       const btnWhats = $("btnEnviarWhats");
       if (btnWhats && !btnWhats.disabled) {
         setTimeout(() => {
-          btnWhats.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-          });
+          btnWhats.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
           setTimeout(() => {
             btnWhats.focus();
             btnWhats.style.transition = "all 0.3s ease";
@@ -528,7 +564,7 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
         }, 200);
       }
     });
-    
+
     if (btn) btn.disabled = true;
     if (btnWhats2) btnWhats2.disabled = !telefono;
   } else {
@@ -536,11 +572,7 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
     if (btnWhats2) btnWhats2.disabled = !telefono;
 
     setTimeout(() => {
-      btn.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest",
-      });
+      btn.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
       setTimeout(() => {
         btn.focus();
         btn.style.transition = "all 0.3s ease";
@@ -555,6 +587,73 @@ const seleccionarCumple = (id, nombre, cedula, correo, telefono, fecha) => {
   }
 
   // ➜ Sincroniza el botón "Enviar ambos" cada vez que seleccionás un cumple
+  syncEnviarAmbos();
+};
+
+// --- Hook para extender la selección con scroll/foco y mantener compatibilidad
+const seleccionarCumpleOriginal = seleccionarCumple;
+window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
+  // Llenar los campos del formulario primero
+  $("idCumple").value = id;
+  $("nombreCorreo").value = nombre;
+  $("cedulaCorreo").value = cedula;
+  $("correoCorreo").value = correo;
+  $("telefonoCorreo").value = telefono;
+  $("fechaCumple").value = fecha;
+
+  const btn = $("btnEnviarCorreo");
+  const btnWhats2 = $("btnEnviarWhats");
+  const btnManualLocal = $("btnEnvioManual"); // NUEVO
+
+  // Habilitar Envío manual si hay selección
+  if (btnManualLocal) btnManualLocal.disabled = !id;
+
+  if (!correo) {
+    Swal.fire({
+      icon: "warning",
+      title: "¡Este cliente no tiene correo!",
+      text: "Recordá llamarlo o escribirle un mensaje.",
+      confirmButtonText: "Entendido",
+    }).then(() => {
+      const btnWhats = $("btnEnviarWhats");
+      if (btnWhats && !btnWhats.disabled) {
+        setTimeout(() => {
+          btnWhats.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+          setTimeout(() => {
+            btnWhats.focus();
+            btnWhats.style.transition = "all 0.3s ease";
+            btnWhats.style.transform = "scale(1.02)";
+            btnWhats.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.7)";
+            setTimeout(() => {
+              btnWhats.style.transform = "scale(1)";
+              btnWhats.style.boxShadow = "";
+            }, 1500);
+          }, 600);
+        }, 200);
+      }
+    });
+
+    if (btn) btn.disabled = true;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
+  } else {
+    if (btn) btn.disabled = false;
+    if (btnWhats2) btnWhats2.disabled = !telefono;
+
+    setTimeout(() => {
+      btn.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      setTimeout(() => {
+        btn.focus();
+        btn.style.transition = "all 0.3s ease";
+        btn.style.transform = "scale(1.02)";
+        btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
+setTimeout(() => {
+          btn.style.transform = "scale(1)";
+          btn.style.boxShadow = "";
+        }, 1500);
+      }, 600);
+    }, 200);
+  }
+
   syncEnviarAmbos();
 };
 
@@ -587,11 +686,7 @@ const formatearFecha = (fechaStr) => {
   const fecha = new Date(anio, mes - 1, dia);
   if (isNaN(fecha)) return "Fecha inválida";
   return fecha
-    .toLocaleDateString("es-CR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    })
+    .toLocaleDateString("es-CR", { day: "2-digit", month: "long", year: "numeric" })
     .toUpperCase();
 };
 
@@ -621,8 +716,7 @@ function cargarHistorial() {
       `;
 
       data.forEach((c) => {
-        const datoContacto =
-          c.correo && c.correo.trim() !== "" ? c.correo : c.telefono;
+        const datoContacto = c.correo && c.correo.trim() !== "" ? c.correo : c.telefono;
         html += `
           <tr>
             <td>${c.cedula}</td>
@@ -649,11 +743,7 @@ function cargarHistorial() {
 on($("btnImprimir"), "click", () => {
   const tabla = $("tablaHistorial");
   if (!tabla || tabla.rows.length <= 1) {
-    Swal.fire(
-      "Tabla vacía",
-      "No hay datos en el historial para imprimir.",
-      "warning"
-    );
+    Swal.fire("Tabla vacía", "No hay datos en el historial para imprimir.", "warning");
     return;
   }
 
@@ -670,9 +760,7 @@ on($("btnImprimir"), "click", () => {
     </style>
   `);
   ventana.document.write("</head><body>");
-  ventana.document.write(
-    "<h3 style='text-align:center;'>Historial de Cumpleaños Atendidos</h3>"
-  );
+  ventana.document.write("<h3 style='text-align:center;'>Historial de Cumpleaños Atendidos</h3>");
   ventana.document.write(contenido);
   ventana.document.write("</body></html>");
   ventana.document.close();
@@ -685,11 +773,7 @@ on($("btnImprimir"), "click", () => {
 on($("btnExportPDF"), "click", function () {
   const tabla = $("tablaHistorial");
   if (!tabla || tabla.rows.length <= 1) {
-    Swal.fire(
-      "Tabla vacía",
-      "No hay datos en el historial para exportar.",
-      "warning"
-    );
+    Swal.fire("Tabla vacía", "No hay datos en el historial para exportar.", "warning");
     return;
   }
 
@@ -698,38 +782,25 @@ on($("btnExportPDF"), "click", function () {
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
-  doc.text(
-    "Historial de Cumpleaños Atendidos",
-    doc.internal.pageSize.getWidth() / 2,
-    40,
-    { align: "center" }
-  );
+  doc.text("Historial de Cumpleaños Atendidos", doc.internal.pageSize.getWidth() / 2, 40, { align: "center" });
 
   doc.autoTable({
     html: "#tablaHistorial",
     startY: 60,
     styles: { font: "helvetica", fontSize: 10, cellPadding: 4 },
-    headStyles: {
-      fillColor: [249, 196, 31],
-      textColor: [0, 0, 0],
-      halign: "center",
-    },
+    headStyles: { fillColor: [249, 196, 31], textColor: [0, 0, 0], halign: "center" },
     bodyStyles: { halign: "center" },
     didDrawPage: function (data) {
       const fecha = new Date().toLocaleString("es-CR");
       doc.setFontSize(8);
-      doc.text(
-        `CRM Bastos - ${fecha}`,
-        data.settings.margin.left,
-        doc.internal.pageSize.getHeight() - 10
-      );
+      doc.text(`CRM Bastos - ${fecha}`, data.settings.margin.left, doc.internal.pageSize.getHeight() - 10);
     },
   });
 
   doc.save("historial_cumpleanos.pdf");
 });
 
-// === MEJORAS PARA EL SISTEMA DE CUMPLEAÑOS (se mantienen) ===
+// === MEJORAS PARA EL SISTEMA DE CUMPLEAÑOS ===
 function agregarBuscadorHistorial() {
   const historialContainer = $("historialCumples");
   if (!historialContainer) return;
@@ -757,9 +828,7 @@ function agregarBuscadorHistorial() {
     const tabla = $("tablaHistorial");
     if (!tabla) return;
 
-    const filas = tabla
-      .getElementsByTagName("tbody")[0]
-      .getElementsByTagName("tr");
+    const filas = tabla.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
     let filasVisibles = 0;
 
     for (let i = 0; i < filas.length; i++) {
@@ -793,10 +862,7 @@ function agregarBuscadorHistorial() {
           ? `<small><i class="fas fa-filter"></i> Se encontraron <strong>${cantidad}</strong> resultados para "<strong>${termino}</strong>"</small>`
           : `<small><i class="fas fa-exclamation-triangle"></i> No se encontraron resultados para "<strong>${termino}</strong>"</small>`;
 
-      inputBuscador.parentNode.parentNode.insertAdjacentElement(
-        "afterend",
-        mensaje
-      );
+      inputBuscador.parentNode.parentNode.insertAdjacentElement("afterend", mensaje);
     }
   }
 
@@ -817,22 +883,14 @@ function agregarBuscadorHistorial() {
 }
 
 function scrollYFocusFormulario() {
-  const formularioCard = document.querySelector(
-    '.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]'
-  );
+  const formularioCard = document.querySelector('.card.shadow-sm[style*="border-left: 5px solid #f9c41f"]');
   if (formularioCard) {
-    formularioCard.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest",
-    });
+    formularioCard.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     setTimeout(() => {
-      // Verificar si el cliente tiene correo para determinar a qué botón hacer focus
       const correoInput = $("correoCorreo");
       const tieneCorreo = correoInput && correoInput.value && correoInput.value.trim() !== "";
-      
+
       if (tieneCorreo) {
-        // Si tiene correo, hacer focus al botón de correo
         const btnEnviarCorreo = $("btnEnviarCorreo");
         if (btnEnviarCorreo && !btnEnviarCorreo.disabled) {
           btnEnviarCorreo.style.transition = "all 0.3s ease";
@@ -841,12 +899,10 @@ function scrollYFocusFormulario() {
           btnEnviarCorreo.focus();
           setTimeout(() => {
             btnEnviarCorreo.style.transform = "scale(1)";
-            btnEnviarCorreo.style.boxShadow =
-              "0 4px 16px rgba(249, 196, 31, 0.3)";
+            btnEnviarCorreo.style.boxShadow = "0 4px 16px rgba(249, 196, 31, 0.3)";
           }, 2000);
         }
       } else {
-        // Si NO tiene correo, hacer focus al área de botones (WhatsApp, correo, ambos)
         const btnEnviarWhats = $("btnEnviarWhats");
         if (btnEnviarWhats) {
           btnEnviarWhats.style.transition = "all 0.3s ease";
@@ -855,8 +911,7 @@ function scrollYFocusFormulario() {
           btnEnviarWhats.focus();
           setTimeout(() => {
             btnEnviarWhats.style.transform = "scale(1)";
-            btnEnviarWhats.style.boxShadow =
-              "0 4px 16px rgba(40, 167, 69, 0.3)";
+            btnEnviarWhats.style.boxShadow = "0 4px 16px rgba(40, 167, 69, 0.3)";
           }, 2000);
         }
       }
@@ -871,77 +926,4 @@ cargarHistorial = function () {
   setTimeout(() => {
     agregarBuscadorHistorial();
   }, 100);
-};
-
-const seleccionarCumpleOriginal = seleccionarCumple;
-window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha) {
-  // Llenar los campos del formulario primero
-  $("idCumple").value = id;
-  $("nombreCorreo").value = nombre;
-  $("cedulaCorreo").value = cedula;
-  $("correoCorreo").value = correo;
-  $("telefonoCorreo").value = telefono;
-  $("fechaCumple").value = fecha;
-
-  const btn = $("btnEnviarCorreo");
-  const btnWhats2 = $("btnEnviarWhats");
-
-  if (!correo) {
-    // Cuando NO tiene correo - mostrar alerta y después hacer scroll igual que con correo
-    Swal.fire({
-      icon: "warning",
-      title: "¡Este cliente no tiene correo!",
-      text: "Recordá llamarlo o escribirle un mensaje.",
-      confirmButtonText: "Entendido",
-    }).then(() => {
-      // Usar la MISMA lógica de scroll y focus que cuando tiene correo, pero para WhatsApp
-      const btnWhats = $("btnEnviarWhats");
-      if (btnWhats && !btnWhats.disabled) {
-        setTimeout(() => {
-          btnWhats.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-          });
-          setTimeout(() => {
-            btnWhats.focus();
-            btnWhats.style.transition = "all 0.3s ease";
-            btnWhats.style.transform = "scale(1.02)";
-            btnWhats.style.boxShadow = "0 0 20px rgba(40, 167, 69, 0.7)";
-            setTimeout(() => {
-              btnWhats.style.transform = "scale(1)";
-              btnWhats.style.boxShadow = "";
-            }, 1500);
-          }, 600);
-        }, 200);
-      }
-    });
-    
-    if (btn) btn.disabled = true;
-    if (btnWhats2) btnWhats2.disabled = !telefono;
-  } else {
-    // Cuando SÍ tiene correo - usar comportamiento original
-    if (btn) btn.disabled = false;
-    if (btnWhats2) btnWhats2.disabled = !telefono;
-
-    setTimeout(() => {
-      btn.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest",
-      });
-      setTimeout(() => {
-        btn.focus();
-        btn.style.transition = "all 0.3s ease";
-        btn.style.transform = "scale(1.02)";
-        btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
-        setTimeout(() => {
-          btn.style.transform = "scale(1)";
-          btn.style.boxShadow = "";
-        }, 1500);
-      }, 600);
-    }, 200);
-  }
-
-  syncEnviarAmbos();
 };

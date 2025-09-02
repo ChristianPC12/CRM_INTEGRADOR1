@@ -2,6 +2,10 @@
 const $ = (id) => document.getElementById(id);
 const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
 
+// ===== PATCH: flags para orquestar "Enviar ambos" =====
+let enviarAmbosEnProgreso = false;   // true mientras se ejecuta el flujo combinado
+let whatsOkEnAmbos = false;          // true cuando WhatsApp ya fue OK en modo ambos
+
 // Sincroniza el estado del botón "Enviar ambos": se activa solo si ambos están activos
 function syncEnviarAmbos() {
   const btnCorreo = $("btnEnviarCorreo");
@@ -75,22 +79,24 @@ document.addEventListener("DOMContentLoaded", () => {
     syncEnviarAmbos();
   });
 
-  // ====== Enviar Ambos: hace click al WhatsApp y luego envía el formulario de correo ======
+  // ====== PATCH: Enviar Ambos (WhatsApp -> luego Correo, sin reset intermedio) ======
   if (btnAmbos) {
-    on(btnAmbos, "click", async () => {
+    on(btnAmbos, "click", () => {
       const btnCorreo = $("btnEnviarCorreo");
       const btnWhats = $("btnEnviarWhats");
-
       if (!btnCorreo || !btnWhats) return;
       if (btnAmbos.disabled) return;
 
-      // 1) Disparar WhatsApp
-      btnWhats.click();
+      // Activar modo combinado
+      enviarAmbosEnProgreso = true;
+      whatsOkEnAmbos = false;
 
-      // 2) Pequeño delay para no pelear con el "estado LISTA"
-      setTimeout(() => {
-        if (!btnCorreo.disabled) submitFormCorreo();
-      }, 250);
+      // Feedback visual
+      btnAmbos.disabled = true;
+      btnAmbos.innerText = "Enviando ambos...";
+
+      // Disparar WhatsApp (su handler decidirá el siguiente paso)
+      btnWhats.click();
     });
   }
 
@@ -146,25 +152,72 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (data.success) {
-        await cambiarEstado(id, "LISTA");
-        Swal.fire("¡Éxito!", data.message, "success");
-        $("formCorreo").reset();
-        if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
-        if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
-        if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
-        if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
+        if (enviarAmbosEnProgreso) {
+          // Flujo combinado: cerrar aquí (cambiar estado, reset, feedback único)
+          await cambiarEstado(id, "LISTA");
+          Swal.fire("¡Éxito!", "Se enviaron WhatsApp y correo correctamente.", "success");
 
-        cargarCumples();
-        cargarHistorial();
-        if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+          $("formCorreo").reset();
+          if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+          if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
+          if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+          if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
+
+          cargarCumples();
+          cargarHistorial();
+          if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+
+          // Salir del modo ambos y restaurar label
+          enviarAmbosEnProgreso = false;
+          whatsOkEnAmbos = false;
+          const btnAmbos = $("btnEnviarAmbos");
+          if (btnAmbos) {
+            btnAmbos.innerHTML = '<i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)';
+          }
+        } else {
+          // --- COMPORTAMIENTO ORIGINAL (solo correo) ---
+          await cambiarEstado(id, "LISTA");
+          Swal.fire("¡Éxito!", data.message, "success");
+          $("formCorreo").reset();
+          if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+          if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
+          if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+          if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
+
+          cargarCumples();
+          cargarHistorial();
+          if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+        }
       } else {
+        // Error de correo
+        if (enviarAmbosEnProgreso) {
+          enviarAmbosEnProgreso = false;
+          whatsOkEnAmbos = false;
+          const btnAmbos = $("btnEnviarAmbos");
+          if (btnAmbos) {
+            btnAmbos.innerHTML = '<i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)';
+            btnAmbos.disabled = false; // permitir reintento
+          }
+        }
         Swal.fire("Error", data.message, "error");
       }
     } catch (err) {
       console.error("Error al enviar correo:", err);
+      if (enviarAmbosEnProgreso) {
+        enviarAmbosEnProgreso = false;
+        whatsOkEnAmbos = false;
+        const btnAmbos = $("btnEnviarAmbos");
+        if (btnAmbos) {
+          btnAmbos.innerHTML = '<i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)';
+          btnAmbos.disabled = false;
+        }
+      }
       Swal.fire("Error", "No se pudo conectar con el servidor", "error");
     } finally {
-      syncEnviarAmbos();
+      // En modo ambos no tocamos sincronización aquí; ya se manejó arriba
+      if (!enviarAmbosEnProgreso) {
+        syncEnviarAmbos();
+      }
     }
   });
 
@@ -222,22 +275,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (data.success) {
-          await cambiarEstado(id, "LISTA");
-          Swal.fire("¡Éxito!", data.message, "success");
-          $("formCorreo").reset();
-          if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
-          if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
-          if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
-          if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
+          if (enviarAmbosEnProgreso) {
+            // En modo ambos: NO resetees ni cambies estado aquí
+            whatsOkEnAmbos = true;
+            // Disparar correo con los datos que ya están en el form
+            submitFormCorreo();
+          } else {
+            // --- COMPORTAMIENTO ORIGINAL (solo Whats) ---
+            await cambiarEstado(id, "LISTA");
+            Swal.fire("¡Éxito!", data.message, "success");
+            $("formCorreo").reset();
+            if ($("btnEnviarCorreo")) $("btnEnviarCorreo").disabled = true;
+            if ($("btnEnviarWhats")) $("btnEnviarWhats").disabled = true;
+            if ($("btnEnviarAmbos")) $("btnEnviarAmbos").disabled = true;
+            if ($("btnEnvioManual")) $("btnEnvioManual").disabled = true;
 
-          cargarCumples();
-          cargarHistorial();
-          if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+            cargarCumples();
+            cargarHistorial();
+            if (window.actualizarCumpleBadgeSidebar) window.actualizarCumpleBadgeSidebar();
+          }
         } else {
+          // Si falla y estaba en modo ambos, salir del modo y permitir reintento
+          if (enviarAmbosEnProgreso) {
+            enviarAmbosEnProgreso = false;
+            whatsOkEnAmbos = false;
+            const btnAmbos = $("btnEnviarAmbos");
+            if (btnAmbos) {
+              btnAmbos.innerHTML = '<i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)';
+              btnAmbos.disabled = false;
+            }
+          }
           Swal.fire("Error", data.message, "error");
         }
       } catch (err) {
         console.error("Error al enviar WhatsApp:", err);
+        if (enviarAmbosEnProgreso) {
+          enviarAmbosEnProgreso = false;
+          whatsOkEnAmbos = false;
+          const btnAmbos = $("btnEnviarAmbos");
+          if (btnAmbos) {
+            btnAmbos.innerHTML = '<i class="fas fa-gift"></i> Enviar ambos (Correo y WhatsApp)';
+            btnAmbos.disabled = false;
+          }
+        }
         Swal.fire(
           "Error",
           err && err.message ? err.message : "No se pudo conectar con el servidor",
@@ -245,8 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       } finally {
         btnWhats.innerHTML = '<i class="bi bi-whatsapp"></i> Enviar WhatsApp';
-        btnWhats.disabled = false;
-        syncEnviarAmbos();
+        // En modo ambos, no re-habilitamos aquí (dejamos que cierre el flujo el submit de correo)
+        if (!enviarAmbosEnProgreso) {
+          btnWhats.disabled = false;
+          syncEnviarAmbos();
+        }
       }
     });
   }
@@ -646,7 +729,7 @@ window.seleccionarCumple = function (id, nombre, cedula, correo, telefono, fecha
         btn.style.transition = "all 0.3s ease";
         btn.style.transform = "scale(1.02)";
         btn.style.boxShadow = "0 0 20px rgba(249, 196, 31, 0.7)";
-setTimeout(() => {
+        setTimeout(() => {
           btn.style.transform = "scale(1)";
           btn.style.boxShadow = "";
         }, 1500);

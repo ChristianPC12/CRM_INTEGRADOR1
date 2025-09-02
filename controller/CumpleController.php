@@ -226,6 +226,41 @@ try {
             }
             break;
 
+        case 'registrarManualCumple':
+            // Registra un "envío manual" (sin WhatsApp ni correo) y calcula vencimiento
+            $idCliente = $_POST['idCliente'] ?? null;
+
+            if (empty($idCliente)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'ID del cliente no proporcionado'
+                ]);
+                break;
+            }
+
+            // Calcula fecha de vencimiento (domingo de la semana)
+            $hoy = new DateTime();
+            $diaSemana = $hoy->format('w');            // 0=Domingo, 6=Sábado
+            $diasHastaDomingo = 7 - $diaSemana;        // cuántos días faltan para domingo
+            $vence = clone $hoy;
+            $vence->modify("+$diasHastaDomingo days");
+            $venceStr = $vence->format('Y-m-d');
+
+            // Inserta en la tabla cumple
+            $sql = "INSERT INTO cumple (IdCliente, FechaLlamada, Vence, Vencido)
+            VALUES (:idCliente, CURDATE(), :vence, 'NO')";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':idCliente', $idCliente);
+            $stmt->bindParam(':vence', $venceStr);
+            $stmt->execute();
+
+            echo json_encode([
+                'success' => true,
+                'message' => '¡Envío manual registrado correctamente!'
+            ]);
+            break;
+
+
 
         case 'registrarLlamadaCumple':
             // Registra una llamada de cumpleaños y calcula vencimiento
